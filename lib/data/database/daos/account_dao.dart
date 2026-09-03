@@ -40,7 +40,10 @@ class AccountDao extends DatabaseAccessor<AppDatabase> with _$AccountDaoMixin {
       final destTxs = await (db.select(
         db.transactions,
       )..where((t) => t.destinationAccountId.equals(id))).get();
-      final allTxIds = <String>{...sourceTxs.map((t) => t.id), ...destTxs.map((t) => t.id)};
+      final allTxIds = <String>{
+        ...sourceTxs.map((t) => t.id),
+        ...destTxs.map((t) => t.id),
+      };
 
       // Reverse balance adjustments for each transaction
       for (final tx in [...sourceTxs, ...destTxs]) {

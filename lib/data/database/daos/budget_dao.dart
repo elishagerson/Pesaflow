@@ -350,9 +350,9 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
 
   /// Returns the IDs of all categories whose [parentId] matches [categoryId].
   Future<List<String>> _getChildCategoryIds(String categoryId) async {
-    final children = await (select(categories)
-          ..where((c) => c.parentId.equals(categoryId)))
-        .get();
+    final children = await (select(
+      categories,
+    )..where((c) => c.parentId.equals(categoryId))).get();
     return children.map((c) => c.id).toList();
   }
 }

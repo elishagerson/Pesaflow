@@ -103,10 +103,7 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    _opacityAnim = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    );
+    _opacityAnim = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
     _slideAnim = Tween<Offset>(
       begin: const Offset(0, 0.08),
       end: Offset.zero,
@@ -127,10 +124,7 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
     }
     return FadeTransition(
       opacity: _opacityAnim,
-      child: SlideTransition(
-        position: _slideAnim,
-        child: widget.child,
-      ),
+      child: SlideTransition(position: _slideAnim, child: widget.child),
     );
   }
 }

@@ -145,7 +145,6 @@ class InsightGenerator {
 
     return insights;
   }
-
 }
 
 class Insight {

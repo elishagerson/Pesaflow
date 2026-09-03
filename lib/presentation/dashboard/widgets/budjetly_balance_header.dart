@@ -70,29 +70,29 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
       child: GestureDetector(
         onTap: _toggleFlip,
         child: AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
-          final angle = _animation.value * pi;
-          final transform = Matrix4.identity()
-            ..setEntry(3, 2, 0.001)
-            ..rotateX(angle);
+          animation: _animation,
+          builder: (context, child) {
+            final angle = _animation.value * pi;
+            final transform = Matrix4.identity()
+              ..setEntry(3, 2, 0.001)
+              ..rotateX(angle);
 
-          // If rotated past 90 degrees (pi/2), show back side
-          final isBackVisible = angle >= pi / 2;
+            // If rotated past 90 degrees (pi/2), show back side
+            final isBackVisible = angle >= pi / 2;
 
-          return Transform(
-            transform: transform,
-            alignment: Alignment.center,
-            child: isBackVisible
-                ? Transform(
-                    // Un-mirror the back side content
-                    transform: Matrix4.identity()..rotateX(pi),
-                    alignment: Alignment.center,
-                    child: _buildCardSide(context, isFront: false),
-                  )
-                : _buildCardSide(context, isFront: true),
-          );
-        },
+            return Transform(
+              transform: transform,
+              alignment: Alignment.center,
+              child: isBackVisible
+                  ? Transform(
+                      // Un-mirror the back side content
+                      transform: Matrix4.identity()..rotateX(pi),
+                      alignment: Alignment.center,
+                      child: _buildCardSide(context, isFront: false),
+                    )
+                  : _buildCardSide(context, isFront: true),
+            );
+          },
         ),
       ),
     );

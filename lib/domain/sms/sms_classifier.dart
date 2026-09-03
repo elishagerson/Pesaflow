@@ -90,7 +90,8 @@ class SmsClassifier {
 
     // Signal: Message is very long (receipts are typically < 250 chars, promos are longer)
     // Bank SMS can be verbose (multi-line with details), so use a higher threshold.
-    final isBankSms = lower.contains('nmb') ||
+    final isBankSms =
+        lower.contains('nmb') ||
         lower.contains('crdb') ||
         lower.contains('nbc') ||
         lower.contains('acct') ||
@@ -99,7 +100,9 @@ class SmsClassifier {
     final lengthThreshold = isBankSms ? 500 : 350;
     if (text.length > lengthThreshold) {
       score -= 1.0;
-      reasons.add('Long message (${text.length} chars, threshold $lengthThreshold) → more likely promo');
+      reasons.add(
+        'Long message (${text.length} chars, threshold $lengthThreshold) → more likely promo',
+      );
     }
 
     // Signal: All-caps ratio (promos tend to shout)

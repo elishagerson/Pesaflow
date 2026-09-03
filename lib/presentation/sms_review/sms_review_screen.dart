@@ -296,9 +296,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                         ),
                         decoration: BoxDecoration(
                           color: _selectAll
-                              ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                              ? theme.colorScheme.primary.withValues(
+                                  alpha: 0.12,
+                                )
                               : theme.colorScheme.surfaceContainerHighest
-                                  .withValues(alpha: 0.3),
+                                    .withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(kSpacing8),
                         ),
                         child: Row(
@@ -386,7 +388,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: theme
-                                            .colorScheme.surfaceContainerHighest
+                                            .colorScheme
+                                            .surfaceContainerHighest
                                             .withValues(alpha: 0.4),
                                         borderRadius: BorderRadius.circular(
                                           kSpacing6,
@@ -399,7 +402,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             Icons.swipe_rounded,
                                             size: 12,
                                             color: theme
-                                                .colorScheme.onSurfaceVariant,
+                                                .colorScheme
+                                                .onSurfaceVariant,
                                           ),
                                           const SizedBox(width: kSpacing4),
                                           Text(
@@ -407,7 +411,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             style: context.ts(
                                               10,
                                               color: theme
-                                                  .colorScheme.onSurfaceVariant,
+                                                  .colorScheme
+                                                  .onSurfaceVariant,
                                             ),
                                           ),
                                         ],
@@ -432,8 +437,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                               itemBuilder: (context, index) {
                                 final item = items[index];
                                 final trans = item.transaction;
-                                final isSelected =
-                                    _selectedIds.contains(trans.id);
+                                final isSelected = _selectedIds.contains(
+                                  trans.id,
+                                );
 
                                 AmountType amtType = AmountType.neutral;
                                 if (trans.type.toLowerCase() == 'income') {
@@ -477,9 +483,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                       await ref
                                           .read(transactionRepositoryProvider)
                                           .approveReviewedTransaction(trans.id);
-                                      ref.invalidate(
-                                        reviewQueueStreamProvider,
-                                      );
+                                      ref.invalidate(reviewQueueStreamProvider);
                                       ref.invalidate(
                                         recentTransactionsStreamProvider,
                                       );
@@ -504,8 +508,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                         });
                                       },
                                       child: AnimatedContainer(
-                                        duration:
-                                            const Duration(milliseconds: 200),
+                                        duration: const Duration(
+                                          milliseconds: 200,
+                                        ),
                                         curve: Curves.easeOut,
                                         margin: const EdgeInsets.only(
                                           bottom: kSpacing12,
@@ -513,7 +518,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                         decoration: BoxDecoration(
                                           color: isSelected
                                               ? theme.colorScheme.primary
-                                                  .withValues(alpha: 0.06)
+                                                    .withValues(alpha: 0.06)
                                               : theme.colorScheme.surface,
                                           borderRadius: BorderRadius.circular(
                                             AppTheme.radiusCard,
@@ -521,9 +526,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                           border: Border.all(
                                             color: isSelected
                                                 ? theme.colorScheme.primary
-                                                    .withValues(alpha: 0.3)
+                                                      .withValues(alpha: 0.3)
                                                 : theme.colorScheme.onSurface
-                                                    .withValues(alpha: 0.06),
+                                                      .withValues(alpha: 0.06),
                                             width: isSelected ? 1.5 : 1.0,
                                           ),
                                         ),
@@ -542,10 +547,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                 children: [
                                                   // Selection checkbox
                                                   AnimatedContainer(
-                                                    duration:
-                                                        const Duration(
-                                                          milliseconds: 200,
-                                                        ),
+                                                    duration: const Duration(
+                                                      milliseconds: 200,
+                                                    ),
                                                     width: 20,
                                                     height: 20,
                                                     margin:
@@ -556,14 +560,15 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                     decoration: BoxDecoration(
                                                       shape: BoxShape.circle,
                                                       color: isSelected
-                                                          ? theme.colorScheme
-                                                              .primary
-                                                          : Colors
-                                                              .transparent,
+                                                          ? theme
+                                                                .colorScheme
+                                                                .primary
+                                                          : Colors.transparent,
                                                       border: Border.all(
                                                         color: isSelected
-                                                            ? theme.colorScheme
-                                                                .primary
+                                                            ? theme
+                                                                  .colorScheme
+                                                                  .primary
                                                             : theme
                                                                   .colorScheme
                                                                   .onSurface
@@ -616,13 +621,14 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                               .start,
                                                       children: [
                                                         Text(
-                                                          trans.description
+                                                          trans
+                                                                  .description
                                                                   .isNotEmpty
                                                               ? trans
-                                                                  .description
+                                                                    .description
                                                               : item
-                                                                  .category
-                                                                  .name,
+                                                                    .category
+                                                                    .name,
                                                           maxLines: 1,
                                                           overflow: TextOverflow
                                                               .ellipsis,
@@ -643,21 +649,21 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                                   const EdgeInsets.symmetric(
                                                                     horizontal:
                                                                         kSpacing6,
-                                                                    vertical:
-                            1,
+                                                                    vertical: 1,
                                                                   ),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: _typeColor(
-                                                                  trans.type,
-                                                                ).withValues(
-                                                                  alpha: 0.1,
-                                                                ),
+                                                              decoration: BoxDecoration(
+                                                                color:
+                                                                    _typeColor(
+                                                                      trans
+                                                                          .type,
+                                                                    ).withValues(
+                                                                      alpha:
+                                                                          0.1,
+                                                                    ),
                                                                 borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                          4,
-                                                                        ),
+                                                                    BorderRadius.circular(
+                                                                      4,
+                                                                    ),
                                                               ),
                                                               child: Text(
                                                                 _typeLabel(
@@ -676,9 +682,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                                 ),
                                                               ),
                                                             ),
-                                                            if (trans
-                                                                .provider !=
-                                                                null &&
+                                                            if (trans.provider !=
+                                                                    null &&
                                                                 trans
                                                                     .provider!
                                                                     .isNotEmpty) ...[
@@ -688,15 +693,12 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                               ),
                                                               // Provider badge
                                                               Container(
-                                                                padding:
-                                                                    const EdgeInsets.symmetric(
-                                                                      horizontal:
-                                                                          kSpacing6,
-                                                                      vertical:
-                                                                          1,
-                                                                    ),
-                                                                decoration:
-                                                                    BoxDecoration(
+                                                                padding: const EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      kSpacing6,
+                                                                  vertical: 1,
+                                                                ),
+                                                                decoration: BoxDecoration(
                                                                   color:
                                                                       _providerColor(
                                                                         trans
@@ -706,10 +708,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                                             0.1,
                                                                       ),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                            4,
-                                                                          ),
+                                                                      BorderRadius.circular(
+                                                                        4,
+                                                                      ),
                                                                 ),
                                                                 child: Text(
                                                                   _formatProvider(
@@ -721,11 +722,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w500,
-                                                                    color:
-                                                                        _providerColor(
-                                                                          trans
-                                                                              .provider,
-                                                                        ),
+                                                                    color: _providerColor(
+                                                                      trans
+                                                                          .provider,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),
@@ -777,7 +777,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
 
                                               // Reference + account row
                                               if ((trans.reference != null &&
-                                                      trans.reference!
+                                                      trans
+                                                          .reference!
                                                           .isNotEmpty) ||
                                                   item.account != null) ...[
                                                 const SizedBox(
@@ -787,15 +788,16 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                   width: double.infinity,
                                                   padding:
                                                       const EdgeInsets.symmetric(
-                                                        horizontal:
-                                                            kSpacing10,
+                                                        horizontal: kSpacing10,
                                                         vertical: kSpacing6,
                                                       ),
                                                   decoration: BoxDecoration(
                                                     color: theme
                                                         .colorScheme
                                                         .surfaceContainerHighest
-                                                        .withValues(alpha: 0.25),
+                                                        .withValues(
+                                                          alpha: 0.25,
+                                                        ),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           kSpacing6,
@@ -805,11 +807,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                     children: [
                                                       if (trans.reference !=
                                                               null &&
-                                                          trans.reference!
+                                                          trans
+                                                              .reference!
                                                               .isNotEmpty) ...[
                                                         Icon(
-                                                          Icons
-                                                              .tag_rounded,
+                                                          Icons.tag_rounded,
                                                           size: 12,
                                                           color: theme
                                                               .colorScheme
@@ -838,10 +840,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                       ],
                                                       if (trans.reference !=
                                                               null &&
-                                                          trans.reference!
+                                                          trans
+                                                              .reference!
                                                               .isNotEmpty &&
-                                                          item.account !=
-                                                              null)
+                                                          item.account != null)
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets.symmetric(
@@ -891,8 +893,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
 
                                               // Raw SMS preview
                                               if (trans.rawSms != null &&
-                                                  trans.rawSms!
-                                                      .isNotEmpty) ...[
+                                                  trans.rawSms!.isNotEmpty) ...[
                                                 const SizedBox(
                                                   height: kSpacing8,
                                                 ),
@@ -902,11 +903,14 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                               ],
 
                                               // Action buttons
-                                              const SizedBox(height: kSpacing10),
+                                              const SizedBox(
+                                                height: kSpacing10,
+                                              ),
                                               Row(
                                                 children: [
                                                   _ActionPill(
-                                                    icon: PesaFlowIcons.category,
+                                                    icon:
+                                                        PesaFlowIcons.category,
                                                     label: 'Category',
                                                     color: theme
                                                         .colorScheme
@@ -944,8 +948,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                           context,
                                                           message:
                                                               'Transaction approved',
-                                                          type: ToastType
-                                                              .success,
+                                                          type:
+                                                              ToastType.success,
                                                         );
                                                       }
                                                     },
@@ -1013,15 +1017,15 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                               kSpacing16,
                               kSpacing12,
                               kSpacing16,
-                              MediaQuery.paddingOf(context).bottom +
-                                  kSpacing12,
+                              MediaQuery.paddingOf(context).bottom + kSpacing12,
                             ),
                             decoration: BoxDecoration(
                               color: theme.scaffoldBackgroundColor,
                               border: Border(
                                 top: BorderSide(
-                                  color: theme.colorScheme.onSurface
-                                      .withValues(alpha: 0.08),
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.08,
+                                  ),
                                 ),
                               ),
                             ),
@@ -1041,7 +1045,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                       vertical: kSpacing10,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: theme.colorScheme
+                                      color: theme
+                                          .colorScheme
                                           .surfaceContainerHighest
                                           .withValues(alpha: 0.4),
                                       borderRadius: BorderRadius.circular(
@@ -1053,8 +1058,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                       style: context.ts(
                                         13,
                                         fontWeight: FontWeight.w500,
-                                        color: theme
-                                            .colorScheme.onSurfaceVariant,
+                                        color:
+                                            theme.colorScheme.onSurfaceVariant,
                                       ),
                                     ),
                                   ),
@@ -1081,8 +1086,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                           style: context.ts(
                                             13,
                                             fontWeight: FontWeight.w600,
-                                            color:
-                                                theme.colorScheme.primary,
+                                            color: theme.colorScheme.primary,
                                           ),
                                         ),
                                       ),
@@ -1096,16 +1100,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                     onTap: () async {
                                       for (final id in _selectedIds) {
                                         await ref
-                                            .read(
-                                              transactionRepositoryProvider,
-                                            )
+                                            .read(transactionRepositoryProvider)
                                             .approveReviewedTransaction(id);
                                       }
-                                      final approvedCount =
-                                          _selectedIds.length;
-                                      ref.invalidate(
-                                        reviewQueueStreamProvider,
-                                      );
+                                      final approvedCount = _selectedIds.length;
+                                      ref.invalidate(reviewQueueStreamProvider);
                                       ref.invalidate(
                                         recentTransactionsStreamProvider,
                                       );
@@ -1327,11 +1326,7 @@ class _ActionPill extends StatelessWidget {
             const SizedBox(width: kSpacing4),
             Text(
               label,
-              style: context.ts(
-                11,
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
+              style: context.ts(11, fontWeight: FontWeight.w600, color: color),
             ),
           ],
         ),

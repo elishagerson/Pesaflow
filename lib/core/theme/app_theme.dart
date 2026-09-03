@@ -48,7 +48,9 @@ class AppTheme {
   // Finance semantic colors — desaturated, premium tones
   static const Color incomeColor = Color(0xFF16A34A); // Muted green, not neon
   static const Color expenseColor = Color(0xFFDC2626); // Softer red, not fire
-  static const Color transferColor = Color(0xFF4F46E5); // Deep indigo, not electric
+  static const Color transferColor = Color(
+    0xFF4F46E5,
+  ); // Deep indigo, not electric
 
   static const Color incomeColorDark = Color(0xFF4ADE80); // Softer light green
   static const Color expenseColorDark = Color(0xFFF87171); // Pastel red

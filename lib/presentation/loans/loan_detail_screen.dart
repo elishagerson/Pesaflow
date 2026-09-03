@@ -44,10 +44,7 @@ class LoanDetailScreen extends ConsumerWidget {
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: Column(
               children: [
-                const FloatingTopBar(
-                  title: 'Loan Details',
-                  forceWhite: true,
-                ),
+                const FloatingTopBar(title: 'Loan Details', forceWhite: true),
                 const Expanded(
                   child: EmptyState(
                     icon: PesaFlowIcons.loans,
@@ -90,8 +87,9 @@ class LoanDetailScreen extends ConsumerWidget {
                       child: Container(
                         padding: const EdgeInsets.all(kSpacing10),
                         decoration: BoxDecoration(
-                          color: context.appColors.expenseColor
-                              .withValues(alpha: 0.12),
+                          color: context.appColors.expenseColor.withValues(
+                            alpha: 0.12,
+                          ),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -210,10 +208,7 @@ class LoanDetailScreen extends ConsumerWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(
           children: [
-            const FloatingTopBar(
-              title: 'Loan Details',
-              forceWhite: true,
-            ),
+            const FloatingTopBar(title: 'Loan Details', forceWhite: true),
             const Expanded(
               child: Padding(
                 padding: EdgeInsets.all(kSpacing20),
@@ -233,10 +228,7 @@ class LoanDetailScreen extends ConsumerWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(
           children: [
-            const FloatingTopBar(
-              title: 'Loan Details',
-              forceWhite: true,
-            ),
+            const FloatingTopBar(title: 'Loan Details', forceWhite: true),
             Expanded(
               child: ErrorState(
                 title: 'Failed to Load Loan Details',

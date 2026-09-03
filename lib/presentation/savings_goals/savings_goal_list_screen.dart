@@ -380,7 +380,9 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.primary
                                           .withValues(alpha: 0.12),
-                                      borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusInput,
+                                      ),
                                     ),
                                     child: Text(
                                       'COMPLETED',

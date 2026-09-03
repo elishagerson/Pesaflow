@@ -55,8 +55,7 @@ class CategoryRepository {
 
     final loanPaymentCat = categories.where(
       (c) =>
-          c.name.trim().toLowerCase() ==
-          loanPaymentCategoryName.toLowerCase(),
+          c.name.trim().toLowerCase() == loanPaymentCategoryName.toLowerCase(),
     );
     if (loanPaymentCat.isNotEmpty) return loanPaymentCat.first;
 

@@ -390,7 +390,11 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
                     ),
                     Text(
                       CurrencyFormatter.formatCents(tx.amount),
-                      style: context.ts(12, color: txColor, fontWeight: FontWeight.bold),
+                      style: context.ts(
+                        12,
+                        color: txColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),

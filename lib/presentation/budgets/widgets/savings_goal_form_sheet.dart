@@ -203,7 +203,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.2,
                         ),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusPill,
+                        ),
                       ),
                     ),
                   ),
@@ -427,7 +429,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               hexToColor(_selectedColor).withValues(alpha: 0.8),
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
                           boxShadow: [
                             BoxShadow(
                               color: hexToColor(

@@ -474,10 +474,9 @@ final GoRouter appRouter = GoRouter(
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
                         final id = state.pathParameters['id'];
-                        if (id == null) return _heroSlidePage(const SizedBox.shrink());
-                        return _heroSlidePage(
-                          LoanDetailScreen(loanId: id),
-                        );
+                        if (id == null)
+                          return _heroSlidePage(const SizedBox.shrink());
+                        return _heroSlidePage(LoanDetailScreen(loanId: id));
                       },
                       routes: [
                         GoRoute(
@@ -512,11 +511,10 @@ final GoRouter appRouter = GoRouter(
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
                         final id = state.pathParameters['id'];
-                        if (id == null) return _heroSlidePage(const SizedBox.shrink());
+                        if (id == null)
+                          return _heroSlidePage(const SizedBox.shrink());
                         return _heroSlidePage(
-                          SavingsGoalDetailScreen(
-                            goalId: id,
-                          ),
+                          SavingsGoalDetailScreen(goalId: id),
                         );
                       },
                       routes: [

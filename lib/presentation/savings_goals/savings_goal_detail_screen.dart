@@ -75,7 +75,8 @@ class _SavingsGoalDetailScreenState
     if (!isDeposit && amountCents > goal.currentAmount) {
       CustomToast.show(
         context,
-        message: 'Cannot withdraw more than saved (${(goal.currentAmount ~/ 100).toString()} TZS).',
+        message:
+            'Cannot withdraw more than saved (${(goal.currentAmount ~/ 100).toString()} TZS).',
         type: ToastType.error,
       );
       return;
@@ -214,7 +215,9 @@ class _SavingsGoalDetailScreenState
                           height: 5,
                           decoration: BoxDecoration(
                             color: onSurface.withValues(alpha: 0.17),
-                            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusPill,
+                            ),
                           ),
                         ),
                         const SizedBox(height: kSpacing16),
@@ -297,7 +300,9 @@ class _SavingsGoalDetailScreenState
                                   Container(
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
-                                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusCard,
+                                      ),
                                       border: Border.all(
                                         color: onSurface.withValues(
                                           alpha: 0.07,
@@ -580,9 +585,9 @@ class _SavingsGoalDetailScreenState
                                             theme.colorScheme.onPrimary,
                                         elevation: 0,
                                         shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          AppTheme.radiusCard,
-                                        ),
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.radiusCard,
+                                          ),
                                         ),
                                         padding: const EdgeInsets.symmetric(
                                           vertical: kSpacing14,
@@ -773,12 +778,7 @@ class _SavingsGoalDetailScreenState
               children: [
                 // ── OLED Black Header ──
                 Container(
-                  padding: const EdgeInsets.fromLTRB(
-                    20,
-                    8,
-                    20,
-                    16,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -913,8 +913,8 @@ class _SavingsGoalDetailScreenState
                                                 .withValues(alpha: 0.1),
                                             valueColor:
                                                 AlwaysStoppedAnimation<Color>(
-                                              goalColor,
-                                            ),
+                                                  goalColor,
+                                                ),
                                             strokeCap: StrokeCap.round,
                                           ),
                                         ),
@@ -922,8 +922,9 @@ class _SavingsGoalDetailScreenState
                                           width: 80,
                                           height: 80,
                                           decoration: BoxDecoration(
-                                            color: goalColor
-                                                .withValues(alpha: 0.1),
+                                            color: goalColor.withValues(
+                                              alpha: 0.1,
+                                            ),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
@@ -950,7 +951,9 @@ class _SavingsGoalDetailScreenState
                                     'of ${CurrencyFormatter.formatCents(goal.targetAmount)}',
                                     style: context.ts(
                                       13,
-                                      color: Colors.white.withValues(alpha: 0.4),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.4,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -966,8 +969,10 @@ class _SavingsGoalDetailScreenState
                             _GoalStatCard(
                               label: 'Remaining',
                               value: CurrencyFormatter.formatCents(
-                                (goal.targetAmount - goal.currentAmount)
-                                    .clamp(0, goal.targetAmount),
+                                (goal.targetAmount - goal.currentAmount).clamp(
+                                  0,
+                                  goal.targetAmount,
+                                ),
                               ),
                               color: goalColor,
                               theme: theme,
@@ -1098,7 +1103,9 @@ class _SavingsGoalDetailScreenState
                                     'No contributions yet. Tap Deposit to get started.',
                                     style: context.ts(
                                       13,
-                                      color: Colors.white.withValues(alpha: 0.35),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.35,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -1127,12 +1134,15 @@ class _SavingsGoalDetailScreenState
                                           width: 36,
                                           height: 36,
                                           decoration: BoxDecoration(
-                                            color: (isPos
-                                                    ? context
-                                                        .appColors.incomeColor
-                                                    : context
-                                                        .appColors.expenseColor)
-                                                .withValues(alpha: 0.1),
+                                            color:
+                                                (isPos
+                                                        ? context
+                                                              .appColors
+                                                              .incomeColor
+                                                        : context
+                                                              .appColors
+                                                              .expenseColor)
+                                                    .withValues(alpha: 0.1),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
@@ -1143,7 +1153,8 @@ class _SavingsGoalDetailScreenState
                                             color: isPos
                                                 ? context.appColors.incomeColor
                                                 : context
-                                                    .appColors.expenseColor,
+                                                      .appColors
+                                                      .expenseColor,
                                           ),
                                         ),
                                         const SizedBox(width: kSpacing12),
@@ -1172,9 +1183,7 @@ class _SavingsGoalDetailScreenState
                                                   style: context.ts(
                                                     11,
                                                     color: Colors.white
-                                                        .withValues(
-                                                          alpha: 0.4,
-                                                        ),
+                                                        .withValues(alpha: 0.4),
                                                   ),
                                                   maxLines: 1,
                                                   overflow:
@@ -1195,9 +1204,11 @@ class _SavingsGoalDetailScreenState
                                                 fontWeight: FontWeight.w700,
                                                 color: isPos
                                                     ? context
-                                                        .appColors.incomeColor
+                                                          .appColors
+                                                          .incomeColor
                                                     : context
-                                                        .appColors.expenseColor,
+                                                          .appColors
+                                                          .expenseColor,
                                               ),
                                             ),
                                             const SizedBox(height: kSpacing2),
@@ -1205,8 +1216,9 @@ class _SavingsGoalDetailScreenState
                                               '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year}',
                                               style: context.ts(
                                                 10,
-                                                color: Colors.white
-                                                    .withValues(alpha: 0.3),
+                                                color: Colors.white.withValues(
+                                                  alpha: 0.3,
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -1229,16 +1241,17 @@ class _SavingsGoalDetailScreenState
                                                     TextButton(
                                                       onPressed: () =>
                                                           Navigator.of(
-                                                        context,
-                                                      ).pop(false),
-                                                      child:
-                                                          const Text('Cancel'),
+                                                            context,
+                                                          ).pop(false),
+                                                      child: const Text(
+                                                        'Cancel',
+                                                      ),
                                                     ),
                                                     TextButton(
                                                       onPressed: () =>
                                                           Navigator.of(
-                                                        context,
-                                                      ).pop(true),
+                                                            context,
+                                                          ).pop(true),
                                                       child: Text(
                                                         'Delete',
                                                         style: context.ts(
@@ -1332,8 +1345,7 @@ class _SavingsGoalDetailScreenState
                 child: ErrorState(
                   title: 'Failed to Load Goal Details',
                   message: err.toString(),
-                  onRetry: () =>
-                      ref.invalidate(savingsGoalsStreamProvider),
+                  onRetry: () => ref.invalidate(savingsGoalsStreamProvider),
                 ),
               ),
             ],
@@ -1370,10 +1382,7 @@ class _GoalStatCard extends StatelessWidget {
           children: [
             Text(
               label,
-              style: context.ts(
-                10,
-                color: Colors.white.withValues(alpha: 0.4),
-              ),
+              style: context.ts(10, color: Colors.white.withValues(alpha: 0.4)),
             ),
             const SizedBox(height: kSpacing4),
             FittedBox(

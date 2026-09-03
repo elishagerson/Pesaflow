@@ -140,7 +140,10 @@ class SmsProcessor {
         .add(_BufferedSms(sender: sender, body: body, timestamp: timestamp));
 
     _flushTimers[provider]?.cancel();
-    _flushTimers[provider] = Timer(_debounceWindow, () => _flushProvider(provider));
+    _flushTimers[provider] = Timer(
+      _debounceWindow,
+      () => _flushProvider(provider),
+    );
 
     return true;
   }

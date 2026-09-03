@@ -483,49 +483,52 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               borderRadius: AppTheme.radiusCard,
                               child: Column(
                                 children: [
-                                    _InteractiveInputRow(
-                                      controller: _nameController,
-                                      label: 'Budget Name',
-                                      hint: 'e.g. Monthly Food',
-                                      icon: PesaFlowIcons.label,
-                                      textCapitalization:
-                                          TextCapitalization.words,
-                                      validator: (v) {
-                                        if (v == null || v.trim().isEmpty) {
-                                          return 'Enter a budget name';
-                                        }
-                                        return null;
-                                      },
+                                  _InteractiveInputRow(
+                                    controller: _nameController,
+                                    label: 'Budget Name',
+                                    hint: 'e.g. Monthly Food',
+                                    icon: PesaFlowIcons.label,
+                                    textCapitalization:
+                                        TextCapitalization.words,
+                                    validator: (v) {
+                                      if (v == null || v.trim().isEmpty) {
+                                        return 'Enter a budget name';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(height: kSpacing16),
+                                  categoriesAsync.when(
+                                    data: (cats) =>
+                                        _buildCategorySelector(cats, theme),
+                                    loading: () =>
+                                        const LinearProgressIndicator(),
+                                    error: (e, _) => ErrorState(
+                                      title: 'Could not load categories',
+                                      message: '$e',
                                     ),
-                                    const SizedBox(height: kSpacing16),
-                                    categoriesAsync.when(
-                                      data: (cats) =>
-                                          _buildCategorySelector(cats, theme),
-                                      loading: () =>
-                                          const LinearProgressIndicator(),
-                                      error: (e, _) => ErrorState(
-                                        title: 'Could not load categories',
-                                        message: '$e',
-                                      ),
-                                    ),
-                                    const SizedBox(height: kSpacing8),
-                                    _InteractiveInputRow(
-                                      controller: _amountController,
-                                      label: 'Budget Amount (Tsh)',
-                                      hint: 'e.g. 300000',
-                                      icon: PesaFlowIcons.cash,
-                                      keyboardType: TextInputType.number,
-                                      validator: (v) {
-                                        if (v == null || v.isEmpty) return 'Enter a valid amount';
-                                        final val = CurrencyFormatter.parseToCents(v);
-                                        if (val <= 0) return 'Enter a valid amount';
-                                        return null;
-                                      },
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(fontWeight: FontWeight.w500),
-                                    ),
+                                  ),
+                                  const SizedBox(height: kSpacing8),
+                                  _InteractiveInputRow(
+                                    controller: _amountController,
+                                    label: 'Budget Amount (Tsh)',
+                                    hint: 'e.g. 300000',
+                                    icon: PesaFlowIcons.cash,
+                                    keyboardType: TextInputType.number,
+                                    validator: (v) {
+                                      if (v == null || v.isEmpty)
+                                        return 'Enter a valid amount';
+                                      final val =
+                                          CurrencyFormatter.parseToCents(v);
+                                      if (val <= 0)
+                                        return 'Enter a valid amount';
+                                      return null;
+                                    },
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(fontWeight: FontWeight.w500),
+                                  ),
                                 ],
                               ),
                             ),
@@ -698,7 +701,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         SizedBox(
                                           width: double.infinity,
                                           child: CupertinoSlidingSegmentedControl<String>(
-                                            groupValue: _rolloverType == 'none' ? 'all' : _rolloverType,
+                                            groupValue: _rolloverType == 'none'
+                                                ? 'all'
+                                                : _rolloverType,
                                             backgroundColor: theme
                                                 .colorScheme
                                                 .onSurface
@@ -860,8 +865,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                             ),
                                             style: theme.textTheme.titleMedium!
                                                 .copyWith(
-                                                   fontWeight: FontWeight.w700,
-                                                   color: thresholdColor,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: thresholdColor,
                                                 ),
                                             child: Text(
                                               '${(_threshold * 100).round()}%',

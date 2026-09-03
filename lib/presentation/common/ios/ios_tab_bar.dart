@@ -82,89 +82,91 @@ class IosTabBar extends StatelessWidget {
           borderRadius: 100,
           backgroundColor: navBgColor,
           elevation: CardElevation.medium,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: tabs.map((tab) {
-              final isSelected = tab.routeIndex == selectedIndex;
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: tabs.map((tab) {
+                final isSelected = tab.routeIndex == selectedIndex;
 
-              final targetFlex = minimized
-                  ? 200
-                  : (isSelected ? 350 : 162); // 35% and 16.25% * 4 = 65%
+                final targetFlex = minimized
+                    ? 200
+                    : (isSelected ? 350 : 162); // 35% and 16.25% * 4 = 65%
 
-              return TweenAnimationBuilder<double>(
-                tween: Tween<double>(end: targetFlex.toDouble()),
-                duration: const Duration(milliseconds: 350),
-                curve: Curves.fastOutSlowIn,
-                builder: (context, flex, child) {
-                  return Expanded(
-                    flex: flex.round(),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                      child: Semantics(
-                        label: tab.label,
-                        button: true,
-                        selected: isSelected,
-                        child: _ElasticTabButton(
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                            onDestinationSelected(tab.routeIndex);
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 350),
-                            curve: Curves.fastOutSlowIn,
-                            height: double.infinity,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? navFgColor.withValues(alpha: 0.15)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            alignment: Alignment.center,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              physics: const NeverScrollableScrollPhysics(),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  AnimatedSwitcher(
-                                    duration: const Duration(milliseconds: 350),
-                                    switchInCurve: Curves.easeOutCubic,
-                                    switchOutCurve: Curves.easeInCubic,
-                                    child: Icon(
-                                      isSelected ? tab.activeIcon : tab.icon,
-                                      key: ValueKey(
-                                        '${tab.routeIndex}_$isSelected',
+                return TweenAnimationBuilder<double>(
+                  tween: Tween<double>(end: targetFlex.toDouble()),
+                  duration: const Duration(milliseconds: 350),
+                  curve: Curves.fastOutSlowIn,
+                  builder: (context, flex, child) {
+                    return Expanded(
+                      flex: flex.round(),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                        child: Semantics(
+                          label: tab.label,
+                          button: true,
+                          selected: isSelected,
+                          child: _ElasticTabButton(
+                            onTap: () {
+                              HapticFeedback.lightImpact();
+                              onDestinationSelected(tab.routeIndex);
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 350),
+                              curve: Curves.fastOutSlowIn,
+                              height: double.infinity,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? navFgColor.withValues(alpha: 0.15)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              alignment: Alignment.center,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                physics: const NeverScrollableScrollPhysics(),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    AnimatedSwitcher(
+                                      duration: const Duration(
+                                        milliseconds: 350,
                                       ),
-                                      size: isSelected ? 26 : 22,
-                                      color: navFgColor,
-                                    ),
-                                  ),
-                                  if (isSelected && !minimized) ...[
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      tab.label,
-                                      style: context.ts(
-                                        15,
-                                        fontWeight: FontWeight.w600,
+                                      switchInCurve: Curves.easeOutCubic,
+                                      switchOutCurve: Curves.easeInCubic,
+                                      child: Icon(
+                                        isSelected ? tab.activeIcon : tab.icon,
+                                        key: ValueKey(
+                                          '${tab.routeIndex}_$isSelected',
+                                        ),
+                                        size: isSelected ? 26 : 22,
                                         color: navFgColor,
                                       ),
                                     ),
+                                    if (isSelected && !minimized) ...[
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        tab.label,
+                                        style: context.ts(
+                                          15,
+                                          fontWeight: FontWeight.w600,
+                                          color: navFgColor,
+                                        ),
+                                      ),
+                                    ],
                                   ],
-                                ],
-                              ),
-                            ), // SingleChildScrollView
-                          ), // AnimatedContainer
-                        ), // _ElasticTabButton
-                      ), // Semantics
-                    ), // Padding
-                  ); // Expanded
-                }, // builder
-              ); // TweenAnimationBuilder
-            }).toList(),
-          ),
+                                ),
+                              ), // SingleChildScrollView
+                            ), // AnimatedContainer
+                          ), // _ElasticTabButton
+                        ), // Semantics
+                      ), // Padding
+                    ); // Expanded
+                  }, // builder
+                ); // TweenAnimationBuilder
+              }).toList(),
+            ),
           ),
         ),
       ),

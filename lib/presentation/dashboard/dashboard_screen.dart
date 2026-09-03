@@ -261,7 +261,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.onSurface
                                           .withValues(alpha: 0.05),
-                                      borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusDialog,
+                                      ),
                                     ),
                                     child: Text(
                                       'Personal',
@@ -330,10 +332,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   color: context
                                                       .appColors
                                                       .expenseColor,
-                                                          borderRadius:
-                                                            BorderRadius.circular(
-                                                              AppTheme.radiusPill,
-                                                            ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        AppTheme.radiusPill,
+                                                      ),
                                                   border: Border.all(
                                                     color: theme
                                                         .colorScheme
@@ -449,9 +451,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 : theme
                                                       .colorScheme
                                                       .surfaceContainerHigh,
-                                    borderRadius: BorderRadius.circular(
-                                                        AppTheme.radiusPill,
-                                                      ),
+                                            borderRadius: BorderRadius.circular(
+                                              AppTheme.radiusPill,
+                                            ),
                                             border: Border.all(
                                               color: isSelected
                                                   ? theme.colorScheme.primary
@@ -493,22 +495,24 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               Text(
                                                 _formatCompact(account.balance),
                                                 style: AppTheme.getMonospaceStyle(
-                                                  theme.textTheme.labelSmall!.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: isSelected
-                                                        ? theme
-                                                                .colorScheme
-                                                                .primary
-                                                                .withValues(
-                                                                  alpha: 0.9,
-                                                                )
-                                                          : theme
-                                                                .colorScheme
-                                                                .onSurface
-                                                                .withValues(
-                                                                   alpha: 0.8,
-                                                                ),
-                                                    ),
+                                                  theme.textTheme.labelSmall!
+                                                      .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: isSelected
+                                                            ? theme
+                                                                  .colorScheme
+                                                                  .primary
+                                                                  .withValues(
+                                                                    alpha: 0.9,
+                                                                  )
+                                                            : theme
+                                                                  .colorScheme
+                                                                  .onSurface
+                                                                  .withValues(
+                                                                    alpha: 0.8,
+                                                                  ),
+                                                      ),
                                                 ),
                                               ),
                                             ],
@@ -601,52 +605,97 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               ),
                               Builder(
                                 builder: (context) {
-                                  final sorted = List.from(budgets)..sort((a, b) => b.percentage.compareTo(a.percentage));
+                                  final sorted = List.from(budgets)
+                                    ..sort(
+                                      (a, b) =>
+                                          b.percentage.compareTo(a.percentage),
+                                    );
                                   final tightest = sorted.first;
                                   if (tightest.percentage > 0.0) {
                                     return Padding(
-                                      padding: const EdgeInsets.fromLTRB(kSpacing20, kSpacing12, kSpacing20, 0),
+                                      padding: const EdgeInsets.fromLTRB(
+                                        kSpacing20,
+                                        kSpacing12,
+                                        kSpacing20,
+                                        0,
+                                      ),
                                       child: TactileSpringContainer(
                                         onTap: () => context.push('/budgets'),
                                         child: GlassCard(
-                                          padding: const EdgeInsets.symmetric(horizontal: kSpacing14, vertical: kSpacing12),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: kSpacing14,
+                                            vertical: kSpacing12,
+                                          ),
                                           child: Row(
                                             children: [
                                               Container(
-                                                padding: const EdgeInsets.all(kSpacing8),
+                                                padding: const EdgeInsets.all(
+                                                  kSpacing8,
+                                                ),
                                                 decoration: BoxDecoration(
-                                                  color: tightest.remaining < 0 
-                                                      ? theme.colorScheme.error.withValues(alpha: 0.1)
-                                                      : context.appColors.warningColor.withValues(alpha: 0.1),
+                                                  color: tightest.remaining < 0
+                                                      ? theme.colorScheme.error
+                                                            .withValues(
+                                                              alpha: 0.1,
+                                                            )
+                                                      : context
+                                                            .appColors
+                                                            .warningColor
+                                                            .withValues(
+                                                              alpha: 0.1,
+                                                            ),
                                                   shape: BoxShape.circle,
                                                 ),
                                                 child: Icon(
-                                                  tightest.remaining < 0 ? PesaFlowIcons.expense : PesaFlowIcons.info,
+                                                  tightest.remaining < 0
+                                                      ? PesaFlowIcons.expense
+                                                      : PesaFlowIcons.info,
                                                   size: 16,
-                                                  color: tightest.remaining < 0 ? theme.colorScheme.error : context.appColors.warningColor,
+                                                  color: tightest.remaining < 0
+                                                      ? theme.colorScheme.error
+                                                      : context
+                                                            .appColors
+                                                            .warningColor,
                                                 ),
                                               ),
                                               const SizedBox(width: kSpacing12),
                                               Expanded(
                                                 child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
                                                       tightest.budget.name,
                                                       style: context.ts(
                                                         13,
-                                                        fontWeight: FontWeight.w700,
-                                                        color: tightest.remaining < 0 ? theme.colorScheme.error : theme.colorScheme.onSurface,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color:
+                                                            tightest.remaining <
+                                                                0
+                                                            ? theme
+                                                                  .colorScheme
+                                                                  .error
+                                                            : theme
+                                                                  .colorScheme
+                                                                  .onSurface,
                                                       ),
                                                     ),
-                                                    const SizedBox(height: kSpacing2),
+                                                    const SizedBox(
+                                                      height: kSpacing2,
+                                                    ),
                                                     Text(
                                                       tightest.remaining < 0
                                                           ? 'Over budget by ${_formatCompact(tightest.remaining.abs())}'
                                                           : '${_formatCompact(tightest.remaining)} left to spend',
                                                       style: context.ts(
                                                         11,
-                                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                                        color: theme
+                                                            .colorScheme
+                                                            .onSurface
+                                                            .withValues(
+                                                              alpha: 0.5,
+                                                            ),
                                                       ),
                                                     ),
                                                   ],
@@ -655,7 +704,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               Icon(
                                                 PesaFlowIcons.chevronRight,
                                                 size: 14,
-                                                color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                                                color: theme
+                                                    .colorScheme
+                                                    .onSurface
+                                                    .withValues(alpha: 0.3),
                                               ),
                                             ],
                                           ),

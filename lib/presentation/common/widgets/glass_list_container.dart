@@ -9,10 +9,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 class GlassListContainer extends StatelessWidget {
   final Widget child;
 
-  const GlassListContainer({
-    super.key,
-    required this.child,
-  });
+  const GlassListContainer({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +19,7 @@ class GlassListContainer extends StatelessWidget {
       decoration: BoxDecoration(
         color: appColors.surfaceContainer,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: appColors.scaffoldLine,
-          width: 0.5,
-        ),
+        border: Border.all(color: appColors.scaffoldLine, width: 0.5),
       ),
       child: child,
     );

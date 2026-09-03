@@ -90,9 +90,7 @@ class BudgetListScreen extends ConsumerWidget {
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(
-                          alpha: 0.1,
-                        ),
+                        color: Colors.white.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -509,7 +507,9 @@ class BudgetListScreen extends ConsumerWidget {
                                   padding: const EdgeInsets.all(kSpacing10),
                                   decoration: BoxDecoration(
                                     color: catColor.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusInput,
+                                    ),
                                   ),
                                   child: Icon(
                                     getCategoryIcon(bp.category.icon),
@@ -615,7 +615,9 @@ class BudgetListScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: kSpacing16),
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusPill,
+                              ),
                               child: TweenAnimationBuilder<double>(
                                 duration: const Duration(milliseconds: 800),
                                 curve: Curves.easeOutCubic,
@@ -806,7 +808,9 @@ class BudgetListScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: kSpacing16),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusSmall,
+                        ),
                         child: LinearProgressIndicator(
                           value: overallPct,
                           backgroundColor: onSurface.withValues(alpha: 0.07),
@@ -992,10 +996,10 @@ class BudgetListScreen extends ConsumerWidget {
                                                         .withValues(
                                                           alpha: 0.12,
                                                         ),
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              AppTheme.radiusInput,
-                                                            ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          AppTheme.radiusInput,
+                                                        ),
                                                   ),
                                                   child: Text(
                                                     'COMPLETED',

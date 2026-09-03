@@ -240,7 +240,9 @@ class _RecurringTransactionListScreenState
                                               direction:
                                                   DismissDirection.horizontal,
                                               confirmDismiss: (direction) async {
-                                                if (direction == DismissDirection.endToStart) {
+                                                if (direction ==
+                                                    DismissDirection
+                                                        .endToStart) {
                                                   showMarkRecurringPaymentSheet(
                                                     context: context,
                                                     ref: ref,
@@ -252,13 +254,22 @@ class _RecurringTransactionListScreenState
                                                   );
                                                 } else {
                                                   await ref
-                                                      .read(recurringTransactionRepositoryProvider)
-                                                      .toggleStatus(sorted[i].id);
+                                                      .read(
+                                                        recurringTransactionRepositoryProvider,
+                                                      )
+                                                      .toggleStatus(
+                                                        sorted[i].id,
+                                                      );
                                                   if (context.mounted) {
-                                                    final newStatus = sorted[i].status == 'active' ? 'paused' : 'active';
+                                                    final newStatus =
+                                                        sorted[i].status ==
+                                                            'active'
+                                                        ? 'paused'
+                                                        : 'active';
                                                     CustomToast.show(
                                                       context,
-                                                      message: 'Recurring ${newStatus == 'paused' ? 'paused' : 'resumed'}',
+                                                      message:
+                                                          'Recurring ${newStatus == 'paused' ? 'paused' : 'resumed'}',
                                                       type: ToastType.info,
                                                     );
                                                   }
@@ -304,12 +315,15 @@ class _RecurringTransactionListScreenState
                                               ),
                                               secondaryBackground: Container(
                                                 decoration: BoxDecoration(
-                                                  color: sorted[i].status == 'active'
+                                                  color:
+                                                      sorted[i].status ==
+                                                          'active'
                                                       ? Colors.orange
-                                                      : context.appColors.incomeColor,
+                                                      : context
+                                                            .appColors
+                                                            .incomeColor,
                                                 ),
-                                                alignment:
-                                                    Alignment.centerLeft,
+                                                alignment: Alignment.centerLeft,
                                                 padding: const EdgeInsets.only(
                                                   left: kSpacing24,
                                                 ),
@@ -318,9 +332,11 @@ class _RecurringTransactionListScreenState
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Icon(
-                                                      sorted[i].status == 'active'
+                                                      sorted[i].status ==
+                                                              'active'
                                                           ? PesaFlowIcons.pause
-                                                          : PesaFlowIcons.success,
+                                                          : PesaFlowIcons
+                                                                .success,
                                                       color: Colors.white,
                                                       size: 24,
                                                     ),
@@ -328,7 +344,8 @@ class _RecurringTransactionListScreenState
                                                       height: kSpacing4,
                                                     ),
                                                     Text(
-                                                      sorted[i].status == 'active'
+                                                      sorted[i].status ==
+                                                              'active'
                                                           ? 'Pause'
                                                           : 'Resume',
                                                       style: theme
@@ -567,7 +584,9 @@ class _RecurringTransactionListScreenState
     final allCount = allRecurring.length;
     final expenseCount = allRecurring.where((r) => r.type == 'expense').length;
     final incomeCount = allRecurring.where((r) => r.type == 'income').length;
-    final transferCount = allRecurring.where((r) => r.type == 'transfer').length;
+    final transferCount = allRecurring
+        .where((r) => r.type == 'transfer')
+        .length;
 
     return Container(
       margin: const EdgeInsets.symmetric(
@@ -589,7 +608,12 @@ class _RecurringTransactionListScreenState
             _RecurringFilter.expenses,
           ),
           _filterTab(theme, 'Income', incomeCount, _RecurringFilter.income),
-          _filterTab(theme, 'Transfer', transferCount, _RecurringFilter.transfers),
+          _filterTab(
+            theme,
+            'Transfer',
+            transferCount,
+            _RecurringFilter.transfers,
+          ),
         ],
       ),
     );

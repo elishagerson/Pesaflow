@@ -259,8 +259,11 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                   validator: (v) {
-                                    if (v == null || v.isEmpty) return 'Enter a valid amount';
-                                    final val = CurrencyFormatter.parseToCents(v);
+                                    if (v == null || v.isEmpty)
+                                      return 'Enter a valid amount';
+                                    final val = CurrencyFormatter.parseToCents(
+                                      v,
+                                    );
                                     if (val <= 0) return 'Enter a valid amount';
                                     return null;
                                   },
@@ -352,18 +355,19 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                       );
                                     },
                                     child: AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 250),
+                                      duration: const Duration(
+                                        milliseconds: 250,
+                                      ),
                                       curve: Curves.easeInOut,
                                       width: isSelected ? 48 : 44,
                                       height: isSelected ? 48 : 44,
                                       decoration: BoxDecoration(
                                         color: isSelected
                                             ? themeCol.withValues(alpha: 0.15)
-                                            : theme.colorScheme
-                                                .surfaceContainerHigh,
-                                        borderRadius:
-                                            BorderRadius.circular(14),
+                                            : theme
+                                                  .colorScheme
+                                                  .surfaceContainerHigh,
+                                        borderRadius: BorderRadius.circular(14),
                                         border: Border.all(
                                           color: isSelected
                                               ? themeCol
@@ -375,8 +379,9 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         item['icon'],
                                         color: isSelected
                                             ? themeCol
-                                            : Colors.white
-                                                .withValues(alpha: 0.6),
+                                            : Colors.white.withValues(
+                                                alpha: 0.6,
+                                              ),
                                         size: 22,
                                       ),
                                     ),
@@ -401,11 +406,14 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                   gradient: LinearGradient(
                                     colors: [
                                       hexToColor(_selectedColor),
-                                      hexToColor(_selectedColor)
-                                          .withValues(alpha: 0.8),
+                                      hexToColor(
+                                        _selectedColor,
+                                      ).withValues(alpha: 0.8),
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusPill,
+                                  ),
                                   boxShadow: [
                                     BoxShadow(
                                       color: hexToColor(
@@ -431,9 +439,9 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                             : 'Create Savings Goal',
                                         style: theme.textTheme.titleMedium!
                                             .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
                                       ),
                               ),
                             ),

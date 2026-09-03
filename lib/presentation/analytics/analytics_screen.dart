@@ -231,7 +231,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 margin: const EdgeInsets.fromLTRB(16, 10, 16, 6),
                 padding: const EdgeInsets.all(kSpacing4),
                 decoration: BoxDecoration(
-                  color: appColors.surfaceContainerHighest.withValues(alpha: 0.6),
+                  color: appColors.surfaceContainerHighest.withValues(
+                    alpha: 0.6,
+                  ),
                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                 ),
                 child: TabBar(
@@ -448,10 +450,8 @@ class _OverviewTab extends ConsumerWidget {
               height: 160,
               child: Center(child: CircularProgressIndicator()),
             ),
-            error: (e, _) => ErrorState(
-              title: 'Could not load data',
-              message: '$e',
-            ),
+            error: (e, _) =>
+                ErrorState(title: 'Could not load data', message: '$e'),
           ),
           const SizedBox(height: kSpacing24),
           const MonthlyOverviewSection(),
@@ -965,10 +965,8 @@ class _OverviewTab extends ConsumerWidget {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                   ),
-                  error: (e, _) => ErrorState(
-                    title: 'Could not load data',
-                    message: '$e',
-                  ),
+                  error: (e, _) =>
+                      ErrorState(title: 'Could not load data', message: '$e'),
                 ),
               ],
             ),
@@ -1329,10 +1327,8 @@ class _TrendsTab extends ConsumerWidget {
               height: 200,
               child: Center(child: CircularProgressIndicator()),
             ),
-            error: (e, _) => ErrorState(
-              title: 'Could not load data',
-              message: '$e',
-            ),
+            error: (e, _) =>
+                ErrorState(title: 'Could not load data', message: '$e'),
           ),
           const SizedBox(height: kSpacing20),
           StaggeredFadeSlide(

@@ -93,7 +93,12 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase>
     }
 
     final nextDue = tx.endDate != null
-        ? _advanceDateWithEnd(tx.nextDate, tx.frequency, tx.intervalValue, tx.endDate!)
+        ? _advanceDateWithEnd(
+            tx.nextDate,
+            tx.frequency,
+            tx.intervalValue,
+            tx.endDate!,
+          )
         : _advanceDate(tx.nextDate, tx.frequency, tx.intervalValue);
 
     final newStatus = nextDue == null ? 'cancelled' : tx.status;
@@ -115,9 +120,9 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase>
     final tx = await getById(id);
     if (tx == null) return;
     final newStatus = tx.status == 'active' ? 'paused' : 'active';
-    await update(recurringTransactions).replace(
-      tx.copyWith(status: newStatus, updatedAt: DateTime.now()),
-    );
+    await update(
+      recurringTransactions,
+    ).replace(tx.copyWith(status: newStatus, updatedAt: DateTime.now()));
   }
 
   DateTime _advanceDate(DateTime from, String frequency, int interval) {

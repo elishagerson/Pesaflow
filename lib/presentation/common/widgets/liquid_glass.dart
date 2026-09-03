@@ -124,7 +124,8 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
     };
 
     final sigma = widget.blurSigma ?? presetBlur;
-    final baseTint = widget.tintColor ??
+    final baseTint =
+        widget.tintColor ??
         (isDark
             ? Color.fromRGBO(255, 255, 255, tintDark)
             : const Color(0xFFFAFAFE).withValues(alpha: tintLight));
@@ -159,7 +160,9 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
                         sigmaY: sigma * k,
                         tileMode: TileMode.mirror,
                       ),
-                      child: Container(color: baseTint.withValues(alpha: baseTint.a * k)),
+                      child: Container(
+                        color: baseTint.withValues(alpha: baseTint.a * k),
+                      ),
                     ),
                   ),
                 ),
@@ -248,10 +251,14 @@ class _LiquidGlassPainter extends CustomPainter {
     final rng = math.Random(grainSeed);
     final dot = Paint()..strokeWidth = 0.8;
     for (var i = 0; i < count; i++) {
-      final p = Offset(rng.nextDouble() * size.width, rng.nextDouble() * size.height);
+      final p = Offset(
+        rng.nextDouble() * size.width,
+        rng.nextDouble() * size.height,
+      );
       final light = rng.nextBool();
-      dot.color = (light ? Colors.white : Colors.black)
-          .withValues(alpha: (light ? 0.020 : 0.014) * k);
+      dot.color = (light ? Colors.white : Colors.black).withValues(
+        alpha: (light ? 0.020 : 0.014) * k,
+      );
       canvas.drawCircle(p, 0.6, dot);
     }
   }
@@ -335,11 +342,7 @@ class _LiquidGlassPainter extends CustomPainter {
     }
 
     catchlight(Offset(cornerR, cornerR), math.pi, 0.60);
-    catchlight(
-      Offset(rect.width - cornerR, rect.height - cornerR),
-      0,
-      0.32,
-    );
+    catchlight(Offset(rect.width - cornerR, rect.height - cornerR), 0, 0.32);
   }
 
   /// Cursor-tracking specular pool (macOS/visionOS desktop feel).

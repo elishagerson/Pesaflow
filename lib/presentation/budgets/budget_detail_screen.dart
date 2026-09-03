@@ -25,6 +25,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+
 /// Provider for loading a specific budget's full data.
 final budgetDetailProvider = FutureProvider.family<BudgetWithProgress?, String>(
   (ref, budgetId) async {
@@ -113,12 +114,7 @@ class BudgetDetailScreen extends ConsumerWidget {
             return Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.fromLTRB(
-                    20,
-                    8,
-                    20,
-                    16,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -252,7 +248,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                                           ? theme.colorScheme.error
                                           : catColor)
                                       .withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusPill,
+                              ),
                             ),
                             child: Text(
                               status.isOverBudget
@@ -349,7 +347,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: kSpacing16),
-                        
+
                         // ── 1.5. SAFE TO SPEND TODAY ──
                         StaggeredFadeSlide(
                           index: 1,
@@ -360,36 +358,53 @@ class BudgetDetailScreen extends ConsumerWidget {
                                 Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: (status.remaining <= 0 ? theme.colorScheme.error : context.appColors.incomeColor).withValues(alpha: 0.15),
+                                    color:
+                                        (status.remaining <= 0
+                                                ? theme.colorScheme.error
+                                                : context.appColors.incomeColor)
+                                            .withValues(alpha: 0.15),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
-                                    status.remaining <= 0 ? PesaFlowIcons.expense : PesaFlowIcons.income,
+                                    status.remaining <= 0
+                                        ? PesaFlowIcons.expense
+                                        : PesaFlowIcons.income,
                                     size: 16,
-                                    color: status.remaining <= 0 ? theme.colorScheme.error : context.appColors.incomeColor,
+                                    color: status.remaining <= 0
+                                        ? theme.colorScheme.error
+                                        : context.appColors.incomeColor,
                                   ),
                                 ),
                                 const SizedBox(width: kSpacing12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Safe to spend today',
                                         style: context.ts(
                                           12,
-                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                          color: theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.6),
                                         ),
                                       ),
                                       const SizedBox(height: kSpacing2),
                                       Text(
                                         status.remaining <= 0
                                             ? 'Tsh 0'
-                                            : CurrencyFormatter.formatCents(status.remaining ~/ (status.daysLeft > 0 ? status.daysLeft : 1)),
+                                            : CurrencyFormatter.formatCents(
+                                                status.remaining ~/
+                                                    (status.daysLeft > 0
+                                                        ? status.daysLeft
+                                                        : 1),
+                                              ),
                                         style: context.ts(
                                           16,
                                           fontWeight: FontWeight.w700,
-                                          color: status.remaining <= 0 ? theme.colorScheme.error : theme.colorScheme.onSurface,
+                                          color: status.remaining <= 0
+                                              ? theme.colorScheme.error
+                                              : theme.colorScheme.onSurface,
                                         ),
                                       ),
                                     ],
@@ -398,7 +413,11 @@ class BudgetDetailScreen extends ConsumerWidget {
                                 if (status.remaining > 0)
                                   Text(
                                     '${status.daysLeft} days left',
-                                    style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
+                                    style: context.ts(
+                                      11,
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.4),
+                                    ),
                                   ),
                               ],
                             ),
@@ -773,10 +792,7 @@ class BudgetDetailScreen extends ConsumerWidget {
             backgroundColor: theme.scaffoldBackgroundColor,
             body: Column(
               children: [
-                const FloatingTopBar(
-                  title: 'Budget Details',
-                  forceWhite: true,
-                ),
+                const FloatingTopBar(title: 'Budget Details', forceWhite: true),
                 const Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(kSpacing20),
@@ -796,10 +812,7 @@ class BudgetDetailScreen extends ConsumerWidget {
             backgroundColor: theme.scaffoldBackgroundColor,
             body: Column(
               children: [
-                const FloatingTopBar(
-                  title: 'Budget Details',
-                  forceWhite: true,
-                ),
+                const FloatingTopBar(title: 'Budget Details', forceWhite: true),
                 Expanded(
                   child: ErrorState(
                     title: 'Failed to Load Budget details',
@@ -850,13 +863,17 @@ class BudgetDetailScreen extends ConsumerWidget {
               Icon(
                 diff > 0 ? PesaFlowIcons.income : PesaFlowIcons.expense,
                 size: 14,
-                color: diff > 0 ? theme.extension<AppColorsTheme>()!.warningColor : theme.colorScheme.primary,
+                color: diff > 0
+                    ? theme.extension<AppColorsTheme>()!.warningColor
+                    : theme.colorScheme.primary,
               ),
               const SizedBox(width: kSpacing4),
               Text(
                 '${diff.abs().round()}% ${diff > 0 ? 'higher' : 'lower'} than last period',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: diff > 0 ? theme.extension<AppColorsTheme>()!.warningColor : theme.colorScheme.primary,
+                  color: diff > 0
+                      ? theme.extension<AppColorsTheme>()!.warningColor
+                      : theme.colorScheme.primary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -894,9 +911,7 @@ class _StatCard extends StatelessWidget {
         children: [
           Text(
             label,
-            style: Theme.of(
-              context,
-            ).textTheme.labelSmall!.copyWith(
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(
               color: context.appColors.textMedium,
             ),
           ),

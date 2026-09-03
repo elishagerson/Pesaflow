@@ -158,7 +158,8 @@ class _GlassCardState extends State<GlassCard>
                             colors: [
                               Colors.white.withValues(alpha: 0.0),
                               Colors.white.withValues(
-                                  alpha: isDark ? 0.1 : 0.3),
+                                alpha: isDark ? 0.1 : 0.3,
+                              ),
                               Colors.white.withValues(alpha: 0.0),
                             ],
                             stops: const [0.3, 0.5, 0.7],

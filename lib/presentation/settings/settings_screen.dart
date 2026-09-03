@@ -1276,7 +1276,8 @@ class SettingsScreen extends ConsumerWidget {
                       subtitle: const Text(
                         'Automatically create 50/30/20 budgets when income is logged',
                       ),
-                      value: ref.watch(autoBudgetEnabledProvider).value ?? false,
+                      value:
+                          ref.watch(autoBudgetEnabledProvider).value ?? false,
                       onChanged: (val) async {
                         HapticFeedback.lightImpact();
                         await ref

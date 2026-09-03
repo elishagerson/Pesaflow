@@ -162,7 +162,9 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                               padding: const EdgeInsets.all(kSpacing6),
                               decoration: BoxDecoration(
                                 color: color.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusSmall,
+                                ),
                               ),
                               child: PulseIcon(
                                 icon: widget.data.icon,

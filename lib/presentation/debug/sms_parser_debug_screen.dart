@@ -11,7 +11,8 @@ class SmsParserDebugScreen extends ConsumerStatefulWidget {
   const SmsParserDebugScreen({super.key});
 
   @override
-  ConsumerState<SmsParserDebugScreen> createState() => _SmsParserDebugScreenState();
+  ConsumerState<SmsParserDebugScreen> createState() =>
+      _SmsParserDebugScreenState();
 }
 
 class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
@@ -35,7 +36,9 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
 
     final sender = _senderController.text.trim();
     final body = _bodyController.text.trim();
-    final timestampMs = int.tryParse(_timestampController.text.trim()) ?? DateTime.now().millisecondsSinceEpoch;
+    final timestampMs =
+        int.tryParse(_timestampController.text.trim()) ??
+        DateTime.now().millisecondsSinceEpoch;
     final timestamp = DateTime.fromMillisecondsSinceEpoch(timestampMs);
 
     final buffer = StringBuffer();
@@ -73,7 +76,9 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
     log('\n═══ STEP 3: SmsClassifier (fallback gate) ═══');
     final classification = SmsClassifier.classify(body);
     log('Label: ${classification.label}');
-    log('Confidence: ${classification.transactionConfidence.toStringAsFixed(3)}');
+    log(
+      'Confidence: ${classification.transactionConfidence.toStringAsFixed(3)}',
+    );
     log('Reasons: ${classification.reasons.join('; ')}');
     if (!classification.isTransaction) {
       log('→ STOPPED: Classifier rejected as ${classification.label}');
@@ -103,7 +108,9 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
     log('  Counterparty: ${sms.senderOrRecipient}');
     log('  Reference: ${sms.reference}');
     log('  Provider: ${sms.provider}');
-    log('  Balance: ${sms.balanceAfter != null ? CurrencyFormatter.formatCents(sms.balanceAfter!) : 'N/A'}');
+    log(
+      '  Balance: ${sms.balanceAfter != null ? CurrencyFormatter.formatCents(sms.balanceAfter!) : 'N/A'}',
+    );
     log('  Timestamp: ${sms.timestamp}');
   }
 
@@ -125,7 +132,9 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
           children: [
             TextField(
               controller: _senderController,
-              decoration: const InputDecoration(labelText: 'Sender (shortcode)'),
+              decoration: const InputDecoration(
+                labelText: 'Sender (shortcode)',
+              ),
             ),
             const SizedBox(height: 12),
             TextField(
@@ -136,7 +145,9 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
             const SizedBox(height: 12),
             TextField(
               controller: _timestampController,
-              decoration: const InputDecoration(labelText: 'Timestamp (ms since epoch)'),
+              decoration: const InputDecoration(
+                labelText: 'Timestamp (ms since epoch)',
+              ),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),
@@ -167,10 +178,7 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
                   child: SelectableText(
                     _output,
                     style: AppTheme.getMonospaceStyle(
-                      const TextStyle(
-                        fontSize: 12,
-                        color: Colors.greenAccent,
-                      ),
+                      const TextStyle(fontSize: 12, color: Colors.greenAccent),
                     ),
                   ),
                 ),
@@ -180,22 +188,46 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
             Wrap(
               spacing: 8,
               children: [
-                _presetButton('Selcom Income', 'SELCOM',
-                    '0517EQMYW Confirmed. You have received TZS 473,000.00 from ELISHA NDUNDULU - Mixx by Yas (255675259341) on 2026-05-17 17:57:46. Updated balance is TZS 477,319.85.'),
-                _presetButton('Selcom Expense', 'SELCOM',
-                    '0517EQN0Z Accepted. You have sent TZS 477,000.00 to PARTS AND COMPONENTS MBEYA - 19938686 on 2026-05-17 17:58:34. Charge is FREE. Updated balance is TZS 319.85.'),
-                _presetButton('M-Pesa Sw Income', 'M-PESA',
-                    'Pesa zimewekwa Tsh 50,000.00 na John Doe tarehe 15/5/2026. Rej: P65AB. Salio: Tsh 250,000.00'),
-                _presetButton('M-Pesa Eng Income', 'M-PESA',
-                    'Z10DN636 Confirmed.You have received Tsh50,000 from FREDRICK KIMARO on 27/1/14 at 1:19 PM New M-PESA balance is Tsh214,676'),
-                _presetButton('Airtel Sw Sent', 'AIRTEL',
-                    'Umetuma Tsh 20,000.00 kwa 0765432198. Rej: AT654321. Salio: Tsh 280,000.00'),
-                _presetButton('Tigo Mixx Eng Sent', 'MIXX',
-                    'ABC123DF Confirmed. Tsh 150,000.00 sent to TIPS-Mixx By Yas for account 255763559341 on 3/6/26. Balance is Tsh2,561.00'),
-                _presetButton('NMB New Format', 'NMB',
-                    'Kumb: GWX102246282556 Imethibitishwa.\nKiasi cha TSH334,500 kimetumwa kutoka katika akaunti inayoishia na 1222 kwenda ELISHA NDUNDULU 255763559341.\nTarehe:10-06-2026 20:11:13. Teleza Kidigitali na Mshiko Fasta'),
-                _presetButton('Promo (should reject)', 'SELCOM',
-                    'Get 100% bonus on your next recharge! Dial *150*00# to win TSH 1,000,000. Visit www.selcom.co.tz'),
+                _presetButton(
+                  'Selcom Income',
+                  'SELCOM',
+                  '0517EQMYW Confirmed. You have received TZS 473,000.00 from ELISHA NDUNDULU - Mixx by Yas (255675259341) on 2026-05-17 17:57:46. Updated balance is TZS 477,319.85.',
+                ),
+                _presetButton(
+                  'Selcom Expense',
+                  'SELCOM',
+                  '0517EQN0Z Accepted. You have sent TZS 477,000.00 to PARTS AND COMPONENTS MBEYA - 19938686 on 2026-05-17 17:58:34. Charge is FREE. Updated balance is TZS 319.85.',
+                ),
+                _presetButton(
+                  'M-Pesa Sw Income',
+                  'M-PESA',
+                  'Pesa zimewekwa Tsh 50,000.00 na John Doe tarehe 15/5/2026. Rej: P65AB. Salio: Tsh 250,000.00',
+                ),
+                _presetButton(
+                  'M-Pesa Eng Income',
+                  'M-PESA',
+                  'Z10DN636 Confirmed.You have received Tsh50,000 from FREDRICK KIMARO on 27/1/14 at 1:19 PM New M-PESA balance is Tsh214,676',
+                ),
+                _presetButton(
+                  'Airtel Sw Sent',
+                  'AIRTEL',
+                  'Umetuma Tsh 20,000.00 kwa 0765432198. Rej: AT654321. Salio: Tsh 280,000.00',
+                ),
+                _presetButton(
+                  'Tigo Mixx Eng Sent',
+                  'MIXX',
+                  'ABC123DF Confirmed. Tsh 150,000.00 sent to TIPS-Mixx By Yas for account 255763559341 on 3/6/26. Balance is Tsh2,561.00',
+                ),
+                _presetButton(
+                  'NMB New Format',
+                  'NMB',
+                  'Kumb: GWX102246282556 Imethibitishwa.\nKiasi cha TSH334,500 kimetumwa kutoka katika akaunti inayoishia na 1222 kwenda ELISHA NDUNDULU 255763559341.\nTarehe:10-06-2026 20:11:13. Teleza Kidigitali na Mshiko Fasta',
+                ),
+                _presetButton(
+                  'Promo (should reject)',
+                  'SELCOM',
+                  'Get 100% bonus on your next recharge! Dial *150*00# to win TSH 1,000,000. Visit www.selcom.co.tz',
+                ),
               ],
             ),
           ],
@@ -209,7 +241,8 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
       onPressed: () {
         _senderController.text = sender;
         _bodyController.text = body;
-        _timestampController.text = DateTime.now().millisecondsSinceEpoch.toString();
+        _timestampController.text = DateTime.now().millisecondsSinceEpoch
+            .toString();
       },
       child: Text(label),
     );
@@ -219,8 +252,8 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
 // Extension to make it easy to push from anywhere
 extension SmsParserDebugExtension on BuildContext {
   void openSmsParserDebug() {
-    Navigator.of(this).push(
-      MaterialPageRoute(builder: (_) => const SmsParserDebugScreen()),
-    );
+    Navigator.of(
+      this,
+    ).push(MaterialPageRoute(builder: (_) => const SmsParserDebugScreen()));
   }
 }
