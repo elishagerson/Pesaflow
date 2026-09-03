@@ -20,7 +20,11 @@ class TransactionService {
   final BudgetAlertService? _budgetAlertService;
   final AutoBudgetService? _autoBudgetService;
 
-  TransactionService(this._repo, this._budgetAlertService, this._autoBudgetService);
+  TransactionService(
+    this._repo,
+    this._budgetAlertService,
+    this._autoBudgetService,
+  );
 
   Stream<List<dynamic>> watchFilteredTransactions({
     String? accountId,

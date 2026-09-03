@@ -254,7 +254,9 @@ class TransactionDetailScreen extends ConsumerWidget {
                           ),
                           decoration: BoxDecoration(
                             color: amountColor.withValues(alpha: 0.115),
-                            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusPill,
+                            ),
                             border: Border.all(
                               color: amountColor.withValues(alpha: 0.25),
                               width: 1,
@@ -385,7 +387,9 @@ class TransactionDetailScreen extends ConsumerWidget {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {},
-                              borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusSmall,
+                              ),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 10,
@@ -395,7 +399,9 @@ class TransactionDetailScreen extends ConsumerWidget {
                                   color: theme.colorScheme.primary.withValues(
                                     alpha: 0.05,
                                   ),
-                                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusSmall,
+                                  ),
                                   border: Border.all(
                                     color: theme.colorScheme.primary.withValues(
                                       alpha: 0.15,

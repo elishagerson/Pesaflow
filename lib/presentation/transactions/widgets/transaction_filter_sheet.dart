@@ -175,15 +175,17 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                           child: TextField(
                             controller: minCtl,
                             keyboardType: TextInputType.number,
-                            decoration: context.inputDecoration(
-                              labelText: 'Min',
-                              hintText: '0',
-                              prefixText: 'TSh ',
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 10,
-                              ),
-                            ).copyWith(isDense: true),
+                            decoration: context
+                                .inputDecoration(
+                                  labelText: 'Min',
+                                  hintText: '0',
+                                  prefixText: 'TSh ',
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 10,
+                                  ),
+                                )
+                                .copyWith(isDense: true),
                           ),
                         ),
                         Padding(
@@ -202,15 +204,17 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                           child: TextField(
                             controller: maxCtl,
                             keyboardType: TextInputType.number,
-                            decoration: context.inputDecoration(
-                              labelText: 'Max',
-                              hintText: '1000000',
-                              prefixText: 'TSh ',
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 10,
-                              ),
-                            ).copyWith(isDense: true),
+                            decoration: context
+                                .inputDecoration(
+                                  labelText: 'Max',
+                                  hintText: '1000000',
+                                  prefixText: 'TSh ',
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 10,
+                                  ),
+                                )
+                                .copyWith(isDense: true),
                           ),
                         ),
                       ],

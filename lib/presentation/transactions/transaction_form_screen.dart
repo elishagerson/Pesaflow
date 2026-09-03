@@ -307,8 +307,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     List<Account> accounts, {
     required bool isDestination,
   }) {
-    final currentSelectedId =
-        isDestination ? _selectedDestinationAccountId : _selectedAccountId;
+    final currentSelectedId = isDestination
+        ? _selectedDestinationAccountId
+        : _selectedAccountId;
     final title = isDestination ? 'To Account' : 'From Account';
 
     showSpringSheet(
@@ -328,7 +329,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               grainSeed: isDestination ? 0xE7F7 : 0xE7F6,
               child: Container(
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.75),
+                  color: theme.colorScheme.surfaceContainerHigh.withValues(
+                    alpha: 0.75,
+                  ),
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(24),
                   ),
@@ -344,7 +347,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.17,
                         ),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusPill,
+                        ),
                       ),
                     ),
                     const SizedBox(height: kSpacing16),
@@ -392,7 +397,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             final account = accounts[index];
                             final isSelected = account.id == currentSelectedId;
                             final isDisabled =
-                                isDestination && account.id == _selectedAccountId;
+                                isDestination &&
+                                account.id == _selectedAccountId;
                             return Padding(
                               padding: const EdgeInsets.only(bottom: kSpacing8),
                               child: GestureDetector(
@@ -475,8 +481,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                     ? FontWeight.w700
                                                     : FontWeight.w500,
                                                 color: isDisabled
-                                                    ? theme.colorScheme.onSurface
-                                                          .withValues(alpha: 0.25)
+                                                    ? theme
+                                                          .colorScheme
+                                                          .onSurface
+                                                          .withValues(
+                                                            alpha: 0.25,
+                                                          )
                                                     : isSelected
                                                     ? theme.colorScheme.primary
                                                     : onSurface.withValues(
@@ -490,7 +500,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                               style: theme.textTheme.bodySmall
                                                   ?.copyWith(
                                                     color: isDisabled
-                                                        ? theme.colorScheme
+                                                        ? theme
+                                                              .colorScheme
                                                               .onSurface
                                                               .withValues(
                                                                 alpha: 0.12,
@@ -577,9 +588,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             style: context.ts(
               13,
               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-              color: isSelected
-                  ? activeColor
-                  : context.appColors.textMedium,
+              color: isSelected ? activeColor : context.appColors.textMedium,
             ),
             child: Text(title),
           ),
@@ -739,10 +748,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               },
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(
-                child: ErrorState(
-                  title: 'Could not load data',
-                  message: '$e',
-                ),
+                child: ErrorState(title: 'Could not load data', message: '$e'),
               ),
             ),
           ],
@@ -939,317 +945,334 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       },
       child: Scaffold(
         body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-            FloatingTopBar(
-              title: _isEditMode ? 'Edit Transaction' : 'New Transaction',
-              forceWhite: true,
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-            ),
-            // TOP HALF: Display & Context
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // Premium Segmented Control
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: kSpacing32),
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHigh.withValues(
-                        alpha: 0.4,
-                      ),
-                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                    ),
-                    padding: const EdgeInsets.all(kSpacing4),
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        final tabWidth = constraints.maxWidth / 3;
-                        final selectedIndex = _transactionType == 'Expense'
-                            ? 0
-                            : (_transactionType == 'Income' ? 1 : 2);
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                FloatingTopBar(
+                  title: _isEditMode ? 'Edit Transaction' : 'New Transaction',
+                  forceWhite: true,
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                ),
+                // TOP HALF: Display & Context
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // Premium Segmented Control
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: kSpacing32,
+                        ),
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.surfaceContainerHigh
+                              .withValues(alpha: 0.4),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(kSpacing4),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            final tabWidth = constraints.maxWidth / 3;
+                            final selectedIndex = _transactionType == 'Expense'
+                                ? 0
+                                : (_transactionType == 'Income' ? 1 : 2);
 
-                        return Stack(
-                          children: [
-                            AnimatedPositioned(
-                              duration: const Duration(milliseconds: 250),
-                              curve: Curves.easeOutCubic,
-                              left: selectedIndex * tabWidth,
-                              top: 0,
-                              bottom: 0,
-                              width: tabWidth,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.surfaceContainerHigh,
-                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(
-                                        alpha: 0.08,
+                            return Stack(
+                              children: [
+                                AnimatedPositioned(
+                                  duration: const Duration(milliseconds: 250),
+                                  curve: Curves.easeOutCubic,
+                                  left: selectedIndex * tabWidth,
+                                  top: 0,
+                                  bottom: 0,
+                                  width: tabWidth,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: theme
+                                          .colorScheme
+                                          .surfaceContainerHigh,
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusPill,
                                       ),
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(
+                                            alpha: 0.08,
+                                          ),
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 1),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    _buildTab(
+                                      'Expense',
+                                      context.appColors.expenseColor,
+                                      theme,
+                                    ),
+                                    _buildTab(
+                                      'Income',
+                                      context.appColors.incomeColor,
+                                      theme,
+                                    ),
+                                    _buildTab(
+                                      'Transfer',
+                                      context.appColors.transferColor,
+                                      theme,
                                     ),
                                   ],
                                 ),
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                _buildTab(
-                                  'Expense',
-                                  context.appColors.expenseColor,
-                                  theme,
-                                ),
-                                _buildTab(
-                                  'Income',
-                                  context.appColors.incomeColor,
-                                  theme,
-                                ),
-                                _buildTab(
-                                  'Transfer',
-                                  context.appColors.transferColor,
-                                  theme,
-                                ),
                               ],
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
+                            );
+                          },
+                        ),
+                      ),
 
-                  const Spacer(),
+                      const Spacer(),
 
-                  // Massive Hero Amount
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
-                    child: FormField<String>(
-                      validator: (_) {
-                        final cents = CurrencyFormatter.parseToCents(_amountController.text);
-                        if (cents <= 0) return 'Enter a valid amount';
-                        return null;
-                      },
-                      builder: (state) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                amt,
-                                style: context.ts(
-                                  96,
-                                  fontWeight: FontWeight.w900,
-                                  color: amtColor,
-                                  letterSpacing: -2,
-                                ),
-                              ),
-                            ),
-                            if (state.hasError)
-                              Padding(
-                                padding: const EdgeInsets.only(top: kSpacing8),
-                                child: Text(
-                                  state.errorText!,
-                                  style: context.ts(
-                                    14,
-                                    color: theme.colorScheme.error,
-                                    fontWeight: FontWeight.w500,
+                      // Massive Hero Amount
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing24,
+                        ),
+                        child: FormField<String>(
+                          validator: (_) {
+                            final cents = CurrencyFormatter.parseToCents(
+                              _amountController.text,
+                            );
+                            if (cents <= 0) return 'Enter a valid amount';
+                            return null;
+                          },
+                          builder: (state) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    amt,
+                                    style: context.ts(
+                                      96,
+                                      fontWeight: FontWeight.w900,
+                                      color: amtColor,
+                                      letterSpacing: -2,
+                                    ),
                                   ),
                                 ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-
-                  const SizedBox(height: kSpacing16),
-
-                  // Category Pill
-                  TactileSpringContainer(
-                    onTap: () =>
-                        _showCategorySheet(context, theme, categoriesAsync),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: kSpacing20,
-                        vertical: kSpacing10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceContainerHigh,
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.08,
-                          ),
-                          width: 0.6,
+                                if (state.hasError)
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: kSpacing8,
+                                    ),
+                                    child: Text(
+                                      state.errorText!,
+                                      style: context.ts(
+                                        14,
+                                        color: theme.colorScheme.error,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
                         ),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (selectedCatObj != null) ...[
-                            Icon(
-                              getCategoryIcon(selectedCatObj.icon),
-                              color: hexToColor(selectedCatObj.color),
-                              size: 18,
-                            ),
-                            const SizedBox(width: kSpacing8),
-                            Text(
-                              selectedCatObj.name,
-                              style: context.ts(
-                                14,
-                                fontWeight: FontWeight.w600,
+
+                      const SizedBox(height: kSpacing16),
+
+                      // Category Pill
+                      TactileSpringContainer(
+                        onTap: () =>
+                            _showCategorySheet(context, theme, categoriesAsync),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing20,
+                            vertical: kSpacing10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceContainerHigh,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.08,
                               ),
+                              width: 0.6,
                             ),
-                          ] else ...[
-                            Icon(
-                              PesaFlowIcons.category,
-                              color: theme.colorScheme.onSurfaceVariant,
-                              size: 18,
-                            ),
-                            const SizedBox(width: kSpacing8),
-                            Text(
-                              'Category',
-                              style: context.ts(
-                                14,
-                                fontWeight: FontWeight.w600,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (selectedCatObj != null) ...[
+                                Icon(
+                                  getCategoryIcon(selectedCatObj.icon),
+                                  color: hexToColor(selectedCatObj.color),
+                                  size: 18,
+                                ),
+                                const SizedBox(width: kSpacing8),
+                                Text(
+                                  selectedCatObj.name,
+                                  style: context.ts(
+                                    14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ] else ...[
+                                Icon(
+                                  PesaFlowIcons.category,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: kSpacing8),
+                                Text(
+                                  'Category',
+                                  style: context.ts(
+                                    14,
+                                    fontWeight: FontWeight.w600,
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                              const SizedBox(width: kSpacing4),
+                              Icon(
+                                Icons.keyboard_arrow_down,
+                                size: 16,
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
-                            ),
-                          ],
-                          const SizedBox(width: kSpacing4),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            size: 16,
-                            color: theme.colorScheme.onSurfaceVariant,
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
 
-                  const SizedBox(height: kSpacing24),
+                      const SizedBox(height: kSpacing24),
 
-                  // Quick Action Pills
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        _buildActionPill(
-                          context: context,
-                          icon: PesaFlowIcons.calendar,
-                          label:
-                              (_selectedDate.year == DateTime.now().year &&
-                                  _selectedDate.month == DateTime.now().month &&
-                                  _selectedDate.day == DateTime.now().day)
-                              ? 'Today'
-                              : DateFormat('MMM d').format(_selectedDate),
-                          onTap: () => _showDatePickerSheet(context),
-                          backgroundColor: theme.colorScheme.primary
-                              .withValues(alpha: 0.08),
-                          iconColor: theme.colorScheme.primary,
-                          textColor: theme.colorScheme.primary,
-                          borderColor: theme.colorScheme.primary
-                              .withValues(alpha: 0.12),
+                      // Quick Action Pills
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing24,
                         ),
-                        const SizedBox(width: kSpacing8),
-                        _buildActionPill(
-                          context: context,
-                          icon: PesaFlowIcons.label,
-                          label: _descriptionController.text.isEmpty
-                              ? 'Note'
-                              : 'Note Added',
-                          onTap: () => _showNoteSheet(context, theme),
-                          backgroundColor:
-                              _descriptionController.text.isNotEmpty
-                              ? theme.colorScheme.primary.withValues(
-                                  alpha: 0.12,
-                                )
-                              : theme.colorScheme.primary.withValues(
-                                  alpha: 0.08,
-                                ),
-                          iconColor: theme.colorScheme.primary,
-                          textColor: theme.colorScheme.primary,
-                          borderColor: theme.colorScheme.primary
-                              .withValues(alpha: 0.12),
-                        ),
-                        const SizedBox(width: kSpacing8),
-                        _buildActionPill(
-                          context: context,
-                          icon: PesaFlowIcons.wallet,
-                          label:
-                              accounts
-                                  .where((a) => a.id == _selectedAccountId)
-                                  .firstOrNull
-                                  ?.name ??
-                              'Account',
-                          onTap: () => _showAccountPickerSheet(
-                            context,
-                            accounts,
-                            isDestination: false,
-                          ),
-                          backgroundColor: theme.colorScheme.primary
-                              .withValues(alpha: 0.08),
-                          iconColor: theme.colorScheme.primary,
-                          textColor: theme.colorScheme.primary,
-                          borderColor: theme.colorScheme.primary
-                              .withValues(alpha: 0.12),
-                        ),
-                        if (_transactionType == 'Transfer') ...[
-                          const SizedBox(width: kSpacing8),
-                          _buildActionPill(
-                            context: context,
-                            icon: PesaFlowIcons.arrowForward,
-                            label:
-                                accounts
-                                    .where(
-                                      (a) =>
-                                          a.id ==
-                                          _selectedDestinationAccountId,
-                                    )
-                                    .firstOrNull
-                                    ?.name ??
-                                'To Account',
-                            onTap: () => _showAccountPickerSheet(
-                              context,
-                              accounts,
-                              isDestination: true,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            _buildActionPill(
+                              context: context,
+                              icon: PesaFlowIcons.calendar,
+                              label:
+                                  (_selectedDate.year == DateTime.now().year &&
+                                      _selectedDate.month ==
+                                          DateTime.now().month &&
+                                      _selectedDate.day == DateTime.now().day)
+                                  ? 'Today'
+                                  : DateFormat('MMM d').format(_selectedDate),
+                              onTap: () => _showDatePickerSheet(context),
+                              backgroundColor: theme.colorScheme.primary
+                                  .withValues(alpha: 0.08),
+                              iconColor: theme.colorScheme.primary,
+                              textColor: theme.colorScheme.primary,
+                              borderColor: theme.colorScheme.primary.withValues(
+                                alpha: 0.12,
+                              ),
                             ),
-                            backgroundColor: context
-                                .appColors
-                                .transferColor
-                                .withValues(alpha: 0.08),
-                            iconColor: context.appColors.transferColor,
-                            textColor: context.appColors.transferColor,
-                            borderColor: context.appColors.transferColor
-                                .withValues(alpha: 0.12),
-                          ),
-                        ],
-                      ],
-                    ),
+                            const SizedBox(width: kSpacing8),
+                            _buildActionPill(
+                              context: context,
+                              icon: PesaFlowIcons.label,
+                              label: _descriptionController.text.isEmpty
+                                  ? 'Note'
+                                  : 'Note Added',
+                              onTap: () => _showNoteSheet(context, theme),
+                              backgroundColor:
+                                  _descriptionController.text.isNotEmpty
+                                  ? theme.colorScheme.primary.withValues(
+                                      alpha: 0.12,
+                                    )
+                                  : theme.colorScheme.primary.withValues(
+                                      alpha: 0.08,
+                                    ),
+                              iconColor: theme.colorScheme.primary,
+                              textColor: theme.colorScheme.primary,
+                              borderColor: theme.colorScheme.primary.withValues(
+                                alpha: 0.12,
+                              ),
+                            ),
+                            const SizedBox(width: kSpacing8),
+                            _buildActionPill(
+                              context: context,
+                              icon: PesaFlowIcons.wallet,
+                              label:
+                                  accounts
+                                      .where((a) => a.id == _selectedAccountId)
+                                      .firstOrNull
+                                      ?.name ??
+                                  'Account',
+                              onTap: () => _showAccountPickerSheet(
+                                context,
+                                accounts,
+                                isDestination: false,
+                              ),
+                              backgroundColor: theme.colorScheme.primary
+                                  .withValues(alpha: 0.08),
+                              iconColor: theme.colorScheme.primary,
+                              textColor: theme.colorScheme.primary,
+                              borderColor: theme.colorScheme.primary.withValues(
+                                alpha: 0.12,
+                              ),
+                            ),
+                            if (_transactionType == 'Transfer') ...[
+                              const SizedBox(width: kSpacing8),
+                              _buildActionPill(
+                                context: context,
+                                icon: PesaFlowIcons.arrowForward,
+                                label:
+                                    accounts
+                                        .where(
+                                          (a) =>
+                                              a.id ==
+                                              _selectedDestinationAccountId,
+                                        )
+                                        .firstOrNull
+                                        ?.name ??
+                                    'To Account',
+                                onTap: () => _showAccountPickerSheet(
+                                  context,
+                                  accounts,
+                                  isDestination: true,
+                                ),
+                                backgroundColor: context.appColors.transferColor
+                                    .withValues(alpha: 0.08),
+                                iconColor: context.appColors.transferColor,
+                                textColor: context.appColors.transferColor,
+                                borderColor: context.appColors.transferColor
+                                    .withValues(alpha: 0.12),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing16),
+                    ],
                   ),
-                  const SizedBox(height: kSpacing16),
-                ],
-              ),
-            ),
+                ),
 
-            // BOTTOM HALF: Integrated Numpad
-            ModernNumpad(
-              controller: _amountController,
-              isDoneLoading: _isSaving,
-              doneLabel: 'Save',
-              onDone: _isSaving ? null : _saveTransaction,
+                // BOTTOM HALF: Integrated Numpad
+                ModernNumpad(
+                  controller: _amountController,
+                  isDoneLoading: _isSaving,
+                  doneLabel: 'Save',
+                  onDone: _isSaving ? null : _saveTransaction,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
-    ),
-  ),
-);
+    );
   }
 }

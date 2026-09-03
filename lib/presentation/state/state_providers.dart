@@ -106,8 +106,6 @@ class TransactionTypeFilterNotifier extends Notifier<String> {
   String build() => 'All';
   @override
   set state(String value) => super.state = value;
-
-
 }
 
 final transactionTypeFilterProvider =
@@ -274,7 +272,9 @@ final dataChangesStreamProvider = StreamProvider<int>((ref) {
       .map((_) => DateTime.now().microsecondsSinceEpoch);
 });
 
-final budgetProgressProvider = FutureProvider<List<BudgetWithProgress>>((ref) async {
+final budgetProgressProvider = FutureProvider<List<BudgetWithProgress>>((
+  ref,
+) async {
   ref.watch(_transactionChangesProvider);
   ref.watch(activeBudgetsStreamProvider);
   final repo = ref.watch(budgetRepositoryProvider);

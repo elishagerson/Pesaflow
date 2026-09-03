@@ -109,13 +109,15 @@ class BudgetGroupConfig {
   };
 
   factory BudgetGroupConfig.fromJson(Map<String, dynamic> json) =>
-    BudgetGroupConfig(
-      name: json['name'] as String,
-      percentage: (json['percentage'] as num).toDouble(),
-      subAllocations: (json['subAllocations'] as List?)
-          ?.map((s) => SubAllocation.fromJson(s as Map<String, dynamic>))
-          .toList() ?? [],
-    );
+      BudgetGroupConfig(
+        name: json['name'] as String,
+        percentage: (json['percentage'] as num).toDouble(),
+        subAllocations:
+            (json['subAllocations'] as List?)
+                ?.map((s) => SubAllocation.fromJson(s as Map<String, dynamic>))
+                .toList() ??
+            [],
+      );
 }
 
 class AutoBudgetConfig {
@@ -181,13 +183,18 @@ class AutoBudgetConfig {
     } catch (_) {}
     List<String> incomeCategoryIds = [];
     try {
-      incomeCategoryIds = (json['incomeCategoryIds'] as List?)?.cast<String>() ?? [];
+      incomeCategoryIds =
+          (json['incomeCategoryIds'] as List?)?.cast<String>() ?? [];
     } catch (_) {}
     List<BudgetGroupConfig> groups = [];
     try {
-      groups = (json['groups'] as List?)
-          ?.map((g) => BudgetGroupConfig.fromJson(g as Map<String, dynamic>))
-          .toList() ?? [];
+      groups =
+          (json['groups'] as List?)
+              ?.map(
+                (g) => BudgetGroupConfig.fromJson(g as Map<String, dynamic>),
+              )
+              .toList() ??
+          [];
     } catch (_) {}
     String period = 'monthly';
     try {
@@ -225,9 +232,21 @@ class AutoBudgetConfig {
       incomeCategoryIds: [],
       period: 'monthly',
       groups: [
-        BudgetGroupConfig(name: 'Mahitaji Muhimu', percentage: 0.50, subAllocations: needs),
-        BudgetGroupConfig(name: 'Matumizi Binafsi', percentage: 0.30, subAllocations: wants),
-        BudgetGroupConfig(name: 'Akiba & Uwekezaji', percentage: 0.20, subAllocations: savings),
+        BudgetGroupConfig(
+          name: 'Mahitaji Muhimu',
+          percentage: 0.50,
+          subAllocations: needs,
+        ),
+        BudgetGroupConfig(
+          name: 'Matumizi Binafsi',
+          percentage: 0.30,
+          subAllocations: wants,
+        ),
+        BudgetGroupConfig(
+          name: 'Akiba & Uwekezaji',
+          percentage: 0.20,
+          subAllocations: savings,
+        ),
       ],
     );
   }
@@ -286,14 +305,18 @@ class AutoBudgetService {
     await _settingsRepo.setSetting(_configKey, jsonEncode(config.toJson()));
   }
 
-  Future<List<String>> _resolveIncomeCategoryIds(List<String> configuredIds) async {
+  Future<List<String>> _resolveIncomeCategoryIds(
+    List<String> configuredIds,
+  ) async {
     if (configuredIds.isNotEmpty) return configuredIds;
     final categories = await _categoryDao.getAllCategories();
     return categories
-        .where((c) =>
-            c.type == 'income' &&
-            (c.name.toLowerCase() == 'salary' ||
-             c.name.toLowerCase() == 'business'))
+        .where(
+          (c) =>
+              c.type == 'income' &&
+              (c.name.toLowerCase() == 'salary' ||
+                  c.name.toLowerCase() == 'business'),
+        )
         .map((c) => c.id)
         .toList();
   }
@@ -327,9 +350,14 @@ class AutoBudgetService {
     final map = <String, _PeriodInfo>{};
     for (final b in budgets) {
       final period = await _budgetDao.getCurrentPeriod(b.id);
-      final coversMonth = period != null &&
-          period.periodStart.isBefore(monthStart.add(const Duration(days: 1))) &&
-          period.periodEnd.isAfter(monthStart.subtract(const Duration(days: 1)));
+      final coversMonth =
+          period != null &&
+          period.periodStart.isBefore(
+            monthStart.add(const Duration(days: 1)),
+          ) &&
+          period.periodEnd.isAfter(
+            monthStart.subtract(const Duration(days: 1)),
+          );
       map[b.categoryId] = _PeriodInfo(
         budgetId: b.id,
         categoryId: b.categoryId,
@@ -362,7 +390,10 @@ class AutoBudgetService {
         final groupPercentages = group.subAllocations
             .map((s) => s.percentage)
             .toList();
-        final resolvedSubs = _resolveSubAllocations(group.subAllocations, nameToId);
+        final resolvedSubs = _resolveSubAllocations(
+          group.subAllocations,
+          nameToId,
+        );
         final groupAmount = (amountCents * group.percentage).round();
         if (groupAmount <= 0) continue;
 
@@ -381,13 +412,8 @@ class AutoBudgetService {
             final budget = existingBudgets.firstWhere(
               (b) => b.id == info!.budgetId,
             );
-            await _budgetDao.updateBudget(
-              budget.copyWith(amount: subAmount),
-            );
-            await _budgetDao.updateCurrentPeriodAllocated(
-              budget.id,
-              subAmount,
-            );
+            await _budgetDao.updateBudget(budget.copyWith(amount: subAmount));
+            await _budgetDao.updateCurrentPeriodAllocated(budget.id, subAmount);
           } else {
             await _budgetRepo.createBudget(
               name: '${group.name} — ${sub.name}',
