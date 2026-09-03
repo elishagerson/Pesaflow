@@ -516,12 +516,14 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     icon: PesaFlowIcons.cash,
                                     keyboardType: TextInputType.number,
                                     validator: (v) {
-                                      if (v == null || v.isEmpty)
+                                      if (v == null || v.isEmpty) {
                                         return 'Enter a valid amount';
+                                      }
                                       final val =
                                           CurrencyFormatter.parseToCents(v);
-                                      if (val <= 0)
+                                      if (val <= 0) {
                                         return 'Enter a valid amount';
+                                      }
                                       return null;
                                     },
                                     style: Theme.of(context)

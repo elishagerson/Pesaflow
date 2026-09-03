@@ -259,8 +259,9 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                   validator: (v) {
-                                    if (v == null || v.isEmpty)
+                                    if (v == null || v.isEmpty) {
                                       return 'Enter a valid amount';
+                                    }
                                     final val = CurrencyFormatter.parseToCents(
                                       v,
                                     );
