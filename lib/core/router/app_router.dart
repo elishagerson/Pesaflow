@@ -415,14 +415,24 @@ class _RouterErrorPage extends StatelessWidget {
   }
 }
 
+// Cached SharedPreferences handle so the redirect reuses the in-memory
+// preferences map instead of re-resolving on every navigation.
+class _OnboardingGate {
+  static SharedPreferences? _prefs;
+
+  static Future<bool> isComplete() async {
+    _prefs ??= await SharedPreferences.getInstance();
+    return _prefs!.getBool('onboarding_complete') ?? false;
+  }
+}
+
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
   debugLogDiagnostics: kDebugMode,
   errorBuilder: (context, state) => const _RouterErrorPage(),
   redirect: (context, state) async {
-    final prefs = await SharedPreferences.getInstance();
-    final onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
+    final onboardingComplete = await _OnboardingGate.isComplete();
     if (!onboardingComplete && state.matchedLocation != '/onboarding') {
       return '/onboarding';
     }
