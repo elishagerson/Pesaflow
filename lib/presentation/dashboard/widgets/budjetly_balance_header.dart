@@ -54,12 +54,16 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
 
   void _toggleFlip() {
     HapticFeedback.lightImpact();
+    _isFront = !_isFront;
+    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      _controller.value = _isFront ? 0.0 : 1.0;
+      return;
+    }
     if (_isFront) {
       _controller.forward();
     } else {
       _controller.reverse();
     }
-    _isFront = !_isFront;
   }
 
   @override
@@ -219,6 +223,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
           ),
         ),
         IconButton(
+          tooltip: _isHidden ? 'Show balance' : 'Hide balance',
           onPressed: () {
             setState(() {
               _isHidden = !_isHidden;

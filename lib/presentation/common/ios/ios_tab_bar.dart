@@ -223,6 +223,7 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
         leading ??
         (effectiveCanPop
             ? IconButton(
+                tooltip: 'Back',
                 icon: const Icon(PesaFlowIcons.back, size: 20),
                 onPressed: () => Navigator.of(context).maybePop(),
               )

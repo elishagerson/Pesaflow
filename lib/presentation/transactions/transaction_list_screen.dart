@@ -966,6 +966,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     ),
                                     suffixIcon: searchQuery.isNotEmpty
                                         ? IconButton(
+                                            tooltip: 'Clear search',
                                             icon: Icon(
                                               PesaFlowIcons.clear,
                                               size: 16,

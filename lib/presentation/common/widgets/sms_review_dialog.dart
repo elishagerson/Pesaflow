@@ -126,6 +126,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   ),
                   const Spacer(),
                   IconButton(
+                    tooltip: 'Close',
                     icon: Icon(PesaFlowIcons.close, size: 20),
                     onPressed: () {
                       ref.read(pendingReviewProvider.notifier).clear();
@@ -203,6 +204,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   prefixIcon: const Icon(PesaFlowIcons.search, size: 18),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
+                          tooltip: 'Clear search',
                           icon: const Icon(PesaFlowIcons.clear, size: 16),
                           onPressed: () {
                             _searchController.clear();

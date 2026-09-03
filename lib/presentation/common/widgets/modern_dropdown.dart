@@ -225,6 +225,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                     ),
                   ),
                   IconButton(
+                    tooltip: 'Close',
                     icon: const Icon(PesaFlowIcons.close, size: 20),
                     onPressed: () => context.pop(),
                     style: IconButton.styleFrom(
