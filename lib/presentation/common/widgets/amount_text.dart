@@ -95,6 +95,10 @@ class _AmountTextState extends ConsumerState<AmountText> {
       final begin = _renderedAmount;
       _renderedAmount = widget.amountInCents;
 
+      if (context.isReducedMotion) {
+        return buildText(widget.amountInCents.toDouble());
+      }
+
       return TweenAnimationBuilder<double>(
         key: ValueKey(widget.amountInCents),
         duration: const Duration(milliseconds: 1200),
