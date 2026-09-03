@@ -53,7 +53,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_received_sw',
     sender: 'M-PESA',
-    body: 'Pesa zimewekwa Tsh 50,000.00 na John Doe tarehe 15/5/2026 saa 14:30. Rej: P65AB1C2D. Salio: Tsh 250,000.00',
+    body:
+        'Pesa zimewekwa Tsh 50,000.00 na John Doe tarehe 15/5/2026 saa 14:30. Rej: P65AB1C2D. Salio: Tsh 250,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 5000000,
@@ -66,7 +67,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_sent_sw',
     sender: 'M-PESA',
-    body: 'Umetuma Tsh 30,000.00 kwa Jane Doe tarehe 15/5/2026 saa 10:00. Rej: P65XYZ123. Salio: Tsh 220,000.00',
+    body:
+        'Umetuma Tsh 30,000.00 kwa Jane Doe tarehe 15/5/2026 saa 10:00. Rej: P65XYZ123. Salio: Tsh 220,000.00',
     timestamp: DateTime(2026, 5, 15, 10, 0),
     expect: SmsExpectation(
       amount: 3000000,
@@ -79,7 +81,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_airtime_sw',
     sender: 'M-PESA',
-    body: 'Umenunua airtime Tsh 5,000.00 kwa 0712345678 tarehe 15/5/2026. Rej: A65ABC. Salio: Tsh 215,000.00',
+    body:
+        'Umenunua airtime Tsh 5,000.00 kwa 0712345678 tarehe 15/5/2026. Rej: A65ABC. Salio: Tsh 215,000.00',
     timestamp: DateTime(2026, 5, 15, 12, 0),
     expect: SmsExpectation(
       amount: 500000,
@@ -92,7 +95,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_fee_sw',
     sender: 'M-PESA',
-    body: 'Kodi ya kuhudumia Tsh 500.00 tarehe 15/5/2026. Salio: Tsh 214,500.00',
+    body:
+        'Kodi ya kuhudumia Tsh 500.00 tarehe 15/5/2026. Salio: Tsh 214,500.00',
     timestamp: DateTime(2026, 5, 15, 12, 0),
     expect: SmsExpectation(
       amount: 50000,
@@ -105,7 +109,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_loan_sw',
     sender: 'M-PESA',
-    body: 'Pesa zimekopeshwa Tsh 100,000.00. Maliza ndani ya siku 30. Rej: P65ABC. Salio: Tsh 250,000.00',
+    body:
+        'Pesa zimekopeshwa Tsh 100,000.00. Maliza ndani ya siku 30. Rej: P65ABC. Salio: Tsh 250,000.00',
     timestamp: DateTime(2026, 5, 15, 12, 0),
     expect: SmsExpectation(
       amount: 10000000,
@@ -118,7 +123,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_received_no_tarehe',
     sender: 'M-PESA',
-    body: 'Pesa zimewekwa Tsh 50,000.00 na John Doe. Rej: P65AB1C2D. Salio: Tsh 250,000.00',
+    body:
+        'Pesa zimewekwa Tsh 50,000.00 na John Doe. Rej: P65AB1C2D. Salio: Tsh 250,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 5000000,
@@ -135,7 +141,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_received_en',
     sender: 'M-PESA',
-    body: 'Z10DN636 Confirmed.You have received Tsh50,000 from FREDRICK KIMARO on 27/1/14 at 1:19 PM New M-PESA balance is Tsh214,676',
+    body:
+        'Z10DN636 Confirmed.You have received Tsh50,000 from FREDRICK KIMARO on 27/1/14 at 1:19 PM New M-PESA balance is Tsh214,676',
     timestamp: DateTime(2014, 1, 27, 13, 19),
     expect: SmsExpectation(
       amount: 5000000,
@@ -148,7 +155,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_sent_en',
     sender: 'M-PESA',
-    body: 'AB12CD34 Confirmed.You have sent Tsh30,000 to JANE DOE on 27/1/14 at 1:19 PM New M-PESA balance is Tsh184,676',
+    body:
+        'AB12CD34 Confirmed.You have sent Tsh30,000 to JANE DOE on 27/1/14 at 1:19 PM New M-PESA balance is Tsh184,676',
     timestamp: DateTime(2014, 1, 27, 13, 19),
     expect: SmsExpectation(
       amount: 3000000,
@@ -161,7 +169,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_bill_payment_en',
     sender: 'M-PESA',
-    body: 'EF56GH78 Confirmed.You have paid Tsh100,000 to ZESA BILLS on 27/1/14 at 1:19 PM New M-PESA balance is Tsh79,676',
+    body:
+        'EF56GH78 Confirmed.You have paid Tsh100,000 to ZESA BILLS on 27/1/14 at 1:19 PM New M-PESA balance is Tsh79,676',
     timestamp: DateTime(2014, 1, 27, 13, 19),
     expect: SmsExpectation(
       amount: 10000000,
@@ -174,7 +183,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_airtime_en',
     sender: 'M-PESA',
-    body: 'IJ90KL12 Confirmed.You have bought airtime of Tsh5,000 on 27/1/14 at 1:19 PM New M-PESA balance is Tsh74,676',
+    body:
+        'IJ90KL12 Confirmed.You have bought airtime of Tsh5,000 on 27/1/14 at 1:19 PM New M-PESA balance is Tsh74,676',
     timestamp: DateTime(2014, 1, 27, 13, 19),
     expect: SmsExpectation(
       amount: 500000,
@@ -187,7 +197,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_fee_en',
     sender: 'M-PESA',
-    body: 'Transaction cost Tsh500 on 27/1/14 at 1:19 PM New M-PESA balance is Tsh74,176',
+    body:
+        'Transaction cost Tsh500 on 27/1/14 at 1:19 PM New M-PESA balance is Tsh74,176',
     timestamp: DateTime(2014, 1, 27, 13, 19),
     expect: SmsExpectation(
       amount: 50000,
@@ -200,7 +211,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_received_dashed_date',
     sender: 'M-PESA',
-    body: 'Z10DN636 Confirmed.You have received Tsh50,000 from FREDRICK KIMARO on 2026-05-15 at 14:30 New M-PESA balance is Tsh214,676',
+    body:
+        'Z10DN636 Confirmed.You have received Tsh50,000 from FREDRICK KIMARO on 2026-05-15 at 14:30 New M-PESA balance is Tsh214,676',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 5000000,
@@ -213,7 +225,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_loan_en',
     sender: 'M-PESA',
-    body: 'P65DEF Confirmed.You have received a loan of Tsh 100,000.00. Pay within 30 days. New M-PESA balance is Tsh 250,000.00',
+    body:
+        'P65DEF Confirmed.You have received a loan of Tsh 100,000.00. Pay within 30 days. New M-PESA balance is Tsh 250,000.00',
     timestamp: DateTime(2026, 5, 15, 12, 0),
     expect: SmsExpectation(
       amount: 10000000,
@@ -226,7 +239,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_sent_modern_with_fee',
     sender: 'M-PESA',
-    body: 'DF3FI18H5B Confirmed. Tsh150,000.00 sent to TIPS-SELCOM MF for account 255763559341 on 3/6/26 at 2:04 pm Total fee Tsh3,500.00 (M-Pesa fee Tsh3,500.00 + Government Levy Tsh0.00). Balance is Tsh2,561.00.',
+    body:
+        'DF3FI18H5B Confirmed. Tsh150,000.00 sent to TIPS-SELCOM MF for account 255763559341 on 3/6/26 at 2:04 pm Total fee Tsh3,500.00 (M-Pesa fee Tsh3,500.00 + Government Levy Tsh0.00). Balance is Tsh2,561.00.',
     timestamp: DateTime(2026, 6, 3, 14, 4),
     expect: SmsExpectation(
       amount: 15000000,
@@ -239,7 +253,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_sent_modern_no_fee',
     sender: 'M-PESA',
-    body: 'DEPFI13LA0 Confirmed. Tsh85,000.00 sent to TIPS-Mixx By Yas for account 19938686 on 25/5/26 at 8:49 am Total fee Tsh2,500.00 (M-Pesa fee Tsh2,500.00 + Government Levy Tsh0.00). Balance is Tsh3,536.00.',
+    body:
+        'DEPFI13LA0 Confirmed. Tsh85,000.00 sent to TIPS-Mixx By Yas for account 19938686 on 25/5/26 at 8:49 am Total fee Tsh2,500.00 (M-Pesa fee Tsh2,500.00 + Government Levy Tsh0.00). Balance is Tsh3,536.00.',
     timestamp: DateTime(2026, 5, 25, 8, 49),
     expect: SmsExpectation(
       amount: 8500000,
@@ -252,7 +267,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_received_payment_of',
     sender: 'M-PESA',
-    body: 'DFDFI1D6RN confirmed. You have received a payment of Tsh26,000.00 from 922749 - TIPS-Mixx By Yas on 13/6/26 at 5:48 pm. New M-Pesa balance is Tsh26,505.00',
+    body:
+        'DFDFI1D6RN confirmed. You have received a payment of Tsh26,000.00 from 922749 - TIPS-Mixx By Yas on 13/6/26 at 5:48 pm. New M-Pesa balance is Tsh26,505.00',
     timestamp: DateTime(2026, 6, 13, 17, 48),
     expect: SmsExpectation(
       amount: 2600000,
@@ -265,7 +281,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_received_modern',
     sender: 'M-PESA',
-    body: 'DEOM013DRD Confirmed.You have received Tsh150,000.00 from 255744055083 - FABIAN EVARISTO MWIPOPO  on 24/5/26 at 7:38 am New M-Pesa balance is Tsh150,000.00.',
+    body:
+        'DEOM013DRD Confirmed.You have received Tsh150,000.00 from 255744055083 - FABIAN EVARISTO MWIPOPO  on 24/5/26 at 7:38 am New M-Pesa balance is Tsh150,000.00.',
     timestamp: DateTime(2026, 5, 24, 7, 38),
     expect: SmsExpectation(
       amount: 15000000,
@@ -278,7 +295,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mpesa_overdraft_repayment',
     sender: 'M-PESA',
-    body: 'DFDFI1D4UA Confirmed. Tsh5,698.00 has been deducted from your M-Pesa account on 13/6/26 at 2:26 pm as a repayment of M-Pesa Overdraft service. New M-Pesa balance is Tsh36,577.00.',
+    body:
+        'DFDFI1D4UA Confirmed. Tsh5,698.00 has been deducted from your M-Pesa account on 13/6/26 at 2:26 pm as a repayment of M-Pesa Overdraft service. New M-Pesa balance is Tsh36,577.00.',
     timestamp: DateTime(2026, 6, 13, 14, 26),
     expect: SmsExpectation(
       amount: 569800,
@@ -295,7 +313,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_received_sw',
     sender: 'AIRTEL',
-    body: 'Umepokea Tsh 45,000.00 kutoka kwa 0712345678. Rej: AT123456. Salio: Tsh 300,000.00',
+    body:
+        'Umepokea Tsh 45,000.00 kutoka kwa 0712345678. Rej: AT123456. Salio: Tsh 300,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 4500000,
@@ -308,7 +327,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_sent_sw',
     sender: 'AIRTEL',
-    body: 'Umetuma Tsh 20,000.00 kwa 0765432198. Rej: AT654321. Salio: Tsh 280,000.00',
+    body:
+        'Umetuma Tsh 20,000.00 kwa 0765432198. Rej: AT654321. Salio: Tsh 280,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 2000000,
@@ -333,7 +353,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_received_with_date_sw',
     sender: 'AIRTEL',
-    body: 'Umepokea Tsh 45,000.00 kutoka kwa JOHN DOE tarehe 15/05/2026. Rej: AT123456. Salio: Tsh 300,000.00',
+    body:
+        'Umepokea Tsh 45,000.00 kutoka kwa JOHN DOE tarehe 15/05/2026. Rej: AT123456. Salio: Tsh 300,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 4500000,
@@ -350,7 +371,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_received_en',
     sender: 'AIRTEL',
-    body: 'You have received TZS 45,000.00 from 0712345678. TxnID: AT123456. Balance: TZS 300,000.00',
+    body:
+        'You have received TZS 45,000.00 from 0712345678. TxnID: AT123456. Balance: TZS 300,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 4500000,
@@ -363,7 +385,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_sent_en',
     sender: 'AIRTEL',
-    body: 'You have sent TZS 20,000.00 to 0765432198. TxnID: AT654321. Balance: TZS 280,000.00',
+    body:
+        'You have sent TZS 20,000.00 to 0765432198. TxnID: AT654321. Balance: TZS 280,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 2000000,
@@ -376,7 +399,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_deposit_en',
     sender: 'AIRTEL',
-    body: 'You have deposited TZS 100,000.00 to Airtel Money. Balance: TZS 380,000.00',
+    body:
+        'You have deposited TZS 100,000.00 to Airtel Money. Balance: TZS 380,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 10000000,
@@ -392,7 +416,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_airtime_sw',
     sender: 'AIRTEL',
-    body: 'Umenunua airtime Tsh 5,000.00 kwa 0712345678. Rej: AT99999. Salio: Tsh 200,000.00',
+    body:
+        'Umenunua airtime Tsh 5,000.00 kwa 0712345678. Rej: AT99999. Salio: Tsh 200,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 500000,
@@ -405,7 +430,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_bundle_sw',
     sender: 'AIRTEL',
-    body: 'Umenunua kifurushi Tsh 3,000.00. Rej: AT88888. Salio: Tsh 197,000.00',
+    body:
+        'Umenunua kifurushi Tsh 3,000.00. Rej: AT88888. Salio: Tsh 197,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 300000,
@@ -418,7 +444,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_payment_sw',
     sender: 'AIRTEL',
-    body: 'Malipo ya Tsh 50,000.00 kwa MERCHANT NAME yamekamilika. Rej: AT77777. Salio: Tsh 150,000.00',
+    body:
+        'Malipo ya Tsh 50,000.00 kwa MERCHANT NAME yamekamilika. Rej: AT77777. Salio: Tsh 150,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 5000000,
@@ -431,7 +458,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_withdrawal_sw',
     sender: 'AIRTEL',
-    body: 'Umetoa Tsh 50,000.00 kwenye ATM. Rej: AT66666. Salio: Tsh 150,000.00',
+    body:
+        'Umetoa Tsh 50,000.00 kwenye ATM. Rej: AT66666. Salio: Tsh 150,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 5000000,
@@ -444,7 +472,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_airtime_en',
     sender: 'AIRTEL',
-    body: 'You have bought airtime of TZS 5,000.00. TxnID: AT99999. Balance: TZS 200,000.00',
+    body:
+        'You have bought airtime of TZS 5,000.00. TxnID: AT99999. Balance: TZS 200,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 500000,
@@ -457,7 +486,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_paid_en',
     sender: 'AIRTEL',
-    body: 'You have paid TZS 100,000.00 to ZESA BILLS. TxnID: AT55555. Balance: TZS 200,000.00',
+    body:
+        'You have paid TZS 100,000.00 to ZESA BILLS. TxnID: AT55555. Balance: TZS 200,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 10000000,
@@ -470,7 +500,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_withdrawal_en',
     sender: 'AIRTEL',
-    body: 'Withdrawal of TZS 50,000.00 at ATM. TxnID: AT44444. Balance: TZS 250,000.00',
+    body:
+        'Withdrawal of TZS 50,000.00 at ATM. TxnID: AT44444. Balance: TZS 250,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 5000000,
@@ -483,7 +514,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_bundle_en',
     sender: 'AIRTEL',
-    body: 'You have purchased a bundle of TZS 3,000.00. TxnID: AT33333. Balance: TZS 197,000.00',
+    body:
+        'You have purchased a bundle of TZS 3,000.00. TxnID: AT33333. Balance: TZS 197,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 300000,
@@ -500,7 +532,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_received_real',
     sender: 'AIRTEL MONEY',
-    body: 'Umepokea Tsh 100.00 kutoka Mixx By Yas - ELISHA NDUNDULU - 675259341.Salio Tsh 117.96. TID:CI260617.2358.N31144',
+    body:
+        'Umepokea Tsh 100.00 kutoka Mixx By Yas - ELISHA NDUNDULU - 675259341.Salio Tsh 117.96. TID:CI260617.2358.N31144',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 10000,
@@ -513,7 +546,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_paid_via_lipa_real',
     sender: 'AIRTEL MONEY',
-    body: 'Umelipa TZS6,000 kwenda 0763485704 FLORA EDSON MWAKIBULAGHA.Makato Tsh 180.00( Ada Tsh 180.00 + Tozo Tsh 0.00). Salio Tsh1,417.96. TID:MP260616.1437.U76387',
+    body:
+        'Umelipa TZS6,000 kwenda 0763485704 FLORA EDSON MWAKIBULAGHA.Makato Tsh 180.00( Ada Tsh 180.00 + Tozo Tsh 0.00). Salio Tsh1,417.96. TID:MP260616.1437.U76387',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 600000,
@@ -526,7 +560,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'airtel_paid_bundle_real',
     sender: 'AIRTEL MONEY',
-    body: 'Umelipa 500.00 Tsh kwenda YATOSHA BUNDLE. Makato Tsh 0.00. Salio 17.96 Tsh TID:MP260617.1328.R77204',
+    body:
+        'Umelipa 500.00 Tsh kwenda YATOSHA BUNDLE. Makato Tsh 0.00. Salio 17.96 Tsh TID:MP260617.1328.R77204',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 50000,
@@ -543,7 +578,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_received_sw',
     sender: 'MIXX',
-    body: 'Umepokea TZS 25,000.00 kutoka kwa 0712345678. Kumbukumbu: MX789012. Salio: TZS 150,000.00',
+    body:
+        'Umepokea TZS 25,000.00 kutoka kwa 0712345678. Kumbukumbu: MX789012. Salio: TZS 150,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 2500000,
@@ -556,7 +592,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_sent_sw',
     sender: 'MIXX',
-    body: 'Umetuma TZS 15,000.00 kwa 0765432198. Kumbukumbu: MX210987. Salio: TZS 135,000.00',
+    body:
+        'Umetuma TZS 15,000.00 kwa 0765432198. Kumbukumbu: MX210987. Salio: TZS 135,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 1500000,
@@ -580,7 +617,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_received_with_date_sw',
     sender: 'MIXX',
-    body: 'Umepokea TZS 25,000.00 kutoka kwa JOHN DOE tarehe 15/05/2026. Kumbukumbu: MX789012. Salio: TZS 150,000.00',
+    body:
+        'Umepokea TZS 25,000.00 kutoka kwa JOHN DOE tarehe 15/05/2026. Kumbukumbu: MX789012. Salio: TZS 150,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 2500000,
@@ -594,7 +632,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_malipo_nivushe',
     sender: 'MIXX',
-    body: 'Malipo yamekamilika kwenda Nivushe Plus, Kiasi Tsh645,728. Salio jipya ni Tsh 47,272. Ada Tsh 0. VAT TSh 0. Kumbukumbu no.26394529507543. 21/05/26 16:25.',
+    body:
+        'Malipo yamekamilika kwenda Nivushe Plus, Kiasi Tsh645,728. Salio jipya ni Tsh 47,272. Ada Tsh 0. VAT TSh 0. Kumbukumbu no.26394529507543. 21/05/26 16:25.',
     timestamp: DateTime(2026, 5, 21, 16, 25),
     expect: SmsExpectation(
       amount: 64572800,
@@ -611,7 +650,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_sent_en',
     sender: 'MIXX',
-    body: 'You have sent TSh 20,000 to Airtel receiver STEPHAN MWAKALASYA - 255787273486. Charges TSh 540. VAT TSh 82. New balance is TSh 311,708. TxnID: 26706282103620. 22/05/26 18:19 Please wait for confirmation.',
+    body:
+        'You have sent TSh 20,000 to Airtel receiver STEPHAN MWAKALASYA - 255787273486. Charges TSh 540. VAT TSh 82. New balance is TSh 311,708. TxnID: 26706282103620. 22/05/26 18:19 Please wait for confirmation.',
     timestamp: DateTime(2026, 5, 22, 18, 19),
     expect: SmsExpectation(
       amount: 2000000,
@@ -624,7 +664,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_cashin_en',
     sender: 'MIXX',
-    body: 'Cash-In of TSh 143,000 from Agent - ELIZA  NYONDO is successful. New balance is TSh 143,000. TxnId: 26694528075313. 22/05/26 15:48.',
+    body:
+        'Cash-In of TSh 143,000 from Agent - ELIZA  NYONDO is successful. New balance is TSh 143,000. TxnId: 26694528075313. 22/05/26 15:48.',
     timestamp: DateTime(2026, 5, 22, 15, 48),
     expect: SmsExpectation(
       amount: 14300000,
@@ -637,7 +678,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_received_en',
     sender: 'MIXX',
-    body: 'You have received TZS 25,000.00 from 0712345678. TxnID: MX789012. Balance: TZS 150,000.00',
+    body:
+        'You have received TZS 25,000.00 from 0712345678. TxnID: MX789012. Balance: TZS 150,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 2500000,
@@ -651,7 +693,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_paid_bustisha_balance',
     sender: 'MIXX',
-    body: 'You have successfully paid your Bustisha Balance by TSh 117,904.55. Your outstanding balance: TSh 8,330.60. New balance: TSh 0. TxnID: 26794215512428. Loan ID: 202606081844181845670752806590. 10/06/26 10:38.',
+    body:
+        'You have successfully paid your Bustisha Balance by TSh 117,904.55. Your outstanding balance: TSh 8,330.60. New balance: TSh 0. TxnID: 26794215512428. Loan ID: 202606081844181845670752806590. 10/06/26 10:38.',
     timestamp: DateTime(2026, 6, 10, 10, 38),
     expect: SmsExpectation(
       amount: 11790455,
@@ -668,7 +711,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_umehamisha_sw',
     sender: 'MIXX',
-    body: 'Umehamisha TZS 10,000 kwenda 0712345678. Kumbukumbu: MX789012. Salio: TZS 50,000.00',
+    body:
+        'Umehamisha TZS 10,000 kwenda 0712345678. Kumbukumbu: MX789012. Salio: TZS 50,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 1000000,
@@ -681,7 +725,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_umewekwa_sw',
     sender: 'MIXX',
-    body: 'Umewekwa TZS 50,000.00 na JOHN DOE. Kumbukumbu: MX789012. Salio: TZS 200,000.00',
+    body:
+        'Umewekwa TZS 50,000.00 na JOHN DOE. Kumbukumbu: MX789012. Salio: TZS 200,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 5000000,
@@ -708,16 +753,13 @@ final List<SmsCorpusEntry> smsCorpus = [
     sender: 'MIXX',
     body: 'Tumekutoa TZS 2,000 kwa ada ya huduma. Salio: TZS 198,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
-    expect: SmsExpectation(
-      amount: 200000,
-      type: 'fee',
-      balanceAfter: 19800000,
-    ),
+    expect: SmsExpectation(amount: 200000, type: 'fee', balanceAfter: 19800000),
   ),
   SmsCorpusEntry(
     label: 'mixx_loan_umekopeshwa_sw',
     sender: 'MIXX',
-    body: 'Umekopeshwa TZS 100,000. Maliza ndani ya siku 30. Rej: MX789012. Salio: TZS 200,000.00',
+    body:
+        'Umekopeshwa TZS 100,000. Maliza ndani ya siku 30. Rej: MX789012. Salio: TZS 200,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 10000000,
@@ -729,7 +771,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_confirmed_received_en',
     sender: 'MIXX',
-    body: 'ABC123DF Confirmed. You have received TZS 25,000.00 from JOHN DOE on 15/06/26. New balance is TZS 150,000.00',
+    body:
+        'ABC123DF Confirmed. You have received TZS 25,000.00 from JOHN DOE on 15/06/26. New balance is TZS 150,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 2500000,
@@ -742,7 +785,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_confirmed_sent_modern_en',
     sender: 'MIXX',
-    body: 'ABC123DF Confirmed. Tsh 150,000.00 sent to TIPS-Mixx By Yas for account 255763559341 on 3/6/26. Total fee Tsh 3,500. Balance is Tsh 2,561.00',
+    body:
+        'ABC123DF Confirmed. Tsh 150,000.00 sent to TIPS-Mixx By Yas for account 255763559341 on 3/6/26. Total fee Tsh 3,500. Balance is Tsh 2,561.00',
     timestamp: DateTime(2026, 6, 3, 14, 4),
     expect: SmsExpectation(
       amount: 15000000,
@@ -755,7 +799,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_confirmed_sent_you_have_sent_en',
     sender: 'MIXX',
-    body: 'ABC123DF Confirmed. You have sent TSh 20,000 to STEPHAN MWAKALASYA on 3/6/26. New balance is TSh 311,708.',
+    body:
+        'ABC123DF Confirmed. You have sent TSh 20,000 to STEPHAN MWAKALASYA on 3/6/26. New balance is TSh 311,708.',
     timestamp: DateTime(2026, 6, 3, 14, 4),
     expect: SmsExpectation(
       amount: 2000000,
@@ -768,7 +813,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_you_have_paid_en',
     sender: 'MIXX',
-    body: 'You have paid TSh 30,000 to Merchant XYZ. New balance is TSh 120,000.00',
+    body:
+        'You have paid TSh 30,000 to Merchant XYZ. New balance is TSh 120,000.00',
     timestamp: DateTime(2026, 6, 3, 14, 4),
     expect: SmsExpectation(
       amount: 3000000,
@@ -780,7 +826,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_credited_wallet_en',
     sender: 'MIXX',
-    body: 'Your Mixx wallet has been credited with TZS 500,000.00 from 0712345678 on 15/06/26.',
+    body:
+        'Your Mixx wallet has been credited with TZS 500,000.00 from 0712345678 on 15/06/26.',
     timestamp: DateTime(2026, 6, 15, 14, 30),
     expect: SmsExpectation(
       amount: 50000000,
@@ -791,7 +838,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_withdrawal_agent_en',
     sender: 'MIXX',
-    body: 'Withdrawal of TSh 50,000 from Agent - JANE DOE is successful. New balance is TSh 100,000.00',
+    body:
+        'Withdrawal of TSh 50,000 from Agent - JANE DOE is successful. New balance is TSh 100,000.00',
     timestamp: DateTime(2026, 6, 15, 14, 30),
     expect: SmsExpectation(
       amount: 5000000,
@@ -803,7 +851,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_confirmed_airtime_en',
     sender: 'MIXX',
-    body: 'ABC123DF Confirmed. You have bought airtime of TSh 5,000 on 15/06/26. New balance is TSh 195,000.00',
+    body:
+        'ABC123DF Confirmed. You have bought airtime of TSh 5,000 on 15/06/26. New balance is TSh 195,000.00',
     timestamp: DateTime(2026, 6, 15, 14, 30),
     expect: SmsExpectation(
       amount: 500000,
@@ -815,7 +864,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'mixx_money_sent_merchant_en',
     sender: 'MIXX',
-    body: 'New Bal TSh 200. Money sent successfully to Sporty Bet, Biller Code: 190190, Ref No: 255675259341.Amt TSh 7,500, Total Charges TSh 300.(Fees TSh 0, Levy TSh 0), VAT TSh 46.TxnID: 26693868497442.11/07/26 20:32. The transaction has been submitted successfully..',
+    body:
+        'New Bal TSh 200. Money sent successfully to Sporty Bet, Biller Code: 190190, Ref No: 255675259341.Amt TSh 7,500, Total Charges TSh 300.(Fees TSh 0, Levy TSh 0), VAT TSh 46.TxnID: 26693868497442.11/07/26 20:32. The transaction has been submitted successfully..',
     timestamp: DateTime(2026, 7, 11, 20, 32),
     expect: SmsExpectation(
       amount: 750000,
@@ -832,7 +882,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'halopesa_received_sw',
     sender: 'HALOPESA',
-    body: 'Umepokea TZS 10,000.00 kutoka kwa 0621234567. Rej: HP12345. Salio: TZS 50,000.00',
+    body:
+        'Umepokea TZS 10,000.00 kutoka kwa 0621234567. Rej: HP12345. Salio: TZS 50,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 1000000,
@@ -845,7 +896,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'halopesa_sent_sw',
     sender: 'HALOPESA',
-    body: 'Umetuma TZS 5,000.00 kwa 0627654321. Rej: HP54321. Salio: TZS 45,000.00',
+    body:
+        'Umetuma TZS 5,000.00 kwa 0627654321. Rej: HP54321. Salio: TZS 45,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 500000,
@@ -857,7 +909,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'halopesa_received_en',
     sender: 'HALOPESA',
-    body: 'You have received TZS 10,000.00 from 0621234567. Ref: HP12345. Balance: TZS 50,000.00',
+    body:
+        'You have received TZS 10,000.00 from 0621234567. Ref: HP12345. Balance: TZS 50,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 1000000,
@@ -870,7 +923,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'halopesa_sent_en',
     sender: 'HALOPESA',
-    body: 'You have sent TZS 5,000.00 to 0627654321. Ref: HP54321. Balance: TZS 45,000.00',
+    body:
+        'You have sent TZS 5,000.00 to 0627654321. Ref: HP54321. Balance: TZS 45,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 500000,
@@ -887,7 +941,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'selcom_received_en',
     sender: 'SELCOM',
-    body: '0517EQMYW Confirmed. You have received TZS 473,000.00 from ELISHA NDUNDULU - Mixx by Yas (255675259341) on 2026-05-17 17:57:46. Updated balance is TZS 477,319.85. Help 0800 714 888 / 0800 784 888',
+    body:
+        '0517EQMYW Confirmed. You have received TZS 473,000.00 from ELISHA NDUNDULU - Mixx by Yas (255675259341) on 2026-05-17 17:57:46. Updated balance is TZS 477,319.85. Help 0800 714 888 / 0800 784 888',
     timestamp: DateTime(2026, 5, 17, 17, 57),
     expect: SmsExpectation(
       amount: 47300000,
@@ -900,7 +955,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'selcom_sent_en',
     sender: 'SELCOM',
-    body: '0517EQN0Z Accepted. You have sent TZS 477,000.00 to PARTS AND COMPONENTS MBEYA - 19938686 on 2026-05-17 17:58:34. Charge is FREE. Transaction 13 of 150-Hello Mwezi. Updated balance is TZS 319.85. Help 0800 714 888 / 0800 784 888',
+    body:
+        '0517EQN0Z Accepted. You have sent TZS 477,000.00 to PARTS AND COMPONENTS MBEYA - 19938686 on 2026-05-17 17:58:34. Charge is FREE. Transaction 13 of 150-Hello Mwezi. Updated balance is TZS 319.85. Help 0800 714 888 / 0800 784 888',
     timestamp: DateTime(2026, 5, 17, 17, 58),
     expect: SmsExpectation(
       amount: 47700000,
@@ -913,7 +969,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'selcom_received_sw',
     sender: 'SELCOM',
-    body: 'Umepokea Tsh 50,000.00 kutoka kwa John Doe tarehe 15/5/2026 saa 14:30. Ref: S78AB1C2D. Salio: Tsh 100,000.00',
+    body:
+        'Umepokea Tsh 50,000.00 kutoka kwa John Doe tarehe 15/5/2026 saa 14:30. Ref: S78AB1C2D. Salio: Tsh 100,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 5000000,
@@ -930,7 +987,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'nmb_debit',
     sender: 'NMB',
-    body: 'Tumekutoa TZS 150,000.00 kwa POS/MERCHANT/0123456789 tarehe 15/05/2026. Salio: TZS 1,250,000.00',
+    body:
+        'Tumekutoa TZS 150,000.00 kwa POS/MERCHANT/0123456789 tarehe 15/05/2026. Salio: TZS 1,250,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 15000000,
@@ -942,7 +1000,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'nmb_credit',
     sender: 'NMB',
-    body: 'Tumeongeza TZS 500,000.00 kutoka SALARY/MONTHLY tarehe 15/05/2026. Salio: TZS 1,750,000.00',
+    body:
+        'Tumeongeza TZS 500,000.00 kutoka SALARY/MONTHLY tarehe 15/05/2026. Salio: TZS 1,750,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 50000000,
@@ -968,7 +1027,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'nmb_debit_numeric_sender',
     sender: '15200',
-    body: 'Tumekutoa TZS 150,000.00 kwa POS/MERCHANT/0123456789 tarehe 15/05/2026. Salio: TZS 1,250,000.00',
+    body:
+        'Tumekutoa TZS 150,000.00 kwa POS/MERCHANT/0123456789 tarehe 15/05/2026. Salio: TZS 1,250,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 15000000,
@@ -982,7 +1042,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'nmb_debit_kimetumwa',
     sender: 'NMB',
-    body: 'Kumb: GWX102246282556 Imethibitishwa.\nKiasi cha TSH334,500 kimetumwa kutoka katika akaunti inayoishia na 1222 kwenda ELISHA NDUNDULU 255763559341.\nTarehe:10-06-2026 20:11:13. Teleza Kidigitali na Mshiko Fasta',
+    body:
+        'Kumb: GWX102246282556 Imethibitishwa.\nKiasi cha TSH334,500 kimetumwa kutoka katika akaunti inayoishia na 1222 kwenda ELISHA NDUNDULU 255763559341.\nTarehe:10-06-2026 20:11:13. Teleza Kidigitali na Mshiko Fasta',
     timestamp: DateTime(2026, 6, 10, 20, 11),
     expect: SmsExpectation(
       amount: 33450000,
@@ -993,7 +1054,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'nmb_credit_kimewekwa',
     sender: 'NMB',
-    body: 'Kiasi cha TZS 335000 kimewekwa kwenye akaunti yako inayoishia na 11222 tarehe 10-06-2026. Kama hutambui muamala huu piga 0800002002. NMB Karibu yako',
+    body:
+        'Kiasi cha TZS 335000 kimewekwa kwenye akaunti yako inayoishia na 11222 tarehe 10-06-2026. Kama hutambui muamala huu piga 0800002002. NMB Karibu yako',
     timestamp: DateTime(2026, 6, 10),
     expect: SmsExpectation(
       amount: 33500000,
@@ -1004,7 +1066,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'nmb_credit_umepokea',
     sender: 'NMB',
-    body: 'Umepokea kiasi cha TZS 8500 kwenye akaunti yako inayoishia 11222 kutoka  5525102063444 ELISHA NDUNDULU Tar 09.06.2026 11:04:55. NMB Karibu yako',
+    body:
+        'Umepokea kiasi cha TZS 8500 kwenye akaunti yako inayoishia 11222 kutoka  5525102063444 ELISHA NDUNDULU Tar 09.06.2026 11:04:55. NMB Karibu yako',
     timestamp: DateTime(2026, 6, 9, 11, 04),
     expect: SmsExpectation(
       amount: 850000,
@@ -1015,7 +1078,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'nmb_credit_umepokea_kwa',
     sender: 'NMB',
-    body: 'Ndugu ELISHA GERSON NDUNDULU, umepokea TZS 5,000,000.00 kwenye akaunti inayoishia 1222 kutoka kwa ALEX SAMWEL MAPUNDA, 27-AUG-2026 17:29:15. Kumb: 610FTIT262391237. NMB Karibu Yako.',
+    body:
+        'Ndugu ELISHA GERSON NDUNDULU, umepokea TZS 5,000,000.00 kwenye akaunti inayoishia 1222 kutoka kwa ALEX SAMWEL MAPUNDA, 27-AUG-2026 17:29:15. Kumb: 610FTIT262391237. NMB Karibu Yako.',
     timestamp: DateTime(2026, 8, 27, 17, 29),
     expect: SmsExpectation(
       amount: 500000000,
@@ -1031,7 +1095,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'crdb_withdrawal',
     sender: 'CRDB',
-    body: 'CRDB: Withdrawal TZS 200,000.00 at ATM/Arusha. Available: TZS 800,000.00. Ref: CRDB123',
+    body:
+        'CRDB: Withdrawal TZS 200,000.00 at ATM/Arusha. Available: TZS 800,000.00. Ref: CRDB123',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 20000000,
@@ -1044,7 +1109,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'crdb_deposit',
     sender: 'CRDB',
-    body: 'CRDB: Deposit TZS 1,000,000.00 from MPESA. Available: TZS 1,800,000.00. Ref: CRDB456',
+    body:
+        'CRDB: Deposit TZS 1,000,000.00 from MPESA. Available: TZS 1,800,000.00. Ref: CRDB456',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 100000000,
@@ -1061,7 +1127,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'nbc_debit',
     sender: 'NBC',
-    body: 'NBC: TZS 50,000.00 debited from acct ****1234. Desc: AIRTIME. Bal: TZS 450,000.00',
+    body:
+        'NBC: TZS 50,000.00 debited from acct ****1234. Desc: AIRTIME. Bal: TZS 450,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 5000000,
@@ -1072,7 +1139,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'nbc_credit',
     sender: 'NBC',
-    body: 'NBC: TZS 300,000.00 credited to acct ****1234. Desc: SALARY. Bal: TZS 750,000.00',
+    body:
+        'NBC: TZS 300,000.00 credited to acct ****1234. Desc: SALARY. Bal: TZS 750,000.00',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(
       amount: 30000000,
@@ -1087,7 +1155,8 @@ final List<SmsCorpusEntry> smsCorpus = [
   SmsCorpusEntry(
     label: 'promo_mpesa',
     sender: 'M-PESA',
-    body: 'Karibu M-PESA! Tuma pesa kwa urahisi na usalama. Piga *150*00# kwa huduma.',
+    body:
+        'Karibu M-PESA! Tuma pesa kwa urahisi na usalama. Piga *150*00# kwa huduma.',
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(expectsNull: true),
   ),

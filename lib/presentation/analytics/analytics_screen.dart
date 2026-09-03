@@ -312,11 +312,9 @@ class _OverviewTab extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Monthly Summary
-          SkeletonCrossfade(
-            isLoading: totalsAsync.isLoading,
-            skeleton: ShimmerCard(height: 160),
-            child: totalsAsync.when(
-              data: (totals) {
+          totalsAsync.when(
+            data: (totals) {
+              final income = totals['income'] ?? 0;
               final expense = totals['expense'] ?? 0;
               final net = income - expense;
               final savingsRate = income > 0
@@ -448,9 +446,10 @@ class _OverviewTab extends ConsumerWidget {
                   ),
                 ),
               );
-              error: (e, _) =>
-                  ErrorState(title: 'Could not load data', message: '$e'),
-            ),
+            },
+            loading: () => ShimmerCard(height: 160),
+            error: (e, _) =>
+                ErrorState(title: 'Could not load data', message: '$e'),
           ),
           const SizedBox(height: kSpacing24),
           const MonthlyOverviewSection(),

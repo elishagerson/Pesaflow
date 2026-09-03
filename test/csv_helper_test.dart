@@ -7,9 +7,12 @@ void main() {
   group('CsvHelper', () {
     test('converts empty list to header-only CSV', () {
       final csv = CsvHelper.convertToCsv([]);
-      expect(csv.trim(), equals(
-        'Transaction ID,Date,Type,Account,Category,Description,Amount (TZS),Reference,Sender,Recipient,Source'
-      ));
+      expect(
+        csv.trim(),
+        equals(
+          'Transaction ID,Date,Type,Account,Category,Description,Amount (TZS),Reference,Sender,Recipient,Source',
+        ),
+      );
     });
 
     test('correctly converts and escapes fields according to RFC 4180', () {
@@ -53,19 +56,22 @@ void main() {
           transaction: transaction,
           category: category,
           account: account,
-        )
+        ),
       ]);
 
       final lines = csv.split('\n');
       expect(lines.length, greaterThanOrEqualTo(2));
-      
+
       // Verify row formatting
       final dataRow = lines[1];
       expect(dataRow, contains('tx-123'));
       expect(dataRow, contains('2026-05-21 10:00:00'));
       expect(dataRow, contains('EXPENSE'));
       expect(dataRow, contains('"M-Pesa, cash"')); // escaped comma
-      expect(dataRow, contains('"Buying, ""milk"" & bread"')); // escaped quotes and comma
+      expect(
+        dataRow,
+        contains('"Buying, ""milk"" & bread"'),
+      ); // escaped quotes and comma
       expect(dataRow, contains('2500.00')); // TZS formatted
     });
   });

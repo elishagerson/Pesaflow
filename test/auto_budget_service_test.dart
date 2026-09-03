@@ -61,10 +61,7 @@ void main() {
       expect(needsResult.reduce((a, b) => a + b), needsAmount);
       expect(wantsResult.reduce((a, b) => a + b), wantsAmount);
       expect(savingsResult.reduce((a, b) => a + b), savingsAmount);
-      expect(
-        needsAmount + wantsAmount + savingsAmount,
-        income,
-      );
+      expect(needsAmount + wantsAmount + savingsAmount, income);
     });
   });
 
@@ -93,7 +90,11 @@ void main() {
     });
 
     test('copyWith preserves original when no args', () {
-      const sub = SubAllocation(name: 'Rent', percentage: 0.38, categoryId: 'a');
+      const sub = SubAllocation(
+        name: 'Rent',
+        percentage: 0.38,
+        categoryId: 'a',
+      );
       final copy = sub.copyWith();
       expect(copy.name, 'Rent');
       expect(copy.percentage, 0.38);
@@ -101,7 +102,11 @@ void main() {
     });
 
     test('copyWith overrides categoryId', () {
-      const sub = SubAllocation(name: 'Rent', percentage: 0.38, categoryId: 'a');
+      const sub = SubAllocation(
+        name: 'Rent',
+        percentage: 0.38,
+        categoryId: 'a',
+      );
       final copy = sub.copyWith(categoryId: 'b');
       expect(copy.categoryId, 'b');
     });
@@ -233,12 +238,21 @@ void main() {
       );
       final errors = config.validationErrors;
       expect(errors.length, 4);
-      expect(errors.any((e) => e.contains('80.0%')), isTrue,
-          reason: 'Group percentages should sum to 80.0%');
-      expect(errors.any((e) => e.contains('60.0%')), isTrue,
-          reason: 'Needs sub-allocations should sum to 60.0%');
-      expect(errors.any((e) => e.contains('has no sub-allocations')), isTrue,
-          reason: 'Wants has no sub-allocations');
+      expect(
+        errors.any((e) => e.contains('80.0%')),
+        isTrue,
+        reason: 'Group percentages should sum to 80.0%',
+      );
+      expect(
+        errors.any((e) => e.contains('60.0%')),
+        isTrue,
+        reason: 'Needs sub-allocations should sum to 60.0%',
+      );
+      expect(
+        errors.any((e) => e.contains('has no sub-allocations')),
+        isTrue,
+        reason: 'Wants has no sub-allocations',
+      );
     });
 
     test('serializes and deserializes defaults', () {
@@ -315,10 +329,7 @@ void main() {
 
     test('group percentages sum to 1.0', () {
       final config = AutoBudgetConfig.defaults();
-      final sum = config.groups.fold<double>(
-        0,
-        (s, g) => s + g.percentage,
-      );
+      final sum = config.groups.fold<double>(0, (s, g) => s + g.percentage);
       expect(sum, closeTo(1.0, 0.001));
     });
   });

@@ -354,8 +354,7 @@ void main() {
     });
 
     test('parses bundle/package purchase', () {
-      const sms =
-          'Ununuzi wa kifurushi TZS 3,000.00. Salio: TZS 132,000.00';
+      const sms = 'Ununuzi wa kifurushi TZS 3,000.00. Salio: TZS 132,000.00';
       final result = parser.parse(sms, now);
 
       expect(result, isNotNull);
@@ -374,7 +373,10 @@ void main() {
       expect(result, isNotNull);
       expect(result!.type, 'expense');
       expect(result.amount, 2000000);
-      expect(result.senderOrRecipient, 'Airtel receiver STEPHAN MWAKALASYA - 255787273486');
+      expect(
+        result.senderOrRecipient,
+        'Airtel receiver STEPHAN MWAKALASYA - 255787273486',
+      );
       expect(result.reference, '26706282103620');
       expect(result.provider, 'TigoPesa_TZ');
       expect(result.balanceAfter, 31170800);
@@ -493,8 +495,7 @@ void main() {
     });
 
     test('SWAHILI: parses Umenunua airtime (airtime purchase)', () {
-      const sms =
-          'Umenunua airtime TZS 5,000. Salio: TZS 195,000.00';
+      const sms = 'Umenunua airtime TZS 5,000. Salio: TZS 195,000.00';
       final result = parser.parse(sms, now);
 
       expect(result, isNotNull);
@@ -611,18 +612,21 @@ void main() {
       expect(result.balanceAfter, 19500000);
     });
 
-    test('ENGLISH: Money sent successfully to (modern Mixx balance-first format)', () {
-      const sms =
-          'New Bal TSh 200. Money sent successfully to Sporty Bet, Biller Code: 190190, Ref No: 255675259341.Amt TSh 7,500, Total Charges TSh 300.(Fees TSh 0, Levy TSh 0), VAT TSh 46.TxnID: 26693868497442.11/07/26 20:32. The transaction has been submitted successfully..';
-      final result = parser.parse(sms, now);
+    test(
+      'ENGLISH: Money sent successfully to (modern Mixx balance-first format)',
+      () {
+        const sms =
+            'New Bal TSh 200. Money sent successfully to Sporty Bet, Biller Code: 190190, Ref No: 255675259341.Amt TSh 7,500, Total Charges TSh 300.(Fees TSh 0, Levy TSh 0), VAT TSh 46.TxnID: 26693868497442.11/07/26 20:32. The transaction has been submitted successfully..';
+        final result = parser.parse(sms, now);
 
-      expect(result, isNotNull);
-      expect(result!.type, 'expense');
-      expect(result.amount, 750000);
-      expect(result.senderOrRecipient, 'Sporty Bet');
-      expect(result.reference, '26693868497442');
-      expect(result.balanceAfter, 20000);
-    });
+        expect(result, isNotNull);
+        expect(result!.type, 'expense');
+        expect(result.amount, 750000);
+        expect(result.senderOrRecipient, 'Sporty Bet');
+        expect(result.reference, '26693868497442');
+        expect(result.balanceAfter, 20000);
+      },
+    );
 
     test('ENGLISH: parses Payment Successful to (bill/bet payment)', () {
       const sms =
@@ -926,7 +930,10 @@ void main() {
       expect(result, isNotNull);
       expect(result!.type, 'income');
       expect(result.amount, 47300000);
-      expect(result.senderOrRecipient, 'ELISHA NDUNDULU - Mixx by Yas (255675259341)');
+      expect(
+        result.senderOrRecipient,
+        'ELISHA NDUNDULU - Mixx by Yas (255675259341)',
+      );
       expect(result.reference, '0517EQMYW');
       expect(result.provider, 'SelcomPesa_TZ');
       expect(result.balanceAfter, 47731985);
@@ -954,7 +961,10 @@ void main() {
       expect(result, isNotNull);
       expect(result!.type, 'income');
       expect(result.amount, 5000000);
-      expect(result.senderOrRecipient, 'ELISHA NDUNDULU - Mixx by Yas (255675259341)');
+      expect(
+        result.senderOrRecipient,
+        'ELISHA NDUNDULU - Mixx by Yas (255675259341)',
+      );
     });
   });
 
@@ -974,7 +984,8 @@ void main() {
     });
 
     test('all parsers return null for promotional messages', () {
-      const promo = 'Congratulations! You have won a free iPhone! Click here to claim.';
+      const promo =
+          'Congratulations! You have won a free iPhone! Click here to claim.';
       expect(MpesaTzParser().parse(promo, now), isNull);
       expect(AirtelTzParser().parse(promo, now), isNull);
       expect(MixxParser().parse(promo, now), isNull);
@@ -1039,46 +1050,74 @@ void main() {
 
     for (final entry in smsCorpus) {
       test(entry.label, () {
-        final provider = ProviderMatcher.matchProvider(entry.sender, body: entry.body);
+        final provider = ProviderMatcher.matchProvider(
+          entry.sender,
+          body: entry.body,
+        );
 
         if (entry.expect.expectsNull) {
           if (provider == null) {
             return; // unrecognized sender = null, correct
           }
           final parser = parserFor(provider);
-          expect(parser.parse(entry.body, entry.timestamp), isNull,
-              reason: 'Expected null for "${entry.label}"');
+          expect(
+            parser.parse(entry.body, entry.timestamp),
+            isNull,
+            reason: 'Expected null for "${entry.label}"',
+          );
           return;
         }
 
-        expect(provider, isNotNull,
-            reason: 'No provider matched sender "${entry.sender}" for "${entry.label}"');
+        expect(
+          provider,
+          isNotNull,
+          reason:
+              'No provider matched sender "${entry.sender}" for "${entry.label}"',
+        );
         final parser = parserFor(provider!);
         final result = parser.parse(entry.body, entry.timestamp);
 
-        expect(result, isNotNull,
-            reason: 'Parser returned null for "${entry.label}"');
+        expect(
+          result,
+          isNotNull,
+          reason: 'Parser returned null for "${entry.label}"',
+        );
         if (result == null) return;
 
         if (entry.expect.amount != null) {
-          expect(result.amount, entry.expect.amount,
-              reason: 'amount mismatch for "${entry.label}"');
+          expect(
+            result.amount,
+            entry.expect.amount,
+            reason: 'amount mismatch for "${entry.label}"',
+          );
         }
         if (entry.expect.type != null) {
-          expect(result.type, entry.expect.type,
-              reason: 'type mismatch for "${entry.label}"');
+          expect(
+            result.type,
+            entry.expect.type,
+            reason: 'type mismatch for "${entry.label}"',
+          );
         }
         if (entry.expect.senderOrRecipient != null) {
-          expect(result.senderOrRecipient, entry.expect.senderOrRecipient,
-              reason: 'senderOrRecipient mismatch for "${entry.label}"');
+          expect(
+            result.senderOrRecipient,
+            entry.expect.senderOrRecipient,
+            reason: 'senderOrRecipient mismatch for "${entry.label}"',
+          );
         }
         if (entry.expect.reference != null) {
-          expect(result.reference, entry.expect.reference,
-              reason: 'reference mismatch for "${entry.label}"');
+          expect(
+            result.reference,
+            entry.expect.reference,
+            reason: 'reference mismatch for "${entry.label}"',
+          );
         }
         if (entry.expect.balanceAfter != null) {
-          expect(result.balanceAfter, entry.expect.balanceAfter,
-              reason: 'balanceAfter mismatch for "${entry.label}"');
+          expect(
+            result.balanceAfter,
+            entry.expect.balanceAfter,
+            reason: 'balanceAfter mismatch for "${entry.label}"',
+          );
         }
       });
     }

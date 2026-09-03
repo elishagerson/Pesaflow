@@ -9,7 +9,7 @@ void main() {
       test('calculates correct percentage for partial spend', () {
         final status = BudgetEngine.computeStatus(
           allocated: 30000000, // Tsh 300,000
-          spent: 15000000,     // Tsh 150,000
+          spent: 15000000, // Tsh 150,000
           periodStart: DateTime.now().subtract(const Duration(days: 15)),
           periodEnd: DateTime.now().add(const Duration(days: 15)),
         );
@@ -22,7 +22,7 @@ void main() {
       test('detects over-budget when spent exceeds allocated', () {
         final status = BudgetEngine.computeStatus(
           allocated: 10000000, // Tsh 100,000
-          spent: 12000000,     // Tsh 120,000
+          spent: 12000000, // Tsh 120,000
           periodStart: DateTime.now().subtract(const Duration(days: 20)),
           periodEnd: DateTime.now().add(const Duration(days: 10)),
         );
@@ -157,27 +157,46 @@ void main() {
 
     group('checkBudgetThresholds', () {
       Category cat(String id) => Category(
-        id: id, name: 'Food', icon: 'cart', color: '#FF9800',
-        type: 'expense', isSystem: true, sortOrder: 1, createdAt: DateTime.now(),
+        id: id,
+        name: 'Food',
+        icon: 'cart',
+        color: '#FF9800',
+        type: 'expense',
+        isSystem: true,
+        sortOrder: 1,
+        createdAt: DateTime.now(),
       );
 
-      Budget budget(String id, {int amount = 30000000, double threshold = 0.8}) => Budget(
-        id: id, name: 'Food', categoryId: 'cat1',
-        period: 'monthly', amount: amount,
-        rollover: false, rolloverType: 'none',
+      Budget budget(
+        String id, {
+        int amount = 30000000,
+        double threshold = 0.8,
+      }) => Budget(
+        id: id,
+        name: 'Food',
+        categoryId: 'cat1',
+        period: 'monthly',
+        amount: amount,
+        rollover: false,
+        rolloverType: 'none',
         startDate: DateTime.now().subtract(const Duration(days: 15)),
         endDate: DateTime.now().add(const Duration(days: 15)),
         notificationThreshold: threshold,
-        isActive: true, createdAt: DateTime.now(),
+        isActive: true,
+        createdAt: DateTime.now(),
       );
 
-      BudgetPeriod period(String budgetId, int allocated, {int spent = 0}) => BudgetPeriod(
-        id: 'p_$budgetId', budgetId: budgetId,
-        periodStart: DateTime.now().subtract(const Duration(days: 15)),
-        periodEnd: DateTime.now().add(const Duration(days: 15)),
-        allocated: allocated, spent: spent,
-        isClosed: false, createdAt: DateTime.now(),
-      );
+      BudgetPeriod period(String budgetId, int allocated, {int spent = 0}) =>
+          BudgetPeriod(
+            id: 'p_$budgetId',
+            budgetId: budgetId,
+            periodStart: DateTime.now().subtract(const Duration(days: 15)),
+            periodEnd: DateTime.now().add(const Duration(days: 15)),
+            allocated: allocated,
+            spent: spent,
+            isClosed: false,
+            createdAt: DateTime.now(),
+          );
 
       test('no alerts when budgets are on track', () {
         final result = BudgetEngine.checkBudgetThresholds([
@@ -194,19 +213,22 @@ void main() {
         expect(result.projectedToExceed, isEmpty);
       });
 
-      test('detects crossed threshold when percentage >= notificationThreshold', () {
-        final result = BudgetEngine.checkBudgetThresholds([
-          BudgetWithProgress(
-            budget: budget('b1'),
-            spentInPeriod: 28000000,
-            category: cat('cat1'),
-            currentPeriod: period('b1', 30000000),
-          ),
-        ]);
+      test(
+        'detects crossed threshold when percentage >= notificationThreshold',
+        () {
+          final result = BudgetEngine.checkBudgetThresholds([
+            BudgetWithProgress(
+              budget: budget('b1'),
+              spentInPeriod: 28000000,
+              category: cat('cat1'),
+              currentPeriod: period('b1', 30000000),
+            ),
+          ]);
 
-        expect(result.crossedThreshold, contains('b1'));
-        expect(result.exceeded, isEmpty);
-      });
+          expect(result.crossedThreshold, contains('b1'));
+          expect(result.exceeded, isEmpty);
+        },
+      );
 
       test('detects exceeded when spent > allocated', () {
         final result = BudgetEngine.checkBudgetThresholds([
@@ -319,20 +341,22 @@ void main() {
         );
       });
 
-      test('successive monthly periods from month-end clamp without overlap',
-          () {
-        final period = 'monthly';
-        var start = DateTime(2026, 1, 31);
-        for (var i = 0; i < 12; i++) {
-          final end = BudgetEngine.computePeriodEnd(start, period);
-          final length = end.difference(start).inDays + 1;
-          expect(length, inInclusiveRange(28, 31));
-          start = end.add(const Duration(days: 1));
-        }
-        // 12 monthly periods starting Jan 31 2026 finish in Feb 2027.
-        expect(start.year, 2027);
-        expect(start.month, 2);
-      });
+      test(
+        'successive monthly periods from month-end clamp without overlap',
+        () {
+          final period = 'monthly';
+          var start = DateTime(2026, 1, 31);
+          for (var i = 0; i < 12; i++) {
+            final end = BudgetEngine.computePeriodEnd(start, period);
+            final length = end.difference(start).inDays + 1;
+            expect(length, inInclusiveRange(28, 31));
+            start = end.add(const Duration(days: 1));
+          }
+          // 12 monthly periods starting Jan 31 2026 finish in Feb 2027.
+          expect(start.year, 2027);
+          expect(start.month, 2);
+        },
+      );
     });
 
     group('period boundary expiry', () {
@@ -370,18 +394,21 @@ void main() {
         expect(atMidnight.isAfter(expiryBoundary), isFalse);
       });
 
-      test('old boundary check (isAfter periodEnd) would prematurely close', () {
-        // Demonstrates the bug: the old check was `now.isAfter(periodEnd)`
-        final periodEnd = DateTime(2026, 9, 30); // midnight
-        final morningOfLastDay = DateTime(2026, 9, 30, 8, 0);
+      test(
+        'old boundary check (isAfter periodEnd) would prematurely close',
+        () {
+          // Demonstrates the bug: the old check was `now.isAfter(periodEnd)`
+          final periodEnd = DateTime(2026, 9, 30); // midnight
+          final morningOfLastDay = DateTime(2026, 9, 30, 8, 0);
 
-        // Old broken check: 8am on Sep 30 IS after midnight Sep 30
-        expect(morningOfLastDay.isAfter(periodEnd), isTrue);
+          // Old broken check: 8am on Sep 30 IS after midnight Sep 30
+          expect(morningOfLastDay.isAfter(periodEnd), isTrue);
 
-        // New correct check: 8am on Sep 30 is NOT after Oct 1 midnight
-        final expiryBoundary = DateTime(2026, 10, 1);
-        expect(morningOfLastDay.isAfter(expiryBoundary), isFalse);
-      });
+          // New correct check: 8am on Sep 30 is NOT after Oct 1 midnight
+          final expiryBoundary = DateTime(2026, 10, 1);
+          expect(morningOfLastDay.isAfter(expiryBoundary), isFalse);
+        },
+      );
     });
   });
 }

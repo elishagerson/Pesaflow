@@ -15,7 +15,10 @@ void main() {
     });
 
     test('Enforces decimals display when specified', () {
-      expect(CurrencyFormatter.formatCents(5000000, showDecimals: true), 'Tsh 50,000.00');
+      expect(
+        CurrencyFormatter.formatCents(5000000, showDecimals: true),
+        'Tsh 50,000.00',
+      );
     });
   });
 

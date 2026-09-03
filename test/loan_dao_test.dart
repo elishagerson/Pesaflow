@@ -82,28 +82,32 @@ void main() {
       final activeId = const Uuid().v4();
       final paidId = const Uuid().v4();
 
-      await loanDao.insertLoan(Loan(
-        id: activeId,
-        amount: 50000000,
-        remaining: 30000000,
-        status: 'active',
-        disbursedAt: DateTime.now(),
-        trackerId: 'default_personal',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ));
+      await loanDao.insertLoan(
+        Loan(
+          id: activeId,
+          amount: 50000000,
+          remaining: 30000000,
+          status: 'active',
+          disbursedAt: DateTime.now(),
+          trackerId: 'default_personal',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
-      await loanDao.insertLoan(Loan(
-        id: paidId,
-        amount: 50000000,
-        remaining: 0,
-        status: 'paid',
-        paidAt: DateTime.now(),
-        disbursedAt: DateTime.now(),
-        trackerId: 'default_personal',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ));
+      await loanDao.insertLoan(
+        Loan(
+          id: paidId,
+          amount: 50000000,
+          remaining: 0,
+          status: 'paid',
+          paidAt: DateTime.now(),
+          disbursedAt: DateTime.now(),
+          trackerId: 'default_personal',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
       final activeLoans = await loanDao.getActiveLoans();
       expect(activeLoans.length, 1);
@@ -113,16 +117,18 @@ void main() {
     test('markLoanAsPaid sets status to paid and remaining to 0', () async {
       final loanId = const Uuid().v4();
 
-      await loanDao.insertLoan(Loan(
-        id: loanId,
-        amount: 50000000,
-        remaining: 20000000,
-        status: 'active',
-        disbursedAt: DateTime.now(),
-        trackerId: 'default_personal',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ));
+      await loanDao.insertLoan(
+        Loan(
+          id: loanId,
+          amount: 50000000,
+          remaining: 20000000,
+          status: 'active',
+          disbursedAt: DateTime.now(),
+          trackerId: 'default_personal',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
       await loanDao.markLoanAsPaid(loanId);
       final loan = await loanDao.getLoanById(loanId);
@@ -134,16 +140,18 @@ void main() {
     test('applyPayment reduces remaining balance', () async {
       final loanId = const Uuid().v4();
 
-      await loanDao.insertLoan(Loan(
-        id: loanId,
-        amount: 50000000,
-        remaining: 50000000,
-        status: 'active',
-        disbursedAt: DateTime.now(),
-        trackerId: 'default_personal',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ));
+      await loanDao.insertLoan(
+        Loan(
+          id: loanId,
+          amount: 50000000,
+          remaining: 50000000,
+          status: 'active',
+          disbursedAt: DateTime.now(),
+          trackerId: 'default_personal',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
       await loanDao.applyPayment(loanId, 10000000);
       var loan = await loanDao.getLoanById(loanId);
@@ -159,16 +167,18 @@ void main() {
     test('applyPayment clamps remaining to 0', () async {
       final loanId = const Uuid().v4();
 
-      await loanDao.insertLoan(Loan(
-        id: loanId,
-        amount: 50000000,
-        remaining: 50000000,
-        status: 'active',
-        disbursedAt: DateTime.now(),
-        trackerId: 'default_personal',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ));
+      await loanDao.insertLoan(
+        Loan(
+          id: loanId,
+          amount: 50000000,
+          remaining: 50000000,
+          status: 'active',
+          disbursedAt: DateTime.now(),
+          trackerId: 'default_personal',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
       await loanDao.applyPayment(loanId, 99999999);
       final loan = await loanDao.getLoanById(loanId);
@@ -177,39 +187,45 @@ void main() {
     });
 
     test('getTotalOutstanding sums active loan remaining balances', () async {
-      await loanDao.insertLoan(Loan(
-        id: const Uuid().v4(),
-        amount: 50000000,
-        remaining: 30000000,
-        status: 'active',
-        disbursedAt: DateTime.now(),
-        trackerId: 'default_personal',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ));
+      await loanDao.insertLoan(
+        Loan(
+          id: const Uuid().v4(),
+          amount: 50000000,
+          remaining: 30000000,
+          status: 'active',
+          disbursedAt: DateTime.now(),
+          trackerId: 'default_personal',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
-      await loanDao.insertLoan(Loan(
-        id: const Uuid().v4(),
-        amount: 10000000,
-        remaining: 5000000,
-        status: 'active',
-        disbursedAt: DateTime.now(),
-        trackerId: 'default_personal',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ));
+      await loanDao.insertLoan(
+        Loan(
+          id: const Uuid().v4(),
+          amount: 10000000,
+          remaining: 5000000,
+          status: 'active',
+          disbursedAt: DateTime.now(),
+          trackerId: 'default_personal',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
-      await loanDao.insertLoan(Loan(
-        id: const Uuid().v4(),
-        amount: 20000000,
-        remaining: 0,
-        status: 'paid',
-        paidAt: DateTime.now(),
-        disbursedAt: DateTime.now(),
-        trackerId: 'default_personal',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ));
+      await loanDao.insertLoan(
+        Loan(
+          id: const Uuid().v4(),
+          amount: 20000000,
+          remaining: 0,
+          status: 'paid',
+          paidAt: DateTime.now(),
+          disbursedAt: DateTime.now(),
+          trackerId: 'default_personal',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
       final total = await loanDao.getTotalOutstanding();
       expect(total, 35000000);
@@ -220,42 +236,48 @@ void main() {
       final categories = await categoryDao.getAllCategories();
       final salaryCat = categories.firstWhere((c) => c.name == 'Salary');
 
-      await accountDao.insertAccount(Account(
-        id: const Uuid().v4(),
-        name: 'Test',
-        type: 'cash',
-        balance: 0,
-        icon: 'wallet',
-        sortOrder: 0,
-        isArchived: false,
-        createdAt: DateTime.now(),
-      ));
+      await accountDao.insertAccount(
+        Account(
+          id: const Uuid().v4(),
+          name: 'Test',
+          type: 'cash',
+          balance: 0,
+          icon: 'wallet',
+          sortOrder: 0,
+          isArchived: false,
+          createdAt: DateTime.now(),
+        ),
+      );
 
-      await loanDao.insertLoan(Loan(
-        id: loanId,
-        amount: 50000000,
-        remaining: 50000000,
-        status: 'active',
-        disbursedAt: DateTime.now(),
-        trackerId: 'default_personal',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ));
+      await loanDao.insertLoan(
+        Loan(
+          id: loanId,
+          amount: 50000000,
+          remaining: 50000000,
+          status: 'active',
+          disbursedAt: DateTime.now(),
+          trackerId: 'default_personal',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
       final accountId = (await accountDao.getAllAccounts()).first.id;
       final txId = const Uuid().v4();
-      await transactionDao.writeTransactionWithBalanceAdjustment(Transaction(
-        id: txId,
-        accountId: accountId,
-        categoryId: salaryCat.id,
-        loanId: loanId,
-        amount: 1000000,
-        type: 'expense',
-        description: 'Loan payment',
-        source: 'manual',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ));
+      await transactionDao.writeTransactionWithBalanceAdjustment(
+        Transaction(
+          id: txId,
+          accountId: accountId,
+          categoryId: salaryCat.id,
+          loanId: loanId,
+          amount: 1000000,
+          type: 'expense',
+          description: 'Loan payment',
+          source: 'manual',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
       await loanDao.deleteLoan(loanId);
       expect(await loanDao.getLoanById(loanId), isNull);

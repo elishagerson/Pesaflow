@@ -149,6 +149,7 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                                   ),
                                 ),
                                 IconButton(
+                                  tooltip: 'Edit',
                                   icon: const Icon(
                                     PesaFlowIcons.edit,
                                     size: 18,
