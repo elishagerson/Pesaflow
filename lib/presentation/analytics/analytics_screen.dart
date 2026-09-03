@@ -46,6 +46,8 @@ class TrendDataPoint {
 class TrendRangeNotifier extends Notifier<TrendRange> {
   @override
   TrendRange build() => TrendRange.days;
+
+  void select(TrendRange range) => state = range;
 }
 
 final trendRangeProvider = NotifierProvider<TrendRangeNotifier, TrendRange>(() {
@@ -992,7 +994,7 @@ class _TrendsTab extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         HapticFeedback.selectionClick();
-        ref.read(trendRangeProvider.notifier).state = range;
+        ref.read(trendRangeProvider.notifier).select(range);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
