@@ -674,7 +674,7 @@ class _RecurringTransactionListScreenState
   // ── Empty State ─────────────────────────────────────────────────────────
   Widget _buildEmptyState(BuildContext context, ThemeData theme) {
     return Padding(
-      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15),
+      padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.15),
       child: EmptyState(
         icon: PesaFlowIcons.calendar,
         title: 'No Recurring Flows',
