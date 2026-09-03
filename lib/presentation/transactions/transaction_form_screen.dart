@@ -761,7 +761,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           left: kSpacing16,
           right: kSpacing16,
           top: kSpacing16,
-          bottom: MediaQuery.of(context).viewInsets.bottom + kSpacing16,
+          bottom: MediaQuery.viewInsetsOf(context).bottom + kSpacing16,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
