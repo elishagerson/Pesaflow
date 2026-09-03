@@ -8,6 +8,7 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/shimmer_card.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
@@ -157,7 +158,7 @@ class InsightsTab extends ConsumerWidget {
           },
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const ShimmerCard(),
       error: (e, _) => ErrorState(
         title: 'Failed to load analytics',
         message: e.toString(),

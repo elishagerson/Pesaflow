@@ -13,6 +13,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/shimmer_card.dart';
 
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
@@ -311,9 +312,11 @@ class _OverviewTab extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Monthly Summary
-          totalsAsync.when(
-            data: (totals) {
-              final income = totals['income'] ?? 0;
+          SkeletonCrossfade(
+            isLoading: totalsAsync.isLoading,
+            skeleton: ShimmerCard(height: 160),
+            child: totalsAsync.when(
+              data: (totals) {
               final expense = totals['expense'] ?? 0;
               final net = income - expense;
               final savingsRate = income > 0
@@ -445,13 +448,9 @@ class _OverviewTab extends ConsumerWidget {
                   ),
                 ),
               );
-            },
-            loading: () => const SizedBox(
-              height: 160,
-              child: Center(child: CircularProgressIndicator()),
+              error: (e, _) =>
+                  ErrorState(title: 'Could not load data', message: '$e'),
             ),
-            error: (e, _) =>
-                ErrorState(title: 'Could not load data', message: '$e'),
           ),
           const SizedBox(height: kSpacing24),
           const MonthlyOverviewSection(),
