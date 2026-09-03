@@ -23,6 +23,7 @@ import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class BudgetFormScreen extends ConsumerStatefulWidget {
@@ -502,7 +503,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                           _buildCategorySelector(cats, theme),
                                       loading: () =>
                                           const LinearProgressIndicator(),
-                                      error: (e, _) => Text('Error: $e'),
+                                      error: (e, _) => ErrorState(
+                                        title: 'Could not load categories',
+                                        message: '$e',
+                                      ),
                                     ),
                                     const SizedBox(height: kSpacing8),
                                     _InteractiveInputRow(

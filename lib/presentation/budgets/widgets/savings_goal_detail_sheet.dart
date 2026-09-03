@@ -21,6 +21,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:go_router/go_router.dart';
 
@@ -1114,7 +1115,10 @@ class _SavingsGoalDetailSheetState
                     },
                     loading: () =>
                         const Center(child: CupertinoActivityIndicator()),
-                    error: (e, _) => Text('Error: $e'),
+                    error: (e, _) => ErrorState(
+                      title: 'Could not load data',
+                      message: '$e',
+                    ),
                   ),
                   const SizedBox(height: kSpacing20),
                 ],

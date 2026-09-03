@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -30,15 +31,7 @@ import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.d
 import 'package:pesaflow/services/home_widgets_renderer.dart';
 import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
-import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
-
-final cardholderNameProvider = StreamProvider<String>((ref) {
-  final repo = ref.watch(settingsRepositoryProvider);
-  return repo
-      .watchSetting('cardholder_name')
-      .map((val) => val ?? 'TOTAL NET WORTH');
-});
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -1198,13 +1191,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                                             kSpacing8,
                                                                       ),
                                                                       Text(
-                                                                        trans
-                                                                            .createdAt
-                                                                            .toString()
-                                                                            .substring(
-                                                                              0,
-                                                                              10,
-                                                                            ),
+                                                                        DateFormat(
+                                                                          'MMM d, yyyy',
+                                                                        ).format(
+                                                                          trans
+                                                                              .createdAt,
+                                                                        ),
                                                                         style: theme
                                                                             .textTheme
                                                                             .labelSmall

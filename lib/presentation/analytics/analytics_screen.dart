@@ -12,6 +12,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
@@ -453,7 +454,10 @@ class _OverviewTab extends StatelessWidget {
               height: 160,
               child: Center(child: CircularProgressIndicator()),
             ),
-            error: (e, _) => Text('Error: $e'),
+            error: (e, _) => ErrorState(
+              title: 'Could not load data',
+              message: '$e',
+            ),
           ),
           const SizedBox(height: kSpacing24),
           const MonthlyOverviewSection(),
@@ -967,7 +971,10 @@ class _OverviewTab extends StatelessWidget {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                   ),
-                  error: (e, _) => Text('Error: $e'),
+                  error: (e, _) => ErrorState(
+              title: 'Could not load data',
+              message: '$e',
+            ),
                 ),
                 const SizedBox(height: kSpacing24),
                 const SpendingHeatmapCard(),
@@ -1315,7 +1322,10 @@ class _TrendsTab extends StatelessWidget {
               height: 200,
               child: Center(child: CircularProgressIndicator()),
             ),
-            error: (e, _) => Text('Error: $e'),
+            error: (e, _) => ErrorState(
+              title: 'Could not load data',
+              message: '$e',
+            ),
           ),
           const SizedBox(height: kSpacing20),
           StaggeredFadeSlide(

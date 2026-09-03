@@ -53,6 +53,13 @@ final allTrackersStreamProvider = StreamProvider<List<Tracker>>((ref) {
   return repo.watchAllTrackers();
 });
 
+final cardholderNameProvider = StreamProvider<String>((ref) {
+  final repo = ref.watch(settingsRepositoryProvider);
+  return repo
+      .watchSetting('cardholder_name')
+      .map((val) => val ?? 'TOTAL NET WORTH');
+});
+
 final activeTrackerProvider = FutureProvider<Tracker?>((ref) async {
   final id = ref.watch(activeTrackerIdProvider);
   final repo = ref.watch(trackerRepositoryProvider);
