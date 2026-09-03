@@ -64,6 +64,7 @@ class _ToastWidgetState extends State<_ToastWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   Timer? _timer;
+  bool _initialized = false;
 
   @override
   void initState() {
@@ -73,6 +74,22 @@ class _ToastWidgetState extends State<_ToastWidget>
       duration: const Duration(milliseconds: 600),
     );
 
+    _timer = Timer(widget.duration, () {
+      _dismiss();
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
+
+    if (context.isReducedMotion) {
+      _controller.value = 1.0;
+      return;
+    }
+
     // Physics-based spring simulation for premium entry feel
     final spring = SpringDescription(
       mass: 0.6, // lightweight
@@ -81,25 +98,24 @@ class _ToastWidgetState extends State<_ToastWidget>
     );
     final simulation = SpringSimulation(spring, 0.0, 1.0, 0.0);
     _controller.animateWith(simulation);
-
-    _timer = Timer(widget.duration, () {
-      _dismiss();
-    });
   }
 
   void _dismiss() {
-    if (mounted) {
-      // Snappy slide-out transition
-      _controller
-          .animateTo(
-            0.0,
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInCubic,
-          )
-          .then((_) {
-            widget.onDismiss();
-          });
+    if (!mounted) return;
+    if (context.isReducedMotion) {
+      widget.onDismiss();
+      return;
     }
+    // Snappy slide-out transition
+    _controller
+        .animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInCubic,
+        )
+        .then((_) {
+          widget.onDismiss();
+        });
   }
 
   @override
