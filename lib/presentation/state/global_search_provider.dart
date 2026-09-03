@@ -84,7 +84,9 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
         ),
       );
     }
-  } catch (_) {}
+  } catch (e) {
+    debugPrint('Global search (transactions) failed: $e');
+  }
 
   try {
     final budgets =
@@ -116,7 +118,9 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
         ),
       );
     }
-  } catch (_) {}
+  } catch (e) {
+    debugPrint('Global search (budgets) failed: $e');
+  }
 
   try {
     final goals =
@@ -150,7 +154,9 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
         ),
       );
     }
-  } catch (_) {}
+  } catch (e) {
+    debugPrint('Global search (savings goals) failed: $e');
+  }
 
   try {
     final loans =
@@ -185,7 +191,9 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
         ),
       );
     }
-  } catch (_) {}
+  } catch (e) {
+    debugPrint('Global search (loans) failed: $e');
+  }
 
   return results;
 });

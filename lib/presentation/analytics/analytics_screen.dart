@@ -189,6 +189,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   Widget build(BuildContext context) {
     super.build(context);
     final theme = Theme.of(context);
+    final appColors = context.appColors;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -209,7 +210,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         28,
                         fontWeight: FontWeight.w700,
                         letterSpacing: -0.8,
-                        color: Colors.white,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -217,7 +218,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       'Spending trends & insights',
                       style: context.ts(
                         13,
-                        color: Colors.white.withValues(alpha: 0.5),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                   ],
@@ -229,7 +232,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 margin: const EdgeInsets.fromLTRB(16, 10, 16, 6),
                 padding: const EdgeInsets.all(kSpacing4),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.06),
+                  color: appColors.surfaceContainerHighest.withValues(alpha: 0.6),
                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                 ),
                 child: TabBar(
@@ -237,11 +240,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   dividerColor: Colors.transparent,
                   indicatorPadding: EdgeInsets.zero,
                   indicator: BoxDecoration(
-                    color: Colors.white,
+                    color: theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   ),
-                  labelColor: Colors.black87,
-                  unselectedLabelColor: Colors.white.withValues(alpha: 0.55),
+                  labelColor: theme.colorScheme.onSurface,
+                  unselectedLabelColor: theme.colorScheme.onSurface.withValues(
+                    alpha: 0.55,
+                  ),
                   labelStyle: context.ts(13, fontWeight: FontWeight.w700),
                   unselectedLabelStyle: context.ts(
                     13,
@@ -257,13 +262,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               Expanded(
                 child: TabBarView(
                   children: [
-                    _OverviewTab(
-                      theme: theme,
-                      ref: ref,
-                      hexToColor: hexToColor,
-                    ),
-                    _TrendsTab(theme: theme, ref: ref),
-                    InsightsTab(theme: theme, ref: ref),
+                    const _OverviewTab(),
+                    const _TrendsTab(),
+                    const InsightsTab(),
                   ],
                 ),
               ),
@@ -288,18 +289,12 @@ Gradient _getCategoryNeonGradient(Color baseColor) {
   );
 }
 
-class _OverviewTab extends StatelessWidget {
-  final ThemeData theme;
-  final WidgetRef ref;
-  final Color Function(String) hexToColor;
-  const _OverviewTab({
-    required this.theme,
-    required this.ref,
-    required this.hexToColor,
-  });
+class _OverviewTab extends ConsumerWidget {
+  const _OverviewTab();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final totalsAsync = ref.watch(monthlyTotalsProvider);
     final categoriesAsync = ref.watch(topCategoriesProvider);
 
@@ -987,12 +982,16 @@ class _OverviewTab extends StatelessWidget {
   }
 }
 
-class _TrendsTab extends StatelessWidget {
-  final ThemeData theme;
-  final WidgetRef ref;
-  const _TrendsTab({required this.theme, required this.ref});
+class _TrendsTab extends ConsumerWidget {
+  const _TrendsTab();
 
-  Widget _buildRangeButton(TrendRange range, String label, TrendRange current) {
+  Widget _buildRangeButton(
+    TrendRange range,
+    String label,
+    TrendRange current,
+    ThemeData theme,
+    WidgetRef ref,
+  ) {
     final isSelected = range == current;
 
     return GestureDetector(
@@ -1025,7 +1024,8 @@ class _TrendsTab extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final currentRange = ref.watch(trendRangeProvider);
     final trendPointsAsync = ref.watch(trendPointsProvider);
 
@@ -1084,16 +1084,26 @@ class _TrendsTab extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _buildRangeButton(TrendRange.days, 'Days', currentRange),
+                      _buildRangeButton(
+                        TrendRange.days,
+                        'Days',
+                        currentRange,
+                        theme,
+                        ref,
+                      ),
                       _buildRangeButton(
                         TrendRange.weeks,
                         'Weeks',
                         currentRange,
+                        theme,
+                        ref,
                       ),
                       _buildRangeButton(
                         TrendRange.months,
                         'Months',
                         currentRange,
+                        theme,
+                        ref,
                       ),
                     ],
                   ),

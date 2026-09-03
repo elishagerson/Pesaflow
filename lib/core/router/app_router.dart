@@ -366,10 +366,60 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
   }
 }
 
+class _RouterErrorPage extends StatelessWidget {
+  const _RouterErrorPage();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(kSpacing24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.travel_explore_rounded,
+                  size: 48,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(height: kSpacing20),
+                Text(
+                  'Page not found',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: kSpacing8),
+                Text(
+                  'The screen you are looking for does not exist.',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: kSpacing24),
+                FilledButton.icon(
+                  onPressed: () => context.go('/'),
+                  icon: const Icon(Icons.home_rounded),
+                  label: const Text('Go Home'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
   debugLogDiagnostics: kDebugMode,
+  errorBuilder: (context, state) => const _RouterErrorPage(),
   redirect: (context, state) async {
     final prefs = await SharedPreferences.getInstance();
     final onboardingComplete = prefs.getBool('onboarding_complete') ?? false;

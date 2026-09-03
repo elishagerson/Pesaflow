@@ -31,7 +31,7 @@ class CategoryBudgetCard extends StatelessWidget {
     // Choose color based on budget progress
     final Color progressColor = isOverBudget
         ? appColors.expenseColor
-        : (pct > 0.85 ? Colors.orange : appColors.incomeColor);
+        : (pct > 0.85 ? appColors.warningColor : theme.colorScheme.primary);
 
     return TactileSpringContainer(
       onTap: onTap,
