@@ -1364,7 +1364,12 @@ class _ConfidenceRingState extends State<ConfidenceRing>
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..repeat(reverse: true);
+    );
+    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      _pulseController.value = 1.0;
+    } else {
+      _pulseController.repeat(reverse: true);
+    }
   }
 
   @override
