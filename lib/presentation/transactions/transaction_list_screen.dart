@@ -1392,7 +1392,11 @@ class _NewRowHighlightState extends State<_NewRowHighlight>
       duration: const Duration(milliseconds: 2000),
     );
     _animation = _controller.drive(Tween<double>(begin: 0.12, end: 0));
-    _controller.forward();
+    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      _controller.value = 0.0;
+    } else {
+      _controller.forward();
+    }
   }
 
   @override

@@ -113,7 +113,12 @@ class _ShimmerEffectState extends State<_ShimmerEffect>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
-    )..repeat();
+    );
+    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      _controller.value = 0.5;
+    } else {
+      _controller.repeat();
+    }
     _animation = Tween<double>(begin: -1, end: 2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
     );
