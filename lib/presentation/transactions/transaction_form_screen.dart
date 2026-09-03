@@ -28,6 +28,7 @@ import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 
 class TransactionFormScreen extends ConsumerStatefulWidget {
   final String? transactionId;
@@ -737,7 +738,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e')),
+              error: (e, _) => Center(
+                child: ErrorState(
+                  title: 'Could not load data',
+                  message: '$e',
+                ),
+              ),
             ),
           ],
         ),
