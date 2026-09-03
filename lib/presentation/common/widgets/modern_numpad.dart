@@ -160,7 +160,7 @@ class ModernNumpad extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: MediaQuery.of(context).padding.bottom + kSpacing16),
+          SizedBox(height: MediaQuery.paddingOf(context).bottom + kSpacing16),
         ],
       ),
     );

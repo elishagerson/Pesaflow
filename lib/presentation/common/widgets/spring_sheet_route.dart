@@ -93,7 +93,7 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
     final theme = Theme.of(context);
     final bgColor = widget.backgroundColor ?? theme.colorScheme.surface;
     final bottomInset = widget.useSafeArea
-        ? MediaQuery.of(context).viewInsets.bottom
+        ? MediaQuery.viewInsetsOf(context).bottom
         : 0.0;
 
     return AnimatedBuilder(
@@ -129,8 +129,8 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
               width: double.infinity,
               constraints: BoxConstraints(
                 maxHeight: widget.isScrollControlled
-                    ? MediaQuery.of(context).size.height * 0.9
-                    : MediaQuery.of(context).size.height * 0.5,
+                    ? MediaQuery.sizeOf(context).height * 0.9
+                    : MediaQuery.sizeOf(context).height * 0.5,
               ),
               child: Padding(
                 padding: EdgeInsets.only(bottom: bottomInset),
