@@ -46,9 +46,6 @@ class TrendDataPoint {
 class TrendRangeNotifier extends Notifier<TrendRange> {
   @override
   TrendRange build() => TrendRange.days;
-
-  @override
-  set state(TrendRange value) => super.state = value;
 }
 
 final trendRangeProvider = NotifierProvider<TrendRangeNotifier, TrendRange>(() {
