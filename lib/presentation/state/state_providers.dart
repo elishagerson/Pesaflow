@@ -267,9 +267,25 @@ final dataChangesStreamProvider = StreamProvider<int>((ref) {
           db.savingsGoals,
           db.savingsGoalContributions,
           db.recurringTransactions,
+          db.budgets,
+          db.budgetPeriods,
         }),
       )
       .map((_) => DateTime.now().microsecondsSinceEpoch);
+});
+
+final _budgetMaintenanceRunning = <String>{};
+
+final budgetMaintenanceProvider = FutureProvider<void>((ref) async {
+  final key = 'global';
+  if (_budgetMaintenanceRunning.contains(key)) return;
+  _budgetMaintenanceRunning.add(key);
+  try {
+    final repo = ref.watch(budgetRepositoryProvider);
+    await repo.checkAndCloseExpiredPeriods();
+  } finally {
+    _budgetMaintenanceRunning.remove(key);
+  }
 });
 
 final budgetProgressProvider = FutureProvider<List<BudgetWithProgress>>((
@@ -277,10 +293,11 @@ final budgetProgressProvider = FutureProvider<List<BudgetWithProgress>>((
 ) async {
   ref.watch(_transactionChangesProvider);
   ref.watch(activeBudgetsStreamProvider);
+  ref.watch(dataChangesStreamProvider);
+  Future.microtask(() {
+    ref.read(budgetMaintenanceProvider.future).catchError((_) {});
+  });
   final repo = ref.watch(budgetRepositoryProvider);
-  // Close any expired periods at runtime so budgets stay correct when the app
-  // remains open across a period boundary (e.g. midnight monthly rollover).
-  await repo.checkAndCloseExpiredPeriods();
   return repo.getActiveBudgetsWithProgress();
 });
 
