@@ -260,9 +260,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
     try {
       if (existingTransaction != null) {
-        await repo.deleteTransaction(existingTransaction.id);
+        await repo.updateTransaction(newTransaction);
+      } else {
+        await repo.createTransaction(newTransaction);
       }
-      await repo.createTransaction(newTransaction);
 
       final settingsRepo = ref.read(settingsRepositoryProvider);
       if (_selectedAccountId != null && _selectedAccountId!.isNotEmpty) {

@@ -366,6 +366,88 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
+  Future<void> updateTransactionWithBalanceAdjustment(
+    Transaction updated,
+  ) async {
+    await attachedDatabase.transaction(() async {
+      final oldQuery = select(transactions)
+        ..where((t) => t.id.equals(updated.id));
+      final old = await oldQuery.getSingleOrNull();
+      if (old == null) {
+        await into(transactions).insert(updated);
+        return;
+      }
+      final oldAcctId = old.accountId;
+      if (oldAcctId != null) {
+        final acctQ = select(accounts)..where((t) => t.id.equals(oldAcctId));
+        final acct = await acctQ.getSingleOrNull();
+        if (acct != null) {
+          final oldType = old.type.toLowerCase();
+          int reverseDelta = 0;
+          if (oldType == 'income' || oldType == 'loan') {
+            reverseDelta = -old.amount;
+          } else if (oldType == 'expense' ||
+              oldType == 'airtime' ||
+              oldType == 'fee') {
+            reverseDelta = old.amount;
+          } else if (oldType == 'transfer') {
+            reverseDelta = old.amount;
+          }
+          await update(accounts).replace(
+            acct.copyWith(balance: acct.balance + reverseDelta),
+          );
+        }
+      }
+      if (old.type.toLowerCase() == 'transfer' &&
+          old.destinationAccountId != null) {
+        final destQ = select(accounts)
+          ..where((t) => t.id.equals(old.destinationAccountId!));
+        final dest = await destQ.getSingleOrNull();
+        if (dest != null) {
+          await update(accounts).replace(
+            dest.copyWith(balance: dest.balance - old.amount),
+          );
+        }
+      }
+      await update(transactions).replace(updated);
+      final newAcctId = updated.accountId;
+      if (newAcctId == null) return;
+      final newAcctQ = select(accounts)..where((t) => t.id.equals(newAcctId));
+      final newAcct = await newAcctQ.getSingleOrNull();
+      if (newAcct == null) return;
+      int newBalance;
+      final newType = updated.type.toLowerCase();
+      if (updated.balanceAfter != null) {
+        newBalance = updated.balanceAfter!;
+      } else {
+        int delta = 0;
+        if (newType == 'income' || newType == 'loan') {
+          delta = updated.amount;
+        } else if (newType == 'expense' ||
+            newType == 'airtime' ||
+            newType == 'fee') {
+          delta = -updated.amount;
+        } else if (newType == 'transfer') {
+          delta = -updated.amount;
+        }
+        newBalance = newAcct.balance + delta;
+      }
+      await update(accounts).replace(
+        newAcct.copyWith(balance: newBalance),
+      );
+      if (newType == 'transfer' && updated.destinationAccountId != null) {
+        final destQ = select(accounts)
+          ..where((t) => t.id.equals(updated.destinationAccountId!));
+        final dest = await destQ.getSingleOrNull();
+        if (dest != null) {
+          await update(accounts).replace(
+            dest.copyWith(balance: dest.balance + updated.amount),
+          );
+        }
+      }
+    });
+  }
+
   /// Approves a reviewed transaction by updating its source to 'sms_auto',
   /// optionally changing its category, and applying the deferred balance adjustment.
   Future<void> approveReviewedTransaction(
@@ -393,6 +475,39 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
         updatedAt: DateTime.now(),
       );
       await update(transactions).replace(updated);
+      final acctId = updated.accountId;
+      if (acctId == null) return;
+      final acctQ = select(accounts)..where((t) => t.id.equals(acctId));
+      final acct = await acctQ.getSingleOrNull();
+      if (acct == null) return;
+      int newBalance;
+      final type = updated.type.toLowerCase();
+      if (updated.balanceAfter != null) {
+        newBalance = updated.balanceAfter!;
+      } else {
+        int delta = 0;
+        if (type == 'income' || type == 'loan') {
+          delta = updated.amount;
+        } else if (type == 'expense' ||
+            type == 'airtime' ||
+            type == 'fee') {
+          delta = -updated.amount;
+        } else if (type == 'transfer') {
+          delta = -updated.amount;
+        }
+        newBalance = acct.balance + delta;
+      }
+      await update(accounts).replace(acct.copyWith(balance: newBalance));
+      if (type == 'transfer' && updated.destinationAccountId != null) {
+        final destQ = select(accounts)
+          ..where((t) => t.id.equals(updated.destinationAccountId!));
+        final dest = await destQ.getSingleOrNull();
+        if (dest != null) {
+          await update(accounts).replace(
+            dest.copyWith(balance: dest.balance + updated.amount),
+          );
+        }
+      }
     });
   }
 

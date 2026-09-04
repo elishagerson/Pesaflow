@@ -99,6 +99,12 @@ class TransactionRepository {
     }
   }
 
+  Future<void> updateTransaction(Transaction transaction) async {
+    await _transactionDao.updateTransactionWithBalanceAdjustment(transaction);
+    _budgetAlertService?.checkBudgetsAfterTransaction(transaction.categoryId);
+    _refreshAnalytics(transaction.createdAt);
+  }
+
   Future<void> deleteTransaction(String transactionId) {
     return _transactionDao.deleteTransactionWithBalanceAdjustment(
       transactionId,

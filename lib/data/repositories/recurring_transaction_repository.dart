@@ -8,16 +8,19 @@ final recurringTransactionRepositoryProvider =
     Provider<RecurringTransactionRepository>((ref) {
       final dao = ref.watch(recurringTransactionDaoProvider);
       final transactionDao = ref.watch(transactionDaoProvider);
-      return RecurringTransactionRepository(dao, transactionDao);
+      final db = ref.watch(databaseProvider);
+      return RecurringTransactionRepository(dao, transactionDao, db);
     });
 
 class RecurringTransactionRepository {
   final RecurringTransactionDao _recurringTransactionDao;
   final TransactionDao _transactionDao;
+  final AppDatabase _db;
 
   RecurringTransactionRepository(
     this._recurringTransactionDao,
     this._transactionDao,
+    this._db,
   );
 
   Stream<List<RecurringTransaction>> watchAll({String? trackerId}) =>
@@ -60,7 +63,7 @@ class RecurringTransactionRepository {
     required DateTime paidAt,
     required bool deductBalance,
   }) async {
-    try {
+    await _db.transaction(() async {
       if (deductBalance) {
         await _transactionDao.writeTransactionWithBalanceAdjustment(
           transaction,
@@ -70,9 +73,14 @@ class RecurringTransactionRepository {
           transaction,
         );
       }
-      await _recurringTransactionDao.recordPayment(recurringId, amount, paidAt);
-    } catch (e) {
-      rethrow;
-    }
+      final ok = await _recurringTransactionDao.recordPayment(
+        recurringId,
+        amount,
+        paidAt,
+      );
+      if (!ok) {
+        throw StateError('Recurring payment rejected: duplicate or expired');
+      }
+    });
   }
 }
