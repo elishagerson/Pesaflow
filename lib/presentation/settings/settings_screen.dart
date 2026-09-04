@@ -635,10 +635,11 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(width: kSpacing12),
-                          TactileSpringContainer(
-                            onTap: () async {
-                              final categoryData = cat;
-                              UndoDelete.show(
+                          if (!cat.isSystem)
+                            TactileSpringContainer(
+                              onTap: () async {
+                                final categoryData = cat;
+                                UndoDelete.show(
                                 context: context,
                                 entityName: 'Category',
                                 message: '"${categoryData.name}" deleted',
