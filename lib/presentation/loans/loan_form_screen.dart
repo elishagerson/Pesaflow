@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -37,6 +38,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   DateTime? _dueAt;
   Loan? _existingLoan;
   String? _selectedCategory;
+  bool _isSaving = false;
 
   bool get _isDirty {
     return _amountController.text.trim().isNotEmpty ||
@@ -251,8 +253,10 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   }
 
   Future<void> _submit() async {
+    if (_isSaving) return;
     if (!_formKey.currentState!.validate()) return;
 
+    setState(() => _isSaving = true);
     final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
 
     final activeTrackerId = ref.read(activeTrackerIdProvider);
@@ -285,51 +289,69 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       try {
         await ref.read(loanRepositoryProvider).updateLoan(updatedLoan);
         if (!mounted) return;
+        HapticFeedback.mediumImpact();
+        CustomToast.show(
+          context,
+          message: 'Loan updated!',
+          type: ToastType.success,
+        );
         context.pop();
       } catch (e) {
+        HapticFeedback.heavyImpact();
         if (!mounted) return;
         CustomToast.show(
           context,
           message: 'Failed to update loan: $e',
           type: ToastType.error,
         );
+      } finally {
+        if (mounted) setState(() => _isSaving = false);
       }
-    } else {
-      final loanId = const Uuid().v4();
-      final loan = Loan(
-        id: loanId,
-        amount: amountCents,
-        remaining: amountCents,
-        status: 'active',
-        description: _descriptionController.text.trim().isEmpty
-            ? null
-            : _descriptionController.text.trim(),
-        sender: _senderController.text.trim().isEmpty
-            ? null
-            : _senderController.text.trim(),
-        reference: _referenceController.text.trim().isEmpty
-            ? null
-            : _referenceController.text.trim(),
-        disbursedAt: _disbursedAt,
-        dueAt: _dueAt,
-        interestRate: double.tryParse(_interestRateController.text),
-        category: _selectedCategory,
-        trackerId: activeTrackerId,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+      return;
+    }
+    final loanId = const Uuid().v4();
+    final loan = Loan(
+      id: loanId,
+      amount: amountCents,
+      remaining: amountCents,
+      status: 'active',
+      description: _descriptionController.text.trim().isEmpty
+          ? null
+          : _descriptionController.text.trim(),
+      sender: _senderController.text.trim().isEmpty
+          ? null
+          : _senderController.text.trim(),
+      reference: _referenceController.text.trim().isEmpty
+          ? null
+          : _referenceController.text.trim(),
+      disbursedAt: _disbursedAt,
+      dueAt: _dueAt,
+      interestRate: double.tryParse(_interestRateController.text),
+      category: _selectedCategory,
+      trackerId: activeTrackerId,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+    try {
+      await ref.read(loanRepositoryProvider).createLoan(loan);
+      if (!mounted) return;
+      HapticFeedback.mediumImpact();
+      CustomToast.show(
+        context,
+        message: 'Loan created!',
+        type: ToastType.success,
       );
-      try {
-        await ref.read(loanRepositoryProvider).createLoan(loan);
-        if (!mounted) return;
-        context.pop();
-      } catch (e) {
-        if (!mounted) return;
-        CustomToast.show(
-          context,
-          message: 'Failed to create loan: $e',
-          type: ToastType.error,
-        );
-      }
+      context.pop();
+    } catch (e) {
+      HapticFeedback.heavyImpact();
+      if (!mounted) return;
+      CustomToast.show(
+        context,
+        message: 'Failed to create loan: $e',
+        type: ToastType.error,
+      );
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
     }
   }
 
@@ -600,26 +622,46 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       StaggeredFadeSlide(
                         index: 8,
                         child: TactileSpringContainer(
-                          onTap: _submit,
+                          onTap: _isSaving ? null : _submit,
                           child: Container(
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(
                               vertical: kSpacing16,
                             ),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme.of(context).colorScheme.primary
+                                  .withValues(
+                                    alpha: _isSaving ? 0.6 : 1.0,
+                                  ),
                               borderRadius: BorderRadius.circular(
                                 AppTheme.radiusInput,
                               ),
                             ),
-                            child: Text(
-                              _existingLoan != null
-                                  ? 'Update Loan'
-                                  : 'Add Loan',
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.titleMedium!
-                                  .copyWith(
-                                    fontWeight: FontWeight.bold,
+                            child: _isSaving
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: Center(
+                                      child: SizedBox(
+                                        height: 18,
+                                        width: 18,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    _existingLoan != null
+                                        ? 'Update Loan'
+                                        : 'Add Loan',
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                          fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
                             ),

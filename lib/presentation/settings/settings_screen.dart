@@ -500,35 +500,50 @@ class SettingsScreen extends ConsumerWidget {
           ),
           onPressed: () async {
             Navigator.of(context, rootNavigator: true).pop();
+            final backupTxs = await ref
+                .read(transactionDaoProvider)
+                .getFilteredTransactions(accountId: acc.id);
+            final destTxs =
+                await (ref
+                        .read(databaseProvider)
+                        .select(ref.read(databaseProvider).transactions)
+                      ..where((t) => t.destinationAccountId.equals(acc.id)))
+                    .get();
+            final allBackup = [
+              ...backupTxs.map((e) => e.transaction),
+              ...destTxs,
+            ];
+            try {
+              await ref.read(accountRepositoryProvider).deleteAccount(acc.id);
+              HapticFeedback.mediumImpact();
+              if (context.mounted) context.pop();
+            } catch (e) {
+              if (context.mounted) {
+                CustomToast.show(
+                  context,
+                  message: 'Failed to delete account: $e',
+                  type: ToastType.error,
+                );
+              }
+              return;
+            }
+            if (!context.mounted) return;
             UndoDelete.show(
               context: context,
               entityName: 'Account',
               message: '"${acc.name}" deleted',
               onUndo: () async {
-                await ref.read(accountRepositoryProvider).createAccount(acc);
-                if (context.mounted) {
-                  ref.invalidate(accountsStreamProvider);
-                  ref.invalidate(netWorthProvider);
-                }
-              },
-              onDelete: () async {
                 try {
-                  await ref
-                      .read(accountRepositoryProvider)
-                      .deleteAccount(acc.id);
-                  ref.invalidate(accountsStreamProvider);
-                  ref.invalidate(netWorthProvider);
-                  if (context.mounted) context.pop();
-                } catch (e) {
-                  if (context.mounted) {
-                    CustomToast.show(
-                      context,
-                      message: 'Failed to delete account: $e',
-                      type: ToastType.error,
-                    );
+                  await ref.read(accountRepositoryProvider).createAccount(acc);
+                  for (final tx in allBackup) {
+                    await ref
+                        .read(transactionDaoProvider)
+                        .writeTransactionWithBalanceAdjustment(tx);
                   }
-                }
+                  HapticFeedback.lightImpact();
+                } catch (_) {}
               },
+              onDelete: () async {},
             );
           },
           child: const Text('Delete'),
@@ -640,45 +655,45 @@ class SettingsScreen extends ConsumerWidget {
                               onTap: () async {
                                 final categoryData = cat;
                                 UndoDelete.show(
-                                context: context,
-                                entityName: 'Category',
-                                message: '"${categoryData.name}" deleted',
-                                onUndo: () async {
-                                  await ref
-                                      .read(categoryRepositoryProvider)
-                                      .createCategory(categoryData);
-                                  if (context.mounted) {
-                                    ref.invalidate(categoriesFutureProvider);
-                                  }
-                                },
-                                onDelete: () async {
-                                  try {
+                                  context: context,
+                                  entityName: 'Category',
+                                  message: '"${categoryData.name}" deleted',
+                                  onUndo: () async {
                                     await ref
                                         .read(categoryRepositoryProvider)
-                                        .deleteCategory(categoryData.id);
-                                    ref.invalidate(categoriesFutureProvider);
-                                    ref.invalidate(
-                                      filteredTransactionsStreamProvider,
-                                    );
-                                  } catch (e) {
+                                        .createCategory(categoryData);
                                     if (context.mounted) {
-                                      CustomToast.show(
-                                        context,
-                                        message:
-                                            'Failed to delete category: $e',
-                                        type: ToastType.error,
-                                      );
+                                      ref.invalidate(categoriesFutureProvider);
                                     }
-                                  }
-                                },
-                              );
-                            },
-                            child: Icon(
-                              PesaFlowIcons.delete,
-                              size: 20,
-                              color: theme.colorScheme.error,
+                                  },
+                                  onDelete: () async {
+                                    try {
+                                      await ref
+                                          .read(categoryRepositoryProvider)
+                                          .deleteCategory(categoryData.id);
+                                      ref.invalidate(categoriesFutureProvider);
+                                      ref.invalidate(
+                                        filteredTransactionsStreamProvider,
+                                      );
+                                    } catch (e) {
+                                      if (context.mounted) {
+                                        CustomToast.show(
+                                          context,
+                                          message:
+                                              'Failed to delete category: $e',
+                                          type: ToastType.error,
+                                        );
+                                      }
+                                    }
+                                  },
+                                );
+                              },
+                              child: Icon(
+                                PesaFlowIcons.delete,
+                                size: 20,
+                                color: theme.colorScheme.error,
+                              ),
                             ),
-                          ),
                         ],
                       ),
               ),

@@ -84,7 +84,8 @@ class CategoryRepository {
     if (target.isSystem) {
       throw StateError('System categories cannot be deleted');
     }
-    final fallback = all
+    final fallback =
+        all
             .where((c) => c.name.toLowerCase() == 'other' && c.id != id)
             .firstOrNull ??
         all.where((c) => c.type == target.type && c.id != id).firstOrNull;
