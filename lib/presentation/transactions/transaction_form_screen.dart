@@ -278,11 +278,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
       HapticFeedback.mediumImpact();
 
-      ref.invalidate(accountsStreamProvider);
-      ref.invalidate(recentTransactionsStreamProvider);
-      ref.invalidate(filteredTransactionsStreamProvider);
-      ref.invalidate(netWorthProvider);
-
       if (mounted) {
         CustomToast.show(
           context,

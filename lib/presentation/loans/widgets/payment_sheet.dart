@@ -986,9 +986,12 @@ Future<bool> processPayment({
     );
 
     await ref
-        .read(transactionRepositoryNoAlertsProvider)
-        .createTransaction(txn);
-    await ref.read(loanRepositoryProvider).applyPayment(loan.id, amount);
+        .read(loanRepositoryProvider)
+        .recordPaymentWithTransaction(
+          transaction: txn,
+          loanId: loan.id,
+          paymentAmount: amount,
+        );
 
     HapticFeedback.mediumImpact();
     return true;
