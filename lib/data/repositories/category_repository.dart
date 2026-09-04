@@ -76,5 +76,22 @@ class CategoryRepository {
   Future<bool> updateCategory(Category category) =>
       _categoryDao.updateCategory(category);
 
-  Future<int> deleteCategory(String id) => _categoryDao.deleteCategory(id);
+  Future<void> deleteCategory(String id) async {
+    if (id.isEmpty) return;
+    final all = await _categoryDao.getAllCategories();
+    final target = all.where((c) => c.id == id).firstOrNull;
+    if (target == null) return;
+    if (target.isSystem) {
+      throw StateError('System categories cannot be deleted');
+    }
+    final fallback = all
+            .where((c) => c.name.toLowerCase() == 'other' && c.id != id)
+            .firstOrNull ??
+        all.where((c) => c.type == target.type && c.id != id).firstOrNull;
+    if (fallback == null) {
+      await _categoryDao.deleteCategory(id);
+      return;
+    }
+    await _categoryDao.reassignAndDeleteCategory(id, fallback.id);
+  }
 }

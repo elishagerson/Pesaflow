@@ -42,4 +42,16 @@ class CategoryDao extends DatabaseAccessor<AppDatabase>
 
   Future<int> deleteCategory(String id) =>
       (delete(categories)..where((t) => t.id.equals(id))).go();
+
+  Future<void> reassignAndDeleteCategory(
+    String categoryId,
+    String fallbackCategoryId,
+  ) async {
+    await attachedDatabase.transaction(() async {
+      await (update(attachedDatabase.transactions)
+            ..where((t) => t.categoryId.equals(categoryId)))
+          .write(TransactionsCompanion(categoryId: Value(fallbackCategoryId)));
+      await (delete(categories)..where((t) => t.id.equals(categoryId))).go();
+    });
+  }
 }

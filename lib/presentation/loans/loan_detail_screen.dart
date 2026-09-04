@@ -8,21 +8,22 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/date_formatter.dart';
 import 'widgets/transaction_tile.dart';
 import 'widgets/loan_info_rows.dart';
 import 'widgets/payment_sheet.dart';
 import 'widgets/offline_payment_sheet.dart';
-import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
-import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 
 class LoanDetailScreen extends ConsumerWidget {
@@ -860,60 +861,59 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  void _confirmDelete(BuildContext context, WidgetRef ref, Loan loan) {
-    showDialog(
+  void _confirmDelete(BuildContext context, WidgetRef ref, Loan loan) async {
+    final confirm = await ModernDialog.show<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Delete Loan?'),
-        content: Text(
-          loan.status == 'paid'
-              ? 'Remove "${loan.description ?? loan.provider ?? 'Loan'}" from your records? All linked payment transactions will also be deleted.'
-              : '"${loan.description ?? loan.provider ?? 'Loan'}" has an outstanding balance of ${CurrencyFormatter.formatCents(loan.remaining)}. Deleting it will also remove all linked payment transactions.',
-          style: Theme.of(context).textTheme.titleSmall!,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx, rootNavigator: true).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () async {
-              Navigator.of(ctx, rootNavigator: true).pop();
-              final savedLoan = loan;
-              UndoDelete.show(
-                context: context,
-                entityName: 'Loan',
-                message:
-                    '"${savedLoan.description ?? savedLoan.provider ?? 'Loan'}" deleted',
-                onUndo: () async {
-                  await ref.read(loanRepositoryProvider).createLoan(savedLoan);
-                },
-                onDelete: () async {
-                  try {
-                    await ref
-                        .read(loanRepositoryProvider)
-                        .deleteLoan(savedLoan.id);
-                    if (context.mounted) context.pop();
-                  } catch (e) {
-                    if (context.mounted) {
-                      CustomToast.show(
-                        context,
-                        message: 'Failed: $e',
-                        type: ToastType.error,
-                      );
-                    }
-                  }
-                },
-              );
-            },
-            child: const Text('Delete'),
-          ),
-        ],
+      title: const Text('Delete Loan?'),
+      titleIcon: PesaFlowIcons.delete,
+      iconColor: context.appColors.expenseColor,
+      content: Text(
+        loan.status == 'paid'
+            ? 'Remove "${loan.description ?? loan.provider ?? 'Loan'}" from your records? All linked payment transactions will also be deleted.'
+            : '"${loan.description ?? loan.provider ?? 'Loan'}" has an outstanding balance of ${CurrencyFormatter.formatCents(loan.remaining)}. Deleting it will also remove all linked payment transactions.',
+        style: Theme.of(context).textTheme.titleSmall!,
       ),
+      actions: [
+        TextButton(
+          onPressed: () =>
+              Navigator.of(context, rootNavigator: true).pop(false),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: context.appColors.expenseColor,
+            foregroundColor: Colors.white,
+          ),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
+          child: const Text('Delete'),
+        ),
+      ],
+    );
+    if (confirm != true) return;
+    if (!context.mounted) return;
+    final savedLoan = loan;
+    UndoDelete.show(
+      context: context,
+      entityName: 'Loan',
+      message:
+          '"${savedLoan.description ?? savedLoan.provider ?? 'Loan'}" deleted',
+      onUndo: () async {
+        await ref.read(loanRepositoryProvider).createLoan(savedLoan);
+      },
+      onDelete: () async {
+        try {
+          await ref.read(loanRepositoryProvider).deleteLoan(savedLoan.id);
+          if (context.mounted) context.pop();
+        } catch (e) {
+          if (context.mounted) {
+            CustomToast.show(
+              context,
+              message: 'Failed: $e',
+              type: ToastType.error,
+            );
+          }
+        }
+      },
     );
   }
 }
