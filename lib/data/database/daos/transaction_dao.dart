@@ -264,52 +264,44 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
 
       if (transactionObj == null) return;
 
-      // 2. Skip balance reversal if no account was linked
       final acctId = transactionObj.accountId;
-      if (acctId == null) return;
+      if (acctId != null) {
+        final accountQuery = select(accounts)
+          ..where((t) => t.id.equals(acctId));
+        final account = await accountQuery.getSingleOrNull();
 
-      // 3. Load the linked account
-      final accountQuery = select(accounts)..where((t) => t.id.equals(acctId));
-      final account = await accountQuery.getSingleOrNull();
+        if (account != null) {
+          int balanceDelta = 0;
+          final type = transactionObj.type.toLowerCase();
+          if (type == 'income' || type == 'loan') {
+            balanceDelta = -transactionObj.amount;
+          } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
+            balanceDelta = transactionObj.amount;
+          } else if (type == 'transfer') {
+            balanceDelta = transactionObj.amount;
+          }
 
-      if (account != null) {
-        // 3. Compute reversed balance
-        int balanceDelta = 0;
-        final type = transactionObj.type.toLowerCase();
-        if (type == 'income' || type == 'loan') {
-          // Subtract original added income
-          balanceDelta = -transactionObj.amount;
-        } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
-          // Add back subtracted expense
-          balanceDelta = transactionObj.amount;
-        } else if (type == 'transfer') {
-          // Add back amount deducted from source
-          balanceDelta = transactionObj.amount;
-        }
-
-        final updatedAccount = account.copyWith(
-          balance: account.balance + balanceDelta,
-        );
-
-        // 4. Update the account
-        await update(accounts).replace(updatedAccount);
-      }
-
-      // 5. For transfers, also reverse the destination credit
-      if (transactionObj.type.toLowerCase() == 'transfer' &&
-          transactionObj.destinationAccountId != null) {
-        final destQuery = select(accounts)
-          ..where((t) => t.id.equals(transactionObj.destinationAccountId!));
-        final destAccount = await destQuery.getSingleOrNull();
-        if (destAccount != null) {
-          final updatedDest = destAccount.copyWith(
-            balance: destAccount.balance - transactionObj.amount,
+          final updatedAccount = account.copyWith(
+            balance: account.balance + balanceDelta,
           );
-          await update(accounts).replace(updatedDest);
+
+          await update(accounts).replace(updatedAccount);
+        }
+
+        if (transactionObj.type.toLowerCase() == 'transfer' &&
+            transactionObj.destinationAccountId != null) {
+          final destQuery = select(accounts)
+            ..where((t) => t.id.equals(transactionObj.destinationAccountId!));
+          final destAccount = await destQuery.getSingleOrNull();
+          if (destAccount != null) {
+            final updatedDest = destAccount.copyWith(
+              balance: destAccount.balance - transactionObj.amount,
+            );
+            await update(accounts).replace(updatedDest);
+          }
         }
       }
 
-      // 6. Delete the transaction
       await (delete(
         transactions,
       )..where((t) => t.id.equals(transactionId))).go();
@@ -393,9 +385,9 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
           } else if (oldType == 'transfer') {
             reverseDelta = old.amount;
           }
-          await update(accounts).replace(
-            acct.copyWith(balance: acct.balance + reverseDelta),
-          );
+          await update(
+            accounts,
+          ).replace(acct.copyWith(balance: acct.balance + reverseDelta));
         }
       }
       if (old.type.toLowerCase() == 'transfer' &&
@@ -404,9 +396,9 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
           ..where((t) => t.id.equals(old.destinationAccountId!));
         final dest = await destQ.getSingleOrNull();
         if (dest != null) {
-          await update(accounts).replace(
-            dest.copyWith(balance: dest.balance - old.amount),
-          );
+          await update(
+            accounts,
+          ).replace(dest.copyWith(balance: dest.balance - old.amount));
         }
       }
       await update(transactions).replace(updated);
@@ -432,17 +424,15 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
         }
         newBalance = newAcct.balance + delta;
       }
-      await update(accounts).replace(
-        newAcct.copyWith(balance: newBalance),
-      );
+      await update(accounts).replace(newAcct.copyWith(balance: newBalance));
       if (newType == 'transfer' && updated.destinationAccountId != null) {
         final destQ = select(accounts)
           ..where((t) => t.id.equals(updated.destinationAccountId!));
         final dest = await destQ.getSingleOrNull();
         if (dest != null) {
-          await update(accounts).replace(
-            dest.copyWith(balance: dest.balance + updated.amount),
-          );
+          await update(
+            accounts,
+          ).replace(dest.copyWith(balance: dest.balance + updated.amount));
         }
       }
     });
@@ -488,9 +478,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
         int delta = 0;
         if (type == 'income' || type == 'loan') {
           delta = updated.amount;
-        } else if (type == 'expense' ||
-            type == 'airtime' ||
-            type == 'fee') {
+        } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
           delta = -updated.amount;
         } else if (type == 'transfer') {
           delta = -updated.amount;
@@ -503,9 +491,9 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
           ..where((t) => t.id.equals(updated.destinationAccountId!));
         final dest = await destQ.getSingleOrNull();
         if (dest != null) {
-          await update(accounts).replace(
-            dest.copyWith(balance: dest.balance + updated.amount),
-          );
+          await update(
+            accounts,
+          ).replace(dest.copyWith(balance: dest.balance + updated.amount));
         }
       }
     });

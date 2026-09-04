@@ -139,9 +139,20 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
     });
   }
 
-  /// Updates a budget.
   Future<void> updateBudget(Budget budget) async {
     await update(budgets).replace(budget);
+  }
+
+  Future<void> updateBudgetWithPeriodAtomically(Budget budget) async {
+    await attachedDatabase.transaction(() async {
+      await update(budgets).replace(budget);
+      final period = await getCurrentPeriod(budget.id);
+      if (period != null) {
+        await update(
+          budgetPeriods,
+        ).replace(period.copyWith(allocated: budget.amount));
+      }
+    });
   }
 
   /// Deletes a budget and all its periods.

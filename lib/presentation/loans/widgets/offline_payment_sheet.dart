@@ -481,11 +481,13 @@ Future<bool> processOfflinePayment({
       updatedAt: DateTime.now(),
     );
 
-    await ref.read(loanRepositoryProvider).recordPaymentWithTransaction(
-      transaction: txn,
-      loanId: loan.id,
-      paymentAmount: amount,
-    );
+    await ref
+        .read(loanRepositoryProvider)
+        .recordPaymentWithTransaction(
+          transaction: txn,
+          loanId: loan.id,
+          paymentAmount: amount,
+        );
 
     HapticFeedback.mediumImpact();
     return true;

@@ -92,10 +92,8 @@ class BudgetRepository {
   /// Updates an existing budget.
   Future<void> updateBudget(Budget budget) => _budgetDao.updateBudget(budget);
 
-  /// Updates the budget's amount and also updates the current period's allocated.
   Future<void> updateBudgetWithPeriodAllocation(Budget budget) async {
-    await _budgetDao.updateBudget(budget);
-    await _budgetDao.updateCurrentPeriodAllocated(budget.id, budget.amount);
+    await _budgetDao.updateBudgetWithPeriodAtomically(budget);
   }
 
   /// Deletes a budget and all periods.
