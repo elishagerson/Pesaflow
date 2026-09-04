@@ -20,6 +20,7 @@ import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/domain/categorization/auto_categorizer.dart';
 import 'package:pesaflow/services/budget_alert_service.dart';
+import 'package:pesaflow/services/notification_service.dart';
 import 'package:pesaflow/domain/sms/sms_processor.dart';
 import 'package:pesaflow/domain/sms/deduplicator.dart';
 
@@ -71,7 +72,7 @@ void main() {
       AnalyticsRepository(AnalyticsDao(database)),
       BudgetAlertService(
         budgetDao: BudgetDao(database),
-        notificationService: NotificationService(),
+        notificationService: _MockNotificationService(),
       ),
     );
     settingsRepo = SettingsRepository(settingsDao);
