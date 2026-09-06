@@ -328,6 +328,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                         if (groupData.subBudgets.isNotEmpty) ...[
                           const SizedBox(height: kSpacing16),
                           _buildUnallocatedInfo(
+                            context,
                             groupData,
                             theme,
                             onSurface,
@@ -432,6 +433,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildUnallocatedInfo(
+    BuildContext context,
     BudgetGroupWithChildren groupData,
     ThemeData theme,
     Color onSurface,
