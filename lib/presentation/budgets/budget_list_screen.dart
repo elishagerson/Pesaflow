@@ -535,7 +535,7 @@ class BudgetListScreen extends ConsumerWidget {
               ),
               const SizedBox(width: kSpacing8),
               TactileSpringContainer(
-                onTap: () => _showPlanOptions(context, groups),
+                onTap: () => _showPlanOptions(context, ref, groups),
                 child: Container(
                   padding: const EdgeInsets.all(kSpacing4),
                   decoration: BoxDecoration(
@@ -709,6 +709,7 @@ class BudgetListScreen extends ConsumerWidget {
 
   Future<void> _showPlanOptions(
     BuildContext context,
+    WidgetRef ref,
     List<BudgetGroupWithChildren> groups,
   ) async {
     final confirm = await ModernDialog.show<bool>(
@@ -773,6 +774,7 @@ class BudgetListScreen extends ConsumerWidget {
     BuildContext context,
     ThemeData theme,
     BudgetGroupWithChildren g,
+    WidgetRef ref,
   ) {
     final onSurface = theme.colorScheme.onSurface;
     final type = BudgetGroupType.fromDbString(g.group.groupType);
@@ -1070,6 +1072,7 @@ class BudgetListScreen extends ConsumerWidget {
     BuildContext context,
     ThemeData theme,
     BudgetWithProgress bp,
+    WidgetRef ref,
   ) {
     final onSurface = theme.colorScheme.onSurface;
     final status = BudgetEngine.computeStatus(
