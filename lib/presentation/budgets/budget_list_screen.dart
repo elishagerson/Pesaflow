@@ -703,6 +703,68 @@ class BudgetListScreen extends ConsumerWidget {
     );
   }
 
+  Future<void> _showPlanOptions(
+    BuildContext context,
+    List<BudgetGroupWithChildren> groups,
+  ) async {
+    final confirm = await ModernDialog.show<bool>(
+      context: context,
+      title: const Text('Delete Budget Plan?'),
+      titleIcon: PesaFlowIcons.delete,
+      iconColor: context.appColors.expenseColor,
+      content: const Text(
+        'This will remove the Needs, Wants, and Investments groups. Any category budgets inside will be preserved as standalone envelopes.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () =>
+              Navigator.of(context, rootNavigator: true).pop(false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () =>
+              Navigator.of(context, rootNavigator: true).pop(true),
+          child: Text(
+            'Delete Plan',
+            style: TextStyle(color: context.appColors.expenseColor),
+          ),
+        ),
+      ],
+    );
+
+    if (confirm != true || !context.mounted) return;
+
+    try {
+      final groupRepo = ref.read(budgetGroupRepositoryProvider);
+      final settingsRepo = ref.read(settingsRepositoryProvider);
+
+      await groupRepo.deleteAllGroups(keepSubBudgets: true);
+      await settingsRepo.setSetting('budget_rule', '');
+
+      ref.invalidate(budgetGroupsProvider);
+      ref.invalidate(standaloneBudgetsProvider);
+      ref.invalidate(activeBudgetsStreamProvider);
+      ref.invalidate(budgetProgressProvider);
+      ref.invalidate(budgetRuleProvider);
+
+      if (context.mounted) {
+        CustomToast.show(
+          context,
+          message: 'Budget plan deleted',
+          type: ToastType.success,
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        CustomToast.show(
+          context,
+          message: 'Error deleting plan: $e',
+          type: ToastType.error,
+        );
+      }
+    }
+  }
+
   Widget _buildGroupCard(
     BuildContext context,
     ThemeData theme,
@@ -727,7 +789,65 @@ class BudgetListScreen extends ConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: kSpacing12),
-      child: TactileSpringContainer(
+      child: Dismissible(
+        key: ValueKey('group-dismiss-${g.group.id}'),
+        direction: DismissDirection.endToStart,
+        confirmDismiss: (direction) async {
+          final subCount = g.subBudgets.length;
+          final contentText = subCount > 0
+              ? 'Deleting the "${g.group.name}" group will preserve its $subCount sub-budget${subCount > 1 ? 's' : ''} as standalone envelopes.'
+              : 'Are you sure you want to delete the "${g.group.name}" group?';
+          return await ModernDialog.show<bool>(
+            context: context,
+            title: Text('Delete ${g.group.name} Group?'),
+            titleIcon: PesaFlowIcons.delete,
+            iconColor: context.appColors.expenseColor,
+            content: Text(contentText),
+            actions: [
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context, rootNavigator: true).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context, rootNavigator: true).pop(true),
+                child: Text(
+                  'Delete Group',
+                  style: TextStyle(color: context.appColors.expenseColor),
+                ),
+              ),
+            ],
+          );
+        },
+        onDismissed: (direction) async {
+          final repo = ref.read(budgetGroupRepositoryProvider);
+          await repo.deleteGroup(g.group.id);
+          ref.invalidate(budgetGroupsProvider);
+          ref.invalidate(standaloneBudgetsProvider);
+          ref.invalidate(activeBudgetsStreamProvider);
+          ref.invalidate(budgetProgressProvider);
+          if (context.mounted) {
+            CustomToast.show(
+              context,
+              message: '"${g.group.name}" group deleted',
+              type: ToastType.success,
+            );
+          }
+        },
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: kSpacing20),
+          decoration: BoxDecoration(
+            color: context.appColors.expenseColor.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+          ),
+          child: Icon(
+            PesaFlowIcons.delete,
+            color: context.appColors.expenseColor,
+          ),
+        ),
+        child: TactileSpringContainer(
         onTap: () => context.push('/budgets/groups/${g.group.id}'),
         child: GlassCard(
           padding: const EdgeInsets.all(kSpacing16),
