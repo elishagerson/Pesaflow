@@ -221,6 +221,63 @@ class BudgetDetailScreen extends ConsumerWidget {
                         ],
                       ),
                       const SizedBox(height: kSpacing12),
+                      if (bp.budget.groupId != null) ...[
+                        GestureDetector(
+                          onTap: () => context.push(
+                            '/budgets/groups/${bp.budget.groupId}',
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: kSpacing8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing10,
+                              vertical: kSpacing4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusPill,
+                              ),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.15),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  PesaFlowIcons.back,
+                                  size: 12,
+                                  color: Colors.white70,
+                                ),
+                                const SizedBox(width: 4),
+                                Consumer(
+                                  builder: (context, ref, _) {
+                                    final groups =
+                                        ref.watch(budgetGroupsProvider).asData?.value ??
+                                            [];
+                                    final group = groups
+                                        .where(
+                                          (g) =>
+                                              g.group.id == bp.budget.groupId,
+                                        )
+                                        .firstOrNull;
+                                    final groupName =
+                                        group?.group.name ?? 'Budget Group';
+                                    return Text(
+                                      groupName,
+                                      style: context.ts(
+                                        12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                       Row(
                         children: [
                           Expanded(
