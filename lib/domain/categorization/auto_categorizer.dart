@@ -393,15 +393,6 @@ class AutoCategorizer {
       'picha': 'Hobbies & Recreation',
       'studio': 'Hobbies & Recreation',
 
-      // Fines & Penalties
-      'faini': 'Fines & Penalties',
-      'fine': 'Fines & Penalties',
-      'penalty': 'Fines & Penalties',
-      'traffic fine': 'Fines & Penalties',
-      'tms': 'Fines & Penalties',
-      'askari': 'Fines & Penalties',
-      'adhabu': 'Fines & Penalties',
-
       // Generic Subscriptions fallback
       'subscription': 'Subscriptions & Streaming',
       'subscriptions': 'Subscriptions & Streaming',
