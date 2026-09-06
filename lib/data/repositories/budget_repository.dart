@@ -1,21 +1,44 @@
+import 'dart:developer' as developer;
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../database/app_database.dart';
 import '../database/daos/budget_dao.dart';
+import '../database/daos/category_dao.dart';
+import '../database/daos/savings_goals_dao.dart';
 import '../database/database_providers.dart';
+import '../../services/notification_service.dart';
+import '../../core/utils/currency_formatter.dart';
 import '../../domain/budget/budget_engine.dart';
 
 final budgetRepositoryProvider = Provider<BudgetRepository>((ref) {
   final budgetDao = ref.watch(budgetDaoProvider);
-  return BudgetRepository(budgetDao);
+  final categoryDao = ref.watch(categoryDaoProvider);
+  final savingsGoalsDao = ref.watch(savingsGoalsDaoProvider);
+  final notificationService = ref.watch(notificationServiceProvider);
+  return BudgetRepository(
+    budgetDao,
+    categoryDao: categoryDao,
+    savingsGoalsDao: savingsGoalsDao,
+    notificationService: notificationService,
+  );
 });
 
 class BudgetRepository {
   final BudgetDao _budgetDao;
+  final CategoryDao? _categoryDao;
+  final SavingsGoalsDao? _savingsGoalsDao;
+  final NotificationService? _notificationService;
   static const _uuid = Uuid();
 
-  BudgetRepository(this._budgetDao);
+  BudgetRepository(
+    this._budgetDao, {
+    CategoryDao? categoryDao,
+    SavingsGoalsDao? savingsGoalsDao,
+    NotificationService? notificationService,
+  })  : _categoryDao = categoryDao,
+        _savingsGoalsDao = savingsGoalsDao,
+        _notificationService = notificationService;
 
   Stream<List<Budget>> watchAllActiveBudgets() =>
       _budgetDao.watchAllActiveBudgets();
@@ -182,8 +205,20 @@ class BudgetRepository {
           currentPeriod.periodEnd,
         );
 
+        final isEmergency = await _isEmergencyBudget(budget);
+        final remaining = currentPeriod.allocated - spent;
+
         int rolloverAmount = 0;
-        if (budget.rollover) {
+        if (isEmergency && remaining > 0) {
+          // Emergency budget had unused or remaining amount — move to savings and notify user
+          await _handleEmergencyBudgetSavings(
+            budget: budget,
+            closedPeriod: currentPeriod,
+            remaining: remaining,
+          );
+          // Funds are moved to savings, so do not roll over to next budget period
+          rolloverAmount = 0;
+        } else if (budget.rollover) {
           rolloverAmount = BudgetEngine.computeRollover(
             allocated: currentPeriod.allocated,
             spent: spent,
@@ -219,5 +254,143 @@ class BudgetRepository {
         currentPeriod = await _budgetDao.getCurrentPeriod(budget.id);
       }
     }
+  }
+
+  /// Checks if a budget belongs to the Emergencies category or has an emergency name.
+  Future<bool> _isEmergencyBudget(Budget budget) async {
+    if (budget.name.toLowerCase().contains('emergenc')) {
+      return true;
+    }
+    if (_categoryDao != null) {
+      try {
+        final category = await _categoryDao!.getCategoryById(budget.categoryId);
+        if (category != null &&
+            category.name.toLowerCase().contains('emergenc')) {
+          return true;
+        }
+      } catch (_) {}
+    }
+    return false;
+  }
+
+  /// Automatically moves remaining emergency budget funds into a savings goal
+  /// and delivers a local notification prompting the user to deposit into savings.
+  Future<void> _handleEmergencyBudgetSavings({
+    required Budget budget,
+    required BudgetPeriod closedPeriod,
+    required int remaining,
+  }) async {
+    if (_savingsGoalsDao == null || remaining <= 0) return;
+
+    try {
+      final allGoals = await _savingsGoalsDao!.getAllGoals();
+
+      // Look for an Emergency Fund goal first, or any active goal
+      SavingsGoal? targetGoal = allGoals
+          .where(
+            (g) =>
+                g.name.toLowerCase().contains('emergenc') && !g.isCompleted,
+          )
+          .firstOrNull;
+
+      targetGoal ??= allGoals
+          .where((g) => g.name.toLowerCase().contains('emergenc'))
+          .firstOrNull;
+
+      targetGoal ??= allGoals.where((g) => !g.isCompleted).firstOrNull;
+
+      targetGoal ??= allGoals.firstOrNull;
+
+      if (targetGoal == null) {
+        // Auto-create dedicated Emergency Fund savings goal
+        final now = DateTime.now();
+        final newGoalId = _uuid.v4();
+        final target =
+            remaining * 6 > 100000000 ? remaining * 6 : 100000000;
+        final newGoal = SavingsGoal(
+          id: newGoalId,
+          name: 'Emergency Fund',
+          targetAmount: target,
+          currentAmount: 0,
+          targetDate: DateTime(now.year + 1, now.month, now.day),
+          color: '#E11D48',
+          icon: 'alert-circle',
+          trackerId: budget.trackerId,
+          isCompleted: false,
+          createdAt: now,
+        );
+        await _savingsGoalsDao!.insertSavingsGoal(newGoal);
+        targetGoal = newGoal;
+      }
+
+      // Record contribution to the savings goal
+      final contribution = SavingsGoalContribution(
+        id: _uuid.v4(),
+        savingsGoalId: targetGoal.id,
+        amount: remaining,
+        notes:
+            'Unused budget from ${budget.name} (${closedPeriod.periodStart.month}/${closedPeriod.periodStart.year})',
+        createdAt: DateTime.now(),
+      );
+      await _savingsGoalsDao!.addContribution(contribution);
+
+      // Send local notification to user
+      if (_notificationService != null) {
+        try {
+          final formattedAmount = CurrencyFormatter.formatCents(remaining);
+          final notifId =
+              (budget.id.hashCode ^ closedPeriod.id.hashCode) & 0x7FFFFFFF;
+          await _notificationService!.showNotification(
+            id: notifId,
+            title: 'Move to Savings: ${budget.name}',
+            body:
+                'You had $formattedAmount unspent in your Emergencies budget. It has been allocated to "${targetGoal.name}". Remember to move that money into your savings account!',
+          );
+        } catch (e) {
+          developer.log(
+            'Failed to send emergency savings notification: $e',
+            name: 'BudgetRepository',
+          );
+        }
+      }
+    } catch (e) {
+      developer.log(
+        'Failed to process emergency budget savings: $e',
+        name: 'BudgetRepository',
+      );
+    }
+  }
+
+  /// Allows manually moving unspent emergency budget remainder into savings
+  /// during the active period. Adjusts current period allocated to match spent
+  /// so funds are not swept again on period close.
+  Future<bool> moveEmergencyBudgetRemainderToSavings(String budgetId) async {
+    final budget = await _budgetDao.getBudgetById(budgetId);
+    if (budget == null) return false;
+
+    final currentPeriod = await _budgetDao.getCurrentPeriod(budgetId);
+    if (currentPeriod == null || currentPeriod.isClosed) return false;
+
+    final spent = await _budgetDao.getSpentForCategoryInPeriod(
+      budget.categoryId,
+      currentPeriod.periodStart,
+      currentPeriod.periodEnd,
+    );
+
+    final remaining = currentPeriod.allocated - spent;
+    if (remaining <= 0) return false;
+
+    await _handleEmergencyBudgetSavings(
+      budget: budget,
+      closedPeriod: currentPeriod,
+      remaining: remaining,
+    );
+
+    // Adjust period allocation so remaining is 0 and won't re-trigger at period close
+    final updatedPeriod = currentPeriod.copyWith(
+      allocated: spent,
+    );
+    await _budgetDao.updatePeriod(updatedPeriod);
+    return true;
   }
 }

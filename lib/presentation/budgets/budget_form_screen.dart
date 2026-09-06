@@ -363,6 +363,42 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
             },
           ),
         ),
+        if (categories
+            .where((c) => c.id == _selectedCategoryId)
+            .any((c) => c.name.toLowerCase() == 'emergencies')) ...[
+          const SizedBox(height: kSpacing8),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: kSpacing16),
+            padding: const EdgeInsets.all(kSpacing10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE11D48).withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+              border: Border.all(
+                color: const Color(0xFFE11D48).withValues(alpha: 0.25),
+              ),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  PesaFlowIcons.emergency,
+                  size: 16,
+                  color: Color(0xFFE11D48),
+                ),
+                const SizedBox(width: kSpacing8),
+                Expanded(
+                  child: Text(
+                    'Unused emergency budget will automatically be moved to your savings at the end of the period.',
+                    style: context.ts(
+                      11,
+                      fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
         const SizedBox(height: kSpacing12),
       ],
     );
