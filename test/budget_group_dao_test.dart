@@ -249,5 +249,141 @@ void main() {
       expect(standalone.first.budget.name, equals('Standalone Budget'));
       expect(standalone.first.budget.groupId, isNull);
     });
+
+    test('deleting a budget removes it and its periods', () async {
+      final categories = await categoryDao.getAllCategories();
+      final cat = categories.first;
+
+      final budgetId = await budgetRepo.createBudget(
+        name: 'To Delete',
+        categoryId: cat.id,
+        period: 'monthly',
+        amount: 200000,
+        rollover: false,
+        rolloverType: 'none',
+        startDate: DateTime.now(),
+      );
+
+      var budget = await budgetRepo.getBudgetById(budgetId);
+      expect(budget, isNotNull);
+
+      var periods = await budgetRepo.getPeriodsForBudget(budgetId);
+      expect(periods, isNotEmpty);
+
+      await budgetRepo.deleteBudget(budgetId);
+
+      budget = await budgetRepo.getBudgetById(budgetId);
+      expect(budget, isNull);
+
+      periods = await budgetRepo.getPeriodsForBudget(budgetId);
+      expect(periods, isEmpty);
+    });
+
+    test('deleting a group unlinks child budgets to standalone', () async {
+      final categories = await categoryDao.getAllCategories();
+      final cat = categories.first;
+
+      final groupId = uuid.v4();
+      await groupDao.insertGroup(
+        BudgetGroup(
+          id: groupId,
+          name: 'Needs',
+          groupType: 'needs',
+          percentage: 0.5,
+          allocatedAmount: 500000,
+          icon: 'home',
+          color: '#2196F3',
+          sortOrder: 0,
+          isActive: true,
+          createdAt: DateTime.now(),
+        ),
+      );
+
+      final budgetId = await budgetRepo.createBudget(
+        name: 'Sub Budget',
+        categoryId: cat.id,
+        groupId: groupId,
+        period: 'monthly',
+        amount: 200000,
+        rollover: false,
+        rolloverType: 'none',
+        startDate: DateTime.now(),
+      );
+
+      // Verify it is grouped
+      var groupsWithChildren = await groupRepo.getGroupsWithProgress();
+      expect(groupsWithChildren.first.subBudgets.length, equals(1));
+
+      // Delete group
+      await groupRepo.deleteGroup(groupId);
+
+      // Group is gone
+      groupsWithChildren = await groupRepo.getGroupsWithProgress();
+      expect(groupsWithChildren, isEmpty);
+
+      // Child budget is now standalone
+      final standalone = await groupRepo.getStandaloneBudgetsWithProgress();
+      expect(standalone.length, equals(1));
+      expect(standalone.first.budget.id, equals(budgetId));
+      expect(standalone.first.budget.groupId, isNull);
+    });
+
+    test('deleteAllGroups removes all groups and preserves child budgets', () async {
+      final categories = await categoryDao.getAllCategories();
+      final cat = categories.first;
+
+      await groupRepo.createBudgetPlan(
+        rule: BudgetRuleType.rule503020,
+        monthlyIncomeCents: 100000000,
+      );
+
+      final groups = await groupDao.getAllActiveGroups();
+      expect(groups.length, equals(3));
+
+      await budgetRepo.createBudget(
+        name: 'Sub In Needs',
+        categoryId: cat.id,
+        groupId: groups.first.id,
+        period: 'monthly',
+        amount: 200000,
+        rollover: false,
+        rolloverType: 'none',
+        startDate: DateTime.now(),
+      );
+
+      await groupRepo.deleteAllGroups(keepSubBudgets: true);
+
+      final groupsAfter = await groupDao.getAllActiveGroups();
+      expect(groupsAfter, isEmpty);
+
+      final standalone = await groupRepo.getStandaloneBudgetsWithProgress();
+      expect(standalone.length, equals(1));
+      expect(standalone.first.budget.name, equals('Sub In Needs'));
+      expect(standalone.first.budget.groupId, isNull);
+    });
+
+    test('reconfiguring budget plan updates existing groups without creating duplicates', () async {
+      await groupRepo.createBudgetPlan(
+        rule: BudgetRuleType.rule503020,
+        monthlyIncomeCents: 100000000, // 1,000,000 TZS
+      );
+
+      var groups = await groupDao.getAllActiveGroups();
+      expect(groups.length, equals(3));
+
+      // Reconfigure plan with different income and rule
+      await groupRepo.createBudgetPlan(
+        rule: BudgetRuleType.rule702010,
+        monthlyIncomeCents: 200000000, // 2,000,000 TZS
+      );
+
+      groups = await groupDao.getAllActiveGroups();
+      // Still exactly 3 groups, not 6
+      expect(groups.length, equals(3));
+
+      final needs = groups.firstWhere((g) => g.groupType == 'needs');
+      expect(needs.percentage, equals(0.70));
+      expect(needs.allocatedAmount, equals(140000000));
+    });
   });
 }
