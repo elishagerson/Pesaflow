@@ -235,7 +235,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       ref.invalidate(activeBudgetsStreamProvider);
       ref.invalidate(budgetGroupsProvider);
       ref.invalidate(standaloneBudgetsProvider);
-      if (context.mounted) {
+      if (mounted) {
         CustomToast.show(
           context,
           message: '"$name" deleted',
@@ -243,7 +243,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         );
       }
     } catch (e) {
-      if (context.mounted) {
+      if (mounted) {
         CustomToast.show(
           context,
           message: 'Error deleting budget: $e',
