@@ -583,7 +583,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
 // SUB-BUDGET CARD
 // ════════════════════════════════════════════════════════════════════════════
 
-class _SubBudgetCard extends StatelessWidget {
+class _SubBudgetCard extends ConsumerWidget {
   final BudgetWithChildProgress subBudget;
   final Color groupColor;
 
@@ -593,7 +593,7 @@ class _SubBudgetCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
     final catColor = hexToColor(subBudget.category.color);
@@ -615,29 +615,106 @@ class _SubBudgetCard extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: kSpacing10),
-      child: TactileSpringContainer(
-        onTap: () => context.push('/budgets/${subBudget.budget.id}'),
-        child: GlassCard(
-          padding: const EdgeInsets.all(kSpacing14),
-          borderRadius: AppTheme.radiusCard,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(kSpacing8),
-                    decoration: BoxDecoration(
-                      color: catColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(
-                        AppTheme.radiusCompact,
+      child: Dismissible(
+        key: ValueKey(subBudget.budget.id),
+        direction: DismissDirection.endToStart,
+        confirmDismiss: (direction) async {
+          return await ModernDialog.show<bool>(
+            context: context,
+            title: const Text('Delete Sub-Budget?'),
+            titleIcon: PesaFlowIcons.delete,
+            iconColor: context.appColors.expenseColor,
+            content: Text(
+              'Permanently remove the "${subBudget.budget.name}" envelope from this group?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context, rootNavigator: true).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context, rootNavigator: true).pop(true),
+                child: Text(
+                  'Delete',
+                  style: TextStyle(color: context.appColors.expenseColor),
+                ),
+              ),
+            ],
+          );
+        },
+        onDismissed: (direction) async {
+          final budget = subBudget.budget;
+          final budgetRepo = ref.read(budgetRepositoryProvider);
+          await budgetRepo.deleteBudget(budget.id);
+          ref.invalidate(budgetGroupsProvider);
+          ref.invalidate(standaloneBudgetsProvider);
+          ref.invalidate(activeBudgetsStreamProvider);
+          ref.invalidate(budgetProgressProvider);
+          if (context.mounted) {
+            CustomToast.show(
+              context,
+              message: '"${budget.name}" deleted',
+              type: ToastType.success,
+              duration: const Duration(seconds: 5),
+              actionLabel: 'Undo',
+              onAction: () async {
+                await budgetRepo.createBudget(
+                  name: budget.name,
+                  categoryId: budget.categoryId,
+                  period: budget.period,
+                  amount: budget.amount,
+                  rollover: budget.rollover,
+                  rolloverType: budget.rolloverType,
+                  rolloverCap: budget.rolloverCap,
+                  startDate: budget.startDate,
+                  notificationThreshold: budget.notificationThreshold,
+                  groupId: budget.groupId,
+                );
+                ref.invalidate(budgetGroupsProvider);
+                ref.invalidate(standaloneBudgetsProvider);
+                ref.invalidate(activeBudgetsStreamProvider);
+                ref.invalidate(budgetProgressProvider);
+              },
+            );
+          }
+        },
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: kSpacing20),
+          decoration: BoxDecoration(
+            color: context.appColors.expenseColor.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+          ),
+          child: Icon(
+            PesaFlowIcons.delete,
+            color: context.appColors.expenseColor,
+          ),
+        ),
+        child: TactileSpringContainer(
+          onTap: () => context.push('/budgets/${subBudget.budget.id}'),
+          child: GlassCard(
+            padding: const EdgeInsets.all(kSpacing14),
+            borderRadius: AppTheme.radiusCard,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(kSpacing8),
+                      decoration: BoxDecoration(
+                        color: catColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusCompact,
+                        ),
+                      ),
+                      child: Icon(
+                        getCategoryIcon(subBudget.category.icon),
+                        color: catColor,
+                        size: 20,
                       ),
                     ),
-                    child: Icon(
-                      getCategoryIcon(subBudget.category.icon),
-                      color: catColor,
-                      size: 20,
-                    ),
-                  ),
                   const SizedBox(width: kSpacing12),
                   Expanded(
                     child: Column(
@@ -707,6 +784,7 @@ class _SubBudgetCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
       ),
     );
   }
