@@ -87,6 +87,14 @@ class DemoSeeder {
         ('Income', 'work', 6, 'income'),
         ('Other', 'category', 7, 'expense'),
         ('Investments', 'trending-up', 8, 'expense'),
+        ('Emergencies', 'alert-circle', 9, 'expense'),
+        ('Charity & Offerings', 'charity', 10, 'expense'),
+        ('Contributions & Michango', 'community', 11, 'expense'),
+        ('Personal Care', 'spa', 12, 'expense'),
+        ('Family Support', 'family', 13, 'expense'),
+        ('Home & Maintenance', 'handyman', 14, 'expense'),
+        ('Insurance & Taxes', 'insurance', 15, 'expense'),
+        ('Subscriptions & Streaming', 'subscriptions', 16, 'expense'),
       ];
 
       for (final (name, icon, order, type) in defaultCategories) {
