@@ -42,6 +42,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   final _amountController = TextEditingController();
   final _capController = TextEditingController();
   String? _selectedCategoryId;
+  String? _selectedGroupId;
   String _period = 'monthly';
   bool _rollover = false;
   String _rolloverType = 'none';
@@ -62,6 +63,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   @override
   void initState() {
     super.initState();
+    _selectedGroupId = widget.groupId;
     _nameController.addListener(_onNameChanged);
     _amountController.addListener(_onAmountChanged);
     if (widget.budgetId != null) {
@@ -83,6 +85,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         _rolloverType = budget.rolloverType;
         _threshold = budget.notificationThreshold;
         _startDate = budget.startDate;
+        if (budget.groupId != null) {
+          _selectedGroupId = budget.groupId;
+        }
         if (budget.rolloverCap != null) {
           _capController.text = (budget.rolloverCap! ~/ 100).toString();
         }
@@ -145,6 +150,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
             existing.copyWith(
               name: _nameController.text.trim(),
               categoryId: _selectedCategoryId!,
+              groupId: Value(_selectedGroupId),
               period: _period,
               amount: amountCents,
               rollover: _rollover,
@@ -158,6 +164,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         await repo.createBudget(
           name: _nameController.text.trim(),
           categoryId: _selectedCategoryId!,
+          groupId: _selectedGroupId,
           period: _period,
           amount: amountCents,
           rollover: _rollover,
@@ -169,6 +176,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       }
       ref.invalidate(budgetProgressProvider);
       ref.invalidate(activeBudgetsStreamProvider);
+      ref.invalidate(budgetGroupsProvider);
+      ref.invalidate(standaloneBudgetsProvider);
       if (mounted) context.pop();
     } catch (e) {
       if (mounted) {
@@ -639,6 +648,20 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           ),
                         ),
                         const SizedBox(height: kSpacing8),
+                        ref.watch(budgetGroupsProvider).maybeWhen(
+                          data: (groups) {
+                            if (groups.isEmpty) return const SizedBox.shrink();
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                sectionLabel('BUDGET GROUP'),
+                                _buildGroupSelector(groups, theme),
+                                const SizedBox(height: kSpacing8),
+                              ],
+                            );
+                          },
+                          orElse: () => const SizedBox.shrink(),
+                        ),
                         sectionLabel('START DATE'),
                         StaggeredFadeSlide(
                           index: 2,
