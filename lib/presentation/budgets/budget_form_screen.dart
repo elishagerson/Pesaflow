@@ -48,7 +48,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   String _rolloverType = 'none';
   double _threshold = 0.8;
   bool _isSaving = false;
-  DateTime _startDate = DateTime.now();
+  DateTime _startDate =
+      DateTime(DateTime.now().year, DateTime.now().month, 1);
 
   bool get _isDirty {
     if (_isSaving) return false;
@@ -84,7 +85,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         _rollover = budget.rollover;
         _rolloverType = budget.rolloverType;
         _threshold = budget.notificationThreshold;
-        _startDate = budget.startDate;
+        _startDate = budget.period == 'monthly'
+            ? DateTime(budget.startDate.year, budget.startDate.month, 1)
+            : budget.startDate;
         if (budget.groupId != null) {
           _selectedGroupId = budget.groupId;
         }
@@ -170,7 +173,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
           rollover: _rollover,
           rolloverType: _rolloverType,
           rolloverCap: rolloverCap,
-          startDate: _startDate,
+          startDate: _period == 'monthly'
+              ? DateTime(_startDate.year, _startDate.month, 1)
+              : _startDate,
           notificationThreshold: _threshold,
         );
       }
@@ -706,7 +711,18 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     ),
                                   },
                                   onValueChanged: (v) {
-                                    if (v != null) setState(() => _period = v);
+                                    if (v != null) {
+                                      setState(() {
+                                        _period = v;
+                                        if (v == 'monthly') {
+                                          _startDate = DateTime(
+                                            _startDate.year,
+                                            _startDate.month,
+                                            1,
+                                          );
+                                        }
+                                      });
+                                    }
                                   },
                                 ),
                               ),
@@ -738,14 +754,38 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                             child: GlassCard(
                               padding: const EdgeInsets.all(kSpacing8),
                               borderRadius: AppTheme.radiusCard,
-                              child: ModernDateSelector(
-                                labelText: 'Start Date',
-                                value: _startDate,
-                                prefixIcon: PesaFlowIcons.calendar,
-                                firstDate: DateTime(2020),
-                                lastDate: DateTime(2030),
-                                onChanged: (d) =>
-                                    setState(() => _startDate = d),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ModernDateSelector(
+                                    labelText: _period == 'monthly'
+                                        ? 'Start Month (Starts 1st)'
+                                        : 'Start Date',
+                                    value: _startDate,
+                                    prefixIcon: PesaFlowIcons.calendar,
+                                    firstDate: DateTime(2020),
+                                    lastDate: DateTime(2030),
+                                    onChanged: (d) => setState(() =>
+                                        _startDate = _period == 'monthly'
+                                            ? DateTime(d.year, d.month, 1)
+                                            : d),
+                                  ),
+                                  if (_period == 'monthly')
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: kSpacing4,
+                                        left: kSpacing8,
+                                        bottom: kSpacing4,
+                                      ),
+                                      child: Text(
+                                        'Tracking automatically starts from the 1st day of the month',
+                                        style: context.ts(
+                                          11,
+                                          color: context.appColors.textMedium,
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
                             ),
                           ),

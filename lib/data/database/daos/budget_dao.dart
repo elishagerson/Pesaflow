@@ -196,6 +196,11 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
     }
   }
 
+  /// Replaces a period with updated values.
+  Future<void> updatePeriod(BudgetPeriod period) async {
+    await update(budgetPeriods).replace(period);
+  }
+
   /// Updates the current period's allocated amount for a budget.
   Future<void> updateCurrentPeriodAllocated(
     String budgetId,

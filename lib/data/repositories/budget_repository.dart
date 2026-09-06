@@ -54,11 +54,13 @@ class BudgetRepository {
     String? groupId,
   }) async {
     final budgetId = _uuid.v4();
-    final normalizedStart = DateTime(
-      startDate.year,
-      startDate.month,
-      startDate.day,
-    );
+    final normalizedStart = period == 'monthly'
+        ? DateTime(startDate.year, startDate.month, 1)
+        : DateTime(
+            startDate.year,
+            startDate.month,
+            startDate.day,
+          );
     final periodEnd = BudgetEngine.computePeriodEnd(normalizedStart, period);
 
     final budget = Budget(
@@ -131,6 +133,37 @@ class BudgetRepository {
 
     for (final budget in activeBudgets) {
       var currentPeriod = await _budgetDao.getCurrentPeriod(budget.id);
+
+      // Monthly budgets always track starting from the 1st day of the month
+      if (budget.period == 'monthly') {
+        if (budget.startDate.day != 1) {
+          final alignedBudgetStart = DateTime(
+            budget.startDate.year,
+            budget.startDate.month,
+            1,
+          );
+          await _budgetDao.updateBudget(
+            budget.copyWith(startDate: alignedBudgetStart),
+          );
+        }
+
+        if (currentPeriod != null && currentPeriod.periodStart.day != 1) {
+          final alignedStart = DateTime(
+            currentPeriod.periodStart.year,
+            currentPeriod.periodStart.month,
+            1,
+          );
+          final alignedEnd =
+              BudgetEngine.computePeriodEnd(alignedStart, 'monthly');
+          final alignedPeriod = currentPeriod.copyWith(
+            periodStart: alignedStart,
+            periodEnd: alignedEnd,
+          );
+          await _budgetDao.updatePeriod(alignedPeriod);
+          currentPeriod = alignedPeriod;
+        }
+      }
+
       while (currentPeriod != null &&
           now.isAfter(
             // periodEnd is the inclusive last day stored at midnight (00:00:00).
