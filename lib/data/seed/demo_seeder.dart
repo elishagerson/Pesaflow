@@ -95,6 +95,16 @@ class DemoSeeder {
         ('Home & Maintenance', 'handyman', 14, 'expense'),
         ('Insurance & Taxes', 'insurance', 15, 'expense'),
         ('Subscriptions & Streaming', 'subscriptions', 16, 'expense'),
+        ('Vehicle & Fuel', 'gas-station', 17, 'expense'),
+        ('Travel & Vacations', 'flight', 18, 'expense'),
+        ('Fitness & Sports', 'fitness', 19, 'expense'),
+        ('Children & Baby', 'childcare', 20, 'expense'),
+        ('Gifts & Celebrations', 'gift', 21, 'expense'),
+        ('Electronics & Tech', 'devices', 22, 'expense'),
+        ('Pets & Animals', 'pets', 23, 'expense'),
+        ('Legal & Professional', 'legal', 24, 'expense'),
+        ('Hobbies & Recreation', 'palette', 25, 'expense'),
+        ('Fines & Penalties', 'fines', 26, 'expense'),
       ];
 
       for (final (name, icon, order, type) in defaultCategories) {

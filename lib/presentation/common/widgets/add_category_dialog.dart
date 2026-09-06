@@ -53,6 +53,16 @@ Future<Category?> showAddCategoryDialog(
     'handyman',
     'insurance',
     'subscriptions',
+    'gas-station',
+    'flight',
+    'fitness',
+    'childcare',
+    'gift',
+    'devices',
+    'pets',
+    'legal',
+    'palette',
+    'fines',
   ];
 
   Category? result;

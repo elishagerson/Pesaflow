@@ -76,6 +76,37 @@ IconData getCategoryIcon(String iconName) {
     case 'subscriptions':
     case 'repeat':
       return PesaFlowIcons.digitalSubscriptions;
+    case 'gas-station':
+    case 'fuel':
+    case 'vehicle':
+      return PesaFlowIcons.vehicle;
+    case 'flight':
+    case 'travel':
+    case 'beach':
+      return PesaFlowIcons.travel;
+    case 'fitness':
+    case 'dumbbell':
+    case 'sports':
+      return PesaFlowIcons.fitness;
+    case 'childcare':
+    case 'baby':
+      return PesaFlowIcons.childcare;
+    case 'devices':
+    case 'electronics':
+    case 'tech':
+      return PesaFlowIcons.electronics;
+    case 'pets':
+    case 'animals':
+      return PesaFlowIcons.pets;
+    case 'legal':
+    case 'gavel':
+      return PesaFlowIcons.legal;
+    case 'palette':
+    case 'hobbies':
+      return PesaFlowIcons.hobbies;
+    case 'fines':
+    case 'penalty':
+      return PesaFlowIcons.fines;
     default:
       return PesaFlowIcons.add;
   }

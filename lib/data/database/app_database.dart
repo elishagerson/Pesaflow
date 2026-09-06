@@ -45,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 14;
+  int get schemaVersion => 15;
 
   @override
   MigrationStrategy get migration {
@@ -254,6 +254,96 @@ class AppDatabase extends _$AppDatabase {
             '#4F46E5',
             'expense',
             25,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Vehicle & Fuel',
+            'gas-station',
+            '#EA580C',
+            'expense',
+            26,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Travel & Vacations',
+            'flight',
+            '#0891B2',
+            'expense',
+            27,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Fitness & Sports',
+            'fitness',
+            '#16A34A',
+            'expense',
+            28,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Children & Baby',
+            'childcare',
+            '#F472B6',
+            'expense',
+            29,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Gifts & Celebrations',
+            'gift',
+            '#EC4899',
+            'expense',
+            30,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Electronics & Tech',
+            'devices',
+            '#6366F1',
+            'expense',
+            31,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Pets & Animals',
+            'pets',
+            '#84CC16',
+            'expense',
+            32,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Legal & Professional',
+            'legal',
+            '#475569',
+            'expense',
+            33,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Hobbies & Recreation',
+            'palette',
+            '#A855F7',
+            'expense',
+            34,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Fines & Penalties',
+            'fines',
+            '#DC2626',
+            'expense',
+            35,
             true,
           ),
 
@@ -506,6 +596,35 @@ class AppDatabase extends _$AppDatabase {
           ];
 
           for (final (name, icon, color, order) in newCategories) {
+            if (!existingNames.contains(name.toLowerCase())) {
+              await into(categories).insert(
+                _cat(uuid.v4(), name, icon, color, 'expense', order, true),
+              );
+            }
+          }
+        }
+
+        // Migration from schema version 14 → 15: add next wave of lifestyle & professional categories
+        if (from < 15) {
+          final existingCats = await select(categories).get();
+          final existingNames =
+              existingCats.map((c) => c.name.toLowerCase()).toSet();
+          final uuid = const Uuid();
+
+          final nextWaveCategories = [
+            ('Vehicle & Fuel', 'gas-station', '#EA580C', 26),
+            ('Travel & Vacations', 'flight', '#0891B2', 27),
+            ('Fitness & Sports', 'fitness', '#16A34A', 28),
+            ('Children & Baby', 'childcare', '#F472B6', 29),
+            ('Gifts & Celebrations', 'gift', '#EC4899', 30),
+            ('Electronics & Tech', 'devices', '#6366F1', 31),
+            ('Pets & Animals', 'pets', '#84CC16', 32),
+            ('Legal & Professional', 'legal', '#475569', 33),
+            ('Hobbies & Recreation', 'palette', '#A855F7', 34),
+            ('Fines & Penalties', 'fines', '#DC2626', 35),
+          ];
+
+          for (final (name, icon, color, order) in nextWaveCategories) {
             if (!existingNames.contains(name.toLowerCase())) {
               await into(categories).insert(
                 _cat(uuid.v4(), name, icon, color, 'expense', order, true),

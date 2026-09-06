@@ -57,9 +57,19 @@ class DefaultSeeder {
       ('Home & Maintenance', 'handyman', '#B45309', 22, 'expense'),
       ('Insurance & Taxes', 'insurance', '#0284C7', 23, 'expense'),
       ('Subscriptions & Streaming', 'subscriptions', '#4F46E5', 24, 'expense'),
-      ('Salary', 'briefcase', '#2E7D32', 25, 'income'),
-      ('Business', 'store', '#008080', 26, 'income'),
-      ('Other Income', 'plus-circle', '#808080', 27, 'income'),
+      ('Vehicle & Fuel', 'gas-station', '#EA580C', 25, 'expense'),
+      ('Travel & Vacations', 'flight', '#0891B2', 26, 'expense'),
+      ('Fitness & Sports', 'fitness', '#16A34A', 27, 'expense'),
+      ('Children & Baby', 'childcare', '#F472B6', 28, 'expense'),
+      ('Gifts & Celebrations', 'gift', '#EC4899', 29, 'expense'),
+      ('Electronics & Tech', 'devices', '#6366F1', 30, 'expense'),
+      ('Pets & Animals', 'pets', '#84CC16', 31, 'expense'),
+      ('Legal & Professional', 'legal', '#475569', 32, 'expense'),
+      ('Hobbies & Recreation', 'palette', '#A855F7', 33, 'expense'),
+      ('Fines & Penalties', 'fines', '#DC2626', 34, 'expense'),
+      ('Salary', 'briefcase', '#2E7D32', 35, 'income'),
+      ('Business', 'store', '#008080', 36, 'income'),
+      ('Other Income', 'plus-circle', '#808080', 37, 'income'),
     ];
 
     for (final (name, icon, color, order, type) in defaultCategories) {

@@ -161,5 +161,14 @@ class PesaFlowIcons {
   static const IconData maintenance = Icons.handyman_rounded;
   static const IconData insurance = Icons.verified_user_rounded;
   static const IconData digitalSubscriptions = Icons.subscriptions_rounded;
+  static const IconData vehicle = Icons.local_gas_station_rounded;
+  static const IconData travel = Icons.beach_access_rounded;
+  static const IconData fitness = Icons.fitness_center_rounded;
+  static const IconData childcare = Icons.child_care_rounded;
+  static const IconData electronics = Icons.devices_rounded;
+  static const IconData pets = Icons.pets_rounded;
+  static const IconData legal = Icons.gavel_rounded;
+  static const IconData hobbies = Icons.palette_rounded;
+  static const IconData fines = Icons.report_problem_rounded;
 }
 
