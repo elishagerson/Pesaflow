@@ -153,4 +153,13 @@ class PesaFlowIcons {
   static const IconData compareArrows = Icons.compare_arrows_rounded;
   static const IconData folder = Icons.folder_rounded;
   static const IconData title = Icons.title_rounded;
+  static const IconData emergency = Icons.emergency_rounded;
+  static const IconData charity = Icons.volunteer_activism_rounded;
+  static const IconData community = Icons.groups_rounded;
+  static const IconData personalCare = Icons.spa_rounded;
+  static const IconData family = Icons.family_restroom_rounded;
+  static const IconData maintenance = Icons.handyman_rounded;
+  static const IconData insurance = Icons.verified_user_rounded;
+  static const IconData digitalSubscriptions = Icons.subscriptions_rounded;
 }
+

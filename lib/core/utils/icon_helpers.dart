@@ -39,6 +39,43 @@ IconData getCategoryIcon(String iconName) {
       return PesaFlowIcons.compareArrows;
     case 'plus-circle':
       return PesaFlowIcons.add;
+    case 'trending-up':
+      return PesaFlowIcons.income;
+    case 'more-horizontal':
+      return PesaFlowIcons.more;
+    case 'alert-circle':
+    case 'emergency':
+    case 'shield-alert':
+      return PesaFlowIcons.emergency;
+    case 'charity':
+    case 'gift':
+    case 'offering':
+      return PesaFlowIcons.charity;
+    case 'users':
+    case 'community':
+    case 'michango':
+    case 'people':
+      return PesaFlowIcons.community;
+    case 'spa':
+    case 'personal-care':
+    case 'scissors':
+      return PesaFlowIcons.personalCare;
+    case 'family':
+    case 'family-restroom':
+      return PesaFlowIcons.family;
+    case 'tool':
+    case 'handyman':
+    case 'maintenance':
+    case 'wrench':
+      return PesaFlowIcons.maintenance;
+    case 'insurance':
+    case 'verified-user':
+    case 'policy':
+    case 'shield-check':
+      return PesaFlowIcons.insurance;
+    case 'subscriptions':
+    case 'repeat':
+      return PesaFlowIcons.digitalSubscriptions;
     default:
       return PesaFlowIcons.add;
   }

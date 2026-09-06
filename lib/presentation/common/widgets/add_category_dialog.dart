@@ -38,9 +38,21 @@ Future<Category?> showAddCategoryDialog(
     'heart',
     'book',
     'film',
+    'shopping-bag',
     'coffee',
     'send',
+    'credit-card',
+    'banknote',
     'piggy-bank',
+    'trending-up',
+    'emergency',
+    'charity',
+    'community',
+    'spa',
+    'family',
+    'handyman',
+    'insurance',
+    'subscriptions',
   ];
 
   Category? result;
