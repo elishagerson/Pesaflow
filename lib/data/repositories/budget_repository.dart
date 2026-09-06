@@ -26,19 +26,17 @@ final budgetRepositoryProvider = Provider<BudgetRepository>((ref) {
 
 class BudgetRepository {
   final BudgetDao _budgetDao;
-  final CategoryDao? _categoryDao;
-  final SavingsGoalsDao? _savingsGoalsDao;
-  final NotificationService? _notificationService;
+  final CategoryDao? categoryDao;
+  final SavingsGoalsDao? savingsGoalsDao;
+  final NotificationService? notificationService;
   static const _uuid = Uuid();
 
   BudgetRepository(
     this._budgetDao, {
-    CategoryDao? categoryDao,
-    SavingsGoalsDao? savingsGoalsDao,
-    NotificationService? notificationService,
-  })  : _categoryDao = categoryDao,
-        _savingsGoalsDao = savingsGoalsDao,
-        _notificationService = notificationService;
+    this.categoryDao,
+    this.savingsGoalsDao,
+    this.notificationService,
+  });
 
   Stream<List<Budget>> watchAllActiveBudgets() =>
       _budgetDao.watchAllActiveBudgets();
@@ -261,9 +259,10 @@ class BudgetRepository {
     if (budget.name.toLowerCase().contains('emergenc')) {
       return true;
     }
-    if (_categoryDao != null) {
+    final catDao = categoryDao;
+    if (catDao != null) {
       try {
-        final category = await _categoryDao!.getCategoryById(budget.categoryId);
+        final category = await catDao.getCategoryById(budget.categoryId);
         if (category != null &&
             category.name.toLowerCase().contains('emergenc')) {
           return true;
@@ -280,10 +279,11 @@ class BudgetRepository {
     required BudgetPeriod closedPeriod,
     required int remaining,
   }) async {
-    if (_savingsGoalsDao == null || remaining <= 0) return;
+    final sgDao = savingsGoalsDao;
+    if (sgDao == null || remaining <= 0) return;
 
     try {
-      final allGoals = await _savingsGoalsDao!.getAllGoals();
+      final allGoals = await sgDao.getAllGoals();
 
       // Look for an Emergency Fund goal first, or any active goal
       SavingsGoal? targetGoal = allGoals
@@ -315,11 +315,11 @@ class BudgetRepository {
           targetDate: DateTime(now.year + 1, now.month, now.day),
           color: '#E11D48',
           icon: 'alert-circle',
-          trackerId: budget.trackerId,
+          trackerId: null,
           isCompleted: false,
           createdAt: now,
         );
-        await _savingsGoalsDao!.insertSavingsGoal(newGoal);
+        await sgDao.insertSavingsGoal(newGoal);
         targetGoal = newGoal;
       }
 
@@ -332,15 +332,16 @@ class BudgetRepository {
             'Unused budget from ${budget.name} (${closedPeriod.periodStart.month}/${closedPeriod.periodStart.year})',
         createdAt: DateTime.now(),
       );
-      await _savingsGoalsDao!.addContribution(contribution);
+      await sgDao.addContribution(contribution);
 
       // Send local notification to user
-      if (_notificationService != null) {
+      final notif = notificationService;
+      if (notif != null) {
         try {
           final formattedAmount = CurrencyFormatter.formatCents(remaining);
           final notifId =
               (budget.id.hashCode ^ closedPeriod.id.hashCode) & 0x7FFFFFFF;
-          await _notificationService!.showNotification(
+          await notif.showNotification(
             id: notifId,
             title: 'Move to Savings: ${budget.name}',
             body:
