@@ -18,7 +18,6 @@ import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
-import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -175,33 +174,61 @@ class BudgetDetailScreen extends ConsumerWidget {
                                 if (!context.mounted) return;
                                 final budget = bp.budget;
                                 final savedBudgetName = budget.name;
-                                await UndoDelete.show(
-                                  context: context,
-                                  entityName: 'Budget',
-                                  message: '"$savedBudgetName" deleted',
-                                  onUndo: () async {
-                                    await ref
-                                        .read(budgetRepositoryProvider)
-                                        .createBudget(
-                                          name: budget.name,
-                                          categoryId: budget.categoryId,
-                                          period: budget.period,
-                                          amount: budget.amount,
-                                          rollover: budget.rollover,
-                                          rolloverType: budget.rolloverType,
-                                          rolloverCap: budget.rolloverCap,
-                                          startDate: budget.startDate,
-                                          notificationThreshold:
-                                              budget.notificationThreshold,
+                                final budgetRepo =
+                                    ref.read(budgetRepositoryProvider);
+
+                                // Pop immediately to caller (prevents "Budget Not Found" empty state flicker)
+                                context.pop();
+
+                                // Delete immediately
+                                await budgetRepo.deleteBudget(budgetId);
+
+                                // Invalidate providers
+                                ref.invalidate(budgetGroupsProvider);
+                                ref.invalidate(standaloneBudgetsProvider);
+                                ref.invalidate(activeBudgetsStreamProvider);
+                                ref.invalidate(budgetProgressProvider);
+
+                                if (context.mounted) {
+                                  CustomToast.show(
+                                    context,
+                                    message: '"$savedBudgetName" deleted',
+                                    type: ToastType.success,
+                                    duration: const Duration(seconds: 5),
+                                    actionLabel: 'Undo',
+                                    onAction: () async {
+                                      await budgetRepo.createBudget(
+                                        name: budget.name,
+                                        categoryId: budget.categoryId,
+                                        period: budget.period,
+                                        amount: budget.amount,
+                                        rollover: budget.rollover,
+                                        rolloverType: budget.rolloverType,
+                                        rolloverCap: budget.rolloverCap,
+                                        startDate: budget.startDate,
+                                        notificationThreshold:
+                                            budget.notificationThreshold,
+                                        groupId: budget.groupId,
+                                      );
+                                      ref.invalidate(budgetGroupsProvider);
+                                      ref.invalidate(
+                                        standaloneBudgetsProvider,
+                                      );
+                                      ref.invalidate(
+                                        activeBudgetsStreamProvider,
+                                      );
+                                      ref.invalidate(budgetProgressProvider);
+                                      if (context.mounted) {
+                                        CustomToast.show(
+                                          context,
+                                          message:
+                                              '"$savedBudgetName" restored',
+                                          type: ToastType.info,
                                         );
-                                  },
-                                  onDelete: () async {
-                                    await ref
-                                        .read(budgetRepositoryProvider)
-                                        .deleteBudget(budgetId);
-                                    if (context.mounted) context.pop();
-                                  },
-                                );
+                                      }
+                                    },
+                                  );
+                                }
                               }
                             },
                             child: Container(
