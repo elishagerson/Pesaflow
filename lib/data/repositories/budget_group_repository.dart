@@ -75,10 +75,15 @@ class BudgetGroupRepository {
   /// Deletes a budget group and unlinks its child budgets.
   Future<void> deleteGroup(String groupId) => _groupDao.deleteGroup(groupId);
 
+  /// Deletes all budget groups, preserving child budgets as standalone envelopes.
+  Future<void> deleteAllGroups({bool keepSubBudgets = true}) =>
+      _groupDao.deleteAllGroups(keepSubBudgets: keepSubBudgets);
+
   /// Creates a full budget plan from a rule and income amount.
   ///
-  /// Creates 3 budget groups (Needs, Wants, Investments) with amounts
-  /// calculated from the income and the rule's percentages.
+  /// Replaces or reconfigures the 3 budget groups (Needs, Wants, Investments)
+  /// with amounts calculated from the income and the rule's percentages,
+  /// preserving existing sub-budgets.
   Future<List<String>> createBudgetPlan({
     required BudgetRuleType rule,
     required int monthlyIncomeCents,
@@ -94,21 +99,46 @@ class BudgetGroupRepository {
       customInvestments: customInvestments,
     );
 
+    final existingGroups = await _groupDao.getAllActiveGroups();
+    final existingByType = <BudgetGroupType, BudgetGroup>{};
+    for (final g in existingGroups) {
+      final type = BudgetGroupType.values
+          .where((t) => t.name == g.groupType)
+          .firstOrNull;
+      if (type != null) existingByType[type] = g;
+    }
+
     final groupIds = <String>[];
 
     for (var i = 0; i < allocations.length; i++) {
       final alloc = allocations[i];
       final (icon, color) = _groupTypeVisuals(alloc.type);
-      final id = await createGroup(
-        name: alloc.type.displayName,
-        groupType: alloc.type,
-        percentage: alloc.percentage,
-        allocatedAmount: alloc.amount,
-        icon: icon,
-        color: color,
-        sortOrder: i,
-      );
-      groupIds.add(id);
+      final existing = existingByType[alloc.type];
+
+      if (existing != null) {
+        // Update existing group with new allocation
+        await updateGroup(
+          existing.copyWith(
+            percentage: alloc.percentage,
+            allocatedAmount: alloc.amount,
+            icon: icon,
+            color: color,
+            sortOrder: i,
+          ),
+        );
+        groupIds.add(existing.id);
+      } else {
+        final id = await createGroup(
+          name: alloc.type.displayName,
+          groupType: alloc.type,
+          percentage: alloc.percentage,
+          allocatedAmount: alloc.amount,
+          icon: icon,
+          color: color,
+          sortOrder: i,
+        );
+        groupIds.add(id);
+      }
     }
 
     return groupIds;
