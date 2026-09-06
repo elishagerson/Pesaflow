@@ -56,8 +56,8 @@ void main() {
       final categories = await categoryDao.getAllCategories();
       final emergencyCat = categories.firstWhere((c) => c.name == 'Emergencies');
 
-      // Create an emergency budget starting last month (already expired)
-      final pastStart = DateTime(2026, 7, 1);
+      final now = DateTime.now();
+      final pastStart = DateTime(now.year, now.month - 1, 1);
       const allocatedCents = 20000000; // 200,000 TZS
 
       await budgetRepo.createBudget(
@@ -130,7 +130,8 @@ void main() {
         ),
       );
 
-      final pastStart = DateTime(2026, 7, 1);
+      final now = DateTime.now();
+      final pastStart = DateTime(now.year, now.month - 1, 1);
       const allocatedCents = 15000000; // 150,000 TZS
       const spentCents = 5000000; // 50,000 TZS spent
       const remainingCents = 10000000; // 100,000 TZS remaining
@@ -154,8 +155,8 @@ void main() {
           categoryId: emergencyCat.id,
           description: 'Clinic medicine',
           source: 'manual',
-          createdAt: DateTime(2026, 7, 10, 10, 0),
-          updatedAt: DateTime(2026, 7, 10, 10, 0),
+          createdAt: DateTime(pastStart.year, pastStart.month, 10, 10, 0),
+          updatedAt: DateTime(pastStart.year, pastStart.month, 10, 10, 0),
         ),
       );
 
@@ -183,7 +184,8 @@ void main() {
       final emergencyCat = categories.firstWhere((c) => c.name == 'Emergencies');
       const uuid = Uuid();
 
-      final pastStart = DateTime(2026, 7, 1);
+      final now = DateTime.now();
+      final pastStart = DateTime(now.year, now.month - 1, 1);
       const allocatedCents = 10000000;
 
       await budgetRepo.createBudget(
@@ -205,8 +207,8 @@ void main() {
           categoryId: emergencyCat.id,
           description: 'Emergency repair',
           source: 'manual',
-          createdAt: DateTime(2026, 7, 5, 12, 0),
-          updatedAt: DateTime(2026, 7, 5, 12, 0),
+          createdAt: DateTime(pastStart.year, pastStart.month, 5, 12, 0),
+          updatedAt: DateTime(pastStart.year, pastStart.month, 5, 12, 0),
         ),
       );
 
