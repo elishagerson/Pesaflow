@@ -42,6 +42,16 @@ void main() {
       expect(categoryNames, contains('Home & Maintenance'));
       expect(categoryNames, contains('Insurance & Taxes'));
       expect(categoryNames, contains('Subscriptions & Streaming'));
+      expect(categoryNames, contains('Vehicle & Fuel'));
+      expect(categoryNames, contains('Travel & Vacations'));
+      expect(categoryNames, contains('Fitness & Sports'));
+      expect(categoryNames, contains('Children & Baby'));
+      expect(categoryNames, contains('Gifts & Celebrations'));
+      expect(categoryNames, contains('Electronics & Tech'));
+      expect(categoryNames, contains('Pets & Animals'));
+      expect(categoryNames, contains('Legal & Professional'));
+      expect(categoryNames, contains('Hobbies & Recreation'));
+      expect(categoryNames, contains('Fines & Penalties'));
 
       final emergencyCat =
           categories.firstWhere((c) => c.name == 'Emergencies');
@@ -63,29 +73,36 @@ void main() {
       expect(michangoCat.isSystem, isTrue);
       expect(michangoCat.icon, 'community');
       expect(michangoCat.color, '#2563EB');
+
+      final fuelCat =
+          categories.firstWhere((c) => c.name == 'Vehicle & Fuel');
+      expect(fuelCat.type, 'expense');
+      expect(fuelCat.isSystem, isTrue);
+      expect(fuelCat.icon, 'gas-station');
+      expect(fuelCat.color, '#EA580C');
     });
 
-    test('Migration from schema version 13 to 14 seeds missing categories for existing users', () async {
-      // Delete Emergencies and Charity & Offerings to simulate existing pre-v14 database
-      await db.customStatement("DELETE FROM categories WHERE name = 'Emergencies'");
-      await db.customStatement("DELETE FROM categories WHERE name = 'Charity & Offerings'");
+    test('Migration from schema version 14 to 15 seeds missing categories for existing users', () async {
+      // Delete Vehicle & Fuel and Travel & Vacations to simulate pre-v15 database
+      await db.customStatement("DELETE FROM categories WHERE name = 'Vehicle & Fuel'");
+      await db.customStatement("DELETE FROM categories WHERE name = 'Travel & Vacations'");
 
       final before = await categoryDao.getAllCategories();
-      expect(before.any((c) => c.name == 'Emergencies'), isFalse);
-      expect(before.any((c) => c.name == 'Charity & Offerings'), isFalse);
+      expect(before.any((c) => c.name == 'Vehicle & Fuel'), isFalse);
+      expect(before.any((c) => c.name == 'Travel & Vacations'), isFalse);
 
-      // Run migration step for 13 -> 14
-      await db.migration.onUpgrade(db.createMigrator(), 13, 14);
+      // Run migration step for 14 -> 15
+      await db.migration.onUpgrade(db.createMigrator(), 14, 15);
 
       final after = await categoryDao.getAllCategories();
-      expect(after.any((c) => c.name == 'Emergencies'), isTrue);
-      expect(after.any((c) => c.name == 'Charity & Offerings'), isTrue);
+      expect(after.any((c) => c.name == 'Vehicle & Fuel'), isTrue);
+      expect(after.any((c) => c.name == 'Travel & Vacations'), isTrue);
 
       // Ensure no duplicate categories are added if run again
-      await db.migration.onUpgrade(db.createMigrator(), 13, 14);
+      await db.migration.onUpgrade(db.createMigrator(), 14, 15);
       final afterRerun = await categoryDao.getAllCategories();
       expect(
-        afterRerun.where((c) => c.name == 'Emergencies').length,
+        afterRerun.where((c) => c.name == 'Vehicle & Fuel').length,
         1,
       );
     });
@@ -107,6 +124,16 @@ void main() {
       expect(getCategoryIcon('subscriptions'), PesaFlowIcons.digitalSubscriptions);
       expect(getCategoryIcon('trending-up'), PesaFlowIcons.income);
       expect(getCategoryIcon('more-horizontal'), PesaFlowIcons.more);
+      expect(getCategoryIcon('gas-station'), PesaFlowIcons.vehicle);
+      expect(getCategoryIcon('flight'), PesaFlowIcons.travel);
+      expect(getCategoryIcon('fitness'), PesaFlowIcons.fitness);
+      expect(getCategoryIcon('childcare'), PesaFlowIcons.childcare);
+      expect(getCategoryIcon('gift'), PesaFlowIcons.gift);
+      expect(getCategoryIcon('devices'), PesaFlowIcons.electronics);
+      expect(getCategoryIcon('pets'), PesaFlowIcons.pets);
+      expect(getCategoryIcon('legal'), PesaFlowIcons.legal);
+      expect(getCategoryIcon('palette'), PesaFlowIcons.hobbies);
+      expect(getCategoryIcon('fines'), PesaFlowIcons.fines);
     });
   });
 
@@ -202,6 +229,50 @@ void main() {
         senderOrRecipient: 'Netflix International',
       );
       expect(resSubs.category.name, 'Subscriptions & Streaming');
+    });
+
+    test('categorizes lifestyle, vehicle, travel, fitness, childcare, legal, fines', () async {
+      final resFuel = await categorizer.categorize(
+        type: 'expense',
+        description: 'Mafuta ya petrol gari',
+        senderOrRecipient: 'TotalEnergies Station',
+      );
+      expect(resFuel.category.name, 'Vehicle & Fuel');
+
+      final resTravel = await categorizer.categorize(
+        type: 'expense',
+        description: 'Booking ticket azam marine zanzibar',
+        senderOrRecipient: 'Azam Marine Ferry',
+      );
+      expect(resTravel.category.name, 'Travel & Vacations');
+
+      final resGym = await categorizer.categorize(
+        type: 'expense',
+        description: 'Monthly gym workout subscription',
+        senderOrRecipient: 'Crossfit Gym Club',
+      );
+      expect(resGym.category.name, 'Fitness & Sports');
+
+      final resBaby = await categorizer.categorize(
+        type: 'expense',
+        description: 'Pampers za mtoto na baby food',
+        senderOrRecipient: 'Baby Care Store',
+      );
+      expect(resBaby.category.name, 'Children & Baby');
+
+      final resLegal = await categorizer.categorize(
+        type: 'expense',
+        description: 'Malipo ya mwanasheria kuthibitisha hati',
+        senderOrRecipient: 'Advocate & Notary Public',
+      );
+      expect(resLegal.category.name, 'Legal & Professional');
+
+      final resFine = await categorizer.categorize(
+        type: 'expense',
+        description: 'Traffic fine TMS askari',
+        senderOrRecipient: 'Tanzania Police TMS',
+      );
+      expect(resFine.category.name, 'Fines & Penalties');
     });
   });
 }
