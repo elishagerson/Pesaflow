@@ -223,9 +223,9 @@ class AutoBudgetConfig {
       SubAllocation(name: 'Other', percentage: 0.333),
     ];
     const savings = [
-      SubAllocation(name: 'Savings', percentage: 0.50),
+      SubAllocation(name: 'Investments', percentage: 0.50),
+      SubAllocation(name: 'Savings', percentage: 0.25),
       SubAllocation(name: 'Loans', percentage: 0.25),
-      SubAllocation(name: 'Other', percentage: 0.25),
     ];
     return const AutoBudgetConfig(
       enabled: false,
