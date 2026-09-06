@@ -10,6 +10,7 @@ import 'daos/tracker_dao.dart';
 import 'daos/savings_goals_dao.dart';
 import 'daos/loan_dao.dart';
 import 'daos/recurring_transaction_dao.dart';
+import 'daos/budget_group_dao.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase();
@@ -67,4 +68,9 @@ final recurringTransactionDaoProvider = Provider<RecurringTransactionDao>((
 ) {
   final db = ref.watch(databaseProvider);
   return RecurringTransactionDao(db);
+});
+
+final budgetGroupDaoProvider = Provider<BudgetGroupDao>((ref) {
+  final db = ref.watch(databaseProvider);
+  return BudgetGroupDao(db);
 });

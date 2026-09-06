@@ -51,6 +51,7 @@ class BudgetRepository {
     int? rolloverCap,
     required DateTime startDate,
     double notificationThreshold = 0.8,
+    String? groupId,
   }) async {
     final budgetId = _uuid.v4();
     final normalizedStart = DateTime(
@@ -66,6 +67,7 @@ class BudgetRepository {
       categoryId: categoryId,
       period: period,
       amount: amount,
+      groupId: groupId,
       rollover: rollover,
       rolloverType: rolloverType,
       rolloverCap: rolloverCap,

@@ -19,6 +19,7 @@ import 'tables/savings_goals_table.dart';
 import 'tables/savings_goal_contributions_table.dart';
 import 'tables/loans_table.dart';
 import 'tables/recurring_transactions_table.dart';
+import 'tables/budget_groups_table.dart';
 
 part 'app_database.g.dart';
 
@@ -37,13 +38,14 @@ part 'app_database.g.dart';
     SavingsGoalContributions,
     Loans,
     RecurringTransactions,
+    BudgetGroups,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   @override
   MigrationStrategy get migration {
@@ -157,11 +159,20 @@ class AppDatabase extends _$AppDatabase {
           ),
           _cat(
             uuid.v4(),
+            'Investments',
+            'trending-up',
+            '#1B5E20',
+            'expense',
+            15,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
             'Loans',
             'credit-card',
             '#9C27B0',
             'expense',
-            15,
+            16,
             true,
           ),
           _cat(
@@ -170,7 +181,7 @@ class AppDatabase extends _$AppDatabase {
             'more-horizontal',
             '#9E9E9E',
             'expense',
-            16,
+            17,
             true,
           ),
 
@@ -376,6 +387,32 @@ class AppDatabase extends _$AppDatabase {
             'CREATE INDEX IF NOT EXISTS idx_recurring_tracker '
             'ON recurring_transactions (tracker_id);',
           );
+        }
+
+        // Migration from schema version 12 → 13: add budget_groups table + groupId + Investments category
+        if (from < 13) {
+          await m.createTable(budgetGroups);
+          await m.addColumn(budgets, budgets.groupId);
+
+          // Seed "Investments" expense category for existing users
+          final existingCats = await select(categories).get();
+          final hasInvestments = existingCats.any(
+            (c) => c.name == 'Investments',
+          );
+          if (!hasInvestments) {
+            final uuid = const Uuid();
+            await into(categories).insert(
+              _cat(
+                uuid.v4(),
+                'Investments',
+                'trending-up',
+                '#1B5E20',
+                'expense',
+                15,
+                true,
+              ),
+            );
+          }
         }
 
         // Migration from schema version 9 → 10: consolidate subscriptions into recurring transactions

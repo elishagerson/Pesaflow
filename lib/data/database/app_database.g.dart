@@ -2290,6 +2290,17 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _groupIdMeta = const VerificationMeta(
+    'groupId',
+  );
+  @override
+  late final GeneratedColumn<String> groupId = GeneratedColumn<String>(
+    'group_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _rolloverMeta = const VerificationMeta(
     'rollover',
   );
@@ -2396,6 +2407,7 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
     categoryId,
     period,
     amount,
+    groupId,
     rollover,
     rolloverType,
     rolloverCap,
@@ -2453,6 +2465,12 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
       );
     } else if (isInserting) {
       context.missing(_amountMeta);
+    }
+    if (data.containsKey('group_id')) {
+      context.handle(
+        _groupIdMeta,
+        groupId.isAcceptableOrUnknown(data['group_id']!, _groupIdMeta),
+      );
     }
     if (data.containsKey('rollover')) {
       context.handle(
@@ -2542,6 +2560,10 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
         DriftSqlType.int,
         data['${effectivePrefix}amount'],
       )!,
+      groupId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}group_id'],
+      ),
       rollover: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}rollover'],
@@ -2589,6 +2611,7 @@ class Budget extends DataClass implements Insertable<Budget> {
   final String categoryId;
   final String period;
   final int amount;
+  final String? groupId;
   final bool rollover;
   final String rolloverType;
   final int? rolloverCap;
@@ -2603,6 +2626,7 @@ class Budget extends DataClass implements Insertable<Budget> {
     required this.categoryId,
     required this.period,
     required this.amount,
+    this.groupId,
     required this.rollover,
     required this.rolloverType,
     this.rolloverCap,
@@ -2620,6 +2644,9 @@ class Budget extends DataClass implements Insertable<Budget> {
     map['category_id'] = Variable<String>(categoryId);
     map['period'] = Variable<String>(period);
     map['amount'] = Variable<int>(amount);
+    if (!nullToAbsent || groupId != null) {
+      map['group_id'] = Variable<String>(groupId);
+    }
     map['rollover'] = Variable<bool>(rollover);
     map['rollover_type'] = Variable<String>(rolloverType);
     if (!nullToAbsent || rolloverCap != null) {
@@ -2642,6 +2669,9 @@ class Budget extends DataClass implements Insertable<Budget> {
       categoryId: Value(categoryId),
       period: Value(period),
       amount: Value(amount),
+      groupId: groupId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(groupId),
       rollover: Value(rollover),
       rolloverType: Value(rolloverType),
       rolloverCap: rolloverCap == null && nullToAbsent
@@ -2668,6 +2698,7 @@ class Budget extends DataClass implements Insertable<Budget> {
       categoryId: serializer.fromJson<String>(json['categoryId']),
       period: serializer.fromJson<String>(json['period']),
       amount: serializer.fromJson<int>(json['amount']),
+      groupId: serializer.fromJson<String?>(json['groupId']),
       rollover: serializer.fromJson<bool>(json['rollover']),
       rolloverType: serializer.fromJson<String>(json['rolloverType']),
       rolloverCap: serializer.fromJson<int?>(json['rolloverCap']),
@@ -2689,6 +2720,7 @@ class Budget extends DataClass implements Insertable<Budget> {
       'categoryId': serializer.toJson<String>(categoryId),
       'period': serializer.toJson<String>(period),
       'amount': serializer.toJson<int>(amount),
+      'groupId': serializer.toJson<String?>(groupId),
       'rollover': serializer.toJson<bool>(rollover),
       'rolloverType': serializer.toJson<String>(rolloverType),
       'rolloverCap': serializer.toJson<int?>(rolloverCap),
@@ -2706,6 +2738,7 @@ class Budget extends DataClass implements Insertable<Budget> {
     String? categoryId,
     String? period,
     int? amount,
+    Value<String?> groupId = const Value.absent(),
     bool? rollover,
     String? rolloverType,
     Value<int?> rolloverCap = const Value.absent(),
@@ -2720,6 +2753,7 @@ class Budget extends DataClass implements Insertable<Budget> {
     categoryId: categoryId ?? this.categoryId,
     period: period ?? this.period,
     amount: amount ?? this.amount,
+    groupId: groupId.present ? groupId.value : this.groupId,
     rollover: rollover ?? this.rollover,
     rolloverType: rolloverType ?? this.rolloverType,
     rolloverCap: rolloverCap.present ? rolloverCap.value : this.rolloverCap,
@@ -2738,6 +2772,7 @@ class Budget extends DataClass implements Insertable<Budget> {
           : this.categoryId,
       period: data.period.present ? data.period.value : this.period,
       amount: data.amount.present ? data.amount.value : this.amount,
+      groupId: data.groupId.present ? data.groupId.value : this.groupId,
       rollover: data.rollover.present ? data.rollover.value : this.rollover,
       rolloverType: data.rolloverType.present
           ? data.rolloverType.value
@@ -2763,6 +2798,7 @@ class Budget extends DataClass implements Insertable<Budget> {
           ..write('categoryId: $categoryId, ')
           ..write('period: $period, ')
           ..write('amount: $amount, ')
+          ..write('groupId: $groupId, ')
           ..write('rollover: $rollover, ')
           ..write('rolloverType: $rolloverType, ')
           ..write('rolloverCap: $rolloverCap, ')
@@ -2782,6 +2818,7 @@ class Budget extends DataClass implements Insertable<Budget> {
     categoryId,
     period,
     amount,
+    groupId,
     rollover,
     rolloverType,
     rolloverCap,
@@ -2800,6 +2837,7 @@ class Budget extends DataClass implements Insertable<Budget> {
           other.categoryId == this.categoryId &&
           other.period == this.period &&
           other.amount == this.amount &&
+          other.groupId == this.groupId &&
           other.rollover == this.rollover &&
           other.rolloverType == this.rolloverType &&
           other.rolloverCap == this.rolloverCap &&
@@ -2816,6 +2854,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
   final Value<String> categoryId;
   final Value<String> period;
   final Value<int> amount;
+  final Value<String?> groupId;
   final Value<bool> rollover;
   final Value<String> rolloverType;
   final Value<int?> rolloverCap;
@@ -2831,6 +2870,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     this.categoryId = const Value.absent(),
     this.period = const Value.absent(),
     this.amount = const Value.absent(),
+    this.groupId = const Value.absent(),
     this.rollover = const Value.absent(),
     this.rolloverType = const Value.absent(),
     this.rolloverCap = const Value.absent(),
@@ -2847,6 +2887,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     required String categoryId,
     required String period,
     required int amount,
+    this.groupId = const Value.absent(),
     this.rollover = const Value.absent(),
     this.rolloverType = const Value.absent(),
     this.rolloverCap = const Value.absent(),
@@ -2868,6 +2909,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     Expression<String>? categoryId,
     Expression<String>? period,
     Expression<int>? amount,
+    Expression<String>? groupId,
     Expression<bool>? rollover,
     Expression<String>? rolloverType,
     Expression<int>? rolloverCap,
@@ -2884,6 +2926,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
       if (categoryId != null) 'category_id': categoryId,
       if (period != null) 'period': period,
       if (amount != null) 'amount': amount,
+      if (groupId != null) 'group_id': groupId,
       if (rollover != null) 'rollover': rollover,
       if (rolloverType != null) 'rollover_type': rolloverType,
       if (rolloverCap != null) 'rollover_cap': rolloverCap,
@@ -2903,6 +2946,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     Value<String>? categoryId,
     Value<String>? period,
     Value<int>? amount,
+    Value<String?>? groupId,
     Value<bool>? rollover,
     Value<String>? rolloverType,
     Value<int?>? rolloverCap,
@@ -2919,6 +2963,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
       categoryId: categoryId ?? this.categoryId,
       period: period ?? this.period,
       amount: amount ?? this.amount,
+      groupId: groupId ?? this.groupId,
       rollover: rollover ?? this.rollover,
       rolloverType: rolloverType ?? this.rolloverType,
       rolloverCap: rolloverCap ?? this.rolloverCap,
@@ -2949,6 +2994,9 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     }
     if (amount.present) {
       map['amount'] = Variable<int>(amount.value);
+    }
+    if (groupId.present) {
+      map['group_id'] = Variable<String>(groupId.value);
     }
     if (rollover.present) {
       map['rollover'] = Variable<bool>(rollover.value);
@@ -2990,6 +3038,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
           ..write('categoryId: $categoryId, ')
           ..write('period: $period, ')
           ..write('amount: $amount, ')
+          ..write('groupId: $groupId, ')
           ..write('rollover: $rollover, ')
           ..write('rolloverType: $rolloverType, ')
           ..write('rolloverCap: $rolloverCap, ')
@@ -8513,6 +8562,612 @@ class RecurringTransactionsCompanion
   }
 }
 
+class $BudgetGroupsTable extends BudgetGroups
+    with TableInfo<$BudgetGroupsTable, BudgetGroup> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BudgetGroupsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 100,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _groupTypeMeta = const VerificationMeta(
+    'groupType',
+  );
+  @override
+  late final GeneratedColumn<String> groupType = GeneratedColumn<String>(
+    'group_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _percentageMeta = const VerificationMeta(
+    'percentage',
+  );
+  @override
+  late final GeneratedColumn<double> percentage = GeneratedColumn<double>(
+    'percentage',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _allocatedAmountMeta = const VerificationMeta(
+    'allocatedAmount',
+  );
+  @override
+  late final GeneratedColumn<int> allocatedAmount = GeneratedColumn<int>(
+    'allocated_amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _iconMeta = const VerificationMeta('icon');
+  @override
+  late final GeneratedColumn<String> icon = GeneratedColumn<String>(
+    'icon',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('wallet'),
+  );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<String> color = GeneratedColumn<String>(
+    'color',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('#6B7280'),
+  );
+  static const VerificationMeta _sortOrderMeta = const VerificationMeta(
+    'sortOrder',
+  );
+  @override
+  late final GeneratedColumn<int> sortOrder = GeneratedColumn<int>(
+    'sort_order',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _isActiveMeta = const VerificationMeta(
+    'isActive',
+  );
+  @override
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+    'is_active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    groupType,
+    percentage,
+    allocatedAmount,
+    icon,
+    color,
+    sortOrder,
+    isActive,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'budget_groups';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BudgetGroup> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('group_type')) {
+      context.handle(
+        _groupTypeMeta,
+        groupType.isAcceptableOrUnknown(data['group_type']!, _groupTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_groupTypeMeta);
+    }
+    if (data.containsKey('percentage')) {
+      context.handle(
+        _percentageMeta,
+        percentage.isAcceptableOrUnknown(data['percentage']!, _percentageMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_percentageMeta);
+    }
+    if (data.containsKey('allocated_amount')) {
+      context.handle(
+        _allocatedAmountMeta,
+        allocatedAmount.isAcceptableOrUnknown(
+          data['allocated_amount']!,
+          _allocatedAmountMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_allocatedAmountMeta);
+    }
+    if (data.containsKey('icon')) {
+      context.handle(
+        _iconMeta,
+        icon.isAcceptableOrUnknown(data['icon']!, _iconMeta),
+      );
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
+    }
+    if (data.containsKey('sort_order')) {
+      context.handle(
+        _sortOrderMeta,
+        sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
+      );
+    }
+    if (data.containsKey('is_active')) {
+      context.handle(
+        _isActiveMeta,
+        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BudgetGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BudgetGroup(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      groupType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}group_type'],
+      )!,
+      percentage: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}percentage'],
+      )!,
+      allocatedAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}allocated_amount'],
+      )!,
+      icon: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon'],
+      )!,
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}color'],
+      )!,
+      sortOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sort_order'],
+      )!,
+      isActive: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_active'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $BudgetGroupsTable createAlias(String alias) {
+    return $BudgetGroupsTable(attachedDatabase, alias);
+  }
+}
+
+class BudgetGroup extends DataClass implements Insertable<BudgetGroup> {
+  final String id;
+  final String name;
+  final String groupType;
+  final double percentage;
+  final int allocatedAmount;
+  final String icon;
+  final String color;
+  final int sortOrder;
+  final bool isActive;
+  final DateTime createdAt;
+  const BudgetGroup({
+    required this.id,
+    required this.name,
+    required this.groupType,
+    required this.percentage,
+    required this.allocatedAmount,
+    required this.icon,
+    required this.color,
+    required this.sortOrder,
+    required this.isActive,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['group_type'] = Variable<String>(groupType);
+    map['percentage'] = Variable<double>(percentage);
+    map['allocated_amount'] = Variable<int>(allocatedAmount);
+    map['icon'] = Variable<String>(icon);
+    map['color'] = Variable<String>(color);
+    map['sort_order'] = Variable<int>(sortOrder);
+    map['is_active'] = Variable<bool>(isActive);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  BudgetGroupsCompanion toCompanion(bool nullToAbsent) {
+    return BudgetGroupsCompanion(
+      id: Value(id),
+      name: Value(name),
+      groupType: Value(groupType),
+      percentage: Value(percentage),
+      allocatedAmount: Value(allocatedAmount),
+      icon: Value(icon),
+      color: Value(color),
+      sortOrder: Value(sortOrder),
+      isActive: Value(isActive),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory BudgetGroup.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BudgetGroup(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      groupType: serializer.fromJson<String>(json['groupType']),
+      percentage: serializer.fromJson<double>(json['percentage']),
+      allocatedAmount: serializer.fromJson<int>(json['allocatedAmount']),
+      icon: serializer.fromJson<String>(json['icon']),
+      color: serializer.fromJson<String>(json['color']),
+      sortOrder: serializer.fromJson<int>(json['sortOrder']),
+      isActive: serializer.fromJson<bool>(json['isActive']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'groupType': serializer.toJson<String>(groupType),
+      'percentage': serializer.toJson<double>(percentage),
+      'allocatedAmount': serializer.toJson<int>(allocatedAmount),
+      'icon': serializer.toJson<String>(icon),
+      'color': serializer.toJson<String>(color),
+      'sortOrder': serializer.toJson<int>(sortOrder),
+      'isActive': serializer.toJson<bool>(isActive),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  BudgetGroup copyWith({
+    String? id,
+    String? name,
+    String? groupType,
+    double? percentage,
+    int? allocatedAmount,
+    String? icon,
+    String? color,
+    int? sortOrder,
+    bool? isActive,
+    DateTime? createdAt,
+  }) => BudgetGroup(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    groupType: groupType ?? this.groupType,
+    percentage: percentage ?? this.percentage,
+    allocatedAmount: allocatedAmount ?? this.allocatedAmount,
+    icon: icon ?? this.icon,
+    color: color ?? this.color,
+    sortOrder: sortOrder ?? this.sortOrder,
+    isActive: isActive ?? this.isActive,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  BudgetGroup copyWithCompanion(BudgetGroupsCompanion data) {
+    return BudgetGroup(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      groupType: data.groupType.present ? data.groupType.value : this.groupType,
+      percentage: data.percentage.present
+          ? data.percentage.value
+          : this.percentage,
+      allocatedAmount: data.allocatedAmount.present
+          ? data.allocatedAmount.value
+          : this.allocatedAmount,
+      icon: data.icon.present ? data.icon.value : this.icon,
+      color: data.color.present ? data.color.value : this.color,
+      sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
+      isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BudgetGroup(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('groupType: $groupType, ')
+          ..write('percentage: $percentage, ')
+          ..write('allocatedAmount: $allocatedAmount, ')
+          ..write('icon: $icon, ')
+          ..write('color: $color, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('isActive: $isActive, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    name,
+    groupType,
+    percentage,
+    allocatedAmount,
+    icon,
+    color,
+    sortOrder,
+    isActive,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BudgetGroup &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.groupType == this.groupType &&
+          other.percentage == this.percentage &&
+          other.allocatedAmount == this.allocatedAmount &&
+          other.icon == this.icon &&
+          other.color == this.color &&
+          other.sortOrder == this.sortOrder &&
+          other.isActive == this.isActive &&
+          other.createdAt == this.createdAt);
+}
+
+class BudgetGroupsCompanion extends UpdateCompanion<BudgetGroup> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String> groupType;
+  final Value<double> percentage;
+  final Value<int> allocatedAmount;
+  final Value<String> icon;
+  final Value<String> color;
+  final Value<int> sortOrder;
+  final Value<bool> isActive;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const BudgetGroupsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.groupType = const Value.absent(),
+    this.percentage = const Value.absent(),
+    this.allocatedAmount = const Value.absent(),
+    this.icon = const Value.absent(),
+    this.color = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  BudgetGroupsCompanion.insert({
+    required String id,
+    required String name,
+    required String groupType,
+    required double percentage,
+    required int allocatedAmount,
+    this.icon = const Value.absent(),
+    this.color = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       groupType = Value(groupType),
+       percentage = Value(percentage),
+       allocatedAmount = Value(allocatedAmount);
+  static Insertable<BudgetGroup> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? groupType,
+    Expression<double>? percentage,
+    Expression<int>? allocatedAmount,
+    Expression<String>? icon,
+    Expression<String>? color,
+    Expression<int>? sortOrder,
+    Expression<bool>? isActive,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (groupType != null) 'group_type': groupType,
+      if (percentage != null) 'percentage': percentage,
+      if (allocatedAmount != null) 'allocated_amount': allocatedAmount,
+      if (icon != null) 'icon': icon,
+      if (color != null) 'color': color,
+      if (sortOrder != null) 'sort_order': sortOrder,
+      if (isActive != null) 'is_active': isActive,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  BudgetGroupsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<String>? groupType,
+    Value<double>? percentage,
+    Value<int>? allocatedAmount,
+    Value<String>? icon,
+    Value<String>? color,
+    Value<int>? sortOrder,
+    Value<bool>? isActive,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return BudgetGroupsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      groupType: groupType ?? this.groupType,
+      percentage: percentage ?? this.percentage,
+      allocatedAmount: allocatedAmount ?? this.allocatedAmount,
+      icon: icon ?? this.icon,
+      color: color ?? this.color,
+      sortOrder: sortOrder ?? this.sortOrder,
+      isActive: isActive ?? this.isActive,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (groupType.present) {
+      map['group_type'] = Variable<String>(groupType.value);
+    }
+    if (percentage.present) {
+      map['percentage'] = Variable<double>(percentage.value);
+    }
+    if (allocatedAmount.present) {
+      map['allocated_amount'] = Variable<int>(allocatedAmount.value);
+    }
+    if (icon.present) {
+      map['icon'] = Variable<String>(icon.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<String>(color.value);
+    }
+    if (sortOrder.present) {
+      map['sort_order'] = Variable<int>(sortOrder.value);
+    }
+    if (isActive.present) {
+      map['is_active'] = Variable<bool>(isActive.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BudgetGroupsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('groupType: $groupType, ')
+          ..write('percentage: $percentage, ')
+          ..write('allocatedAmount: $allocatedAmount, ')
+          ..write('icon: $icon, ')
+          ..write('color: $color, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('isActive: $isActive, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -8533,6 +9188,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $LoansTable loans = $LoansTable(this);
   late final $RecurringTransactionsTable recurringTransactions =
       $RecurringTransactionsTable(this);
+  late final $BudgetGroupsTable budgetGroups = $BudgetGroupsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -8551,6 +9207,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     savingsGoalContributions,
     loans,
     recurringTransactions,
+    budgetGroups,
   ];
 }
 
@@ -9600,6 +10257,7 @@ typedef $$BudgetsTableCreateCompanionBuilder =
       required String categoryId,
       required String period,
       required int amount,
+      Value<String?> groupId,
       Value<bool> rollover,
       Value<String> rolloverType,
       Value<int?> rolloverCap,
@@ -9617,6 +10275,7 @@ typedef $$BudgetsTableUpdateCompanionBuilder =
       Value<String> categoryId,
       Value<String> period,
       Value<int> amount,
+      Value<String?> groupId,
       Value<bool> rollover,
       Value<String> rolloverType,
       Value<int?> rolloverCap,
@@ -9659,6 +10318,11 @@ class $$BudgetsTableFilterComposer
 
   ColumnFilters<int> get amount => $composableBuilder(
     column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get groupId => $composableBuilder(
+    column: $table.groupId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -9737,6 +10401,11 @@ class $$BudgetsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get groupId => $composableBuilder(
+    column: $table.groupId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get rollover => $composableBuilder(
     column: $table.rollover,
     builder: (column) => ColumnOrderings(column),
@@ -9804,6 +10473,9 @@ class $$BudgetsTableAnnotationComposer
   GeneratedColumn<int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
+  GeneratedColumn<String> get groupId =>
+      $composableBuilder(column: $table.groupId, builder: (column) => column);
+
   GeneratedColumn<bool> get rollover =>
       $composableBuilder(column: $table.rollover, builder: (column) => column);
 
@@ -9868,6 +10540,7 @@ class $$BudgetsTableTableManager
                 Value<String> categoryId = const Value.absent(),
                 Value<String> period = const Value.absent(),
                 Value<int> amount = const Value.absent(),
+                Value<String?> groupId = const Value.absent(),
                 Value<bool> rollover = const Value.absent(),
                 Value<String> rolloverType = const Value.absent(),
                 Value<int?> rolloverCap = const Value.absent(),
@@ -9883,6 +10556,7 @@ class $$BudgetsTableTableManager
                 categoryId: categoryId,
                 period: period,
                 amount: amount,
+                groupId: groupId,
                 rollover: rollover,
                 rolloverType: rolloverType,
                 rolloverCap: rolloverCap,
@@ -9900,6 +10574,7 @@ class $$BudgetsTableTableManager
                 required String categoryId,
                 required String period,
                 required int amount,
+                Value<String?> groupId = const Value.absent(),
                 Value<bool> rollover = const Value.absent(),
                 Value<String> rolloverType = const Value.absent(),
                 Value<int?> rolloverCap = const Value.absent(),
@@ -9915,6 +10590,7 @@ class $$BudgetsTableTableManager
                 categoryId: categoryId,
                 period: period,
                 amount: amount,
+                groupId: groupId,
                 rollover: rollover,
                 rolloverType: rolloverType,
                 rolloverCap: rolloverCap,
@@ -12678,6 +13354,305 @@ typedef $$RecurringTransactionsTableProcessedTableManager =
       RecurringTransaction,
       PrefetchHooks Function()
     >;
+typedef $$BudgetGroupsTableCreateCompanionBuilder =
+    BudgetGroupsCompanion Function({
+      required String id,
+      required String name,
+      required String groupType,
+      required double percentage,
+      required int allocatedAmount,
+      Value<String> icon,
+      Value<String> color,
+      Value<int> sortOrder,
+      Value<bool> isActive,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+typedef $$BudgetGroupsTableUpdateCompanionBuilder =
+    BudgetGroupsCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<String> groupType,
+      Value<double> percentage,
+      Value<int> allocatedAmount,
+      Value<String> icon,
+      Value<String> color,
+      Value<int> sortOrder,
+      Value<bool> isActive,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$BudgetGroupsTableFilterComposer
+    extends Composer<_$AppDatabase, $BudgetGroupsTable> {
+  $$BudgetGroupsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get groupType => $composableBuilder(
+    column: $table.groupType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get percentage => $composableBuilder(
+    column: $table.percentage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get allocatedAmount => $composableBuilder(
+    column: $table.allocatedAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get icon => $composableBuilder(
+    column: $table.icon,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$BudgetGroupsTableOrderingComposer
+    extends Composer<_$AppDatabase, $BudgetGroupsTable> {
+  $$BudgetGroupsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get groupType => $composableBuilder(
+    column: $table.groupType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get percentage => $composableBuilder(
+    column: $table.percentage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get allocatedAmount => $composableBuilder(
+    column: $table.allocatedAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get icon => $composableBuilder(
+    column: $table.icon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$BudgetGroupsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BudgetGroupsTable> {
+  $$BudgetGroupsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get groupType =>
+      $composableBuilder(column: $table.groupType, builder: (column) => column);
+
+  GeneratedColumn<double> get percentage => $composableBuilder(
+    column: $table.percentage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get allocatedAmount => $composableBuilder(
+    column: $table.allocatedAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get icon =>
+      $composableBuilder(column: $table.icon, builder: (column) => column);
+
+  GeneratedColumn<String> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumn<int> get sortOrder =>
+      $composableBuilder(column: $table.sortOrder, builder: (column) => column);
+
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$BudgetGroupsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $BudgetGroupsTable,
+          BudgetGroup,
+          $$BudgetGroupsTableFilterComposer,
+          $$BudgetGroupsTableOrderingComposer,
+          $$BudgetGroupsTableAnnotationComposer,
+          $$BudgetGroupsTableCreateCompanionBuilder,
+          $$BudgetGroupsTableUpdateCompanionBuilder,
+          (
+            BudgetGroup,
+            BaseReferences<_$AppDatabase, $BudgetGroupsTable, BudgetGroup>,
+          ),
+          BudgetGroup,
+          PrefetchHooks Function()
+        > {
+  $$BudgetGroupsTableTableManager(_$AppDatabase db, $BudgetGroupsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BudgetGroupsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BudgetGroupsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BudgetGroupsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> groupType = const Value.absent(),
+                Value<double> percentage = const Value.absent(),
+                Value<int> allocatedAmount = const Value.absent(),
+                Value<String> icon = const Value.absent(),
+                Value<String> color = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BudgetGroupsCompanion(
+                id: id,
+                name: name,
+                groupType: groupType,
+                percentage: percentage,
+                allocatedAmount: allocatedAmount,
+                icon: icon,
+                color: color,
+                sortOrder: sortOrder,
+                isActive: isActive,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                required String groupType,
+                required double percentage,
+                required int allocatedAmount,
+                Value<String> icon = const Value.absent(),
+                Value<String> color = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BudgetGroupsCompanion.insert(
+                id: id,
+                name: name,
+                groupType: groupType,
+                percentage: percentage,
+                allocatedAmount: allocatedAmount,
+                icon: icon,
+                color: color,
+                sortOrder: sortOrder,
+                isActive: isActive,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$BudgetGroupsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $BudgetGroupsTable,
+      BudgetGroup,
+      $$BudgetGroupsTableFilterComposer,
+      $$BudgetGroupsTableOrderingComposer,
+      $$BudgetGroupsTableAnnotationComposer,
+      $$BudgetGroupsTableCreateCompanionBuilder,
+      $$BudgetGroupsTableUpdateCompanionBuilder,
+      (
+        BudgetGroup,
+        BaseReferences<_$AppDatabase, $BudgetGroupsTable, BudgetGroup>,
+      ),
+      BudgetGroup,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -12711,4 +13686,6 @@ class $AppDatabaseManager {
       $$LoansTableTableManager(_db, _db.loans);
   $$RecurringTransactionsTableTableManager get recurringTransactions =>
       $$RecurringTransactionsTableTableManager(_db, _db.recurringTransactions);
+  $$BudgetGroupsTableTableManager get budgetGroups =>
+      $$BudgetGroupsTableTableManager(_db, _db.budgetGroups);
 }

@@ -1,20 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'budget_dao.dart';
+part of 'budget_group_dao.dart';
 
 // ignore_for_file: type=lint
-mixin _$BudgetDaoMixin on DatabaseAccessor<AppDatabase> {
+mixin _$BudgetGroupDaoMixin on DatabaseAccessor<AppDatabase> {
+  $BudgetGroupsTable get budgetGroups => attachedDatabase.budgetGroups;
   $BudgetsTable get budgets => attachedDatabase.budgets;
   $BudgetPeriodsTable get budgetPeriods => attachedDatabase.budgetPeriods;
   $TransactionsTable get transactions => attachedDatabase.transactions;
   $CategoriesTable get categories => attachedDatabase.categories;
-  $BudgetGroupsTable get budgetGroups => attachedDatabase.budgetGroups;
-  BudgetDaoManager get managers => BudgetDaoManager(this);
+  BudgetGroupDaoManager get managers => BudgetGroupDaoManager(this);
 }
 
-class BudgetDaoManager {
-  final _$BudgetDaoMixin _db;
-  BudgetDaoManager(this._db);
+class BudgetGroupDaoManager {
+  final _$BudgetGroupDaoMixin _db;
+  BudgetGroupDaoManager(this._db);
+  $$BudgetGroupsTableTableManager get budgetGroups =>
+      $$BudgetGroupsTableTableManager(_db.attachedDatabase, _db.budgetGroups);
   $$BudgetsTableTableManager get budgets =>
       $$BudgetsTableTableManager(_db.attachedDatabase, _db.budgets);
   $$BudgetPeriodsTableTableManager get budgetPeriods =>
@@ -23,6 +25,4 @@ class BudgetDaoManager {
       $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
   $$CategoriesTableTableManager get categories =>
       $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
-  $$BudgetGroupsTableTableManager get budgetGroups =>
-      $$BudgetGroupsTableTableManager(_db.attachedDatabase, _db.budgetGroups);
 }

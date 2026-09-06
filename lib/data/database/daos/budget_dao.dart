@@ -4,6 +4,7 @@ import '../tables/budgets_table.dart';
 import '../tables/budget_periods_table.dart';
 import '../tables/transactions_table.dart';
 import '../tables/categories_table.dart';
+import '../tables/budget_groups_table.dart';
 
 part 'budget_dao.g.dart';
 
@@ -34,7 +35,7 @@ class BudgetWithProgress {
   }
 }
 
-@DriftAccessor(tables: [Budgets, BudgetPeriods, Transactions, Categories])
+@DriftAccessor(tables: [Budgets, BudgetPeriods, Transactions, Categories, BudgetGroups])
 class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
   BudgetDao(super.db);
 
@@ -46,6 +47,15 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
   /// Gets all active budgets as a future.
   Future<List<Budget>> getAllActiveBudgets() {
     return (select(budgets)..where((b) => b.isActive.equals(true))).get();
+  }
+
+  /// Gets all active budgets belonging to a specific group.
+  Future<List<Budget>> getSubBudgetsForGroup(String groupId) {
+    return (select(budgets)
+          ..where(
+            (b) => b.groupId.equals(groupId) & b.isActive.equals(true),
+          ))
+        .get();
   }
 
   /// Gets a single budget by ID.
