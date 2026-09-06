@@ -1058,6 +1058,7 @@ class BudgetListScreen extends ConsumerWidget {
           ),
         ),
       ),
+      ),
     );
   }
 
@@ -1087,7 +1088,84 @@ class BudgetListScreen extends ConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: kSpacing12),
-      child: Hero(
+      child: Dismissible(
+        key: ValueKey('budget-dismiss-${bp.budget.id}'),
+        direction: DismissDirection.endToStart,
+        confirmDismiss: (direction) async {
+          return await ModernDialog.show<bool>(
+            context: context,
+            title: const Text('Delete Budget?'),
+            titleIcon: PesaFlowIcons.delete,
+            iconColor: context.appColors.expenseColor,
+            content: Text(
+              'Permanently remove the "${bp.budget.name}" budget and all its history?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context, rootNavigator: true).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context, rootNavigator: true).pop(true),
+                child: Text(
+                  'Delete',
+                  style: TextStyle(color: context.appColors.expenseColor),
+                ),
+              ),
+            ],
+          );
+        },
+        onDismissed: (direction) async {
+          final budget = bp.budget;
+          final budgetRepo = ref.read(budgetRepositoryProvider);
+          await budgetRepo.deleteBudget(budget.id);
+          ref.invalidate(budgetGroupsProvider);
+          ref.invalidate(standaloneBudgetsProvider);
+          ref.invalidate(activeBudgetsStreamProvider);
+          ref.invalidate(budgetProgressProvider);
+          if (context.mounted) {
+            CustomToast.show(
+              context,
+              message: '"${budget.name}" deleted',
+              type: ToastType.success,
+              duration: const Duration(seconds: 5),
+              actionLabel: 'Undo',
+              onAction: () async {
+                await budgetRepo.createBudget(
+                  name: budget.name,
+                  categoryId: budget.categoryId,
+                  period: budget.period,
+                  amount: budget.amount,
+                  rollover: budget.rollover,
+                  rolloverType: budget.rolloverType,
+                  rolloverCap: budget.rolloverCap,
+                  startDate: budget.startDate,
+                  notificationThreshold: budget.notificationThreshold,
+                  groupId: budget.groupId,
+                );
+                ref.invalidate(budgetGroupsProvider);
+                ref.invalidate(standaloneBudgetsProvider);
+                ref.invalidate(activeBudgetsStreamProvider);
+                ref.invalidate(budgetProgressProvider);
+              },
+            );
+          }
+        },
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: kSpacing20),
+          decoration: BoxDecoration(
+            color: context.appColors.expenseColor.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+          ),
+          child: Icon(
+            PesaFlowIcons.delete,
+            color: context.appColors.expenseColor,
+          ),
+        ),
+        child: Hero(
         tag: 'budget-${bp.budget.id}',
         child: TactileSpringContainer(
           onTap: () => context.push('/budgets/${bp.budget.id}'),
@@ -1233,6 +1311,7 @@ class BudgetListScreen extends ConsumerWidget {
             ),
           ),
         ),
+      ),
       ),
     );
   }
