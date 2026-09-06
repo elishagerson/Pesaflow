@@ -254,7 +254,7 @@ void main() {
       final categories = await categoryDao.getAllCategories();
       final cat = categories.first;
 
-      final budgetId = await budgetRepo.createBudget(
+      await budgetRepo.createBudget(
         name: 'To Delete',
         categoryId: cat.id,
         period: 'monthly',
@@ -263,6 +263,10 @@ void main() {
         rolloverType: 'none',
         startDate: DateTime.now(),
       );
+
+      final active = await budgetDao.getAllActiveBudgets();
+      final created = active.firstWhere((b) => b.name == 'To Delete');
+      final budgetId = created.id;
 
       var budget = await budgetRepo.getBudgetById(budgetId);
       expect(budget, isNotNull);
@@ -299,7 +303,7 @@ void main() {
         ),
       );
 
-      final budgetId = await budgetRepo.createBudget(
+      await budgetRepo.createBudget(
         name: 'Sub Budget',
         categoryId: cat.id,
         groupId: groupId,
@@ -324,7 +328,7 @@ void main() {
       // Child budget is now standalone
       final standalone = await groupRepo.getStandaloneBudgetsWithProgress();
       expect(standalone.length, equals(1));
-      expect(standalone.first.budget.id, equals(budgetId));
+      expect(standalone.first.budget.name, equals('Sub Budget'));
       expect(standalone.first.budget.groupId, isNull);
     });
 
