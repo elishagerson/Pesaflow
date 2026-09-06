@@ -22,13 +22,15 @@ import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 
+import 'package:pesaflow/data/database/daos/budget_group_dao.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class BudgetFormScreen extends ConsumerStatefulWidget {
   final String? budgetId;
-  const BudgetFormScreen({this.budgetId, super.key});
+  final String? groupId;
+  const BudgetFormScreen({this.budgetId, this.groupId, super.key});
 
   @override
   ConsumerState<BudgetFormScreen> createState() => _BudgetFormScreenState();
