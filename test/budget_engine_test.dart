@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/domain/budget/budget_engine.dart';
+import 'package:pesaflow/domain/models/enums.dart' hide BudgetPeriod;
 
 void main() {
   group('BudgetEngine', () {
@@ -409,6 +410,71 @@ void main() {
           expect(morningOfLastDay.isAfter(expiryBoundary), isFalse);
         },
       );
+    });
+
+    group('computeGroupAllocations', () {
+      test('correctly splits income for 50/30/20 rule', () {
+        const income = 100000000; // 1,000,000 TZS
+        final allocations = BudgetEngine.computeGroupAllocations(
+          monthlyIncome: income,
+          rule: BudgetRuleType.rule503020,
+        );
+
+        expect(allocations.length, equals(3));
+        expect(allocations[0].type, equals(BudgetGroupType.needs));
+        expect(allocations[0].amount, equals(50000000));
+        expect(allocations[1].type, equals(BudgetGroupType.wants));
+        expect(allocations[1].amount, equals(30000000));
+        expect(allocations[2].type, equals(BudgetGroupType.investments));
+        expect(allocations[2].amount, equals(20000000));
+
+        final total = allocations.fold<int>(0, (sum, a) => sum + a.amount);
+        expect(total, equals(income));
+      });
+
+      test('correctly splits income for 70/20/10 rule', () {
+        const income = 150000000; // 1,500,000 TZS
+        final allocations = BudgetEngine.computeGroupAllocations(
+          monthlyIncome: income,
+          rule: BudgetRuleType.rule702010,
+        );
+
+        expect(allocations[0].amount, equals(105000000)); // 70%
+        expect(allocations[1].amount, equals(30000000)); // 20%
+        expect(allocations[2].amount, equals(15000000)); // 10%
+
+        final total = allocations.fold<int>(0, (sum, a) => sum + a.amount);
+        expect(total, equals(income));
+      });
+
+      test('correctly splits income for custom percentages', () {
+        const income = 200000000; // 2,000,000 TZS
+        final allocations = BudgetEngine.computeGroupAllocations(
+          monthlyIncome: income,
+          rule: BudgetRuleType.custom,
+          customNeeds: 0.40,
+          customWants: 0.35,
+          customInvestments: 0.25,
+        );
+
+        expect(allocations[0].amount, equals(80000000)); // 40%
+        expect(allocations[1].amount, equals(70000000)); // 35%
+        expect(allocations[2].amount, equals(50000000)); // 25%
+
+        final total = allocations.fold<int>(0, (sum, a) => sum + a.amount);
+        expect(total, equals(income));
+      });
+
+      test('handles rounding without losing single cent', () {
+        const income = 100000001; // Odd amount
+        final allocations = BudgetEngine.computeGroupAllocations(
+          monthlyIncome: income,
+          rule: BudgetRuleType.rule503020,
+        );
+
+        final total = allocations.fold<int>(0, (sum, a) => sum + a.amount);
+        expect(total, equals(income));
+      });
     });
   });
 }
