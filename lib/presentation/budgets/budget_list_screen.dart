@@ -333,6 +333,7 @@ class BudgetListScreen extends ConsumerWidget {
                 groups,
                 monthlyIncome,
                 budgetRule,
+                ref,
               ),
               const SizedBox(height: kSpacing20),
               Row(
@@ -358,7 +359,7 @@ class BudgetListScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: kSpacing12),
-              ...groups.map((g) => _buildGroupCard(context, theme, g)),
+              ...groups.map((g) => _buildGroupCard(context, theme, g, ref)),
               if (standaloneBudgets.isNotEmpty) ...[
                 const SizedBox(height: kSpacing24),
                 Row(
@@ -385,7 +386,7 @@ class BudgetListScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: kSpacing12),
                 ...standaloneBudgets.map(
-                  (bp) => _buildBudgetCard(context, theme, bp),
+                  (bp) => _buildBudgetCard(context, theme, bp, ref),
                 ),
               ],
             ],
@@ -414,7 +415,9 @@ class BudgetListScreen extends ConsumerWidget {
             children: [
               _buildUpgradeBanner(context, theme),
               const SizedBox(height: kSpacing16),
-              ...allBudgets.map((bp) => _buildBudgetCard(context, theme, bp)),
+              ...allBudgets.map(
+                (bp) => _buildBudgetCard(context, theme, bp, ref),
+              ),
             ],
           ),
         ),
@@ -431,6 +434,7 @@ class BudgetListScreen extends ConsumerWidget {
     List<BudgetGroupWithChildren> groups,
     int monthlyIncome,
     String? budgetRuleName,
+    WidgetRef ref,
   ) {
     final onSurface = theme.colorScheme.onSurface;
     final totalAllocated = groups.fold<int>(
