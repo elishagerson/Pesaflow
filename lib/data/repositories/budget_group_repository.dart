@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../database/app_database.dart';
 import '../database/daos/budget_group_dao.dart';
+import '../database/daos/budget_dao.dart';
 import '../database/database_providers.dart';
 import '../../domain/models/enums.dart';
 import '../../domain/budget/budget_engine.dart';
