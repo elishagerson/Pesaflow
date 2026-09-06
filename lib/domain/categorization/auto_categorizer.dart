@@ -139,6 +139,7 @@ class AutoCategorizer {
       'dawasco': 'Utilities',
       'dawasa': 'Utilities',
       'dstv': 'Utilities',
+      'azam marine': 'Travel & Vacations',
       'azam': 'Utilities',
       'startimes': 'Utilities',
       'kodi': 'Rent',
@@ -170,6 +171,14 @@ class AutoCategorizer {
       'uwekezaji': 'Investments',
       'dse': 'Investments',
       'utt': 'Investments',
+
+      // Fines & Penalties
+      'traffic fine': 'Fines & Penalties',
+      'tms': 'Fines & Penalties',
+      'faini': 'Fines & Penalties',
+      'fine': 'Fines & Penalties',
+      'penalty': 'Fines & Penalties',
+      'adhabu': 'Fines & Penalties',
 
       // Emergencies
       'emergency': 'Emergencies',
@@ -262,8 +271,6 @@ class AutoCategorizer {
       'apple music': 'Subscriptions & Streaming',
       'google play': 'Subscriptions & Streaming',
       'youtube': 'Subscriptions & Streaming',
-      'subscription': 'Subscriptions & Streaming',
-      'subscriptions': 'Subscriptions & Streaming',
 
       // Vehicle & Fuel
       'petrol': 'Vehicle & Fuel',
@@ -394,6 +401,10 @@ class AutoCategorizer {
       'tms': 'Fines & Penalties',
       'askari': 'Fines & Penalties',
       'adhabu': 'Fines & Penalties',
+
+      // Generic Subscriptions fallback
+      'subscription': 'Subscriptions & Streaming',
+      'subscriptions': 'Subscriptions & Streaming',
     };
 
     // Scan lowercase combined text for these keywords

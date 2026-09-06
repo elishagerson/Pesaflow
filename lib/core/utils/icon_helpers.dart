@@ -48,7 +48,6 @@ IconData getCategoryIcon(String iconName) {
     case 'shield-alert':
       return PesaFlowIcons.emergency;
     case 'charity':
-    case 'gift':
     case 'offering':
       return PesaFlowIcons.charity;
     case 'users':
@@ -91,6 +90,9 @@ IconData getCategoryIcon(String iconName) {
     case 'childcare':
     case 'baby':
       return PesaFlowIcons.childcare;
+    case 'gift':
+    case 'celebration':
+      return PesaFlowIcons.gift;
     case 'devices':
     case 'electronics':
     case 'tech':
