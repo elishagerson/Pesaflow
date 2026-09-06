@@ -271,6 +271,7 @@ final dataChangesStreamProvider = StreamProvider<int>((ref) {
           db.recurringTransactions,
           db.budgets,
           db.budgetPeriods,
+          db.budgetGroups,
         }),
       )
       .map((_) => DateTime.now().microsecondsSinceEpoch);
