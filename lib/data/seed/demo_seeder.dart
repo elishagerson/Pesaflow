@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/data/database/daos/settings_dao.dart';
 import 'package:pesaflow/domain/budget/budget_engine.dart';
 
 class DemoSeeder {
@@ -16,6 +17,7 @@ class DemoSeeder {
     await db.customStatement('DELETE FROM accounts;');
     await db.customStatement('DELETE FROM budget_periods;');
     await db.customStatement('DELETE FROM budgets;');
+    await db.customStatement('DELETE FROM budget_groups;');
     await db.customStatement('DELETE FROM loans;');
     await db.customStatement('DELETE FROM savings_goal_contributions;');
     await db.customStatement('DELETE FROM savings_goals;');
@@ -84,6 +86,7 @@ class DemoSeeder {
         ('Shopping', 'shopping_bag', 5, 'expense'),
         ('Income', 'work', 6, 'income'),
         ('Other', 'category', 7, 'expense'),
+        ('Investments', 'trending-up', 8, 'expense'),
       ];
 
       for (final (name, icon, order, type) in defaultCategories) {
@@ -110,8 +113,64 @@ class DemoSeeder {
     final utilCat = categories.firstWhere((c) => c.name == 'Utilities');
     final shoppingCat = categories.firstWhere((c) => c.name == 'Shopping');
     final incCat = categories.firstWhere((c) => c.name == 'Income');
+    final investCat = categories.firstWhere(
+      (c) => c.name == 'Investments',
+      orElse: () => categories.firstWhere((c) => c.name == 'Other'),
+    );
 
-    // 4. Seed Budgets & Periods
+    // 4. Seed Budget Groups (50/30/20 Rule)
+    final needsGroupId = uuid.v4();
+    final wantsGroupId = uuid.v4();
+    final investGroupId = uuid.v4();
+
+    await db.into(db.budgetGroups).insert(
+      BudgetGroup(
+        id: needsGroupId,
+        name: 'Needs',
+        groupType: 'needs',
+        percentage: 0.50,
+        allocatedAmount: 750000,
+        icon: 'home',
+        color: '#2196F3',
+        sortOrder: 0,
+        isActive: true,
+        createdAt: now,
+      ),
+    );
+    await db.into(db.budgetGroups).insert(
+      BudgetGroup(
+        id: wantsGroupId,
+        name: 'Wants',
+        groupType: 'wants',
+        percentage: 0.30,
+        allocatedAmount: 450000,
+        icon: 'shopping-bag',
+        color: '#FF9800',
+        sortOrder: 1,
+        isActive: true,
+        createdAt: now,
+      ),
+    );
+    await db.into(db.budgetGroups).insert(
+      BudgetGroup(
+        id: investGroupId,
+        name: 'Investments',
+        groupType: 'investments',
+        percentage: 0.20,
+        allocatedAmount: 300000,
+        icon: 'trending-up',
+        color: '#4CAF50',
+        sortOrder: 2,
+        isActive: true,
+        createdAt: now,
+      ),
+    );
+
+    final settingsDao = SettingsDao(db);
+    await settingsDao.setSetting('monthly_income', '1500000');
+    await settingsDao.setSetting('budget_rule', 'rule503020');
+
+    // 5. Seed Budgets & Periods
     final startOfMonth = DateTime(now.year, now.month, 1);
     final endOfMonth = BudgetEngine.computePeriodEnd(startOfMonth, 'monthly');
 
@@ -123,6 +182,7 @@ class DemoSeeder {
             id: foodBudgetId,
             name: 'Monthly Food',
             categoryId: foodCat.id,
+            groupId: needsGroupId,
             period: 'monthly',
             amount: 400000,
             rollover: false,
@@ -158,6 +218,7 @@ class DemoSeeder {
             id: transBudgetId,
             name: 'Commute Budget',
             categoryId: transCat.id,
+            groupId: needsGroupId,
             period: 'monthly',
             amount: 150000,
             rollover: false,
@@ -179,6 +240,78 @@ class DemoSeeder {
             periodStart: startOfMonth,
             periodEnd: endOfMonth,
             allocated: 150000,
+            spent: 0,
+            isClosed: false,
+            createdAt: now,
+          ),
+        );
+
+    final shoppingBudgetId = uuid.v4();
+    await db
+        .into(db.budgets)
+        .insert(
+          Budget(
+            id: shoppingBudgetId,
+            name: 'Shopping & Outings',
+            categoryId: shoppingCat.id,
+            groupId: wantsGroupId,
+            period: 'monthly',
+            amount: 250000,
+            rollover: false,
+            rolloverType: 'none',
+            startDate: startOfMonth,
+            endDate: endOfMonth,
+            notificationThreshold: 0.8,
+            isActive: true,
+            createdAt: now,
+          ),
+        );
+
+    await db
+        .into(db.budgetPeriods)
+        .insert(
+          BudgetPeriod(
+            id: uuid.v4(),
+            budgetId: shoppingBudgetId,
+            periodStart: startOfMonth,
+            periodEnd: endOfMonth,
+            allocated: 250000,
+            spent: 0,
+            isClosed: false,
+            createdAt: now,
+          ),
+        );
+
+    final investBudgetId = uuid.v4();
+    await db
+        .into(db.budgets)
+        .insert(
+          Budget(
+            id: investBudgetId,
+            name: 'Monthly Investments',
+            categoryId: investCat.id,
+            groupId: investGroupId,
+            period: 'monthly',
+            amount: 200000,
+            rollover: false,
+            rolloverType: 'none',
+            startDate: startOfMonth,
+            endDate: endOfMonth,
+            notificationThreshold: 0.8,
+            isActive: true,
+            createdAt: now,
+          ),
+        );
+
+    await db
+        .into(db.budgetPeriods)
+        .insert(
+          BudgetPeriod(
+            id: uuid.v4(),
+            budgetId: investBudgetId,
+            periodStart: startOfMonth,
+            periodEnd: endOfMonth,
+            allocated: 200000,
             spent: 0,
             isClosed: false,
             createdAt: now,
