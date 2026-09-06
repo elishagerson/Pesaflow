@@ -45,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 14;
 
   @override
   MigrationStrategy get migration {
@@ -182,6 +182,78 @@ class AppDatabase extends _$AppDatabase {
             '#9E9E9E',
             'expense',
             17,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Emergencies',
+            'alert-circle',
+            '#E11D48',
+            'expense',
+            18,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Charity & Offerings',
+            'charity',
+            '#7C3AED',
+            'expense',
+            19,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Contributions & Michango',
+            'community',
+            '#2563EB',
+            'expense',
+            20,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Personal Care',
+            'spa',
+            '#DB2777',
+            'expense',
+            21,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Family Support',
+            'family',
+            '#0D9488',
+            'expense',
+            22,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Home & Maintenance',
+            'handyman',
+            '#B45309',
+            'expense',
+            23,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Insurance & Taxes',
+            'insurance',
+            '#0284C7',
+            'expense',
+            24,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Subscriptions & Streaming',
+            'subscriptions',
+            '#4F46E5',
+            'expense',
+            25,
             true,
           ),
 
@@ -412,6 +484,33 @@ class AppDatabase extends _$AppDatabase {
                 true,
               ),
             );
+          }
+        }
+
+        // Migration from schema version 13 → 14: add comprehensive expense categories
+        if (from < 14) {
+          final existingCats = await select(categories).get();
+          final existingNames =
+              existingCats.map((c) => c.name.toLowerCase()).toSet();
+          final uuid = const Uuid();
+
+          final newCategories = [
+            ('Emergencies', 'alert-circle', '#E11D48', 18),
+            ('Charity & Offerings', 'charity', '#7C3AED', 19),
+            ('Contributions & Michango', 'community', '#2563EB', 20),
+            ('Personal Care', 'spa', '#DB2777', 21),
+            ('Family Support', 'family', '#0D9488', 22),
+            ('Home & Maintenance', 'handyman', '#B45309', 23),
+            ('Insurance & Taxes', 'insurance', '#0284C7', 24),
+            ('Subscriptions & Streaming', 'subscriptions', '#4F46E5', 25),
+          ];
+
+          for (final (name, icon, color, order) in newCategories) {
+            if (!existingNames.contains(name.toLowerCase())) {
+              await into(categories).insert(
+                _cat(uuid.v4(), name, icon, color, 'expense', order, true),
+              );
+            }
           }
         }
 
