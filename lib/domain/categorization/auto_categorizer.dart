@@ -170,6 +170,100 @@ class AutoCategorizer {
       'uwekezaji': 'Investments',
       'dse': 'Investments',
       'utt': 'Investments',
+
+      // Emergencies
+      'emergency': 'Emergencies',
+      'emergencies': 'Emergencies',
+      'dharura': 'Emergencies',
+      'ambulance': 'Emergencies',
+      'rescue': 'Emergencies',
+      'first aid': 'Emergencies',
+      'polisi': 'Emergencies',
+      'police': 'Emergencies',
+      'ajali': 'Emergencies',
+
+      // Charity & Offerings
+      'sadaka': 'Charity & Offerings',
+      'zaka': 'Charity & Offerings',
+      'tithe': 'Charity & Offerings',
+      'offering': 'Charity & Offerings',
+      'offerings': 'Charity & Offerings',
+      'kanisa': 'Charity & Offerings',
+      'church': 'Charity & Offerings',
+      'msikiti': 'Charity & Offerings',
+      'mosque': 'Charity & Offerings',
+      'donation': 'Charity & Offerings',
+      'donations': 'Charity & Offerings',
+      'charity': 'Charity & Offerings',
+      'harambee': 'Charity & Offerings',
+      'msaada': 'Charity & Offerings',
+
+      // Contributions & Michango
+      'mchango': 'Contributions & Michango',
+      'michango': 'Contributions & Michango',
+      'harusi': 'Contributions & Michango',
+      'wedding': 'Contributions & Michango',
+      'msiba': 'Contributions & Michango',
+      'funeral': 'Contributions & Michango',
+      'sendoff': 'Contributions & Michango',
+      'send off': 'Contributions & Michango',
+      'kitchen party': 'Contributions & Michango',
+      'kikoba': 'Contributions & Michango',
+      'upatu': 'Contributions & Michango',
+
+      // Personal Care
+      'saluni': 'Personal Care',
+      'salon': 'Personal Care',
+      'kinyozi': 'Personal Care',
+      'barber': 'Personal Care',
+      'cosmetics': 'Personal Care',
+      'spa': 'Personal Care',
+      'massage': 'Personal Care',
+      'haircut': 'Personal Care',
+      'beauty': 'Personal Care',
+      'dobi': 'Personal Care',
+      'laundry': 'Personal Care',
+
+      // Family Support
+      'wazazi': 'Family Support',
+      'familia': 'Family Support',
+      'family support': 'Family Support',
+      'child support': 'Family Support',
+      'upendo': 'Family Support',
+
+      // Home & Maintenance
+      'fundi': 'Home & Maintenance',
+      'hardware': 'Home & Maintenance',
+      'repairs': 'Home & Maintenance',
+      'maintenance': 'Home & Maintenance',
+      'ujenzi': 'Home & Maintenance',
+      'plumber': 'Home & Maintenance',
+      'electrician': 'Home & Maintenance',
+      'furniture': 'Home & Maintenance',
+      'carpenter': 'Home & Maintenance',
+      'appliance': 'Home & Maintenance',
+
+      // Insurance & Taxes
+      'bima': 'Insurance & Taxes',
+      'insurance': 'Insurance & Taxes',
+      'nhif': 'Insurance & Taxes',
+      'sanlam': 'Insurance & Taxes',
+      'jubilee': 'Insurance & Taxes',
+      'tra': 'Insurance & Taxes',
+      'tax': 'Insurance & Taxes',
+      'revenue': 'Insurance & Taxes',
+      'leseni': 'Insurance & Taxes',
+      'license': 'Insurance & Taxes',
+
+      // Subscriptions & Streaming
+      'netflix': 'Subscriptions & Streaming',
+      'spotify': 'Subscriptions & Streaming',
+      'showmax': 'Subscriptions & Streaming',
+      'apple music': 'Subscriptions & Streaming',
+      'google play': 'Subscriptions & Streaming',
+      'youtube': 'Subscriptions & Streaming',
+      'subscription': 'Subscriptions & Streaming',
+      'subscriptions': 'Subscriptions & Streaming',
     };
 
     // Scan lowercase combined text for these keywords
