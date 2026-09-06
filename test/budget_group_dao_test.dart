@@ -158,7 +158,9 @@ void main() {
           amount: 10000000,
           type: 'expense',
           description: 'Groceries spend',
+          source: 'manual',
           createdAt: now,
+          updatedAt: now,
         ),
       );
 
