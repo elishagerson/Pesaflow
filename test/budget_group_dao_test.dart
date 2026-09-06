@@ -129,8 +129,35 @@ void main() {
           periodStart: periodStart,
           periodEnd: periodEnd,
           allocated: 30000000,
-          spent: 10000000,
+          spent: 0,
           isClosed: false,
+          createdAt: now,
+        ),
+      );
+
+      // Insert account and transaction in period to generate spending
+      final accountId = uuid.v4();
+      await database.into(database.accounts).insert(
+        Account(
+          id: accountId,
+          name: 'Cash',
+          type: 'cash',
+          balance: 100000000,
+          icon: 'wallet',
+          sortOrder: 0,
+          isArchived: false,
+          createdAt: now,
+        ),
+      );
+
+      await database.into(database.transactions).insert(
+        Transaction(
+          id: uuid.v4(),
+          accountId: accountId,
+          categoryId: cat.id,
+          amount: 10000000,
+          type: 'expense',
+          description: 'Groceries spend',
           createdAt: now,
         ),
       );
