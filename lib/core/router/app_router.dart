@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/presentation/analytics/analytics_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
+import 'package:pesaflow/presentation/budgets/budget_setup_screen.dart';
+import 'package:pesaflow/presentation/budgets/budget_group_detail_screen.dart';
 import 'package:pesaflow/presentation/debug/sms_parser_debug_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_form_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_detail_screen.dart';
@@ -625,10 +627,32 @@ final GoRouter appRouter = GoRouter(
                   _tabTransitionPage(const BudgetListScreen()),
               routes: [
                 GoRoute(
+                  path: 'setup',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  pageBuilder: (context, state) =>
+                      _springSlidePage(const BudgetSetupScreen()),
+                ),
+                GoRoute(
                   path: 'add',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
                       _springSlidePage(const BudgetFormScreen()),
+                ),
+                GoRoute(
+                  path: 'groups/:groupId',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  pageBuilder: (context, state) => _heroSlidePage(
+                    BudgetGroupDetailScreen(groupId: state.param('groupId')),
+                  ),
+                  routes: [
+                    GoRoute(
+                      path: 'add',
+                      parentNavigatorKey: _rootNavigatorKey,
+                      pageBuilder: (context, state) => _springSlidePage(
+                        BudgetFormScreen(groupId: state.param('groupId')),
+                      ),
+                    ),
+                  ],
                 ),
                 GoRoute(
                   path: ':id',

@@ -1017,6 +1017,89 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       ),
     );
   }
+
+  Widget _buildGroupSelector(
+    List<BudgetGroupWithChildren> groups,
+    ThemeData theme,
+  ) {
+    final onSurface = theme.colorScheme.onSurface;
+    return StaggeredFadeSlide(
+      index: 1,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+        child: GlassCard(
+          padding: const EdgeInsets.all(kSpacing12),
+          borderRadius: AppTheme.radiusCard,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Wrap(
+                spacing: kSpacing8,
+                runSpacing: kSpacing8,
+                children: [
+                  ChoiceChip(
+                    label: const Text('None (Standalone)'),
+                    selected: _selectedGroupId == null,
+                    onSelected: (selected) {
+                      if (selected) setState(() => _selectedGroupId = null);
+                    },
+                    selectedColor:
+                        theme.colorScheme.primary.withValues(alpha: 0.15),
+                  ),
+                  for (final g in groups)
+                    ChoiceChip(
+                      avatar: Icon(
+                        _getGroupIcon(g.group.groupType),
+                        size: 16,
+                        color: hexToColor(g.group.color),
+                      ),
+                      label: Text(g.group.name),
+                      selected: _selectedGroupId == g.group.id,
+                      onSelected: (selected) {
+                        setState(() {
+                          _selectedGroupId = selected ? g.group.id : null;
+                        });
+                      },
+                      selectedColor:
+                          hexToColor(g.group.color).withValues(alpha: 0.15),
+                    ),
+                ],
+              ),
+              if (_selectedGroupId != null) ...[
+                const SizedBox(height: kSpacing8),
+                Builder(
+                  builder: (context) {
+                    final selectedGroup = groups
+                        .where((g) => g.group.id == _selectedGroupId)
+                        .firstOrNull;
+                    if (selectedGroup == null) return const SizedBox.shrink();
+                    final remaining = selectedGroup.group.allocatedAmount -
+                        selectedGroup.totalAllocated;
+                    return Text(
+                      'Group budget: ${CurrencyFormatter.formatCents(selectedGroup.group.allocatedAmount)} (${remaining >= 0 ? "${CurrencyFormatter.formatCents(remaining)} available" : "over-allocated"})',
+                      style: context.ts(
+                        11,
+                        color: onSurface.withValues(alpha: 0.6),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  IconData _getGroupIcon(String type) {
+    return switch (type) {
+      'needs' => PesaFlowIcons.home,
+      'wants' => PesaFlowIcons.shoppingBag,
+      'investments' => PesaFlowIcons.income,
+      _ => PesaFlowIcons.budgets,
+    };
+  }
 }
 
 class _InteractiveInputRow extends StatefulWidget {
