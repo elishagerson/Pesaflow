@@ -518,8 +518,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                             index: 1,
                             child: GlassCard(
                               padding: const EdgeInsets.all(kSpacing16),
-                              borderColor: const Color(0xFFE11D48)
-                                  .withValues(alpha: 0.3),
+                              accentColor: const Color(0xFFE11D48),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -615,7 +614,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                         color: const Color(0xFFE11D48)
                                             .withValues(alpha: 0.12),
                                         borderRadius: BorderRadius.circular(
-                                          AppTheme.radiusSm,
+                                          AppTheme.radiusSmall,
                                         ),
                                         border: Border.all(
                                           color: const Color(0xFFE11D48)
