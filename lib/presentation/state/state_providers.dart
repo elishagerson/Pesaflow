@@ -11,8 +11,10 @@ import '../../data/repositories/account_repository.dart';
 import '../../data/repositories/category_repository.dart';
 import '../../data/repositories/transaction_repository.dart';
 import '../../data/repositories/budget_repository.dart';
+import '../../data/repositories/budget_group_repository.dart';
 import '../../data/repositories/analytics_repository.dart';
 import '../../data/repositories/recurring_transaction_repository.dart';
+import '../../data/database/daos/budget_group_dao.dart';
 import '../../core/utils/settings_keys.dart';
 import '../../data/repositories/settings_repository.dart';
 import '../../data/repositories/tracker_repository.dart';
@@ -299,6 +301,38 @@ final budgetProgressProvider = FutureProvider<List<BudgetWithProgress>>((
   });
   final repo = ref.watch(budgetRepositoryProvider);
   return repo.getActiveBudgetsWithProgress();
+});
+
+/// Budget groups with their child budgets and progress.
+final budgetGroupsProvider =
+    FutureProvider<List<BudgetGroupWithChildren>>((ref) async {
+  ref.watch(_transactionChangesProvider);
+  ref.watch(dataChangesStreamProvider);
+  final repo = ref.watch(budgetGroupRepositoryProvider);
+  return repo.getGroupsWithProgress();
+});
+
+/// Standalone (ungrouped) budgets with progress.
+final standaloneBudgetsProvider =
+    FutureProvider<List<BudgetWithProgress>>((ref) async {
+  ref.watch(_transactionChangesProvider);
+  ref.watch(dataChangesStreamProvider);
+  final repo = ref.watch(budgetGroupRepositoryProvider);
+  return repo.getStandaloneBudgetsWithProgress();
+});
+
+/// Monthly income setting (TZS cents), stored in app_settings.
+final monthlyIncomeProvider = FutureProvider<int>((ref) async {
+  final settingsRepo = ref.watch(settingsRepositoryProvider);
+  final value = await settingsRepo.getSetting('monthly_income');
+  if (value == null) return 0;
+  return int.tryParse(value) ?? 0;
+});
+
+/// The active budget rule type, stored in app_settings.
+final budgetRuleProvider = FutureProvider<String?>((ref) async {
+  final settingsRepo = ref.watch(settingsRepositoryProvider);
+  return settingsRepo.getSetting('budget_rule');
 });
 
 // ═══════════════════════════════════════════════════════

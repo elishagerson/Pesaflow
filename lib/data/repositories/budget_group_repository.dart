@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../database/app_database.dart';
 import '../database/daos/budget_group_dao.dart';
-import '../database/daos/budget_dao.dart';
 import '../database/database_providers.dart';
 import '../../domain/models/enums.dart';
 import '../../domain/budget/budget_engine.dart';
@@ -10,18 +9,16 @@ import 'budget_repository.dart';
 
 final budgetGroupRepositoryProvider = Provider<BudgetGroupRepository>((ref) {
   final groupDao = ref.watch(budgetGroupDaoProvider);
-  final budgetDao = ref.watch(budgetDaoProvider);
   final budgetRepo = ref.watch(budgetRepositoryProvider);
-  return BudgetGroupRepository(groupDao, budgetDao, budgetRepo);
+  return BudgetGroupRepository(groupDao, budgetRepo);
 });
 
 class BudgetGroupRepository {
   final BudgetGroupDao _groupDao;
-  final BudgetDao _budgetDao;
   final BudgetRepository _budgetRepo;
   static const _uuid = Uuid();
 
-  BudgetGroupRepository(this._groupDao, this._budgetDao, this._budgetRepo);
+  BudgetGroupRepository(this._groupDao, this._budgetRepo);
 
   /// Gets all active budget groups.
   Future<List<BudgetGroup>> getAllActiveGroups() =>

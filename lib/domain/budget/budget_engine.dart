@@ -1,7 +1,89 @@
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
+import 'package:pesaflow/domain/models/enums.dart';
 
 /// Budget computation engine for envelope-style budget management.
 class BudgetEngine {
+  /// Computes group allocations from income and a budgeting rule.
+  ///
+  /// Returns a list of (type, percentage, amount) for each group.
+  static List<({BudgetGroupType type, double percentage, int amount})>
+      computeGroupAllocations({
+    required int monthlyIncome,
+    required BudgetRuleType rule,
+    double? customNeeds,
+    double? customWants,
+    double? customInvestments,
+  }) {
+    double needsPct, wantsPct, investPct;
+
+    if (rule == BudgetRuleType.custom) {
+      needsPct = customNeeds ?? 0.50;
+      wantsPct = customWants ?? 0.30;
+      investPct = customInvestments ?? 0.20;
+    } else {
+      final (n, w, i) = rule.percentages;
+      needsPct = n;
+      wantsPct = w;
+      investPct = i;
+    }
+
+    // Use largest-remainder to avoid rounding errors
+    final percentages = [needsPct, wantsPct, investPct];
+    final amounts = _distributeAmount(monthlyIncome, percentages);
+
+    return [
+      (
+        type: BudgetGroupType.needs,
+        percentage: needsPct,
+        amount: amounts[0],
+      ),
+      (
+        type: BudgetGroupType.wants,
+        percentage: wantsPct,
+        amount: amounts[1],
+      ),
+      (
+        type: BudgetGroupType.investments,
+        percentage: investPct,
+        amount: amounts[2],
+      ),
+    ];
+  }
+
+  /// Distributes [total] across [percentages] using largest-remainder method
+  /// so rounding errors never lose or over-allocate money.
+  static List<int> _distributeAmount(int total, List<double> percentages) {
+    if (percentages.isEmpty) return [];
+    final n = percentages.length;
+    final raw = <int>[];
+    final remainders = <int>[];
+    var sum = 0;
+
+    for (var i = 0; i < n; i++) {
+      final exact = total * percentages[i];
+      final floored = exact.floor();
+      raw.add(floored);
+      remainders.add(i);
+      sum += floored;
+    }
+
+    var remainder = total - sum;
+    remainders.sort((a, b) {
+      final ra = total * percentages[a] - raw[a];
+      final rb = total * percentages[b] - raw[b];
+      return rb.compareTo(ra);
+    });
+
+    var idx = 0;
+    while (remainder > 0 && idx < n) {
+      raw[remainders[idx]]++;
+      remainder--;
+      idx++;
+    }
+
+    return raw;
+  }
+
   /// Computes the budget status for a given period.
   static BudgetStatus computeStatus({
     required int allocated,
