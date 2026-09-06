@@ -1071,6 +1071,50 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                             ),
                           ),
                         ),
+                        if (isEditing) ...[
+                          const SizedBox(height: kSpacing16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing16,
+                            ),
+                            child: TactileSpringContainer(
+                              onTap: _deleteBudget,
+                              child: Container(
+                                width: double.infinity,
+                                height: 48,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: context.appColors.expenseColor
+                                      .withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(24.0),
+                                  border: Border.all(
+                                    color: context.appColors.expenseColor
+                                        .withValues(alpha: 0.3),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      PesaFlowIcons.delete,
+                                      size: 18,
+                                      color: context.appColors.expenseColor,
+                                    ),
+                                    const SizedBox(width: kSpacing8),
+                                    Text(
+                                      'Delete Budget',
+                                      style: context.ts(
+                                        15,
+                                        fontWeight: FontWeight.w600,
+                                        color: context.appColors.expenseColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: kSpacing40),
                       ],
                     ),
