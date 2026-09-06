@@ -129,6 +129,29 @@ class BudgetGroupDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
+  /// Deletes all budget groups, optionally unlinking child budgets to standalone.
+  Future<void> deleteAllGroups({bool keepSubBudgets = true}) async {
+    await attachedDatabase.transaction(() async {
+      if (keepSubBudgets) {
+        await (update(budgets)..where((b) => b.groupId.isNotNull())).write(
+          const BudgetsCompanion(groupId: Value(null)),
+        );
+      } else {
+        final groupedBudgets = await (select(budgets)
+              ..where((b) => b.groupId.isNotNull()))
+            .get();
+        final budgetIds = groupedBudgets.map((b) => b.id).toList();
+        if (budgetIds.isNotEmpty) {
+          await (delete(budgetPeriods)
+                ..where((p) => p.budgetId.isIn(budgetIds)))
+              .go();
+          await (delete(budgets)..where((b) => b.id.isIn(budgetIds))).go();
+        }
+      }
+      await delete(budgetGroups).go();
+    });
+  }
+
   /// Gets all budget groups with their child budgets and progress data.
   Future<List<BudgetGroupWithChildren>>
       getGroupsWithChildren() async {
