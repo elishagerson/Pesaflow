@@ -155,11 +155,21 @@ class AutoCategorizer {
       'sales': 'Business',
       'dukani': 'Business',
 
-      // Savings / Investments
+      // Savings
       'savings': 'Savings',
       'akiba': 'Savings',
-      'investment': 'Savings',
-      'hisa': 'Savings',
+
+      // Investments
+      'investment': 'Investments',
+      'investments': 'Investments',
+      'hisa': 'Investments',
+      'stock': 'Investments',
+      'bond': 'Investments',
+      'mutual fund': 'Investments',
+      'dividends': 'Investments',
+      'uwekezaji': 'Investments',
+      'dse': 'Investments',
+      'utt': 'Investments',
     };
 
     // Scan lowercase combined text for these keywords

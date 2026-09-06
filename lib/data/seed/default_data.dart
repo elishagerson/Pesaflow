@@ -40,6 +40,7 @@ class DefaultSeeder {
       ('Shopping', 'shopping_bag', 5, 'expense'),
       ('Income', 'work', 6, 'income'),
       ('Other', 'category', 7, 'expense'),
+      ('Investments', 'trending-up', 8, 'expense'),
     ];
 
     for (final (name, icon, order, type) in defaultCategories) {
