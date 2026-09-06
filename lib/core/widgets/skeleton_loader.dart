@@ -114,14 +114,20 @@ class _ShimmerEffectState extends State<_ShimmerEffect>
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     );
-    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
-      _controller.value = 0.5;
-    } else {
-      _controller.repeat();
-    }
     _animation = Tween<double>(begin: -1, end: 2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      _controller.stop();
+      _controller.value = 0.5;
+    } else if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
   }
 
   @override

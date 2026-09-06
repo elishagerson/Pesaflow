@@ -1365,9 +1365,15 @@ class _ConfidenceRingState extends State<ConfidenceRing>
       vsync: this,
       duration: const Duration(seconds: 2),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      _pulseController.stop();
       _pulseController.value = 1.0;
-    } else {
+    } else if (!_pulseController.isAnimating) {
       _pulseController.repeat(reverse: true);
     }
   }

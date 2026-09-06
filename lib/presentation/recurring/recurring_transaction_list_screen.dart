@@ -1110,9 +1110,15 @@ class _DueItemPulseState extends State<_DueItemPulse>
         end: 1.015,
       ).chain(CurveTween(curve: Curves.easeInOut)),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      _controller.stop();
       _controller.value = 1.0;
-    } else {
+    } else if (!_controller.isAnimating) {
       _controller.repeat(reverse: true);
     }
   }

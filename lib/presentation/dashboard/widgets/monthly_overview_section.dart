@@ -326,15 +326,28 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
       vsync: this,
       duration: const Duration(seconds: 2),
     );
-    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
-      _controller!.value = 1.0;
-    } else {
-      _controller!.repeat(reverse: true);
-    }
     _glowAnimation = Tween<double>(
       begin: 4.0,
       end: 14.0,
     ).animate(CurvedAnimation(parent: _controller!, curve: Curves.easeInOut));
+  }
+
+  void _syncAnimation() {
+    if (_controller == null) return;
+    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      _controller!.stop();
+      _controller!.value = 1.0;
+    } else if (!_controller!.isAnimating) {
+      _controller!.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.pulse) {
+      _syncAnimation();
+    }
   }
 
   @override
@@ -342,6 +355,7 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
     super.didUpdateWidget(oldWidget);
     if (widget.pulse && _controller == null) {
       _initAnimation();
+      _syncAnimation();
     } else if (!widget.pulse && _controller != null) {
       _controller!.dispose();
       _controller = null;

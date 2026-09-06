@@ -1384,6 +1384,7 @@ class _NewRowHighlightState extends State<_NewRowHighlight>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  bool _started = false;
 
   @override
   void initState() {
@@ -1393,10 +1394,18 @@ class _NewRowHighlightState extends State<_NewRowHighlight>
       duration: const Duration(milliseconds: 2000),
     );
     _animation = _controller.drive(Tween<double>(begin: 0.12, end: 0));
-    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
-      _controller.value = 0.0;
-    } else {
-      _controller.forward();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_started) {
+      _started = true;
+      if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+        _controller.value = 1.0;
+      } else {
+        _controller.forward();
+      }
     }
   }
 
