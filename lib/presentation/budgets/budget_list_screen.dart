@@ -21,6 +21,11 @@ import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/data/repositories/budget_repository.dart';
+import 'package:pesaflow/data/repositories/budget_group_repository.dart';
+import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -521,6 +526,22 @@ class BudgetListScreen extends ConsumerWidget {
                         color: onSurface.withValues(alpha: 0.7),
                       ),
                     ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: kSpacing8),
+              TactileSpringContainer(
+                onTap: () => _showPlanOptions(context, groups),
+                child: Container(
+                  padding: const EdgeInsets.all(kSpacing4),
+                  decoration: BoxDecoration(
+                    color: onSurface.withValues(alpha: 0.06),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.more_horiz,
+                    size: 16,
+                    color: onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               ),
