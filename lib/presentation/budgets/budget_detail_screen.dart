@@ -508,6 +508,147 @@ class BudgetDetailScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
+                        if ((bp.category.name.toLowerCase() == 'emergencies' ||
+                                bp.budget.name
+                                    .toLowerCase()
+                                    .contains('emergenc')) &&
+                            status.remaining > 0) ...[
+                          const SizedBox(height: kSpacing12),
+                          StaggeredFadeSlide(
+                            index: 1,
+                            child: GlassCard(
+                              padding: const EdgeInsets.all(kSpacing16),
+                              borderColor: const Color(0xFFE11D48)
+                                  .withValues(alpha: 0.3),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding:
+                                            const EdgeInsets.all(kSpacing8),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFE11D48)
+                                              .withValues(alpha: 0.15),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          PesaFlowIcons.emergency,
+                                          size: 18,
+                                          color: Color(0xFFE11D48),
+                                        ),
+                                      ),
+                                      const SizedBox(width: kSpacing12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Emergency Surplus Protection',
+                                              style: context.ts(
+                                                14,
+                                                fontWeight: FontWeight.w700,
+                                                color:
+                                                    theme.colorScheme.onSurface,
+                                              ),
+                                            ),
+                                            const SizedBox(height: kSpacing2),
+                                            Text(
+                                              'Unused funds move to savings automatically when the period ends, or move them now.',
+                                              style: context.ts(
+                                                11,
+                                                color: theme
+                                                    .colorScheme.onSurface
+                                                    .withValues(alpha: 0.6),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: kSpacing12),
+                                  TactileSpringContainer(
+                                    onTap: () async {
+                                      final repo =
+                                          ref.read(budgetRepositoryProvider);
+                                      final moved = await repo
+                                          .moveEmergencyBudgetRemainderToSavings(
+                                            bp.budget.id,
+                                          );
+                                      if (context.mounted) {
+                                        if (moved) {
+                                          CustomToast.show(
+                                            context,
+                                            message:
+                                                '${CurrencyFormatter.formatCents(status.remaining)} moved to savings!',
+                                            type: ToastType.success,
+                                          );
+                                          ref.invalidate(
+                                            budgetDetailProvider(budgetId),
+                                          );
+                                          ref.invalidate(
+                                            savingsGoalsStreamProvider,
+                                          );
+                                          ref.invalidate(
+                                            savingsGoalsTotalSavedProvider,
+                                          );
+                                        } else {
+                                          CustomToast.show(
+                                            context,
+                                            message:
+                                                'No remaining funds to move.',
+                                            type: ToastType.info,
+                                          );
+                                        }
+                                      }
+                                    },
+                                    child: Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: kSpacing10,
+                                        horizontal: kSpacing14,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFE11D48)
+                                            .withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusSm,
+                                        ),
+                                        border: Border.all(
+                                          color: const Color(0xFFE11D48)
+                                              .withValues(alpha: 0.35),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            PesaFlowIcons.savings,
+                                            size: 16,
+                                            color: Color(0xFFE11D48),
+                                          ),
+                                          const SizedBox(width: kSpacing8),
+                                          Text(
+                                            'Move ${CurrencyFormatter.formatCents(status.remaining)} to Savings Now',
+                                            style: context.ts(
+                                              12,
+                                              fontWeight: FontWeight.w700,
+                                              color: const Color(0xFFE11D48),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: kSpacing20),
 
                         // ── 2. LINEAR PROGRESS — time remaining + budget used ──
