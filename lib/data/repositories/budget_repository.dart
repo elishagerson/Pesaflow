@@ -345,7 +345,7 @@ class BudgetRepository {
             id: notifId,
             title: 'Move to Savings: ${budget.name}',
             body:
-                'You had $formattedAmount unspent in your Emergencies budget. It has been allocated to "${targetGoal.name}". Remember to move that money into your savings account!',
+                'You had $formattedAmount unspent in ${budget.name}. It has been allocated to "${targetGoal.name}". Remember to move that money into your savings account!',
           );
         } catch (e) {
           developer.log(
