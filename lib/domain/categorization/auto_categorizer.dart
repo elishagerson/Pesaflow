@@ -112,23 +112,20 @@ class AutoCategorizer {
 
       // Food & Dining
       'restaurant': 'Food & Groceries',
-      'hotel': 'Food & Groceries',
+      'hoteli ya chakula': 'Food & Groceries',
       'mkahawa': 'Food & Groceries',
       'chakula': 'Food & Groceries',
       'pizza': 'Food & Groceries',
 
-      // Transport / Travel
-      'petrol': 'Transport',
-      'fuel': 'Transport',
+      // Transport / Commute
       'stesheni': 'Transport',
       'nauli': 'Transport',
+      'daladala': 'Transport',
       'uber': 'Transport',
       'bolt': 'Transport',
       'taxify': 'Transport',
       'mwendokasi': 'Transport',
-      'travel': 'Transport',
       'ndege': 'Transport',
-      'flight': 'Transport',
 
       // Utilities / Rent
       'luku': 'Utilities',
@@ -299,7 +296,6 @@ class AutoCategorizer {
       'safari': 'Travel & Vacations',
       'utalii': 'Travel & Vacations',
       'ferry': 'Travel & Vacations',
-      'azam marine': 'Travel & Vacations',
       'booking.com': 'Travel & Vacations',
       'holiday': 'Travel & Vacations',
       'zanzibar': 'Travel & Vacations',
