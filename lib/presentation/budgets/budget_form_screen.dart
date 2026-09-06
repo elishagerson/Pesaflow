@@ -187,6 +187,72 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
     }
   }
 
+  Future<void> _deleteBudget() async {
+    if (widget.budgetId == null) return;
+    final confirm = await ModernDialog.show<bool>(
+      context: context,
+      title: const Text('Delete Budget?'),
+      titleIcon: PesaFlowIcons.delete,
+      iconColor: context.appColors.expenseColor,
+      content: const Text(
+        'This will permanently remove this budget and all its history.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(
+            context,
+            rootNavigator: true,
+          ).pop(false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(
+            context,
+            rootNavigator: true,
+          ).pop(true),
+          child: Text(
+            'Delete',
+            style: TextStyle(
+              color: context.appColors.expenseColor,
+            ),
+          ),
+        ),
+      ],
+    );
+
+    if (confirm != true || !mounted) return;
+
+    final repo = ref.read(budgetRepositoryProvider);
+    final budgetId = widget.budgetId!;
+    final name = _nameController.text.trim();
+
+    // Pop the edit form immediately
+    context.pop();
+
+    try {
+      await repo.deleteBudget(budgetId);
+      ref.invalidate(budgetProgressProvider);
+      ref.invalidate(activeBudgetsStreamProvider);
+      ref.invalidate(budgetGroupsProvider);
+      ref.invalidate(standaloneBudgetsProvider);
+      if (context.mounted) {
+        CustomToast.show(
+          context,
+          message: '"$name" deleted',
+          type: ToastType.success,
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        CustomToast.show(
+          context,
+          message: 'Error deleting budget: $e',
+          type: ToastType.error,
+        );
+      }
+    }
+  }
+
   Widget _buildCategorySelector(List<dynamic> categories, ThemeData theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
