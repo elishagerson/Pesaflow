@@ -903,7 +903,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
         const Color(0xFFFF9800),
       ),
       BudgetGroupType.investments => (
-        PesaFlowIcons.trendingUp,
+        PesaFlowIcons.income,
         const Color(0xFF4CAF50),
       ),
       BudgetGroupType.custom => (PesaFlowIcons.budgets, const Color(0xFF6B7280)),
