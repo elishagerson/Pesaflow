@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,56 +39,10 @@ final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
 );
 
-Page<dynamic> _springSlidePage(Widget page) {
-  return CustomTransitionPage(
+Page<dynamic> _nativeIosPage(Widget page) {
+  return CupertinoPage(
     key: ValueKey(page.runtimeType),
     child: page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 0.05);
-      const end = Offset.zero;
-      final tween = Tween(
-        begin: begin,
-        end: end,
-      ).chain(CurveTween(curve: Curves.easeOutCubic));
-      final fadeTween = Tween<double>(
-        begin: 0.0,
-        end: 1.0,
-      ).chain(CurveTween(curve: Curves.easeOutCubic));
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: FadeTransition(
-          opacity: animation.drive(fadeTween),
-          child: child,
-        ),
-      );
-    },
-    reverseTransitionDuration: const Duration(milliseconds: 200),
-  );
-}
-
-Page<dynamic> _heroSlidePage(Widget page) {
-  return CustomTransitionPage(
-    key: ValueKey(page.runtimeType),
-    child: page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 0.03);
-      const end = Offset.zero;
-      final tween = Tween(
-        begin: begin,
-        end: end,
-      ).chain(CurveTween(curve: Curves.easeOutCubic));
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: FadeTransition(
-          opacity: Tween<double>(
-            begin: 0.0,
-            end: 1.0,
-          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
-          child: child,
-        ),
-      );
-    },
-    reverseTransitionDuration: const Duration(milliseconds: 200),
   );
 }
 
@@ -445,7 +400,7 @@ final GoRouter appRouter = GoRouter(
       path: '/onboarding',
       parentNavigatorKey: _rootNavigatorKey,
       pageBuilder: (context, state) =>
-          _springSlidePage(const OnboardingScreen()),
+          _nativeIosPage(const OnboardingScreen()),
     ),
 
     StatefulShellRoute.indexedStack(
@@ -463,13 +418,13 @@ final GoRouter appRouter = GoRouter(
                   path: 'loans',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _heroSlidePage(const LoanListScreen()),
+                      _nativeIosPage(const LoanListScreen()),
                   routes: [
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) =>
-                          _springSlidePage(const LoanFormScreen()),
+                          _nativeIosPage(const LoanFormScreen()),
                     ),
                     GoRoute(
                       path: ':id',
@@ -477,16 +432,16 @@ final GoRouter appRouter = GoRouter(
                       pageBuilder: (context, state) {
                         final id = state.pathParameters['id'];
                         if (id == null) {
-                          return _heroSlidePage(const SizedBox.shrink());
+                          return _nativeIosPage(const SizedBox.shrink());
                         }
-                        return _heroSlidePage(LoanDetailScreen(loanId: id));
+                        return _nativeIosPage(LoanDetailScreen(loanId: id));
                       },
                       routes: [
                         GoRoute(
                           path: 'edit',
                           parentNavigatorKey: _rootNavigatorKey,
                           pageBuilder: (context, state) {
-                            return _springSlidePage(
+                            return _nativeIosPage(
                               LoanFormScreen(
                                 loanId: state.pathParameters['id'],
                               ),
@@ -501,13 +456,13 @@ final GoRouter appRouter = GoRouter(
                   path: 'savings-goals',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _heroSlidePage(const SavingsGoalListScreen()),
+                      _nativeIosPage(const SavingsGoalListScreen()),
                   routes: [
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) =>
-                          _springSlidePage(const SavingsGoalFormScreen()),
+                          _nativeIosPage(const SavingsGoalFormScreen()),
                     ),
                     GoRoute(
                       path: ':id',
@@ -515,9 +470,9 @@ final GoRouter appRouter = GoRouter(
                       pageBuilder: (context, state) {
                         final id = state.pathParameters['id'];
                         if (id == null) {
-                          return _heroSlidePage(const SizedBox.shrink());
+                          return _nativeIosPage(const SizedBox.shrink());
                         }
-                        return _heroSlidePage(
+                        return _nativeIosPage(
                           SavingsGoalDetailScreen(goalId: id),
                         );
                       },
@@ -526,7 +481,7 @@ final GoRouter appRouter = GoRouter(
                           path: 'edit',
                           parentNavigatorKey: _rootNavigatorKey,
                           pageBuilder: (context, state) {
-                            return _springSlidePage(
+                            return _nativeIosPage(
                               SavingsGoalFormScreen(
                                 goalId: state.pathParameters['id'],
                               ),
@@ -541,12 +496,12 @@ final GoRouter appRouter = GoRouter(
                   path: 'recurring',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _springSlidePage(const RecurringTransactionListScreen()),
+                      _nativeIosPage(const RecurringTransactionListScreen()),
                   routes: [
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
-                      pageBuilder: (context, state) => _springSlidePage(
+                      pageBuilder: (context, state) => _nativeIosPage(
                         const RecurringTransactionFormScreen(),
                       ),
                     ),
@@ -554,7 +509,7 @@ final GoRouter appRouter = GoRouter(
                       path: ':id/edit',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
-                        return _springSlidePage(
+                        return _nativeIosPage(
                           RecurringTransactionFormScreen(
                             recurringId: state.param('id'),
                           ),
@@ -581,7 +536,7 @@ final GoRouter appRouter = GoRouter(
                     final params = state.uri.queryParameters;
                     final type = params['type'];
                     final amountStr = params['amount'];
-                    return _springSlidePage(
+                    return _nativeIosPage(
                       TransactionFormScreen(
                         initialType: type,
                         prefillDescription: params['description'],
@@ -599,7 +554,7 @@ final GoRouter appRouter = GoRouter(
                   path: 'edit/:id',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
-                    return _springSlidePage(
+                    return _nativeIosPage(
                       TransactionFormScreen(
                         transactionId: state.optParam('id'),
                       ),
@@ -610,7 +565,7 @@ final GoRouter appRouter = GoRouter(
                   path: ':id',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
-                    return _springSlidePage(
+                    return _nativeIosPage(
                       TransactionDetailScreen(transactionId: state.param('id')),
                     );
                   },
@@ -630,25 +585,25 @@ final GoRouter appRouter = GoRouter(
                   path: 'setup',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _springSlidePage(const BudgetSetupScreen()),
+                      _nativeIosPage(const BudgetSetupScreen()),
                 ),
                 GoRoute(
                   path: 'add',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _springSlidePage(const BudgetFormScreen()),
+                      _nativeIosPage(const BudgetFormScreen()),
                 ),
                 GoRoute(
                   path: 'groups/:groupId',
                   parentNavigatorKey: _rootNavigatorKey,
-                  pageBuilder: (context, state) => _heroSlidePage(
+                  pageBuilder: (context, state) => _nativeIosPage(
                     BudgetGroupDetailScreen(groupId: state.param('groupId')),
                   ),
                   routes: [
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
-                      pageBuilder: (context, state) => _springSlidePage(
+                      pageBuilder: (context, state) => _nativeIosPage(
                         BudgetFormScreen(groupId: state.param('groupId')),
                       ),
                     ),
@@ -658,7 +613,7 @@ final GoRouter appRouter = GoRouter(
                   path: ':id',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
-                    return _heroSlidePage(
+                    return _nativeIosPage(
                       BudgetDetailScreen(budgetId: state.param('id')),
                     );
                   },
@@ -667,7 +622,7 @@ final GoRouter appRouter = GoRouter(
                       path: 'edit',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
-                        return _springSlidePage(
+                        return _nativeIosPage(
                           BudgetFormScreen(budgetId: state.optParam('id')),
                         );
                       },
@@ -703,14 +658,14 @@ final GoRouter appRouter = GoRouter(
       path: '/sms-review',
       parentNavigatorKey: _rootNavigatorKey,
       pageBuilder: (context, state) =>
-          _springSlidePage(const SmsReviewScreen()),
+          _nativeIosPage(const SmsReviewScreen()),
     ),
 
     GoRoute(
       path: '/debug/sms-parser',
       parentNavigatorKey: _rootNavigatorKey,
       pageBuilder: (context, state) =>
-          _springSlidePage(const SmsParserDebugScreen()),
+          _nativeIosPage(const SmsParserDebugScreen()),
     ),
   ],
 );
