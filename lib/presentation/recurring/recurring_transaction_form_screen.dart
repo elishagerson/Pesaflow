@@ -774,7 +774,7 @@ class _RecurringTransactionFormScreenState
                                       height: 20,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
-                                        color: Colors.white,
+                                        color: theme.colorScheme.onPrimary,
                                       ),
                                     ),
                                   )
@@ -788,7 +788,9 @@ class _RecurringTransactionFormScreenState
                                         .titleMedium!
                                         .copyWith(
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                          color: theme
+                                              .colorScheme
+                                              .onPrimary,
                                         ),
                                   ),
                           ),

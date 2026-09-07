@@ -1280,13 +1280,13 @@ class _SavingsGoalDetailScreenState
                                               );
                                             }
                                           },
-                                          child: Icon(
-                                            PesaFlowIcons.delete,
-                                            size: 14,
-                                            color: Colors.white.withValues(
-                                              alpha: 0.2,
-                                            ),
-                                          ),
+                                           child: Icon(
+                                             PesaFlowIcons.delete,
+                                             size: 14,
+                                             color: context.appColors.onBgColor.withValues(
+                                               alpha: 0.2,
+                                             ),
+                                           ),
                                         ),
                                       ],
                                     ),
@@ -1383,7 +1383,7 @@ class _GoalStatCard extends StatelessWidget {
           children: [
             Text(
               label,
-              style: context.ts(10, color: Colors.white.withValues(alpha: 0.4)),
+              style: context.ts(10, color: context.appColors.onBgColor.withValues(alpha: 0.4)),
             ),
             const SizedBox(height: kSpacing4),
             FittedBox(

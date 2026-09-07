@@ -179,7 +179,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.appColors.expenseColor,
-                foregroundColor: Colors.white,
+                foregroundColor: theme.colorScheme.onPrimary,
               ),
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(true),
@@ -218,7 +218,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                           style: context.ts(
                             15,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: context.appColors.onBgColor,
                           ),
                         ),
                         const SizedBox(height: kSpacing8),
@@ -296,7 +296,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                           style: context.ts(
                             15,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: context.appColors.onBgColor,
                           ),
                         ),
                         const SizedBox(height: kSpacing8),
@@ -323,7 +323,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                           style: context.ts(
                             15,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: context.appColors.onBgColor,
                           ),
                         ),
                         const SizedBox(height: kSpacing8),
@@ -379,7 +379,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         item['icon'],
                                         color: isSelected
                                             ? themeCol
-                                            : Colors.white.withValues(
+                                            : context.appColors.onBgColor.withValues(
                                                 alpha: 0.6,
                                               ),
                                         size: 22,
