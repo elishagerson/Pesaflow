@@ -273,9 +273,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(
-                                  PesaFlowIcons.back,
-                                  size: 12,
-                                  color: Colors.white70,
+                                    PesaFlowIcons.back,
+                                    size: 12,
+                                    color: context.appColors.onBgColor.withValues(alpha: 0.7),
                                 ),
                                 const SizedBox(width: 4),
                                 Consumer(
