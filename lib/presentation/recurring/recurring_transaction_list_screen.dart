@@ -655,7 +655,7 @@ class _RecurringTransactionListScreenState
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.12),
+                      color: context.appColors.shadowMedium,
                       blurRadius: 6,
                       offset: const Offset(0, 2),
                     ),

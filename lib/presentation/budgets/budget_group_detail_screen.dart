@@ -67,7 +67,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
 
             final group = groupData.group;
             final groupType = BudgetGroupType.fromDbString(group.groupType);
-            final (groupIcon, groupColor) = _groupVisuals(groupType);
+            final (groupIcon, groupColor) = _groupVisuals(context, groupType);
 
             return Column(
               children: [
@@ -485,21 +485,19 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
     );
   }
 
-  (IconData, Color) _groupVisuals(BudgetGroupType type) {
+  (IconData, Color) _groupVisuals(BuildContext context, BudgetGroupType type) {
+    final appColors = context.appColors;
     return switch (type) {
-      BudgetGroupType.needs => (PesaFlowIcons.home, const Color(0xFF2196F3)),
+      BudgetGroupType.needs => (PesaFlowIcons.home, appColors.needsColor),
       BudgetGroupType.wants => (
         PesaFlowIcons.shoppingBag,
-        const Color(0xFFFF9800),
+        appColors.wantsColor,
       ),
       BudgetGroupType.investments => (
         PesaFlowIcons.income,
-        const Color(0xFF4CAF50),
+        appColors.investColor,
       ),
-      BudgetGroupType.custom => (
-        PesaFlowIcons.budgets,
-        const Color(0xFF6B7280),
-      ),
+      BudgetGroupType.custom => (PesaFlowIcons.budgets, appColors.neutralColor),
     };
   }
 

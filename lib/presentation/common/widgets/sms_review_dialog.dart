@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -144,7 +145,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   color: theme.colorScheme.surfaceContainerHighest.withValues(
                     alpha: 0.3,
                   ),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                 ),
                 child: Column(
                   children: [
@@ -176,7 +177,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       ),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                       ),
                       child: Text(
                         widget.item.account!.name,
@@ -246,7 +247,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                           alpha: 0.08,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                         ),
                         leading: Container(
                           padding: const EdgeInsets.all(kSpacing6),
@@ -301,7 +302,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         ),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.error.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                           border: Border.all(
                             color: theme.colorScheme.error.withValues(
                               alpha: 0.3,
@@ -340,7 +341,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         ),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.primary,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                           boxShadow: [
                             BoxShadow(
                               color: theme.colorScheme.primary.withValues(

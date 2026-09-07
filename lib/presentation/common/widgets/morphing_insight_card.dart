@@ -216,7 +216,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                                 color: _severityColor(
                                   severity,
                                 ).withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(6),
+                                borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,

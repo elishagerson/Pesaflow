@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'tactile_spring_container.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -103,7 +104,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
+                  color: context.appColors.shadowSubtle,
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),

@@ -222,7 +222,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   boxShadow: activeTab == 0
                       ? [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.05),
+                            color: context.appColors.shadowSubtle,
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -264,7 +264,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   boxShadow: activeTab == 1
                       ? [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.05),
+                            color: context.appColors.shadowSubtle,
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -645,7 +645,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               child: Row(
                 children: groups.map((g) {
                   final type = BudgetGroupType.fromDbString(g.group.groupType);
-                  final (_, color) = _groupVisuals(type);
+                  final (_, color) = _groupVisuals(context, type);
                   final flex = (g.group.percentage * 100).round().clamp(1, 100);
                   return Expanded(
                     flex: flex,
@@ -663,7 +663,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: groups.map((g) {
               final type = BudgetGroupType.fromDbString(g.group.groupType);
-              final (_, color) = _groupVisuals(type);
+              final (_, color) = _groupVisuals(context, type);
               final pctLabel = '${(g.group.percentage * 100).round()}%';
               return Row(
                 mainAxisSize: MainAxisSize.min,
@@ -808,7 +808,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
   ) {
     final onSurface = theme.colorScheme.onSurface;
     final type = BudgetGroupType.fromDbString(g.group.groupType);
-    final (icon, color) = _groupVisuals(type);
+    final (icon, color) = _groupVisuals(context, type);
     final allocated = g.group.allocatedAmount;
     final spent = g.totalSpent;
     final isOver = spent > allocated;
@@ -1493,21 +1493,19 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
     );
   }
 
-  (IconData, Color) _groupVisuals(BudgetGroupType type) {
+  (IconData, Color) _groupVisuals(BuildContext context, BudgetGroupType type) {
+    final appColors = context.appColors;
     return switch (type) {
-      BudgetGroupType.needs => (PesaFlowIcons.home, const Color(0xFF2196F3)),
+      BudgetGroupType.needs => (PesaFlowIcons.home, appColors.needsColor),
       BudgetGroupType.wants => (
         PesaFlowIcons.shoppingBag,
-        const Color(0xFFFF9800),
+        appColors.wantsColor,
       ),
       BudgetGroupType.investments => (
         PesaFlowIcons.income,
-        const Color(0xFF4CAF50),
+        appColors.investColor,
       ),
-      BudgetGroupType.custom => (
-        PesaFlowIcons.budgets,
-        const Color(0xFF9C27B0),
-      ),
+      BudgetGroupType.custom => (PesaFlowIcons.budgets, appColors.neutralColor),
     };
   }
 

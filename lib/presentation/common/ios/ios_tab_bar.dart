@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/physics.dart';
@@ -123,7 +124,7 @@ class IosTabBar extends StatelessWidget {
                                 color: isSelected
                                     ? navFgColor.withValues(alpha: 0.15)
                                     : Colors.transparent,
-                                borderRadius: BorderRadius.circular(100),
+                                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                               ),
                               alignment: Alignment.center,
                               child: SingleChildScrollView(

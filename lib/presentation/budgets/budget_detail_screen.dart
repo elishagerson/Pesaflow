@@ -526,7 +526,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                             index: 1,
                             child: GlassCard(
                               padding: const EdgeInsets.all(kSpacing16),
-                              accentColor: const Color(0xFFE11D48),
+                              accentColor: context.appColors.dangerColor,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -537,15 +537,14 @@ class BudgetDetailScreen extends ConsumerWidget {
                                           kSpacing8,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: const Color(
-                                            0xFFE11D48,
-                                          ).withValues(alpha: 0.15),
+                                          color: context.appColors.dangerColor
+                                              .withValues(alpha: 0.15),
                                           shape: BoxShape.circle,
                                         ),
-                                        child: const Icon(
+                                        child: Icon(
                                           PesaFlowIcons.emergency,
                                           size: 18,
-                                          color: Color(0xFFE11D48),
+                                          color: context.appColors.dangerColor,
                                         ),
                                       ),
                                       const SizedBox(width: kSpacing12),
@@ -623,26 +622,25 @@ class BudgetDetailScreen extends ConsumerWidget {
                                         horizontal: kSpacing14,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: const Color(
-                                          0xFFE11D48,
-                                        ).withValues(alpha: 0.12),
+                                        color: context.appColors.dangerColor
+                                            .withValues(alpha: 0.12),
                                         borderRadius: BorderRadius.circular(
                                           AppTheme.radiusSmall,
                                         ),
                                         border: Border.all(
-                                          color: const Color(
-                                            0xFFE11D48,
-                                          ).withValues(alpha: 0.35),
+                                          color: context.appColors.dangerColor
+                                              .withValues(alpha: 0.35),
                                         ),
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          const Icon(
+                                          Icon(
                                             PesaFlowIcons.savings,
                                             size: 16,
-                                            color: Color(0xFFE11D48),
+                                            color:
+                                                context.appColors.dangerColor,
                                           ),
                                           const SizedBox(width: kSpacing8),
                                           Text(
@@ -650,7 +648,8 @@ class BudgetDetailScreen extends ConsumerWidget {
                                             style: context.ts(
                                               12,
                                               fontWeight: FontWeight.w700,
-                                              color: const Color(0xFFE11D48),
+                                              color:
+                                                  context.appColors.dangerColor,
                                             ),
                                           ),
                                         ],

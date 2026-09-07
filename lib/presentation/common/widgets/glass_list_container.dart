@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 /// Flat grouped-list container.
@@ -18,7 +19,7 @@ class GlassListContainer extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: appColors.surfaceContainer,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
         border: Border.all(color: appColors.scaffoldLine, width: 0.5),
       ),
       child: child,

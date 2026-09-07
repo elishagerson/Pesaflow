@@ -314,7 +314,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.25),
+                            color: context.appColors.shadowStrong,
                             blurRadius: 40,
                             offset: const Offset(0, 12),
                           ),

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -132,7 +133,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.15),
+              color: context.appColors.shadowMedium,
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),

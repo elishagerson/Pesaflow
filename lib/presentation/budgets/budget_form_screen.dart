@@ -363,18 +363,18 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
             margin: const EdgeInsets.symmetric(horizontal: kSpacing16),
             padding: const EdgeInsets.all(kSpacing10),
             decoration: BoxDecoration(
-              color: const Color(0xFFE11D48).withValues(alpha: 0.08),
+              color: context.appColors.dangerColor.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
               border: Border.all(
-                color: const Color(0xFFE11D48).withValues(alpha: 0.25),
+                color: context.appColors.dangerColor.withValues(alpha: 0.25),
               ),
             ),
             child: Row(
               children: [
-                const Icon(
+                Icon(
                   PesaFlowIcons.emergency,
                   size: 16,
-                  color: Color(0xFFE11D48),
+                  color: context.appColors.dangerColor,
                 ),
                 const SizedBox(width: kSpacing8),
                 Expanded(

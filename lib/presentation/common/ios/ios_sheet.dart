@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
@@ -60,7 +61,7 @@ class IosBottomSheet extends StatelessWidget {
                   height: 5,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.175),
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   ),
                 ),
                 const SizedBox(height: kSpacing10),

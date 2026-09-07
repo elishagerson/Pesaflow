@@ -114,7 +114,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
+                  color: context.appColors.shadowSubtle,
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),

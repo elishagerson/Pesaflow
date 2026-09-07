@@ -440,14 +440,14 @@ class _OverviewTab extends ConsumerWidget {
                             type: net >= 0
                                 ? AmountType.income
                                 : AmountType.expense,
-                            style: Theme.of(context).textTheme.bodyLarge!
-                                .copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: net >= 0
-                                      ? incomeColorVal
-                                      : expenseColorVal,
-                                  letterSpacing: -0.2,
-                                ),
+                            style: context.ts(
+                              16,
+                              fontWeight: FontWeight.w700,
+                              color: net >= 0
+                                  ? incomeColorVal
+                                  : expenseColorVal,
+                              letterSpacing: -0.2,
+                            ),
                           ),
                         ],
                       ),

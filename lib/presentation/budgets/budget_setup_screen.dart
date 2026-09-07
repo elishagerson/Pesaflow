@@ -535,19 +535,19 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                           _buildCustomSlider(
                             'Needs',
                             _customNeeds,
-                            const Color(0xFF2196F3),
+                            context.appColors.needsColor,
                             (v) => _adjustCustomPercentage('needs', v),
                           ),
                           _buildCustomSlider(
                             'Wants',
                             _customWants,
-                            const Color(0xFFFF9800),
+                            context.appColors.wantsColor,
                             (v) => _adjustCustomPercentage('wants', v),
                           ),
                           _buildCustomSlider(
                             'Investments',
                             _customInvestments,
-                            const Color(0xFF4CAF50),
+                            context.appColors.investColor,
                             (v) => _adjustCustomPercentage('investments', v),
                           ),
                         ],
@@ -798,7 +798,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           ...allocations.asMap().entries.map((entry) {
             final i = entry.key;
             final alloc = entry.value;
-            final (icon, color) = _groupVisuals(alloc.type);
+            final (icon, color) = _groupVisuals(context, alloc.type);
 
             return StaggeredFadeSlide(
               index: 3 + i,
@@ -897,21 +897,19 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
     );
   }
 
-  (IconData, Color) _groupVisuals(BudgetGroupType type) {
+  (IconData, Color) _groupVisuals(BuildContext context, BudgetGroupType type) {
+    final appColors = context.appColors;
     return switch (type) {
-      BudgetGroupType.needs => (PesaFlowIcons.home, const Color(0xFF2196F3)),
+      BudgetGroupType.needs => (PesaFlowIcons.home, appColors.needsColor),
       BudgetGroupType.wants => (
         PesaFlowIcons.shoppingBag,
-        const Color(0xFFFF9800),
+        appColors.wantsColor,
       ),
       BudgetGroupType.investments => (
         PesaFlowIcons.income,
-        const Color(0xFF4CAF50),
+        appColors.investColor,
       ),
-      BudgetGroupType.custom => (
-        PesaFlowIcons.budgets,
-        const Color(0xFF6B7280),
-      ),
+      BudgetGroupType.custom => (PesaFlowIcons.budgets, appColors.neutralColor),
     };
   }
 }
@@ -935,10 +933,8 @@ class _SplitPreviewBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = context.appColors;
     final onSurface = Theme.of(context).colorScheme.onSurface;
-    const needsColor = Color(0xFF2196F3);
-    const wantsColor = Color(0xFFFF9800);
-    const investColor = Color(0xFF4CAF50);
 
     return Column(
       children: [
@@ -951,15 +947,15 @@ class _SplitPreviewBar extends StatelessWidget {
               children: [
                 Flexible(
                   flex: (needsPct * 100).round(),
-                  child: Container(color: needsColor),
+                  child: Container(color: appColors.needsColor),
                 ),
                 Flexible(
                   flex: (wantsPct * 100).round(),
-                  child: Container(color: wantsColor),
+                  child: Container(color: appColors.wantsColor),
                 ),
                 Flexible(
                   flex: (investPct * 100).round(),
-                  child: Container(color: investColor),
+                  child: Container(color: appColors.investColor),
                 ),
               ],
             ),
@@ -970,9 +966,27 @@ class _SplitPreviewBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _legendItem('Needs', needsPct, needsColor, onSurface, context),
-            _legendItem('Wants', wantsPct, wantsColor, onSurface, context),
-            _legendItem('Invest', investPct, investColor, onSurface, context),
+            _legendItem(
+              'Needs',
+              needsPct,
+              appColors.needsColor,
+              onSurface,
+              context,
+            ),
+            _legendItem(
+              'Wants',
+              wantsPct,
+              appColors.wantsColor,
+              onSurface,
+              context,
+            ),
+            _legendItem(
+              'Invest',
+              investPct,
+              appColors.investColor,
+              onSurface,
+              context,
+            ),
           ],
         ),
       ],

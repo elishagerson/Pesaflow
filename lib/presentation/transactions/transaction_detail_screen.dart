@@ -534,12 +534,11 @@ class TransactionDetailScreen extends ConsumerWidget {
                             const SizedBox(width: kSpacing8),
                             Text(
                               'Edit',
-                              style: context
-                                  .ts(14, fontWeight: FontWeight.bold)
-                                  .copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: onSurface,
-                                  ),
+                              style: context.ts(
+                                14,
+                                fontWeight: FontWeight.w700,
+                                color: onSurface,
+                              ),
                             ),
                           ],
                         ),
@@ -567,12 +566,11 @@ class TransactionDetailScreen extends ConsumerWidget {
                             const SizedBox(width: kSpacing8),
                             Text(
                               'Duplicate',
-                              style: context
-                                  .ts(14, fontWeight: FontWeight.bold)
-                                  .copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: theme.colorScheme.primary,
-                                  ),
+                              style: context.ts(
+                                14,
+                                fontWeight: FontWeight.w700,
+                                color: theme.colorScheme.primary,
+                              ),
                             ),
                           ],
                         ),
@@ -599,12 +597,11 @@ class TransactionDetailScreen extends ConsumerWidget {
                             const SizedBox(width: kSpacing6),
                             Text(
                               'Delete',
-                              style: context
-                                  .ts(14, fontWeight: FontWeight.bold)
-                                  .copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: context.appColors.expenseColor,
-                                  ),
+                              style: context.ts(
+                                14,
+                                fontWeight: FontWeight.w700,
+                                color: context.appColors.expenseColor,
+                              ),
                             ),
                           ],
                         ),

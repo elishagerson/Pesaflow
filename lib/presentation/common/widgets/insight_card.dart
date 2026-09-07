@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';
@@ -25,7 +26,7 @@ class InsightCard extends StatelessWidget {
           padding: const EdgeInsets.all(kSpacing16),
           decoration: BoxDecoration(
             color: context.appColors.surfaceHigh,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,7 +37,7 @@ class InsightCard extends StatelessWidget {
                     padding: const EdgeInsets.all(kSpacing6),
                     decoration: BoxDecoration(
                       color: color.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                     ),
                     child: Icon(data.icon, size: 18, color: color),
                   ),

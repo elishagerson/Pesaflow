@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -86,7 +87,7 @@ class PremiumExtendedFab extends StatelessWidget {
           vertical: kSpacing12,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(28),
+          borderRadius: BorderRadius.circular(AppTheme.radiusButton),
           gradient: LinearGradient(
             colors: [color, color.withValues(alpha: 0.85)],
             begin: Alignment.topLeft,
