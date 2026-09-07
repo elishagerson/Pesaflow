@@ -1072,8 +1072,7 @@ class SettingsScreen extends ConsumerWidget {
                   style: context.ts(
                     34,
                     fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                    letterSpacing: -0.5,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ),

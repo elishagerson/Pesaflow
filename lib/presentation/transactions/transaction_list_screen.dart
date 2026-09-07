@@ -762,7 +762,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                   'Track your recent activity',
                                   style: context.ts(
                                     13,
-                                    color: Colors.white.withValues(alpha: 0.5),
+                                    color: theme.colorScheme.onSurfaceVariant,
                                   ),
                                 ),
                               ],
@@ -844,9 +844,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     },
                                   ),
                                 Container(
-                                  height: 40,
+                                  height: 44,
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.05),
+                                    color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                                     borderRadius: BorderRadius.circular(
                                       AppTheme.radiusHero,
                                     ),
@@ -885,8 +885,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       Container(
                                         width: 1,
                                         height: 18,
-                                        color: Colors.white.withValues(
-                                          alpha: 0.05,
+                                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                                          alpha: 0.2,
                                         ),
                                       ),
                                       TactileSpringContainer(
@@ -916,8 +916,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                             size: 17,
                                             color: _isSearchVisible
                                                 ? theme.colorScheme.primary
-                                                : Colors.white.withValues(
-                                                    alpha: 0.5,
+                                                : theme.colorScheme.onSurfaceVariant.withValues(
+                                                    alpha: 0.6,
                                                   ),
                                           ),
                                         ),
@@ -970,8 +970,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                             icon: Icon(
                                               PesaFlowIcons.clear,
                                               size: 16,
-                                              color: Colors.white.withValues(
-                                                alpha: 0.54,
+                                              color: theme.colorScheme.onSurfaceVariant.withValues(
+                                                alpha: 0.6,
                                               ),
                                             ),
                                             onPressed: () {
@@ -1035,8 +1035,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                         border: Border.all(
                                           color: isSelected
                                               ? theme.colorScheme.primary
-                                              : Colors.white.withValues(
-                                                  alpha: 0.1,
+                                              : theme.colorScheme.outlineVariant.withValues(
+                                                  alpha: 0.3,
                                                 ),
                                           width: 1.0,
                                         ),
@@ -1048,9 +1048,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                           13,
                                           color: isSelected
                                               ? theme.colorScheme.onPrimary
-                                              : Colors.white.withValues(
-                                                  alpha: 0.7,
-                                                ),
+                                              : theme.colorScheme.onSurfaceVariant,
                                           fontWeight: isSelected
                                               ? FontWeight.bold
                                               : FontWeight.w600,
