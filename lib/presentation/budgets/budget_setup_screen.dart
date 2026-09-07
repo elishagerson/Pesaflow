@@ -493,10 +493,10 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                                 ),
                               ),
                               child: isSelected
-                                  ? const Icon(
+                                  ? Icon(
                                       Icons.check,
                                       size: 14,
-                                      color: Colors.white,
+                                      color: theme.colorScheme.onPrimary,
                                     )
                                   : null,
                             ),

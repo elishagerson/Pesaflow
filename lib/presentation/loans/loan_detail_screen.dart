@@ -823,7 +823,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 label: const Text('Make a Payment'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.appColors.incomeColor,
-                  foregroundColor: Colors.white,
+                  foregroundColor: theme.colorScheme.onPrimary,
                   padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                   elevation: 0,
                 ),
@@ -881,7 +881,7 @@ class LoanDetailScreen extends ConsumerWidget {
         ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: context.appColors.expenseColor,
-            foregroundColor: Colors.white,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
           child: const Text('Delete'),

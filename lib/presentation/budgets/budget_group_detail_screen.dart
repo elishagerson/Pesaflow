@@ -439,7 +439,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                 style: context.ts(
                   13,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: context.appColors.onBgColor,
                 ),
               ),
             ),

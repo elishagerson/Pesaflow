@@ -583,7 +583,7 @@ class _SavingsGoalDetailSheetState
                                                 },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: accentColor,
-                                            foregroundColor: Colors.white,
+                                            foregroundColor: theme.colorScheme.onPrimary,
                                             disabledBackgroundColor: onSurface
                                                 .withValues(alpha: 0.05),
                                             elevation: 0,

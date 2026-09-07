@@ -87,7 +87,7 @@ class _RecurringTransactionListScreenState
                     style: context.ts(
                       34,
                       fontWeight: FontWeight.w800,
-                      color: Colors.white,
+                      color: context.appColors.onBgColor,
                       letterSpacing: -0.5,
                     ),
                   ),

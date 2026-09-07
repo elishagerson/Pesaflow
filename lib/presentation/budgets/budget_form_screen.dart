@@ -555,7 +555,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.appColors.expenseColor,
-                foregroundColor: Colors.white,
+                foregroundColor: theme.colorScheme.onPrimary,
               ),
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(true),
@@ -1065,7 +1065,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                           valueIndicatorColor: thresholdColor,
                                           valueIndicatorTextStyle: context.ts(
                                             12,
-                                            color: Colors.white,
+                                            color: context.appColors.onBgColor,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -1121,27 +1121,27 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     ),
                                   ],
                                 ),
-                                child: _isSaving
-                                    ? const SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Text(
-                                        isEditing
-                                            ? 'Update Budget'
-                                            : 'Create Budget',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                      ),
+                                        child: _isSaving
+                                            ? SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                  color: context.appColors.onBgColor,
+                                                ),
+                                              )
+                                            : Text(
+                                                isEditing
+                                                    ? 'Update Budget'
+                                                    : 'Create Budget',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium!
+                                                    .copyWith(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: context.appColors.onBgColor,
+                                                    ),
+                                              ),
                               ),
                             ),
                           ),
