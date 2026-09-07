@@ -761,8 +761,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                             .watch(budgetGroupsProvider)
                             .maybeWhen(
                               data: (groups) {
-                                if (groups.isEmpty)
+                                if (groups.isEmpty) {
                                   return const SizedBox.shrink();
+                                }
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

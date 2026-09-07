@@ -311,7 +311,7 @@ Gradient _getCategoryNeonGradient(Color baseColor) {
 }
 
 class _OverviewTab extends ConsumerWidget {
-  _OverviewTab();
+  const _OverviewTab();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -994,7 +994,7 @@ class _OverviewTab extends ConsumerWidget {
 }
 
 class _TrendsTab extends ConsumerWidget {
-  _TrendsTab();
+  const _TrendsTab();
 
   Widget _buildRangeButton(
     TrendRange range,
