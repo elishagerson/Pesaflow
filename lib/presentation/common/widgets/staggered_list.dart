@@ -1,7 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
+/// A list view with spring-physics staggered item entrance.
+///
+/// Each item fades + slides in with a 30ms stagger delay (capped at 300ms).
+/// Items animate only on first appearance — rebuilds are instant.
 class StaggeredList extends StatelessWidget {
   final int itemCount;
   final IndexedWidgetBuilder itemBuilder;
@@ -14,7 +20,7 @@ class StaggeredList extends StatelessWidget {
     super.key,
     required this.itemCount,
     required this.itemBuilder,
-    this.staggerDelay = 30,
+    this.staggerDelay = MotionTokens.staggerDelayMs,
     this.padding,
     this.physics,
     this.shrinkWrap = true,
@@ -63,29 +69,54 @@ class _StaggeredItemState extends State<_StaggeredItem>
   late Animation<double> _fade;
   late Animation<Offset> _slide;
   Timer? _timer;
+  bool _hasAnimated = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
+    _controller = AnimationController(vsync: this);
     _fade = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    ).animate(_controller);
     _slide = Tween<Offset>(
-      begin: const Offset(0, 0.25),
+      begin: Offset(0, MotionTokens.staggerSlideOffset),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    ).animate(_controller);
 
-    _timer = Timer(
-      Duration(milliseconds: (widget.index * widget.staggerDelay).round()),
-      () {
-        if (mounted) _controller.forward();
-      },
-    );
+    _startAnimation();
+  }
+
+  void _startAnimation() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (_hasAnimated) {
+        _controller.value = 1.0;
+        return;
+      }
+      final reducedMotion =
+          MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+      if (reducedMotion) {
+        _controller.value = 1.0;
+        _hasAnimated = true;
+        return;
+      }
+      // Cap total stagger delay at 300ms
+      final delay = (widget.index * widget.staggerDelay)
+          .round()
+          .clamp(0, MotionTokens.staggerMaxDelay.inMilliseconds);
+      _timer = Timer(Duration(milliseconds: delay), () {
+        if (!mounted) return;
+        _controller
+            .animateWith(SpringSimulation(
+              MotionTokens.springStiff,
+              0.0,
+              1.0,
+              0.0,
+            ))
+            .then((_) => _hasAnimated = true);
+      });
+    });
   }
 
   @override

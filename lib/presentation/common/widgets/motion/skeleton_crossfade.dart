@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 /// Crossfades between a skeleton loader and the actual content.
 ///
-/// Use in place of a hard cut between `asyncValue.when(loading: ...)` branches.
+/// Adds a subtle scale transition (0.99 → 1.0) alongside the fade
+/// for a "content materializing" effect instead of a flat crossfade.
 class SkeletonCrossfade extends StatelessWidget {
   final bool isLoading;
   final Widget skeleton;
@@ -18,13 +19,30 @@ class SkeletonCrossfade extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 350),
+      duration: const Duration(milliseconds: 280),
       switchInCurve: Curves.easeOut,
       switchOutCurve: Curves.easeIn,
       transitionBuilder: (child, animation) {
+        // Skeleton fades out flat; content fades in with subtle scale
+        final isContent = child.key != const ValueKey('skeleton');
+        if (isContent) {
+          final scaleAnimation = Tween<double>(
+            begin: 0.99,
+            end: 1.0,
+          ).animate(CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOutCubic,
+          ));
+          return FadeTransition(
+            opacity: animation,
+            child: ScaleTransition(scale: scaleAnimation, child: child),
+          );
+        }
         return FadeTransition(opacity: animation, child: child);
       },
-      child: isLoading ? skeleton : child,
+      child: isLoading
+          ? KeyedSubtree(key: const ValueKey('skeleton'), child: skeleton)
+          : KeyedSubtree(key: const ValueKey('content'), child: child),
     );
   }
 }
