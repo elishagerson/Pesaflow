@@ -60,7 +60,6 @@ class LoanListScreen extends ConsumerWidget {
                 const FloatingTopBar(
                   title: 'Loans',
                   padding: EdgeInsets.zero,
-                  forceWhite: true,
                 ),
                 const SizedBox(height: 16),
 

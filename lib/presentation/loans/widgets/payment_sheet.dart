@@ -9,7 +9,6 @@ import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
-import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 
@@ -232,36 +231,14 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
             maxChildSize: 0.9,
             minChildSize: 0.5,
             expand: false,
-            builder: (ctx, scrollController) => ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(24),
-              ),
-              child: LiquidGlassOverlay(
-                grainSeed: 0xC5D4,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface.withValues(alpha: 0.78),
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(24),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(height: kSpacing10),
-                      Container(
-                        width: 38,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color: onSurface.withValues(alpha: 0.17),
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusPill,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: kSpacing16),
-                      Expanded(
-                        child: RawScrollbar(
+            builder: (ctx, scrollController) => Container(
+              color: theme.colorScheme.surface,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const SizedBox(height: kSpacing12),
+                  Expanded(
+                    child: RawScrollbar(
                           controller: scrollController,
                           child: SingleChildScrollView(
                             controller: scrollController,
@@ -871,8 +848,6 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                     ],
                   ),
                 ),
-              ),
-            ),
           );
         },
       );

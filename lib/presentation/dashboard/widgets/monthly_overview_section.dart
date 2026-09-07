@@ -324,12 +324,12 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
   void _initAnimation() {
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(milliseconds: 800),
     );
     _glowAnimation = Tween<double>(
       begin: 4.0,
-      end: 14.0,
-    ).animate(CurvedAnimation(parent: _controller!, curve: Curves.easeInOut));
+      end: 12.0,
+    ).animate(CurvedAnimation(parent: _controller!, curve: Curves.easeOutCubic));
   }
 
   void _syncAnimation() {
@@ -337,8 +337,8 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
     if (context.isReducedMotion) {
       _controller!.stop();
       _controller!.value = 1.0;
-    } else if (!_controller!.isAnimating) {
-      _controller!.repeat(reverse: true);
+    } else if (!_controller!.isAnimating && !_controller!.isCompleted) {
+      _controller!.forward(from: 0.0);
     }
   }
 

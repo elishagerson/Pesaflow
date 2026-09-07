@@ -128,17 +128,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Container(
-                  width: 36,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.outlineVariant,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: kSpacing16),
+              const SizedBox(height: kSpacing4),
               Text(
                 'Loan Category',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -398,7 +388,6 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
           children: [
             FloatingTopBar(
               title: _existingLoan != null ? 'Edit Loan' : 'Add Loan',
-              forceWhite: true,
               padding: EdgeInsets.fromLTRB(
                 20,
                 MediaQuery.paddingOf(context).top + 8,

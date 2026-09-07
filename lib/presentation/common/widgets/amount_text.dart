@@ -53,8 +53,6 @@ class _AmountTextState extends ConsumerState<AmountText> {
     }
 
     final targetColor = resolveColor();
-    final previousColor = _currentColor ?? targetColor;
-    _currentColor = targetColor;
 
     final globalShowDecimals =
         ref.watch(currencyShowDecimalsProvider).value ?? false;
@@ -96,36 +94,39 @@ class _AmountTextState extends ConsumerState<AmountText> {
       );
     }
 
+    if (!widget.animate) {
+      _renderedAmount = widget.amountInCents;
+      return buildText(widget.amountInCents.toDouble(), targetColor);
+    }
+
+    final previousColor = _currentColor ?? targetColor;
+    _currentColor = targetColor;
+
+    final begin = _renderedAmount;
+    _renderedAmount = widget.amountInCents;
+
+    if (context.isReducedMotion) {
+      return buildText(widget.amountInCents.toDouble(), targetColor);
+    }
+
     return TweenAnimationBuilder<Color?>(
       tween: ColorTween(begin: previousColor, end: targetColor),
       duration: context.motionDuration(const Duration(milliseconds: 350)),
       builder: (context, animatedColor, _) {
         final effectiveColor = animatedColor ?? targetColor;
 
-        if (widget.animate) {
-          final begin = _renderedAmount;
-          _renderedAmount = widget.amountInCents;
-
-          if (context.isReducedMotion) {
-            return buildText(widget.amountInCents.toDouble(), effectiveColor);
-          }
-
-          return TweenAnimationBuilder<double>(
-            key: ValueKey(widget.amountInCents),
-            duration: context.motionDuration(
-              const Duration(milliseconds: 800),
-            ),
-            curve: Curves.easeOutCubic,
-            tween: Tween<double>(
-              begin: begin.toDouble(),
-              end: widget.amountInCents.toDouble(),
-            ),
-            builder: (context, val, child) => buildText(val, effectiveColor),
-          );
-        }
-
-        _renderedAmount = widget.amountInCents;
-        return buildText(widget.amountInCents.toDouble(), effectiveColor);
+        return TweenAnimationBuilder<double>(
+          key: ValueKey(widget.amountInCents),
+          duration: context.motionDuration(
+            const Duration(milliseconds: 800),
+          ),
+          curve: Curves.easeOutCubic,
+          tween: Tween<double>(
+            begin: begin.toDouble(),
+            end: widget.amountInCents.toDouble(),
+          ),
+          builder: (context, val, child) => buildText(val, effectiveColor),
+        );
       },
     );
   }

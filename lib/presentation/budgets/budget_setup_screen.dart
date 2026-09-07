@@ -138,7 +138,6 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           children: [
             const FloatingTopBar(
               title: 'Budget Setup',
-              forceWhite: true,
               padding: EdgeInsets.fromLTRB(20, 8, 20, 8),
             ),
 

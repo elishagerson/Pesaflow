@@ -381,7 +381,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
 
 enum Severity { good, warning, neutral }
 
-class PulseIcon extends StatefulWidget {
+class PulseIcon extends StatelessWidget {
   final IconData icon;
   final Color color;
   final double size;
@@ -394,58 +394,8 @@ class PulseIcon extends StatefulWidget {
   });
 
   @override
-  State<PulseIcon> createState() => _PulseIconState();
-}
-
-class _PulseIconState extends State<PulseIcon>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _pulse;
-  bool _initialized = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    );
-    _pulse = Tween<double>(
-      begin: 1.0,
-      end: 1.15,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_initialized) {
-      _initialized = true;
-      if (!context.isReducedMotion) {
-        _controller.repeat(reverse: true);
-      } else {
-        _controller.value = 0.0;
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (context.isReducedMotion) {
-      return Icon(widget.icon, size: widget.size, color: widget.color);
-    }
-    return AnimatedBuilder(
-      animation: _pulse,
-      builder: (context, child) {
-        return Transform.scale(scale: _pulse.value, child: child);
-      },
-      child: Icon(widget.icon, size: widget.size, color: widget.color),
-    );
+    return Icon(icon, size: size, color: color);
   }
 }
+

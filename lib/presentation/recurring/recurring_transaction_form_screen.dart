@@ -273,7 +273,6 @@ class _RecurringTransactionFormScreenState
           children: [
             FloatingTopBar(
               title: _isEditing ? 'Edit Recurring' : 'Add Recurring',
-              forceWhite: true,
               padding: EdgeInsets.fromLTRB(
                 20,
                 MediaQuery.paddingOf(context).top + 8,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:go_router/go_router.dart';
 
@@ -51,7 +52,7 @@ class FloatingTopBar extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
-                      Icons.arrow_back_ios_new,
+                      PesaFlowIcons.back,
                       color: effectiveColor,
                       size: 18,
                     ),

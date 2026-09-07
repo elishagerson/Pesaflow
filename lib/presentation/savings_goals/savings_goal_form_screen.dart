@@ -198,7 +198,6 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
             children: [
               FloatingTopBar(
                 title: widget.goalId != null ? 'Edit Goal' : 'New Goal',
-                forceWhite: true,
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
               ),
               Expanded(

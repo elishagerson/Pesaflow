@@ -947,7 +947,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               children: [
                 FloatingTopBar(
                   title: _isEditMode ? 'Edit Transaction' : 'New Transaction',
-                  forceWhite: true,
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                 ),
                 // TOP HALF: Display & Context

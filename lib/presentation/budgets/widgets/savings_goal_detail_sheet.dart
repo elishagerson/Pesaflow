@@ -18,7 +18,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
-import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
@@ -168,38 +167,18 @@ class _SavingsGoalDetailSheetState
           maxChildSize: 0.9,
           minChildSize: 0.4,
           expand: false,
-          builder: (context, scrollController) => ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            child: LiquidGlassOverlay(
-              grainSeed: 0xA3B2,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface.withValues(alpha: 0.60),
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(24),
-                  ),
-                ),
-                child: StatefulBuilder(
-                  builder: (context, setModalState) {
-                    return Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          const SizedBox(height: kSpacing10),
-                          Container(
-                            width: 38,
-                            height: 5,
-                            decoration: BoxDecoration(
-                              color: onSurface.withValues(alpha: 0.17),
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusPill,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: kSpacing16),
-                          Expanded(
-                            child: RawScrollbar(
+          builder: (context, scrollController) => Container(
+            color: theme.colorScheme.surface,
+            child: StatefulBuilder(
+              builder: (context, setModalState) {
+                return Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      const SizedBox(height: kSpacing12),
+                      Expanded(
+                        child: RawScrollbar(
                               controller: scrollController,
                               child: SingleChildScrollView(
                                 controller: scrollController,
@@ -668,8 +647,6 @@ class _SavingsGoalDetailSheetState
                   },
                 ),
               ),
-            ),
-          ),
         );
       },
     );
@@ -699,18 +676,7 @@ class _SavingsGoalDetailSheetState
       height: MediaQuery.sizeOf(context).height * 0.85,
       child: Column(
         children: [
-          // Top drag handle
-          Center(
-            child: Container(
-              width: 36,
-              height: 5,
-              margin: const EdgeInsets.symmetric(vertical: kSpacing12),
-              decoration: BoxDecoration(
-                color: onSurface.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(2.5),
-              ),
-            ),
-          ),
+          const SizedBox(height: kSpacing12),
 
           // Goal Header Details
           Padding(

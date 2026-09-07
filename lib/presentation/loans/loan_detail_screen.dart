@@ -45,7 +45,7 @@ class LoanDetailScreen extends ConsumerWidget {
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: Column(
               children: [
-                const FloatingTopBar(title: 'Loan Details', forceWhite: true),
+                const FloatingTopBar(title: 'Loan Details'),
                 const Expanded(
                   child: EmptyState(
                     icon: PesaFlowIcons.loans,
@@ -65,20 +65,19 @@ class LoanDetailScreen extends ConsumerWidget {
               children: [
                 FloatingTopBar(
                   title: 'Loan Details',
-                  forceWhite: true,
                   actions: [
                     TactileSpringContainer(
                       onTap: () => context.push('/loans/${loan.id}/edit'),
                       child: Container(
                         padding: const EdgeInsets.all(kSpacing10),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.1),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           PesaFlowIcons.edit,
                           size: 18,
-                          color: Colors.white,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                     ),

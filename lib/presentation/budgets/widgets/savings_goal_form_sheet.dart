@@ -8,7 +8,6 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
-import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -166,51 +165,24 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
       );
     }
 
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      child: LiquidGlassOverlay(
-        grainSeed: 0xF7A8,
-        child: Container(
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHigh.withValues(
-              alpha: 0.78,
-            ),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          padding: const EdgeInsets.only(
-            bottom: kSpacing24,
-            left: 16,
-            right: 16,
-            top: 8,
-          ),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Top drag indicator
-                  Center(
-                    child: Container(
-                      width: 38,
-                      height: 5,
-                      margin: const EdgeInsets.only(
-                        bottom: kSpacing16,
-                        top: kSpacing4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.2,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusPill,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Title Row
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+      ),
+      padding: const EdgeInsets.only(
+        bottom: kSpacing24,
+        left: 16,
+        right: 16,
+        top: 8,
+      ),
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -469,8 +441,6 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
               ),
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

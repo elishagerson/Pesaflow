@@ -101,35 +101,25 @@ class _AnimatedEmptyIllustration extends StatefulWidget {
 }
 
 class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   late AnimationController _entranceController;
-  late AnimationController _floatController;
   late Animation<double> _opacityAnim;
   late Animation<Offset> _slideAnim;
-  late Animation<double> _floatAnim;
 
   @override
   void initState() {
     super.initState();
     _entranceController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 450),
     );
     _opacityAnim =
         CurvedAnimation(parent: _entranceController, curve: Curves.easeOut);
     _slideAnim = Tween<Offset>(
-      begin: const Offset(0, 0.08),
+      begin: const Offset(0, 0.06),
       end: Offset.zero,
     ).animate(
       CurvedAnimation(parent: _entranceController, curve: Curves.easeOutCubic),
-    );
-
-    _floatController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 3000),
-    );
-    _floatAnim = Tween<double>(begin: 0.0, end: -4.0).animate(
-      CurvedAnimation(parent: _floatController, curve: Curves.easeInOut),
     );
   }
 
@@ -143,11 +133,7 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
       if (context.isReducedMotion) {
         _entranceController.value = 1.0;
       } else {
-        _entranceController.forward().then((_) {
-          if (mounted && !context.isReducedMotion) {
-            _floatController.repeat(reverse: true);
-          }
-        });
+        _entranceController.forward();
       }
     }
   }
@@ -155,7 +141,6 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
   @override
   void dispose() {
     _entranceController.dispose();
-    _floatController.dispose();
     super.dispose();
   }
 
@@ -164,20 +149,11 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
     if (context.isReducedMotion) {
       return widget.child;
     }
-    return AnimatedBuilder(
-      animation: _floatAnim,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(0, _floatAnim.value),
-          child: child,
-        );
-      },
-      child: FadeTransition(
-        opacity: _opacityAnim,
-        child: SlideTransition(
-          position: _slideAnim,
-          child: widget.child,
-        ),
+    return FadeTransition(
+      opacity: _opacityAnim,
+      child: SlideTransition(
+        position: _slideAnim,
+        child: widget.child,
       ),
     );
   }
