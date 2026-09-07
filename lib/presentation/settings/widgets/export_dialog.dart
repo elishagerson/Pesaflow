@@ -14,6 +14,7 @@ import 'package:pesaflow/domain/export/pdf_report_generator.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/ios_date_picker_sheet.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:go_router/go_router.dart';
 
@@ -63,11 +64,12 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
     final initial = isStart ? rangeStart : rangeEnd;
     final firstDate = DateTime(now.year - 10);
     final lastDate = now;
-    final picked = await showDatePicker(
-      context: context,
+    final picked = await showIosDatePicker(
+      context,
       initialDate: initial,
       firstDate: firstDate,
       lastDate: lastDate,
+      title: isStart ? 'Start Date' : 'End Date',
     );
     if (picked != null) {
       setState(() {

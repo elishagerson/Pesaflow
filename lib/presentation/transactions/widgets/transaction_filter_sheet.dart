@@ -7,6 +7,7 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
+import 'package:pesaflow/presentation/common/widgets/ios_date_picker_sheet.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -243,11 +244,12 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                             label: 'From',
                             date: dateFrom,
                             onTap: () async {
-                              final picked = await showDatePicker(
-                                context: context,
+                              final picked = await showIosDatePicker(
+                                context,
                                 initialDate: dateFrom ?? DateTime.now(),
                                 firstDate: DateTime(2020),
                                 lastDate: DateTime.now(),
+                                title: 'From Date',
                               );
                               if (picked != null) {
                                 ref
@@ -266,11 +268,12 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                             label: 'To',
                             date: dateTo,
                             onTap: () async {
-                              final picked = await showDatePicker(
-                                context: context,
+                              final picked = await showIosDatePicker(
+                                context,
                                 initialDate: dateTo ?? DateTime.now(),
                                 firstDate: DateTime(2020),
                                 lastDate: DateTime.now(),
+                                title: 'To Date',
                               );
                               if (picked != null) {
                                 ref

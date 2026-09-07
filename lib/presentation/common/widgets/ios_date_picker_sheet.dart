@@ -55,7 +55,7 @@ Future<DateTime?> showIosDatePicker(
                       ),
                       child: Text(
                         'Cancel',
-                        style: ctx.ts(16)?.copyWith(
+                        style: ctx.ts(16).copyWith(
                           color: theme.colorScheme.primary,
                         ),
                       ),
@@ -75,7 +75,7 @@ Future<DateTime?> showIosDatePicker(
                       ),
                       child: Text(
                         'Done',
-                        style: ctx.ts(16, fontWeight: FontWeight.w600)?.copyWith(
+                        style: ctx.ts(16, fontWeight: FontWeight.w600).copyWith(
                           color: theme.colorScheme.primary,
                         ),
                       ),
