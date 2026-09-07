@@ -318,40 +318,16 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           maxChildSize: 0.75,
           minChildSize: 0.3,
           expand: false,
-          builder: (context, scrollController) => ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            child: LiquidGlassOverlay(
-              grainSeed: isDestination ? 0xE7F7 : 0xE7F6,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHigh.withValues(
-                    alpha: 0.75,
+          builder: (context, scrollController) => Container(
+            color: theme.colorScheme.surface,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const SizedBox(height: kSpacing12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kSpacing20,
                   ),
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(24),
-                  ),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    const SizedBox(height: kSpacing10),
-                    Container(
-                      width: 38,
-                      height: 5,
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.17,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusPill,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: kSpacing16),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: kSpacing20,
-                      ),
                       child: Row(
                         children: [
                           Container(
@@ -552,8 +528,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   ],
                 ),
               ),
-            ),
-          ),
         );
       },
     );
