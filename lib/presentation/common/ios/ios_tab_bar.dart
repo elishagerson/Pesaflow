@@ -96,7 +96,7 @@ class IosTabBar extends StatelessWidget {
 
                 return TweenAnimationBuilder<double>(
                   tween: Tween<double>(end: targetFlex.toDouble()),
-                  duration: const Duration(milliseconds: 350),
+                  duration: context.motionDuration(MotionTokens.durationNormal),
                   curve: Curves.fastOutSlowIn,
                   builder: (context, flex, child) {
                     return Expanded(
@@ -109,11 +109,13 @@ class IosTabBar extends StatelessWidget {
                           selected: isSelected,
                           child: _ElasticTabButton(
                             onTap: () {
-                              HapticFeedback.lightImpact();
+                              HapticFeedback.selectionClick();
                               onDestinationSelected(tab.routeIndex);
                             },
                             child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 350),
+                              duration: context.motionDuration(
+                                MotionTokens.durationNormal,
+                              ),
                               curve: Curves.fastOutSlowIn,
                               height: double.infinity,
                               clipBehavior: Clip.antiAlias,
@@ -131,11 +133,23 @@ class IosTabBar extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     AnimatedSwitcher(
-                                      duration: const Duration(
-                                        milliseconds: 350,
+                                      duration: context.motionDuration(
+                                        MotionTokens.durationNormal,
                                       ),
                                       switchInCurve: Curves.easeOutCubic,
                                       switchOutCurve: Curves.easeInCubic,
+                                      transitionBuilder: (child, anim) {
+                                        return ScaleTransition(
+                                          scale: Tween<double>(
+                                            begin: 0.82,
+                                            end: 1.0,
+                                          ).animate(CurvedAnimation(
+                                            parent: anim,
+                                            curve: Curves.easeOutBack,
+                                          )),
+                                          child: child,
+                                        );
+                                      },
                                       child: Icon(
                                         isSelected ? tab.activeIcon : tab.icon,
                                         key: ValueKey(
