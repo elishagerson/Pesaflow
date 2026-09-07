@@ -26,6 +26,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/transactions/widgets/transaction_filter_sheet.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
@@ -484,7 +485,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     onTap: () => context.push(
                                       '/transactions/${trans.id}',
                                     ),
-                                    child: Column(
+                                    child: Semantics(
+                                      label: '${trans.description.isNotEmpty ? trans.description : item.category.name}, ${CurrencyFormatter.formatCents(trans.amount)} ${trans.type}',
+                                      button: true,
+                                      child: Column(
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -695,6 +699,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                             indent: 20 + 40 + 14,
                                           ),
                                       ],
+                                    ),
                                     ),
                                   ),
                                 );

@@ -476,7 +476,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             }
                                           });
                                         },
-                                        child: Container(
+                                        child: Semantics(
+                                          label: '${account.name}, ${_formatCompact(account.balance)}${isSelected ? ', selected filter' : ''}',
+                                          button: true,
+                                          selected: isSelected,
+                                          child: Container(
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: kSpacing14,
                                             vertical: kSpacing6,
@@ -581,6 +585,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 ),
                                               ),
                                             ],
+                                          ),
                                           ),
                                         ),
                                       ),
@@ -1235,7 +1240,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   onTap: () => context.push(
                                                     '/transactions/${trans.id}',
                                                   ),
-                                                  child: Column(
+                                                  child: Semantics(
+                                                    label: '${trans.description.isNotEmpty ? trans.description : item.category.name}, ${CurrencyFormatter.formatCents(trans.amount)} ${trans.type}',
+                                                    button: true,
+                                                    child: Column(
                                                     children: [
                                                       Padding(
                                                         padding:
@@ -1587,7 +1595,11 @@ class _QuickActionButton extends StatelessWidget {
     return Expanded(
       child: TactileSpringContainer(
         onTap: onTap,
-        child: Container(
+        child: Semantics(
+          label: label,
+          button: true,
+          onTap: onTap,
+          child: Container(
           padding: const EdgeInsets.symmetric(
             vertical: kSpacing12,
             horizontal: kSpacing4,
@@ -1632,6 +1644,7 @@ class _QuickActionButton extends StatelessWidget {
                 ),
               ),
             ],
+          ),
           ),
         ),
       ),
