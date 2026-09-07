@@ -471,11 +471,15 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
             systemNavigationBarContrastEnforced: false,
             systemStatusBarContrastEnforced: false,
           ),
-          child: GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
-            child: ScrollConfiguration(
-              behavior: CupertinoScrollBehavior(),
-              child: Stack(
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: MediaQuery.textScalerOf(context),
+            ),
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: ScrollConfiguration(
+                behavior: CupertinoScrollBehavior(),
+                child: Stack(
                 children: [
                   child ?? const SizedBox.shrink(),
                   _PendingReviewOverlay(),
@@ -592,6 +596,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                     OnboardingOverlay(onComplete: _onOnboardingComplete),
                 ],
               ),
+            ),
             ),
           ),
         );
