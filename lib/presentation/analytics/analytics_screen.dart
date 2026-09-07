@@ -182,17 +182,42 @@ class AnalyticsScreen extends ConsumerStatefulWidget {
 
 class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     with AutomaticKeepAliveClientMixin {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   bool get wantKeepAlive => true;
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.offset <= 0) return;
+    if (context.isReducedMotion) {
+      _scrollController.jumpTo(0);
+    } else {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
+    ref.listen(scrollToTopProvider, (_, _) => _scrollToTop());
     final theme = Theme.of(context);
     final appColors = context.appColors;
     return DefaultTabController(
       length: 3,
-      child: Scaffold(
+      child: PrimaryScrollController(
+        controller: _scrollController,
+        child: Scaffold(
         body: SafeArea(
           top: true,
           bottom: false,
@@ -714,10 +739,11 @@ class _OverviewTab extends ConsumerWidget {
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    );
-                  }
+        ],
+      ),
+    );
+  }
+}
                 },
                 loading: () => const SizedBox(
                   height: 100,

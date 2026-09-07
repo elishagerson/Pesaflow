@@ -35,8 +35,35 @@ import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/add_account_dialog.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.offset <= 0) return;
+    if (context.isReducedMotion) {
+      _scrollController.jumpTo(0);
+    } else {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
+      );
+    }
+  }
 
   static void showAccountsManager(BuildContext context, WidgetRef _) {
     final theme = Theme.of(context);
@@ -1046,7 +1073,8 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    ref.listen(scrollToTopProvider, (_, _) => _scrollToTop());
     final theme = Theme.of(context);
     final accounts = ref.watch(accountsStreamProvider).value ?? [];
     final categories = ref.watch(categoriesFutureProvider).value ?? [];
@@ -1058,6 +1086,7 @@ class SettingsScreen extends ConsumerWidget {
         top: true,
         bottom: false,
         child: SingleChildScrollView(
+          controller: _scrollController,
           key: const PageStorageKey('settings'),
           physics: const BouncingScrollPhysics(),
           padding: EdgeInsets.only(bottom: IosTabBar.navBarHeight + kSpacing32),

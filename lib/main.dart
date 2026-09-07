@@ -301,41 +301,54 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
         context: context,
         barrierDismissible: false,
         child: Builder(
-          builder: (dialogCtx) => AlertDialog(
-            title: const Text('Enable Notification Access'),
-            content: const Text(
-              'PesaFlow needs Notification Access to detect transaction SMS on Android 14+.\n\n'
-              'Tap "Open Settings" and toggle PesaFlow ON in the list.',
+          builder: (dialogCtx) => Material(
+            color: Colors.transparent,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Enable Notification Access',
+                  style: Theme.of(dialogCtx).textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'PesaFlow needs Notification Access to detect transaction SMS on Android 14+.\n\n'
+                  'Tap "Open Settings" and toggle PesaFlow ON in the list.',
+                  style: Theme.of(dialogCtx).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(dialogCtx).pop(),
+                      child: const Text('Remind later'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        await ref
+                            .read(settingsRepositoryProvider)
+                            .setSetting(
+                              'notification_access_prompt_dismissed',
+                              'true',
+                            );
+                        if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
+                      },
+                      child: const Text("Don't show again"),
+                    ),
+                    FilledButton(
+                      onPressed: () async {
+                        await _notificationChannel.invokeMethod(
+                          'openNotificationListenerSettings',
+                        );
+                        if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
+                      },
+                      child: const Text('Open Settings'),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogCtx).pop();
-                },
-                child: const Text('Remind later'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  await ref
-                      .read(settingsRepositoryProvider)
-                      .setSetting(
-                        'notification_access_prompt_dismissed',
-                        'true',
-                      );
-                  if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
-                },
-                child: const Text("Don't show again"),
-              ),
-              FilledButton(
-                onPressed: () async {
-                  await _notificationChannel.invokeMethod(
-                    'openNotificationListenerSettings',
-                  );
-                  if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
-                },
-                child: const Text('Open Settings'),
-              ),
-            ],
           ),
         ),
       );

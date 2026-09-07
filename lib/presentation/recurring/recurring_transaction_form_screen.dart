@@ -285,28 +285,29 @@ class _RecurringTransactionFormScreenState
                   ? [
                       TactileSpringContainer(
                         onTap: () async {
-                          final confirm = await showDialog<bool>(
+                          final confirm = await ModernDialog.show<bool>(
                             context: context,
-                            builder: (ctx) => AlertDialog(
-                              title: const Text('Delete Recurring Flow?'),
-                              content: const Text(
-                                'Are you sure you want to delete this recurring flow? Linked transaction history won\'t be affected.',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(ctx).pop(false),
-                                  child: const Text('Cancel'),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: theme.colorScheme.error,
-                                    foregroundColor: Colors.white,
-                                  ),
-                                  onPressed: () => Navigator.of(ctx).pop(true),
-                                  child: const Text('Delete'),
-                                ),
-                              ],
+                            title: const Text('Delete Recurring Flow?'),
+                            titleIcon: PesaFlowIcons.warning,
+                            iconColor: theme.colorScheme.error,
+                            content: const Text(
+                              'Are you sure you want to delete this recurring flow? Linked transaction history won\'t be affected.',
                             ),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context, rootNavigator: true).pop(false),
+                                child: const Text('Cancel'),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: theme.colorScheme.error,
+                                ),
+                                onPressed: () =>
+                                    Navigator.of(context, rootNavigator: true).pop(true),
+                                child: const Text('Delete'),
+                              ),
+                            ],
                           );
                           if (confirm == true && mounted) {
                             final existing = await ref

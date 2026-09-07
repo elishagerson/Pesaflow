@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,6 +48,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
   Set<String> _previousTransactionIds = {};
   bool _isFirstBuild = true;
   final Set<String> _pendingDeleteIds = {};
+  final ScrollController _scrollController = ScrollController();
 
   @override
   bool get wantKeepAlive => true;
@@ -61,7 +63,22 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
   void dispose() {
     _searchDebounce?.cancel();
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _scrollToTop() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.offset <= 0) return;
+    if (context.isReducedMotion) {
+      _scrollController.jumpTo(0);
+    } else {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
+      );
+    }
   }
 
   String _formatHeaderDate(DateTime date) {
@@ -82,6 +99,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    ref.listen(scrollToTopProvider, (_, _) => _scrollToTop());
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
 
@@ -301,6 +319,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                     ..sort((a, b) => b.compareTo(a));
 
                   return StaggeredList(
+                    controller: _scrollController,
                     key: const PageStorageKey('transaction_list'),
                     shrinkWrap: false,
                     physics: const BouncingScrollPhysics(),
@@ -396,7 +415,54 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                 ).format(trans.createdAt);
                                 final isNewRow = newIds.contains(trans.id);
 
-                                final Widget row = Dismissible(
+                                final Widget row = CupertinoContextMenu(
+                                  actions: [
+                                    CupertinoContextMenuAction(
+                                      onPressed: () {
+                                        Navigator.of(context, rootNavigator: true).pop();
+                                        context.push('/transactions/${trans.id}');
+                                      },
+                                      child: const Text('View Details'),
+                                    ),
+                                    CupertinoContextMenuAction(
+                                      onPressed: () {
+                                        Navigator.of(context, rootNavigator: true).pop();
+                                        context.push('/transactions/${trans.id}');
+                                      },
+                                      child: const Text('Edit'),
+                                    ),
+                                    CupertinoContextMenuAction(
+                                      isDestructiveAction: true,
+                                      onPressed: () async {
+                                        Navigator.of(context, rootNavigator: true).pop();
+                                        setState(() {
+                                          _pendingDeleteIds.add(trans.id);
+                                        });
+                                        UndoDelete.show(
+                                          context: context,
+                                          entityName: 'Transaction',
+                                          onUndo: () async {
+                                            setState(() {
+                                              _pendingDeleteIds.remove(trans.id);
+                                            });
+                                            await ref
+                                                .read(transactionRepositoryProvider)
+                                                .createTransaction(trans);
+                                          },
+                                          onDelete: () async {
+                                            setState(() {
+                                              _pendingDeleteIds.remove(trans.id);
+                                            });
+                                            await ref
+                                                .read(transactionRepositoryProvider)
+                                                .deleteTransaction(trans.id);
+                                          },
+                                        );
+                                      },
+                                      child: const Text('Delete'),
+                                    ),
+                                  ],
+                                  child: Dismissible(
                                   key: Key(trans.id),
                                   direction: DismissDirection.endToStart,
                                   background: Container(
@@ -718,6 +784,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                         ],
                                       ),
                                     ),
+                                  ),
                                   ),
                                 );
                                 if (isNewRow) {

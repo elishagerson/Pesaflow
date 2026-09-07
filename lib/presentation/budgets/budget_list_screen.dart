@@ -46,7 +46,7 @@ final budgetActiveTabProvider = NotifierProvider<BudgetActiveTabNotifier, int>(
   },
 );
 
-class BudgetListScreen extends ConsumerWidget {
+class BudgetListScreen extends ConsumerStatefulWidget {
   const BudgetListScreen({super.key});
 
   int _calculateDaysRemaining(DateTime targetDate) {
@@ -55,7 +55,35 @@ class BudgetListScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BudgetListScreen> createState() => _BudgetListScreenState();
+}
+
+class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.offset <= 0) return;
+    if (context.isReducedMotion) {
+      _scrollController.jumpTo(0);
+    } else {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen(scrollToTopProvider, (_, _) => _scrollToTop());
     final theme = Theme.of(context);
     final activeTab = ref.watch(budgetActiveTabProvider);
 
@@ -316,6 +344,7 @@ class BudgetListScreen extends ConsumerWidget {
         backgroundColor: theme.scaffoldBackgroundColor,
         onRefresh: onRefresh,
         child: SingleChildScrollView(
+          controller: _scrollController,
           key: const PageStorageKey('budget_list_groups'),
           physics: const BouncingScrollPhysics(),
           padding: EdgeInsets.fromLTRB(
@@ -402,6 +431,7 @@ class BudgetListScreen extends ConsumerWidget {
         backgroundColor: theme.scaffoldBackgroundColor,
         onRefresh: onRefresh,
         child: SingleChildScrollView(
+          controller: _scrollController,
           key: const PageStorageKey('budget_list_legacy'),
           physics: const BouncingScrollPhysics(),
           padding: EdgeInsets.fromLTRB(
@@ -1570,6 +1600,7 @@ class BudgetListScreen extends ConsumerWidget {
             ref.invalidate(categoriesFutureProvider);
           },
           child: SingleChildScrollView(
+            controller: _scrollController,
             key: const PageStorageKey('savings_goals_tab'),
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.fromLTRB(

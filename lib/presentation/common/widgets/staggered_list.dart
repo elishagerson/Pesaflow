@@ -16,6 +16,7 @@ class StaggeredList extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final ScrollPhysics? physics;
   final bool shrinkWrap;
+  final ScrollController? controller;
 
   const StaggeredList({
     super.key,
@@ -25,11 +26,13 @@ class StaggeredList extends StatelessWidget {
     this.padding,
     this.physics,
     this.shrinkWrap = true,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      controller: controller,
       physics:
           physics ??
           (shrinkWrap
