@@ -297,8 +297,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           )
                                           .toggle(),
                                       child: Container(
-                                        width: 40,
-                                        height: 40,
+                                        width: 44,
+                                        height: 44,
                                         decoration: BoxDecoration(
                                           color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                                           shape: BoxShape.circle,
@@ -322,8 +322,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         clipBehavior: Clip.none,
                                         children: [
                                           Container(
-                                            width: 40,
-                                            height: 40,
+                                            width: 44,
+                                            height: 44,
                                             decoration: BoxDecoration(
                                               color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                                               shape: BoxShape.circle,
@@ -368,7 +368,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   '$pendingReviewCount',
                                                   style: context.ts(
                                                     9,
-                                                    color: Colors.white,
+                                                    color: theme.colorScheme.onPrimary,
                                                     fontWeight:
                                                         FontWeight.w700,
                                                   ),
@@ -1534,8 +1534,8 @@ class _QuickActionButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 40,
-                height: 40,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
