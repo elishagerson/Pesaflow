@@ -1115,7 +1115,7 @@ class _DueItemPulseState extends State<_DueItemPulse>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+    if (context.isReducedMotion) {
       _controller.stop();
       _controller.value = 1.0;
     } else if (!_controller.isAnimating) {

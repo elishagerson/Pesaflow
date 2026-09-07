@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
 class SkeletonCard extends StatelessWidget {
@@ -122,7 +122,7 @@ class _ShimmerEffectState extends State<_ShimmerEffect>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+    if (context.isReducedMotion) {
       _controller.stop();
       _controller.value = 0.5;
     } else if (!_controller.isAnimating) {

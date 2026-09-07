@@ -58,7 +58,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (!(ModalRoute.of(context)?.isCurrent ?? false)) return;
     if (!_scrollController.hasClients) return;
     if (_scrollController.offset <= 0) return;
-    if (MediaQuery.disableAnimationsOf(context)) {
+    if (context.isReducedMotion) {
       _scrollController.jumpTo(0);
     } else {
       _scrollController.animateTo(

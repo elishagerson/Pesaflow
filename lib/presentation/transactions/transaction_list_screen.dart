@@ -1401,7 +1401,7 @@ class _NewRowHighlightState extends State<_NewRowHighlight>
     super.didChangeDependencies();
     if (!_started) {
       _started = true;
-      if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      if (context.isReducedMotion) {
         _controller.value = 1.0;
       } else {
         _controller.forward();
