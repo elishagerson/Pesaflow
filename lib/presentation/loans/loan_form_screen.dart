@@ -14,6 +14,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/ios_date_picker_sheet.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -223,13 +224,14 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
 
   Future<void> _pickDate({required bool dueDate}) async {
     final now = DateTime.now();
-    final picked = await showDatePicker(
-      context: context,
+    final picked = await showIosDatePicker(
+      context,
       initialDate: dueDate
           ? (_dueAt ?? now.add(const Duration(days: 30)))
           : _disbursedAt,
       firstDate: dueDate ? _disbursedAt : DateTime(2020),
       lastDate: dueDate ? now.add(const Duration(days: 365 * 5)) : now,
+      title: dueDate ? 'Due Date' : 'Disbursement Date',
     );
     if (picked != null) {
       setState(() {
