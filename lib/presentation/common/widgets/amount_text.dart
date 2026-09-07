@@ -33,6 +33,7 @@ class AmountText extends ConsumerStatefulWidget {
 
 class _AmountTextState extends ConsumerState<AmountText> {
   int _renderedAmount = 0;
+  Color? _currentColor;
 
   @override
   Widget build(BuildContext context) {
@@ -51,20 +52,24 @@ class _AmountTextState extends ConsumerState<AmountText> {
       }
     }
 
-    final TextStyle baseStyle =
-        widget.style ?? theme.textTheme.bodyMedium ?? const TextStyle();
-    final TextStyle customStyle = widget.useMonospace
-        ? AppTheme.getMonospaceStyle(baseStyle).copyWith(color: resolveColor())
-        : baseStyle.copyWith(
-            color: resolveColor(),
-            fontWeight: baseStyle.fontWeight ?? FontWeight.w900,
-          );
+    final targetColor = resolveColor();
+    final previousColor = _currentColor ?? targetColor;
+    _currentColor = targetColor;
 
     final globalShowDecimals =
         ref.watch(currencyShowDecimalsProvider).value ?? false;
     final finalShowDecimals = widget.showDecimals || globalShowDecimals;
 
-    Widget buildText(double val) {
+    Widget buildText(double val, Color color) {
+      final TextStyle baseStyle =
+          widget.style ?? theme.textTheme.bodyMedium ?? const TextStyle();
+      final TextStyle customStyle = widget.useMonospace
+          ? AppTheme.getMonospaceStyle(baseStyle).copyWith(color: color)
+          : baseStyle.copyWith(
+              color: color,
+              fontWeight: baseStyle.fontWeight ?? FontWeight.w900,
+            );
+
       String displayString = CurrencyFormatter.formatCents(
         val.round(),
         showDecimals: finalShowDecimals,
@@ -91,27 +96,37 @@ class _AmountTextState extends ConsumerState<AmountText> {
       );
     }
 
-    if (widget.animate) {
-      final begin = _renderedAmount;
-      _renderedAmount = widget.amountInCents;
+    return TweenAnimationBuilder<Color?>(
+      tween: ColorTween(begin: previousColor, end: targetColor),
+      duration: context.motionDuration(const Duration(milliseconds: 350)),
+      builder: (context, animatedColor, _) {
+        final effectiveColor = animatedColor ?? targetColor;
 
-      if (context.isReducedMotion) {
-        return buildText(widget.amountInCents.toDouble());
-      }
+        if (widget.animate) {
+          final begin = _renderedAmount;
+          _renderedAmount = widget.amountInCents;
 
-      return TweenAnimationBuilder<double>(
-        key: ValueKey(widget.amountInCents),
-        duration: const Duration(milliseconds: 1200),
-        curve: Curves.easeOutCubic,
-        tween: Tween<double>(
-          begin: begin.toDouble(),
-          end: widget.amountInCents.toDouble(),
-        ),
-        builder: (context, val, child) => buildText(val),
-      );
-    }
+          if (context.isReducedMotion) {
+            return buildText(widget.amountInCents.toDouble(), effectiveColor);
+          }
 
-    _renderedAmount = widget.amountInCents;
-    return buildText(widget.amountInCents.toDouble());
+          return TweenAnimationBuilder<double>(
+            key: ValueKey(widget.amountInCents),
+            duration: context.motionDuration(
+              const Duration(milliseconds: 800),
+            ),
+            curve: Curves.easeOutCubic,
+            tween: Tween<double>(
+              begin: begin.toDouble(),
+              end: widget.amountInCents.toDouble(),
+            ),
+            builder: (context, val, child) => buildText(val, effectiveColor),
+          );
+        }
+
+        _renderedAmount = widget.amountInCents;
+        return buildText(widget.amountInCents.toDouble(), effectiveColor);
+      },
+    );
   }
 }
