@@ -368,7 +368,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                             ),
                             decoration: BoxDecoration(
                               color: catColor.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                             ),
                             child: Text(
                               bp.category.name,
@@ -1223,7 +1223,7 @@ class _TimelineProgressBar extends StatelessWidget {
                       right: 0,
                       height: 20,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                         child: Stack(
                           children: [
                             Container(
@@ -1248,7 +1248,7 @@ class _TimelineProgressBar extends StatelessWidget {
                                             catColor.withValues(alpha: 0.6),
                                           ],
                                   ),
-                                  borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                                 ),
                               ),
                             ),

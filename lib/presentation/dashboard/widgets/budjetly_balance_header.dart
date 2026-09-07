@@ -130,7 +130,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
         width: double.infinity,
         decoration: BoxDecoration(
           color: cardColor,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
           boxShadow: [
             BoxShadow(
               color: context.appColors.shadowMedium,
@@ -398,7 +398,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
                 color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                 border: Border.all(
                   color: theme.colorScheme.primary.withValues(alpha: 0.25),
                   width: 1,
@@ -446,7 +446,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                     color: theme.colorScheme.surfaceContainerHighest.withValues(
                       alpha: 0.5,
                     ),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                     border: Border.all(
                       color: theme.colorScheme.outlineVariant.withValues(
                         alpha: 0.4,

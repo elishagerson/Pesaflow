@@ -332,7 +332,7 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).scaffoldBackgroundColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
           ),
           padding: const EdgeInsets.symmetric(
             horizontal: kSpacing20,
@@ -526,7 +526,7 @@ void showManageTrackerDialog(
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).scaffoldBackgroundColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
           ),
           padding: const EdgeInsets.symmetric(
             horizontal: kSpacing20,

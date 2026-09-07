@@ -37,7 +37,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
       filled: true,
       fillColor: Colors.transparent,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         borderSide: BorderSide(
           color: Theme.of(
             context,
@@ -45,7 +45,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
         ),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         borderSide: BorderSide(
           color: Theme.of(
             context,
@@ -165,7 +165,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
               ),
             ] else ...[
               InkWell(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                 onTap: () => pickDate(isStart: true, setState: setState),
                 child: InputDecorator(
                   decoration: buildDecoration(
@@ -177,7 +177,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
               ),
               const SizedBox(height: kSpacing12),
               InkWell(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                 onTap: () => pickDate(isStart: false, setState: setState),
                 child: InputDecorator(
                   decoration: buildDecoration(

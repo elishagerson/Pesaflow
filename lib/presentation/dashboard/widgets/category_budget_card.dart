@@ -67,7 +67,7 @@ class CategoryBudgetCard extends StatelessWidget {
                   height: 36,
                   decoration: BoxDecoration(
                     color: catColor.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                   ),
                   alignment: Alignment.center,
                   child: Icon(

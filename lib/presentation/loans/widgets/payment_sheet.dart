@@ -457,7 +457,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     decoration: BoxDecoration(
                                       color: context.appColors.expenseColor
                                           .withValues(alpha: 0.05),
-                                      borderRadius: BorderRadius.circular(14),
+                                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                                       border: Border.all(
                                         color: context.appColors.expenseColor
                                             .withValues(alpha: 0.2),

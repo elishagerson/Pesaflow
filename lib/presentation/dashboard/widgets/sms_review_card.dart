@@ -22,7 +22,7 @@ class ActiveParserBadge extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
         border: Border.all(
           color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
           width: 0.5,

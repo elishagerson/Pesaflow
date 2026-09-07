@@ -403,7 +403,7 @@ class _SavingsGoalDetailScreenState
                                   Container(
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
-                                      borderRadius: BorderRadius.circular(14),
+                                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                                       border: Border.all(
                                         color: onSurface.withValues(
                                           alpha: 0.07,
@@ -862,7 +862,7 @@ class _SavingsGoalDetailScreenState
                             ),
                             decoration: BoxDecoration(
                               color: goalColor.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                             ),
                             child: Text(
                               '$percentInt%',

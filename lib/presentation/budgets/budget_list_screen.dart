@@ -1543,7 +1543,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                 ),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   boxShadow: [
                     BoxShadow(
                       color: theme.colorScheme.primary.withValues(alpha: 0.3),
@@ -1940,7 +1940,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                       ),
                                       const SizedBox(height: kSpacing8),
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(6),
+                                        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                                         child: LinearProgressIndicator(
                                           value: goalPct,
                                           backgroundColor: goalColor.withValues(

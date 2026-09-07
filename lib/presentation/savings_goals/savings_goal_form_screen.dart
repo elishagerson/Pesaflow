@@ -367,7 +367,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                             : theme
                                                   .colorScheme
                                                   .surfaceContainerHigh,
-                                        borderRadius: BorderRadius.circular(14),
+                                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                                         border: Border.all(
                                           color: isSelected
                                               ? themeCol

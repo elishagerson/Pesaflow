@@ -1621,7 +1621,7 @@ class _QuickActionButton extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerLow,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
               border: Border.all(
                 color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
                 width: 1,
@@ -1642,7 +1642,7 @@ class _QuickActionButton extends StatelessWidget {
                   height: 44,
                   decoration: BoxDecoration(
                     color: color.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                   ),
                   alignment: Alignment.center,
                   child: Icon(icon, color: color, size: 20),

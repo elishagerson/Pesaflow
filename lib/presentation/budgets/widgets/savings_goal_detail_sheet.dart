@@ -370,7 +370,7 @@ class _SavingsGoalDetailSheetState
                                 Container(
                                   decoration: BoxDecoration(
                                     color: theme.colorScheme.surface,
-                                    borderRadius: BorderRadius.circular(14),
+                                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                                     border: Border.all(
                                       color: onSurface.withValues(alpha: 0.07),
                                     ),

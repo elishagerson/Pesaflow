@@ -940,7 +940,7 @@ class _SplitPreviewBar extends StatelessWidget {
       children: [
         // Bar
         ClipRRect(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
           child: SizedBox(
             height: 12,
             child: Row(

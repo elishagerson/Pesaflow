@@ -1037,7 +1037,7 @@ class _RecurringTransactionListScreenState
           ),
           decoration: BoxDecoration(
             color: theme.colorScheme.primary.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

@@ -356,7 +356,7 @@ class LoanListScreen extends ConsumerWidget {
           ),
           const SizedBox(height: kSpacing10),
           ClipRRect(
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
             child: SizedBox(
               height: 6,
               child: FractionallySizedBox(
@@ -365,7 +365,7 @@ class LoanListScreen extends ConsumerWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: severityColor,
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                   ),
                 ),
               ),
@@ -448,7 +448,7 @@ class LoanListScreen extends ConsumerWidget {
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.primary
                                           .withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(6),
+                                      borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                                     ),
                                     child: Text(
                                       loan.category!,
@@ -591,7 +591,7 @@ class LoanListScreen extends ConsumerWidget {
                                 decoration: BoxDecoration(
                                   color: context.appColors.incomeColor
                                       .withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(6),
+                                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                                 ),
                                 child: Text(
                                   loan.category!,
