@@ -104,7 +104,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     style: context.ts(
                       34,
                       fontWeight: FontWeight.w800,
-                      color: Colors.white,
+                      color: context.appColors.onBgColor,
                       letterSpacing: -0.5,
                     ),
                   ),
@@ -119,12 +119,12 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.1),
+                              color: context.appColors.onBgColor.withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
+                            child: Icon(
                               PesaFlowIcons.settings,
-                              color: Colors.white,
+                              color: context.appColors.onBgColor,
                               size: 20,
                             ),
                           ),
@@ -148,12 +148,12 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.1),
+                            color: context.appColors.onBgColor.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
+                          child: Icon(
                             PesaFlowIcons.add,
-                            color: Colors.white,
+                            color: context.appColors.onBgColor,
                             size: 22,
                           ),
                         ),
