@@ -1012,7 +1012,7 @@ class _SavingsGoalDetailScreenState
                                   decoration: BoxDecoration(
                                     color: context.appColors.incomeColor
                                         .withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(14),
+                                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                                   ),
                                   alignment: Alignment.center,
                                   child: Row(
@@ -1048,7 +1048,7 @@ class _SavingsGoalDetailScreenState
                                   decoration: BoxDecoration(
                                     color: context.appColors.expenseColor
                                         .withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(14),
+                                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                                   ),
                                   alignment: Alignment.center,
                                   child: Row(

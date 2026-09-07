@@ -1254,7 +1254,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
               ),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(23),
+              borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(

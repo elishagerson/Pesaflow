@@ -236,7 +236,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                       ),
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                                   boxShadow: [
                                     BoxShadow(
                                       color: theme.colorScheme.primary
@@ -268,7 +268,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                     color: theme.colorScheme.outline,
                                     width: 1.5,
                                   ),
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                                 ),
                                 child: Text(
                                   'Start Fresh',
@@ -308,7 +308,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                       ),
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                                   boxShadow: [
                                     BoxShadow(
                                       color: theme.colorScheme.primary
@@ -483,7 +483,7 @@ class _SmsPermissionPage extends StatelessWidget {
                 color: theme.brightness == Brightness.dark
                     ? AppTheme.surfaceContainerDark
                     : AppTheme.surfaceLight,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                 border: Border.all(
                   color: theme.colorScheme.outlineVariant.withValues(
                     alpha: 0.3,

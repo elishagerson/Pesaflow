@@ -301,7 +301,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 )
                               : theme.colorScheme.surfaceContainerHighest
                                     .withValues(alpha: 0.3),
-                          borderRadius: BorderRadius.circular(kSpacing8),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -1238,7 +1238,7 @@ class _RawSmsPreviewState extends State<_RawSmsPreview> {
           color: theme.colorScheme.surfaceContainerHighest.withValues(
             alpha: 0.2,
           ),
-          borderRadius: BorderRadius.circular(kSpacing6),
+          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1317,7 +1317,7 @@ class _ActionPill extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(kSpacing6),
+          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -1703,7 +1703,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                             ),
                             decoration: BoxDecoration(
                               color: context.appColors.incomeColor,
-                              borderRadius: BorderRadius.circular(kSpacing12),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                               boxShadow: [
                                 BoxShadow(
                                   color: context.appColors.incomeColor
@@ -1757,7 +1757,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                             ),
                             decoration: BoxDecoration(
                               color: context.appColors.expenseColor,
-                              borderRadius: BorderRadius.circular(kSpacing12),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                               boxShadow: [
                                 BoxShadow(
                                   color: context.appColors.expenseColor

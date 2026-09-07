@@ -300,7 +300,7 @@ class LoanDetailScreen extends ConsumerWidget {
               if (isActive) ...[
                 const SizedBox(height: kSpacing16),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(kSpacing6),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                   child: LinearProgressIndicator(
                     value: ratio.clamp(0.0, 1.0),
                     backgroundColor: statusColor.withValues(alpha: 0.12),
@@ -649,7 +649,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                 alpha: 0.12,
                               )
                             : AppTheme.tertiaryLight.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(kSpacing8),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                       ),
                       child: Text(
                         isPaid ? 'Paid' : 'Pending',
