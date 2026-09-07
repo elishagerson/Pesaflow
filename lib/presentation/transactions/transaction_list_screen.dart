@@ -755,7 +755,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       ?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         letterSpacing: -0.5,
-                                        color: Colors.white,
+                                        color: theme.colorScheme.onSurface,
                                       ),
                                 ),
                                 Text(
