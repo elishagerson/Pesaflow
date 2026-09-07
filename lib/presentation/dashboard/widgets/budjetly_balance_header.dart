@@ -265,9 +265,10 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
           },
           icon: Icon(
             _isHidden
-                ? Icons.visibility_off_outlined
-                : Icons.visibility_outlined,
+                ? PesaFlowIcons.visibilityOff
+                : PesaFlowIcons.visibility,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            size: 20,
           ),
         ),
       ],
@@ -294,12 +295,30 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Total In',
-                  style: context.ts(
-                    13,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        color: context.appColors.incomeColor.withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        PesaFlowIcons.arrowDown,
+                        size: 10,
+                        color: context.appColors.incomeColor,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      'Total In',
+                      style: context.ts(
+                        13,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -315,12 +334,30 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  'Total Out',
-                  style: context.ts(
-                    13,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        PesaFlowIcons.arrowUp,
+                        size: 10,
+                        color: context.appColors.expenseColor,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      'Total Out',
+                      style: context.ts(
+                        13,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -351,19 +388,23 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: Colors.blueAccent.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.25),
+                  width: 1,
+                ),
               ),
               alignment: Alignment.center,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
+                  Icon(
                     PesaFlowIcons.add,
-                    color: Colors.blueAccent,
+                    color: theme.colorScheme.primary,
                     size: 18,
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 8),
                   Flexible(
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
@@ -372,7 +413,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                         style: context.ts(
                           14,
                           fontWeight: FontWeight.w700,
-                          color: Colors.blueAccent,
+                          color: theme.colorScheme.primary,
                         ),
                       ),
                     ),
@@ -382,7 +423,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
             ),
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 12),
         Expanded(
           child: Consumer(
             builder: (context, ref, _) {
@@ -393,19 +434,23 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                      width: 1,
+                    ),
                   ),
                   alignment: Alignment.center,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.account_balance_wallet_outlined,
+                        PesaFlowIcons.wallet,
                         color: theme.colorScheme.onSurface,
                         size: 18,
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 8),
                       Flexible(
                         child: FittedBox(
                           fit: BoxFit.scaleDown,

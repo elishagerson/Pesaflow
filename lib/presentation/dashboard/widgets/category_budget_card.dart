@@ -33,6 +33,8 @@ class CategoryBudgetCard extends StatelessWidget {
         ? appColors.expenseColor
         : (pct > 0.85 ? appColors.warningColor : theme.colorScheme.primary);
 
+    final catColor = hexToColor(budgetProgress.category.color);
+
     return TactileSpringContainer(
       onTap: onTap,
       child: Container(
@@ -41,6 +43,17 @@ class CategoryBudgetCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+          border: Border.all(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,10 +62,19 @@ class CategoryBudgetCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  getCategoryIcon(budgetProgress.category.icon),
-                  color: hexToColor(budgetProgress.category.color),
-                  size: 28,
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: catColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    getCategoryIcon(budgetProgress.category.icon),
+                    color: catColor,
+                    size: 18,
+                  ),
                 ),
                 Text(
                   '${(pct * 100).toInt()}%',
