@@ -1370,7 +1370,7 @@ class _ConfidenceRingState extends State<ConfidenceRing>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+    if (context.isReducedMotion) {
       _pulseController.stop();
       _pulseController.value = 1.0;
     } else if (!_pulseController.isAnimating) {
@@ -1574,6 +1574,10 @@ class _SwipeableCardState extends State<SwipeableCard>
   }
 
   void _flyOut(Offset target, VoidCallback onDone) {
+    if (context.isReducedMotion) {
+      onDone();
+      return;
+    }
     final sim = SpringSimulation(
       _swipeSpring,
       0.0,
@@ -1593,6 +1597,18 @@ class _SwipeableCardState extends State<SwipeableCard>
   }
 
   void _snapBack() {
+    if (context.isReducedMotion) {
+      _controller.value = 0.0;
+      _position = Tween<Offset>(
+        begin: Offset.zero,
+        end: Offset.zero,
+      ).animate(_controller);
+      _rotation = Tween<double>(begin: 0.0, end: 0.0).animate(_controller);
+      _scale = Tween<double>(begin: 1.0, end: 1.0).animate(_controller);
+      _hapticTriggered = false;
+      setState(() {});
+      return;
+    }
     final startPos = _position.value;
     final startRot = _rotation.value;
 

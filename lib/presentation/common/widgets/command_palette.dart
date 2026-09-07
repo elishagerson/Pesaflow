@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -159,6 +160,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
   int _selectedIndex = 0;
   List<_PaletteAction> _cachedDataResults = [];
   Timer? _debounceTimer;
+  bool _animInitialized = false;
 
   @override
   void initState() {
@@ -175,7 +177,6 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
       begin: const Offset(0, -0.05),
       end: Offset.zero,
     ).animate(_fadeAnimation);
-    _animController.forward();
     _focusNode.onKeyEvent = (node, event) {
       if (event is KeyDownEvent) {
         final query = ref.read(paletteQueryProvider);
@@ -203,6 +204,19 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
       return KeyEventResult.ignored;
     };
     _focusNode.requestFocus();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_animInitialized) {
+      _animInitialized = true;
+      if (context.isReducedMotion) {
+        _animController.value = 1.0;
+      } else {
+        _animController.forward();
+      }
+    }
   }
 
   @override

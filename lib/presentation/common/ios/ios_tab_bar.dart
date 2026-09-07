@@ -376,7 +376,7 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
   }
 
   void _pressDown() {
-    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+    if (context.isReducedMotion) {
       _controller.value = 1.0;
       return;
     }
@@ -388,7 +388,7 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
   }
 
   void _release() {
-    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+    if (context.isReducedMotion) {
       _controller.value = 0.0;
       return;
     }

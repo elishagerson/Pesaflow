@@ -52,9 +52,23 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-    Future.delayed(Duration(milliseconds: widget.index * 80), () {
-      if (mounted) _counterController.forward();
-    });
+  }
+
+  bool _counterStarted = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_counterStarted) {
+      _counterStarted = true;
+      if (context.isReducedMotion) {
+        _counterController.value = 1.0;
+      } else {
+        Future.delayed(Duration(milliseconds: widget.index * 80), () {
+          if (mounted) _counterController.forward();
+        });
+      }
+    }
   }
 
   @override
@@ -62,10 +76,14 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
     super.didUpdateWidget(oldWidget);
     if (widget.expanded != null && widget.expanded != oldWidget.expanded) {
       _expanded = widget.expanded!;
-      if (_expanded) {
-        _expandController.forward();
+      if (context.isReducedMotion) {
+        _expandController.value = _expanded ? 1.0 : 0.0;
       } else {
-        _expandController.reverse();
+        if (_expanded) {
+          _expandController.forward();
+        } else {
+          _expandController.reverse();
+        }
       }
     }
   }
@@ -100,10 +118,14 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
           widget.onTap!();
         } else {
           setState(() => _expanded = !_expanded);
-          if (_expanded) {
-            _expandController.forward();
+          if (context.isReducedMotion) {
+            _expandController.value = _expanded ? 1.0 : 0.0;
           } else {
-            _expandController.reverse();
+            if (_expanded) {
+              _expandController.forward();
+            } else {
+              _expandController.reverse();
+            }
           }
         }
       },

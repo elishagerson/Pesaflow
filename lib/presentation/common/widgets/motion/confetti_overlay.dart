@@ -25,7 +25,7 @@ class ConfettiOverlay extends StatefulWidget {
 
 class _ConfettiOverlayState extends State<ConfettiOverlay>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+  AnimationController? _controller;
   final List<_ConfettiParticle> _particles = [];
   final Random _rand = Random();
 
@@ -45,21 +45,28 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
   void initState() {
     super.initState();
     if (widget.show) {
-      _startConfetti();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && widget.show) {
+          _startConfetti();
+        }
+      });
     }
   }
 
   void _startConfetti() {
     if (context.isReducedMotion) return;
-    _controller = AnimationController(vsync: this, duration: widget.duration)
-      ..addListener(_updateParticles)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          setState(() => _particles.clear());
-        }
-      });
+    _controller?.dispose();
+    final controller =
+        AnimationController(vsync: this, duration: widget.duration)
+          ..addListener(_updateParticles)
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              setState(() => _particles.clear());
+            }
+          });
+    _controller = controller;
     _spawnParticles(widget.particleCount);
-    _controller.forward();
+    controller.forward();
   }
 
   @override
@@ -90,11 +97,11 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
   }
 
   void _updateParticles() {
-    if (!mounted) return;
+    if (!mounted || _controller == null) return;
     setState(() {
       for (final p in _particles) {
         p.y += p.vy;
-        p.x += p.vx + sin(_controller.value * 2 * pi + p.size) * 0.5;
+        p.x += p.vx + sin(_controller!.value * 2 * pi + p.size) * 0.5;
         p.rotation += p.rotationSpeed;
         if (p.y > 800) {
           p.y = -20;
@@ -107,7 +114,7 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 

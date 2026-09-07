@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 @Deprecated('Use TactileSpringContainer instead')
 class PressScale extends StatefulWidget {
@@ -43,11 +44,19 @@ class _PressScaleState extends State<PressScale>
 
   void _pressDown() {
     if (widget.onTap == null) return;
+    if (context.isReducedMotion) {
+      _controller.value = 1.0;
+      return;
+    }
     _controller.forward();
   }
 
   void _springBack() {
     if (widget.onTap == null) return;
+    if (context.isReducedMotion) {
+      _controller.value = 0.0;
+      return;
+    }
     _controller.reverse();
   }
 

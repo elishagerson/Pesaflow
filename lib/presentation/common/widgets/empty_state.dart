@@ -108,7 +108,21 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
       begin: const Offset(0, 0.08),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
-    _controller.forward();
+  }
+
+  bool _initialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _initialized = true;
+      if (context.isReducedMotion) {
+        _controller.value = 1.0;
+      } else {
+        _controller.forward();
+      }
+    }
   }
 
   @override

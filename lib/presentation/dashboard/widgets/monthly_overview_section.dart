@@ -334,7 +334,7 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
 
   void _syncAnimation() {
     if (_controller == null) return;
-    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+    if (context.isReducedMotion) {
       _controller!.stop();
       _controller!.value = 1.0;
     } else if (!_controller!.isAnimating) {
