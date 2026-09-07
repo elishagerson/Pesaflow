@@ -21,6 +21,16 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
   final Color sectionHeader;
   final Color accentSubtle;
   final Color warningColor;
+  // Shadow tokens — dark-mode-aware
+  final Color shadowSubtle;
+  final Color shadowMedium;
+  final Color shadowStrong;
+  // Budget group semantic colors
+  final Color needsColor;
+  final Color wantsColor;
+  final Color investColor;
+  final Color dangerColor;
+  final Color neutralColor;
 
   const AppColorsTheme({
     required this.incomeColor,
@@ -40,6 +50,14 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     required this.sectionHeader,
     required this.accentSubtle,
     required this.warningColor,
+    required this.shadowSubtle,
+    required this.shadowMedium,
+    required this.shadowStrong,
+    required this.needsColor,
+    required this.wantsColor,
+    required this.investColor,
+    required this.dangerColor,
+    required this.neutralColor,
   });
 
   factory AppColorsTheme.light() => const AppColorsTheme(
@@ -60,6 +78,14 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     sectionHeader: Color(0xFF475569), // Slate-600
     accentSubtle: Color(0xFFEFF6FF), // Blue-50
     warningColor: Color(0xFFF59E0B), // Amber-500
+    shadowSubtle: Color(0x0A000000),
+    shadowMedium: Color(0x14000000),
+    shadowStrong: Color(0x24000000),
+    needsColor: Color(0xFF2196F3), // Blue
+    wantsColor: Color(0xFFFF9800), // Orange
+    investColor: Color(0xFF4CAF50), // Green
+    dangerColor: Color(0xFFE11D48), // Rose-600
+    neutralColor: Color(0xFF6B7280), // Gray-500
   );
 
   factory AppColorsTheme.dark() => const AppColorsTheme(
@@ -80,6 +106,14 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     sectionHeader: Color(0xFF8E8E93), // System gray
     accentSubtle: Color(0xFF2C2C2E), // Subtle gray
     warningColor: Color(0xFFFBBF24), // Amber-400
+    shadowSubtle: Color(0x0AFFFFFF),
+    shadowMedium: Color(0x14FFFFFF),
+    shadowStrong: Color(0x24FFFFFF),
+    needsColor: Color(0xFF60A5FA), // Blue-400
+    wantsColor: Color(0xFFFBBF24), // Amber-400
+    investColor: Color(0xFF4ADE80), // Green-400
+    dangerColor: Color(0xFFF87171), // Rose-400
+    neutralColor: Color(0xFF9CA3AF), // Gray-400
   );
 
   @override
@@ -101,6 +135,14 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     Color? sectionHeader,
     Color? accentSubtle,
     Color? warningColor,
+    Color? shadowSubtle,
+    Color? shadowMedium,
+    Color? shadowStrong,
+    Color? needsColor,
+    Color? wantsColor,
+    Color? investColor,
+    Color? dangerColor,
+    Color? neutralColor,
   }) {
     return AppColorsTheme(
       incomeColor: incomeColor ?? this.incomeColor,
@@ -121,6 +163,14 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       sectionHeader: sectionHeader ?? this.sectionHeader,
       accentSubtle: accentSubtle ?? this.accentSubtle,
       warningColor: warningColor ?? this.warningColor,
+      shadowSubtle: shadowSubtle ?? this.shadowSubtle,
+      shadowMedium: shadowMedium ?? this.shadowMedium,
+      shadowStrong: shadowStrong ?? this.shadowStrong,
+      needsColor: needsColor ?? this.needsColor,
+      wantsColor: wantsColor ?? this.wantsColor,
+      investColor: investColor ?? this.investColor,
+      dangerColor: dangerColor ?? this.dangerColor,
+      neutralColor: neutralColor ?? this.neutralColor,
     );
   }
 
