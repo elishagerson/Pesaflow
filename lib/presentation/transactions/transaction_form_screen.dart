@@ -941,9 +941,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withValues(
-                                            alpha: 0.08,
-                                          ),
+                                          color: context.appColors.shadowMedium,
                                           blurRadius: 4,
                                           offset: const Offset(0, 1),
                                         ),
