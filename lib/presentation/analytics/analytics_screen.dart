@@ -215,9 +215,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     final appColors = context.appColors;
     return DefaultTabController(
       length: 3,
-      child: PrimaryScrollController(
-        controller: _scrollController,
-        child: Scaffold(
+      child: Scaffold(
         body: SafeArea(
           top: true,
           bottom: false,
@@ -298,7 +296,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             ],
           ),
         ),
-      ),
     );
   }
 }
