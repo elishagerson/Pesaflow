@@ -3,6 +3,7 @@ import 'package:flutter/physics.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/motion_aware.dart';
 
 /// A spring-physics button with configurable spring parameters.
 ///
@@ -34,7 +35,7 @@ class SpringButton extends StatefulWidget {
 }
 
 class _SpringButtonState extends State<SpringButton>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, MotionAwareMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _opacityAnimation;
@@ -61,30 +62,21 @@ class _SpringButtonState extends State<SpringButton>
 
   void _pressDown() {
     if (widget.onTap == null) return;
-    if (context.isReducedMotion) {
-      _controller.value = 1.0;
-      return;
-    }
-    _controller.animateTo(
+    tweenAnimate(
+      _controller,
       1.0,
       duration: widget.pressDuration,
-      curve: Curves.easeOutCubic,
     );
   }
 
   void _springBack() {
     if (widget.onTap == null) return;
-    if (context.isReducedMotion) {
-      _controller.value = 0.0;
-      return;
-    }
-    final simulation = SpringSimulation(
+    springAnimate(
+      _controller,
       widget.spring,
       _controller.value,
       0.0,
-      0.0,
     );
-    _controller.animateWith(simulation);
   }
 
   @override

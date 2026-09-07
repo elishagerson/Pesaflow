@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 /// Named material thicknesses, mirroring visionOS/iOS glass materials.
 enum GlassMaterial {
@@ -91,8 +92,7 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
     if (_entranceStarted) return;
     _entranceStarted = true;
 
-    final reducedMotion =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final reducedMotion = context.isReducedMotion;
     if (reducedMotion) {
       _entrance.value = 1.0;
     } else {
@@ -113,8 +113,7 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final reducedMotion =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final reducedMotion = context.isReducedMotion;
 
     // Material presets (visionOS .thin/.regular/.thick analogues).
     final (presetBlur, tintDark, tintLight) = switch (widget.material) {

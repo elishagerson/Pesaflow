@@ -3,6 +3,7 @@ import 'package:flutter/physics.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/motion_aware.dart';
 
 /// A press-interactive container with physics-based spring scale + opacity dim.
 ///
@@ -33,7 +34,7 @@ class TactileSpringContainer extends StatefulWidget {
 }
 
 class _TactileSpringContainerState extends State<TactileSpringContainer>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, MotionAwareMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _opacityAnimation;
@@ -60,30 +61,21 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
 
   void _pressDown() {
     if (widget.onTap == null) return;
-    if (context.isReducedMotion) {
-      _controller.value = 1.0;
-      return;
-    }
-    _controller.animateTo(
+    tweenAnimate(
+      _controller,
       1.0,
       duration: MotionTokens.durationFast,
-      curve: Curves.easeOutCubic,
     );
   }
 
   void _springBack() {
     if (widget.onTap == null) return;
-    if (context.isReducedMotion) {
-      _controller.value = 0.0;
-      return;
-    }
-    final simulation = SpringSimulation(
+    springAnimate(
+      _controller,
       MotionTokens.springSnappy,
       _controller.value,
       0.0,
-      0.0,
     );
-    _controller.animateWith(simulation);
   }
 
   @override

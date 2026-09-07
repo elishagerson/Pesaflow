@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 /// A list view with spring-physics staggered item entrance.
 ///
@@ -94,9 +95,7 @@ class _StaggeredItemState extends State<_StaggeredItem>
         _controller.value = 1.0;
         return;
       }
-      final reducedMotion =
-          MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-      if (reducedMotion) {
+      if (context.isReducedMotion) {
         _controller.value = 1.0;
         _hasAnimated = true;
         return;
