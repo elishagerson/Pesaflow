@@ -38,6 +38,8 @@ extension PesaFlowContext on BuildContext {
     FontStyle? fontStyle,
   }) {
     final t = Theme.of(this).textTheme;
+    final textScaler = MediaQuery.textScalerOf(this);
+    final scaledSize = textScaler.scale(size);
     final base = switch (size) {
       10 =>
         Theme.of(this).extension<AppTypographyTheme>()?.labelMicro ??
@@ -59,7 +61,7 @@ extension PesaFlowContext on BuildContext {
       _ => t.bodyMedium!,
     };
     return base.copyWith(
-      fontSize: size,
+      fontSize: scaledSize,
       color: color,
       fontWeight: fontWeight,
       letterSpacing: letterSpacing,
