@@ -73,7 +73,6 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
     }
   }
 
-  @override
   void _animateExpand(bool expand) {
     if (context.isReducedMotion) {
       _expandController.value = expand ? 1.0 : 0.0;
@@ -243,8 +242,10 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                         ),
                         const SizedBox(height: kSpacing8),
                         AnimatedSize(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
+                          duration: context.motionDuration(
+                            MotionTokens.durationNormal,
+                          ),
+                          curve: Curves.easeOutCubic,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

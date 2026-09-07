@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 class EmptyState extends StatelessWidget {
@@ -47,31 +48,40 @@ class EmptyState extends StatelessWidget {
                   ),
             ),
             SizedBox(height: context.isCompactView ? 16 : 24),
-            Semantics(
-              header: true,
-              child: Text(
-                title,
-                style: context.ts(
-                  16,
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            StaggeredFadeSlide(
+              index: 1,
+              child: Semantics(
+                header: true,
+                child: Text(
+                  title,
+                  style: context.ts(
+                    16,
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                  ),
                 ),
               ),
             ),
             if (subtitle != null) ...[
               SizedBox(height: context.isCompactView ? 8 : 12),
-              Text(
-                subtitle!,
-                style: context.ts(
-                  13,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              StaggeredFadeSlide(
+                index: 2,
+                child: Text(
+                  subtitle!,
+                  style: context.ts(
+                    13,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
             ],
             if (action != null) ...[
               SizedBox(height: context.isCompactView ? 20 : 28),
-              action!,
+              StaggeredFadeSlide(
+                index: 3,
+                child: action!,
+              ),
             ],
           ],
         ),
@@ -91,23 +101,36 @@ class _AnimatedEmptyIllustration extends StatefulWidget {
 }
 
 class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+    with TickerProviderStateMixin {
+  late AnimationController _entranceController;
+  late AnimationController _floatController;
   late Animation<double> _opacityAnim;
   late Animation<Offset> _slideAnim;
+  late Animation<double> _floatAnim;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
+    _entranceController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    _opacityAnim = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _opacityAnim =
+        CurvedAnimation(parent: _entranceController, curve: Curves.easeOut);
     _slideAnim = Tween<Offset>(
       begin: const Offset(0, 0.08),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    ).animate(
+      CurvedAnimation(parent: _entranceController, curve: Curves.easeOutCubic),
+    );
+
+    _floatController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 3000),
+    );
+    _floatAnim = Tween<double>(begin: 0.0, end: -4.0).animate(
+      CurvedAnimation(parent: _floatController, curve: Curves.easeInOut),
+    );
   }
 
   bool _initialized = false;
@@ -118,16 +141,21 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
     if (!_initialized) {
       _initialized = true;
       if (context.isReducedMotion) {
-        _controller.value = 1.0;
+        _entranceController.value = 1.0;
       } else {
-        _controller.forward();
+        _entranceController.forward().then((_) {
+          if (mounted && !context.isReducedMotion) {
+            _floatController.repeat(reverse: true);
+          }
+        });
       }
     }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _entranceController.dispose();
+    _floatController.dispose();
     super.dispose();
   }
 
@@ -136,9 +164,21 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
     if (context.isReducedMotion) {
       return widget.child;
     }
-    return FadeTransition(
-      opacity: _opacityAnim,
-      child: SlideTransition(position: _slideAnim, child: widget.child),
+    return AnimatedBuilder(
+      animation: _floatAnim,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, _floatAnim.value),
+          child: child,
+        );
+      },
+      child: FadeTransition(
+        opacity: _opacityAnim,
+        child: SlideTransition(
+          position: _slideAnim,
+          child: widget.child,
+        ),
+      ),
     );
   }
 }
