@@ -22,6 +22,11 @@ extension PesaFlowContext on BuildContext {
   bool get isReducedMotion =>
       MediaQuery.maybeOf(this)?.disableAnimations ?? false;
 
+  /// Returns [duration] if motion is allowed, [Duration.zero] otherwise.
+  /// Useful for `AnimatedContainer`, `AnimatedSwitcher`, etc.
+  Duration motionDuration(Duration duration) =>
+      isReducedMotion ? Duration.zero : duration;
+
   TextStyle ts(
     double size, {
     TextStyle? from,
