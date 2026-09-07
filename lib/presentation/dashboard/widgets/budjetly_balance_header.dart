@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -33,21 +34,33 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
   late Animation<double> _animation;
   bool _isFront = true;
   bool _isHidden = false;
+  bool _firedMidFlipHaptic = false;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: MotionTokens.durationSheet,
     );
     _animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutBack),
     );
+    // Mid-flip haptic: fire when crossing 90° threshold
+    _animation.addListener(_checkMidFlipHaptic);
+  }
+
+  void _checkMidFlipHaptic() {
+    final angle = _animation.value * pi;
+    if (!_firedMidFlipHaptic && angle >= pi / 2) {
+      _firedMidFlipHaptic = true;
+      HapticFeedback.lightImpact();
+    }
   }
 
   @override
   void dispose() {
+    _animation.removeListener(_checkMidFlipHaptic);
     _controller.dispose();
     super.dispose();
   }
@@ -55,7 +68,8 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
   void _toggleFlip() {
     HapticFeedback.lightImpact();
     _isFront = !_isFront;
-    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+    _firedMidFlipHaptic = false;
+    if (context.isReducedMotion) {
       _controller.value = _isFront ? 0.0 : 1.0;
       return;
     }
@@ -200,23 +214,43 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 children: [
-                  Expanded(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        _isHidden
-                            ? '••••••'
-                            : CurrencyFormatter.formatCents(widget.balance),
-                        style: context.ts(
-                          40,
-                          fontWeight: FontWeight.w900,
-                          color: theme.colorScheme.onSurface,
-                          letterSpacing: -1.0,
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: context.isReducedMotion || _isHidden
+                      ? Text(
+                          _isHidden
+                              ? '••••••'
+                              : CurrencyFormatter.formatCents(widget.balance),
+                          style: context.ts(
+                            40,
+                            fontWeight: FontWeight.w900,
+                            color: theme.colorScheme.onSurface,
+                            letterSpacing: -1.0,
+                          ),
+                        )
+                      : TweenAnimationBuilder<double>(
+                          duration: const Duration(milliseconds: 1000),
+                          curve: Curves.easeOutCubic,
+                          tween: Tween<double>(
+                            begin: 0,
+                            end: widget.balance.toDouble(),
+                          ),
+                          builder: (context, value, _) {
+                            return Text(
+                              CurrencyFormatter.formatCents(value.round()),
+                              style: context.ts(
+                                40,
+                                fontWeight: FontWeight.w900,
+                                color: theme.colorScheme.onSurface,
+                                letterSpacing: -1.0,
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    ),
-                  ),
+                ),
+              ),
                 ],
               ),
             ],
