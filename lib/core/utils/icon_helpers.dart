@@ -140,11 +140,19 @@ IconData getGoalIcon(String iconName) {
 IconData getAccountIcon(String iconStr) {
   switch (iconStr) {
     case 'phone-android':
+    case 'phone':
+    case 'mobile':
       return PesaFlowIcons.phone;
     case 'account-balance':
+    case 'bank':
       return PesaFlowIcons.loans;
+    case 'credit-card':
+    case 'card':
+      return PesaFlowIcons.card;
+    case 'cash':
+    case 'money':
+      return PesaFlowIcons.cash;
     case 'wallet':
-      return PesaFlowIcons.wallet;
     default:
       return PesaFlowIcons.wallet;
   }

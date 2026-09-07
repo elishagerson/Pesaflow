@@ -23,7 +23,10 @@ class PesaFlowIcons {
   static const IconData back = Icons.arrow_back_ios_new_outlined;
   static const IconData more = Icons.more_horiz_outlined;
   static const IconData search = Icons.search_outlined;
+  static const IconData menu = Icons.menu_rounded;
   static const IconData filter = Icons.tune_outlined;
+  static const IconData visibility = Icons.visibility_outlined;
+  static const IconData visibilityOff = Icons.visibility_off_outlined;
   static const IconData share = Icons.ios_share_outlined;
   static const IconData upload = Icons.cloud_upload_outlined;
   static const IconData download = Icons.cloud_download_outlined;
