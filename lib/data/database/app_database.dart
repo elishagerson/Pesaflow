@@ -580,8 +580,9 @@ class AppDatabase extends _$AppDatabase {
         // Migration from schema version 13 → 14: add comprehensive expense categories
         if (from < 14) {
           final existingCats = await select(categories).get();
-          final existingNames =
-              existingCats.map((c) => c.name.toLowerCase()).toSet();
+          final existingNames = existingCats
+              .map((c) => c.name.toLowerCase())
+              .toSet();
           final uuid = const Uuid();
 
           final newCategories = [
@@ -607,8 +608,9 @@ class AppDatabase extends _$AppDatabase {
         // Migration from schema version 14 → 15: add next wave of lifestyle & professional categories
         if (from < 15) {
           final existingCats = await select(categories).get();
-          final existingNames =
-              existingCats.map((c) => c.name.toLowerCase()).toSet();
+          final existingNames = existingCats
+              .map((c) => c.name.toLowerCase())
+              .toSet();
           final uuid = const Uuid();
 
           final nextWaveCategories = [

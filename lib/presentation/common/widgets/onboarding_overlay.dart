@@ -167,7 +167,9 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                         onPressed: _next,
                         style: FilledButton.styleFrom(
                           backgroundColor: accentColor,
-                          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onPrimary,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 40,
                             vertical: 16,

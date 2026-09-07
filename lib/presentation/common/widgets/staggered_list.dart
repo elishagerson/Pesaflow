@@ -79,10 +79,7 @@ class _StaggeredItemState extends State<_StaggeredItem>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
-    _fade = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(_controller);
+    _fade = Tween<double>(begin: 0, end: 1).animate(_controller);
     _slide = Tween<Offset>(
       begin: Offset(0, MotionTokens.staggerSlideOffset),
       end: Offset.zero,
@@ -104,18 +101,16 @@ class _StaggeredItemState extends State<_StaggeredItem>
         return;
       }
       // Cap total stagger delay at 300ms
-      final delay = (widget.index * widget.staggerDelay)
-          .round()
-          .clamp(0, MotionTokens.staggerMaxDelay.inMilliseconds);
+      final delay = (widget.index * widget.staggerDelay).round().clamp(
+        0,
+        MotionTokens.staggerMaxDelay.inMilliseconds,
+      );
       _timer = Timer(Duration(milliseconds: delay), () {
         if (!mounted) return;
         _controller
-            .animateWith(SpringSimulation(
-              MotionTokens.springStiff,
-              0.0,
-              1.0,
-              0.0,
-            ))
+            .animateWith(
+              SpringSimulation(MotionTokens.springStiff, 0.0, 1.0, 0.0),
+            )
             .then((_) => _hasAnimated = true);
       });
     });

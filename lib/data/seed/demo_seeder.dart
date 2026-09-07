@@ -141,48 +141,54 @@ class DemoSeeder {
     final wantsGroupId = uuid.v4();
     final investGroupId = uuid.v4();
 
-    await db.into(db.budgetGroups).insert(
-      BudgetGroup(
-        id: needsGroupId,
-        name: 'Needs',
-        groupType: 'needs',
-        percentage: 0.50,
-        allocatedAmount: 750000,
-        icon: 'home',
-        color: '#2196F3',
-        sortOrder: 0,
-        isActive: true,
-        createdAt: now,
-      ),
-    );
-    await db.into(db.budgetGroups).insert(
-      BudgetGroup(
-        id: wantsGroupId,
-        name: 'Wants',
-        groupType: 'wants',
-        percentage: 0.30,
-        allocatedAmount: 450000,
-        icon: 'shopping-bag',
-        color: '#FF9800',
-        sortOrder: 1,
-        isActive: true,
-        createdAt: now,
-      ),
-    );
-    await db.into(db.budgetGroups).insert(
-      BudgetGroup(
-        id: investGroupId,
-        name: 'Investments',
-        groupType: 'investments',
-        percentage: 0.20,
-        allocatedAmount: 300000,
-        icon: 'trending-up',
-        color: '#4CAF50',
-        sortOrder: 2,
-        isActive: true,
-        createdAt: now,
-      ),
-    );
+    await db
+        .into(db.budgetGroups)
+        .insert(
+          BudgetGroup(
+            id: needsGroupId,
+            name: 'Needs',
+            groupType: 'needs',
+            percentage: 0.50,
+            allocatedAmount: 750000,
+            icon: 'home',
+            color: '#2196F3',
+            sortOrder: 0,
+            isActive: true,
+            createdAt: now,
+          ),
+        );
+    await db
+        .into(db.budgetGroups)
+        .insert(
+          BudgetGroup(
+            id: wantsGroupId,
+            name: 'Wants',
+            groupType: 'wants',
+            percentage: 0.30,
+            allocatedAmount: 450000,
+            icon: 'shopping-bag',
+            color: '#FF9800',
+            sortOrder: 1,
+            isActive: true,
+            createdAt: now,
+          ),
+        );
+    await db
+        .into(db.budgetGroups)
+        .insert(
+          BudgetGroup(
+            id: investGroupId,
+            name: 'Investments',
+            groupType: 'investments',
+            percentage: 0.20,
+            allocatedAmount: 300000,
+            icon: 'trending-up',
+            color: '#4CAF50',
+            sortOrder: 2,
+            isActive: true,
+            createdAt: now,
+          ),
+        );
 
     final settingsDao = SettingsDao(db);
     await settingsDao.setSetting('monthly_income', '1500000');

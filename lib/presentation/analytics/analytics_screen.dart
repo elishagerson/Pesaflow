@@ -943,9 +943,8 @@ class _OverviewTab extends ConsumerWidget {
                                         child: Container(
                                           height: 5,
                                           width: double.infinity,
-                                          color: context.appColors.onBgColor.withValues(
-                                            alpha: 0.06,
-                                          ),
+                                          color: context.appColors.onBgColor
+                                              .withValues(alpha: 0.06),
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: FractionallySizedBox(
@@ -1224,7 +1223,9 @@ class _TrendsTab extends ConsumerWidget {
                                                           .appColors
                                                           .textMedium,
                                                   strokeWidth: 2,
-                                                  strokeColor: context.appColors.onBgColor,
+                                                  strokeColor: context
+                                                      .appColors
+                                                      .onBgColor,
                                                 );
                                               },
                                         ),

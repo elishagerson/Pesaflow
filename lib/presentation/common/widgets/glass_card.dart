@@ -65,29 +65,33 @@ class _GlassCardState extends State<GlassCard>
   /// Shadow parameters that respond to press state.
   /// When pressed, shadow offset decreases and blur shrinks
   /// → creates "card pushed into surface" illusion.
-  _ShadowParams _resolveShadows(CardElevation elevation, bool isDark, double pressT) {
+  _ShadowParams _resolveShadows(
+    CardElevation elevation,
+    bool isDark,
+    double pressT,
+  ) {
     final base = switch (elevation) {
       CardElevation.low => _ShadowParams(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.20)
-                : Colors.black.withValues(alpha: 0.04),
-            blur: 8.0,
-            offsetY: 2.0,
-          ),
+        color: isDark
+            ? Colors.black.withValues(alpha: 0.20)
+            : Colors.black.withValues(alpha: 0.04),
+        blur: 8.0,
+        offsetY: 2.0,
+      ),
       CardElevation.medium => _ShadowParams(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.28)
-                : Colors.black.withValues(alpha: 0.06),
-            blur: 16.0,
-            offsetY: 4.0,
-          ),
+        color: isDark
+            ? Colors.black.withValues(alpha: 0.28)
+            : Colors.black.withValues(alpha: 0.06),
+        blur: 16.0,
+        offsetY: 4.0,
+      ),
       CardElevation.high => _ShadowParams(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.35)
-                : Colors.black.withValues(alpha: 0.08),
-            blur: 24.0,
-            offsetY: 8.0,
-          ),
+        color: isDark
+            ? Colors.black.withValues(alpha: 0.35)
+            : Colors.black.withValues(alpha: 0.08),
+        blur: 24.0,
+        offsetY: 8.0,
+      ),
       CardElevation.none => null,
     };
 
@@ -303,11 +307,7 @@ class _ShadowParams {
   List<BoxShadow> toList() {
     if (blur == 0 && offsetY == 0) return [];
     return [
-      BoxShadow(
-        color: color,
-        blurRadius: blur,
-        offset: Offset(0, offsetY),
-      ),
+      BoxShadow(color: color, blurRadius: blur, offset: Offset(0, offsetY)),
     ];
   }
 }

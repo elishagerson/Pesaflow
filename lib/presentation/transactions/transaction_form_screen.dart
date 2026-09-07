@@ -1,4 +1,3 @@
-
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/ios_date_picker_sheet.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -325,209 +324,201 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               children: [
                 const SizedBox(height: kSpacing12),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing20,
-                  ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(kSpacing8),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withValues(
-                                alpha: 0.1,
-                              ),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              PesaFlowIcons.wallet,
-                              size: 18,
-                              color: theme.colorScheme.primary,
-                            ),
+                  padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(kSpacing8),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.1,
                           ),
-                          const SizedBox(width: kSpacing12),
-                          Text(
-                            title,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          PesaFlowIcons.wallet,
+                          size: 18,
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: kSpacing12),
-                    Expanded(
-                      child: RawScrollbar(
-                        controller: scrollController,
-                        child: ListView.builder(
-                          controller: scrollController,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kSpacing20,
-                          ),
-                          itemCount: accounts.length,
-                          itemBuilder: (listCtx, index) {
-                            final account = accounts[index];
-                            final isSelected = account.id == currentSelectedId;
-                            final isDisabled =
-                                isDestination &&
-                                account.id == _selectedAccountId;
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: kSpacing8),
-                              child: GestureDetector(
-                                onTap: isDisabled
-                                    ? null
-                                    : () {
-                                        setState(() {
-                                          _isDirty = true;
-                                          if (isDestination) {
-                                            _selectedDestinationAccountId =
-                                                account.id;
-                                          } else {
-                                            _selectedAccountId = account.id;
-                                          }
-                                        });
-                                        Navigator.pop(ctx);
-                                      },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  curve: Curves.easeOutCubic,
-                                  padding: const EdgeInsets.all(kSpacing16),
-                                  decoration: BoxDecoration(
-                                    color: isDisabled
-                                        ? theme.colorScheme.onSurface
-                                              .withValues(alpha: 0.02)
-                                        : isSelected
-                                        ? theme.colorScheme.primary.withValues(
-                                            alpha: 0.08,
-                                          )
-                                        : theme.colorScheme.surface,
-                                    borderRadius: BorderRadius.circular(14),
-                                    border: Border.all(
+                      const SizedBox(width: kSpacing12),
+                      Text(
+                        title,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: kSpacing12),
+                Expanded(
+                  child: RawScrollbar(
+                    controller: scrollController,
+                    child: ListView.builder(
+                      controller: scrollController,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing20,
+                      ),
+                      itemCount: accounts.length,
+                      itemBuilder: (listCtx, index) {
+                        final account = accounts[index];
+                        final isSelected = account.id == currentSelectedId;
+                        final isDisabled =
+                            isDestination && account.id == _selectedAccountId;
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: kSpacing8),
+                          child: GestureDetector(
+                            onTap: isDisabled
+                                ? null
+                                : () {
+                                    setState(() {
+                                      _isDirty = true;
+                                      if (isDestination) {
+                                        _selectedDestinationAccountId =
+                                            account.id;
+                                      } else {
+                                        _selectedAccountId = account.id;
+                                      }
+                                    });
+                                    Navigator.pop(ctx);
+                                  },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeOutCubic,
+                              padding: const EdgeInsets.all(kSpacing16),
+                              decoration: BoxDecoration(
+                                color: isDisabled
+                                    ? theme.colorScheme.onSurface.withValues(
+                                        alpha: 0.02,
+                                      )
+                                    : isSelected
+                                    ? theme.colorScheme.primary.withValues(
+                                        alpha: 0.08,
+                                      )
+                                    : theme.colorScheme.surface,
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? theme.colorScheme.primary.withValues(
+                                          alpha: 0.4,
+                                        )
+                                      : theme.colorScheme.onSurface.withValues(
+                                          alpha: 0.07,
+                                        ),
+                                  width: isSelected ? 1.5 : 1,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(kSpacing8),
+                                    decoration: BoxDecoration(
                                       color: isSelected
                                           ? theme.colorScheme.primary
-                                                .withValues(alpha: 0.4)
+                                                .withValues(alpha: 0.15)
                                           : theme.colorScheme.onSurface
-                                                .withValues(alpha: 0.07),
-                                      width: isSelected ? 1.5 : 1,
+                                                .withValues(alpha: 0.05),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      isSelected
+                                          ? PesaFlowIcons.success
+                                          : PesaFlowIcons.wallet,
+                                      size: 20,
+                                      color: isDisabled
+                                          ? theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.2)
+                                          : isSelected
+                                          ? theme.colorScheme.primary
+                                          : theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.55),
                                     ),
                                   ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(
-                                          kSpacing8,
+                                  const SizedBox(width: kSpacing12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          account.name,
+                                          style: context.ts(
+                                            15,
+                                            fontWeight: isSelected
+                                                ? FontWeight.w700
+                                                : FontWeight.w500,
+                                            color: isDisabled
+                                                ? theme.colorScheme.onSurface
+                                                      .withValues(alpha: 0.25)
+                                                : isSelected
+                                                ? theme.colorScheme.primary
+                                                : onSurface.withValues(
+                                                    alpha: 0.87,
+                                                  ),
+                                          ),
                                         ),
-                                        decoration: BoxDecoration(
-                                          color: isSelected
-                                              ? theme.colorScheme.primary
-                                                    .withValues(alpha: 0.15)
-                                              : theme.colorScheme.onSurface
-                                                    .withValues(alpha: 0.05),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          isSelected
-                                              ? PesaFlowIcons.success
-                                              : PesaFlowIcons.wallet,
-                                          size: 20,
-                                          color: isDisabled
-                                              ? theme.colorScheme.onSurface
-                                                    .withValues(alpha: 0.2)
-                                              : isSelected
-                                              ? theme.colorScheme.primary
-                                              : theme.colorScheme.onSurface
-                                                    .withValues(alpha: 0.55),
-                                        ),
-                                      ),
-                                      const SizedBox(width: kSpacing12),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              account.name,
-                                              style: context.ts(
-                                                15,
-                                                fontWeight: isSelected
-                                                    ? FontWeight.w700
-                                                    : FontWeight.w500,
+                                        const SizedBox(height: kSpacing2),
+                                        Text(
+                                          'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
+                                          style: theme.textTheme.bodySmall
+                                              ?.copyWith(
                                                 color: isDisabled
                                                     ? theme
                                                           .colorScheme
                                                           .onSurface
                                                           .withValues(
-                                                            alpha: 0.25,
+                                                            alpha: 0.12,
                                                           )
-                                                    : isSelected
-                                                    ? theme.colorScheme.primary
                                                     : onSurface.withValues(
-                                                        alpha: 0.87,
+                                                        alpha: 0.38,
                                                       ),
                                               ),
-                                            ),
-                                            const SizedBox(height: kSpacing2),
-                                            Text(
-                                              'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
-                                              style: theme.textTheme.bodySmall
-                                                  ?.copyWith(
-                                                    color: isDisabled
-                                                        ? theme
-                                                              .colorScheme
-                                                              .onSurface
-                                                              .withValues(
-                                                                alpha: 0.12,
-                                                              )
-                                                        : onSurface.withValues(
-                                                            alpha: 0.38,
-                                                          ),
-                                                  ),
-                                            ),
-                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (isDisabled)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        right: kSpacing8,
+                                      ),
+                                      child: Text(
+                                        'Source',
+                                        style: context.ts(
+                                          11,
+                                          fontWeight: FontWeight.w600,
+                                          color: theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.2),
                                         ),
                                       ),
-                                      if (isDisabled)
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            right: kSpacing8,
-                                          ),
-                                          child: Text(
-                                            'Source',
-                                            style: context.ts(
-                                              11,
-                                              fontWeight: FontWeight.w600,
-                                              color: theme.colorScheme.onSurface
-                                                  .withValues(alpha: 0.2),
-                                            ),
-                                          ),
-                                        ),
-                                      if (isSelected)
-                                        Container(
-                                          padding: const EdgeInsets.all(
-                                            kSpacing4,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: theme.colorScheme.primary
-                                                .withValues(alpha: 0.15),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(
-                                            PesaFlowIcons.check,
-                                            size: 16,
-                                            color: theme.colorScheme.primary,
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
+                                    ),
+                                  if (isSelected)
+                                    Container(
+                                      padding: const EdgeInsets.all(kSpacing4),
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.primary
+                                            .withValues(alpha: 0.15),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        PesaFlowIcons.check,
+                                        size: 16,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                    ),
+                                ],
                               ),
-                            );
-                          },
-                        ),
-                      ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
+            ),
+          ),
         );
       },
     );

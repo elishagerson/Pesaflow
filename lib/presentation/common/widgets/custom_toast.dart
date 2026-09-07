@@ -102,12 +102,7 @@ class _ToastWidgetState extends State<_ToastWidget>
     }
 
     // Physics-based spring simulation for premium entry feel
-    final spring = SpringSimulation(
-      MotionTokens.springBouncy,
-      0.0,
-      1.0,
-      0.0,
-    );
+    final spring = SpringSimulation(MotionTokens.springBouncy, 0.0, 1.0, 0.0);
     _entryController.animateWith(spring);
     _timerController.forward();
   }
@@ -191,12 +186,8 @@ class _ToastWidgetState extends State<_ToastWidget>
             return Transform.translate(
               offset: Offset(_swipeOffset, translateY),
               child: Opacity(
-                opacity: (opacity - (_swipeOffset.abs() / 200))
-                    .clamp(0.0, 1.0),
-                child: Transform.scale(
-                  scale: scale,
-                  child: child,
-                ),
+                opacity: (opacity - (_swipeOffset.abs() / 200)).clamp(0.0, 1.0),
+                child: Transform.scale(scale: scale, child: child),
               ),
             );
           },
@@ -207,9 +198,7 @@ class _ToastWidgetState extends State<_ToastWidget>
               child: Material(
                 color: Colors.transparent,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    AppTheme.radiusPill,
-                  ),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
                     child: Container(
@@ -253,12 +242,11 @@ class _ToastWidgetState extends State<_ToastWidget>
                           Flexible(
                             child: Text(
                               widget.message,
-                              style: theme.textTheme.labelMedium
-                                  ?.copyWith(
-                                    color: theme.colorScheme.onSurface,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.2,
-                                  ),
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: theme.colorScheme.onSurface,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.2,
+                              ),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                             ),
@@ -269,8 +257,9 @@ class _ToastWidgetState extends State<_ToastWidget>
                             Container(
                               height: 24,
                               width: 1,
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.1),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.1,
+                              ),
                             ),
                             const SizedBox(width: kSpacing4),
                             TextButton(
@@ -279,8 +268,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                                   horizontal: kSpacing12,
                                 ),
                                 minimumSize: Size.zero,
-                                tapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               onPressed: () {
                                 widget.onAction!();
@@ -355,11 +343,7 @@ class _TimerRingIcon extends StatelessWidget {
               color: brandColor.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              color: brandColor,
-              size: 14,
-            ),
+            child: Icon(icon, color: brandColor, size: 14),
           ),
         ],
       ),

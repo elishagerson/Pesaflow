@@ -40,10 +40,7 @@ final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
 );
 
 Page<dynamic> _nativeIosPage(Widget page) {
-  return CupertinoPage(
-    key: ValueKey(page.runtimeType),
-    child: page,
-  );
+  return CupertinoPage(key: ValueKey(page.runtimeType), child: page);
 }
 
 Page<dynamic> _tabTransitionPage(Widget child) {
@@ -399,8 +396,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/onboarding',
       parentNavigatorKey: _rootNavigatorKey,
-      pageBuilder: (context, state) =>
-          _nativeIosPage(const OnboardingScreen()),
+      pageBuilder: (context, state) => _nativeIosPage(const OnboardingScreen()),
     ),
 
     StatefulShellRoute.indexedStack(
@@ -657,8 +653,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/sms-review',
       parentNavigatorKey: _rootNavigatorKey,
-      pageBuilder: (context, state) =>
-          _nativeIosPage(const SmsReviewScreen()),
+      pageBuilder: (context, state) => _nativeIosPage(const SmsReviewScreen()),
     ),
 
     GoRoute(

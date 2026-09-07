@@ -13,23 +13,17 @@ class BudgetGroupWithChildren {
   final BudgetGroup group;
   final List<BudgetWithChildProgress> subBudgets;
 
-  BudgetGroupWithChildren({
-    required this.group,
-    required this.subBudgets,
-  });
+  BudgetGroupWithChildren({required this.group, required this.subBudgets});
 
   int get totalAllocated => subBudgets.fold(
-        0,
-        (s, b) =>
-            s + (b.currentPeriod?.allocated ?? b.budget.amount),
-      );
+    0,
+    (s, b) => s + (b.currentPeriod?.allocated ?? b.budget.amount),
+  );
 
   int get totalSpent => subBudgets.fold(0, (s, b) => s + b.spentInPeriod);
 
   double get percentage =>
-      totalAllocated > 0
-          ? (totalSpent / totalAllocated).clamp(0.0, 2.0)
-          : 0.0;
+      totalAllocated > 0 ? (totalSpent / totalAllocated).clamp(0.0, 2.0) : 0.0;
 
   int get remaining => totalAllocated - totalSpent;
 }
@@ -86,26 +80,23 @@ class BudgetGroupDao extends DatabaseAccessor<AppDatabase>
 
   /// Gets a single budget group by ID.
   Future<BudgetGroup?> getGroupById(String groupId) {
-    return (select(budgetGroups)..where((g) => g.id.equals(groupId)))
-        .getSingleOrNull();
+    return (select(
+      budgetGroups,
+    )..where((g) => g.id.equals(groupId))).getSingleOrNull();
   }
 
   /// Gets all budgets belonging to a group.
   Future<List<Budget>> getBudgetsForGroup(String groupId) {
-    return (select(budgets)
-          ..where(
-            (b) => b.groupId.equals(groupId) & b.isActive.equals(true),
-          ))
-        .get();
+    return (select(
+      budgets,
+    )..where((b) => b.groupId.equals(groupId) & b.isActive.equals(true))).get();
   }
 
   /// Gets all active budgets that have no group (standalone/legacy).
   Future<List<Budget>> getStandaloneBudgets() {
-    return (select(budgets)
-          ..where(
-            (b) => b.groupId.isNull() & b.isActive.equals(true),
-          ))
-        .get();
+    return (select(
+      budgets,
+    )..where((b) => b.groupId.isNull() & b.isActive.equals(true))).get();
   }
 
   /// Inserts a new budget group.
@@ -137,14 +128,14 @@ class BudgetGroupDao extends DatabaseAccessor<AppDatabase>
           const BudgetsCompanion(groupId: Value(null)),
         );
       } else {
-        final groupedBudgets = await (select(budgets)
-              ..where((b) => b.groupId.isNotNull()))
-            .get();
+        final groupedBudgets = await (select(
+          budgets,
+        )..where((b) => b.groupId.isNotNull())).get();
         final budgetIds = groupedBudgets.map((b) => b.id).toList();
         if (budgetIds.isNotEmpty) {
-          await (delete(budgetPeriods)
-                ..where((p) => p.budgetId.isIn(budgetIds)))
-              .go();
+          await (delete(
+            budgetPeriods,
+          )..where((p) => p.budgetId.isIn(budgetIds))).go();
           await (delete(budgets)..where((b) => b.id.isIn(budgetIds))).go();
         }
       }
@@ -153,27 +144,26 @@ class BudgetGroupDao extends DatabaseAccessor<AppDatabase>
   }
 
   /// Gets all budget groups with their child budgets and progress data.
-  Future<List<BudgetGroupWithChildren>>
-      getGroupsWithChildren() async {
+  Future<List<BudgetGroupWithChildren>> getGroupsWithChildren() async {
     final activeGroups = await getAllActiveGroups();
     if (activeGroups.isEmpty) return [];
 
     // Fetch all active budgets with a groupId in one query
     final groupIds = activeGroups.map((g) => g.id).toList();
-    final groupedBudgets = await (select(budgets)
-          ..where(
-            (b) =>
-                b.groupId.isIn(groupIds) & b.isActive.equals(true),
-          ))
-        .get();
+    final groupedBudgets = await (select(
+      budgets,
+    )..where((b) => b.groupId.isIn(groupIds) & b.isActive.equals(true))).get();
 
     // Fetch all relevant categories
-    final categoryIds = groupedBudgets.map((b) => b.categoryId).toSet().toList();
+    final categoryIds = groupedBudgets
+        .map((b) => b.categoryId)
+        .toSet()
+        .toList();
     final categoriesMap = <String, Category>{};
     if (categoryIds.isNotEmpty) {
-      final cats = await (select(categories)
-            ..where((c) => c.id.isIn(categoryIds)))
-          .get();
+      final cats = await (select(
+        categories,
+      )..where((c) => c.id.isIn(categoryIds))).get();
       for (final cat in cats) {
         categoriesMap[cat.id] = cat;
       }
@@ -183,13 +173,13 @@ class BudgetGroupDao extends DatabaseAccessor<AppDatabase>
     final budgetIds = groupedBudgets.map((b) => b.id).toList();
     final periodsMap = <String, BudgetPeriod>{};
     if (budgetIds.isNotEmpty) {
-      final periods = await (select(budgetPeriods)
-            ..where(
-              (p) =>
-                  p.budgetId.isIn(budgetIds) & p.isClosed.equals(false),
-            )
-            ..orderBy([(p) => OrderingTerm.desc(p.periodStart)]))
-          .get();
+      final periods =
+          await (select(budgetPeriods)
+                ..where(
+                  (p) => p.budgetId.isIn(budgetIds) & p.isClosed.equals(false),
+                )
+                ..orderBy([(p) => OrderingTerm.desc(p.periodStart)]))
+              .get();
 
       final processedIds = <String>{};
       for (final period in periods) {
@@ -235,9 +225,7 @@ class BudgetGroupDao extends DatabaseAccessor<AppDatabase>
           ),
         );
       }
-      result.add(
-        BudgetGroupWithChildren(group: group, subBudgets: children),
-      );
+      result.add(BudgetGroupWithChildren(group: group, subBudgets: children));
     }
 
     return result;
@@ -276,9 +264,9 @@ class BudgetGroupDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<List<String>> _getChildCategoryIds(String categoryId) async {
-    final children = await (select(categories)
-          ..where((c) => c.parentId.equals(categoryId)))
-        .get();
+    final children = await (select(
+      categories,
+    )..where((c) => c.parentId.equals(categoryId))).get();
     return children.map((c) => c.id).toList();
   }
 }

@@ -621,9 +621,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                             ),
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.primary
-                                  .withValues(
-                                    alpha: _isSaving ? 0.6 : 1.0,
-                                  ),
+                                  .withValues(alpha: _isSaving ? 0.6 : 1.0),
                               borderRadius: BorderRadius.circular(
                                 AppTheme.radiusInput,
                               ),
@@ -653,9 +651,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                                         .titleMedium!
                                         .copyWith(
                                           fontWeight: FontWeight.bold,
-                                    color: theme.colorScheme.onPrimary,
+                                          color: theme.colorScheme.onPrimary,
+                                        ),
                                   ),
-                            ),
                           ),
                         ),
                       ),

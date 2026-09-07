@@ -295,16 +295,20 @@ class _RecurringTransactionFormScreenState
                             ),
                             actions: [
                               TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context, rootNavigator: true).pop(false),
+                                onPressed: () => Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(false),
                                 child: const Text('Cancel'),
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: theme.colorScheme.error,
                                 ),
-                                onPressed: () =>
-                                    Navigator.of(context, rootNavigator: true).pop(true),
+                                onPressed: () => Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(true),
                                 child: const Text('Delete'),
                               ),
                             ],
@@ -761,8 +765,8 @@ class _RecurringTransactionFormScreenState
                             ),
                             decoration: BoxDecoration(
                               color: _isLoading
-                                ? theme.colorScheme.onSurfaceVariant
-                                   : theme.colorScheme.primary,
+                                  ? theme.colorScheme.onSurfaceVariant
+                                  : theme.colorScheme.primary,
                               borderRadius: BorderRadius.circular(
                                 AppTheme.radiusInput,
                               ),
@@ -788,9 +792,7 @@ class _RecurringTransactionFormScreenState
                                         .titleMedium!
                                         .copyWith(
                                           fontWeight: FontWeight.bold,
-                                          color: theme
-                                              .colorScheme
-                                              .onPrimary,
+                                          color: theme.colorScheme.onPrimary,
                                         ),
                                   ),
                           ),

@@ -1078,7 +1078,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                       children: [
                                                         Icon(
                                                           PesaFlowIcons.add,
-                                                          color: theme.colorScheme.onPrimary,
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onPrimary,
                                                           size: 18,
                                                         ),
                                                         const SizedBox(
@@ -1090,9 +1092,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                               .textTheme
                                                               .titleSmall
                                                               ?.copyWith(
-                                                                 color: theme
-                                                                     .colorScheme
-                                                                     .onPrimary,
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .onPrimary,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold,

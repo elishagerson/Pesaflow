@@ -326,10 +326,9 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-    _glowAnimation = Tween<double>(
-      begin: 4.0,
-      end: 12.0,
-    ).animate(CurvedAnimation(parent: _controller!, curve: Curves.easeOutCubic));
+    _glowAnimation = Tween<double>(begin: 4.0, end: 12.0).animate(
+      CurvedAnimation(parent: _controller!, curve: Curves.easeOutCubic),
+    );
   }
 
   void _syncAnimation() {

@@ -7,8 +7,8 @@ class Budgets extends Table {
   TextColumn get categoryId => text()(); // FK to Categories
   TextColumn get period => text()(); // enum: weekly, biweekly, monthly, yearly
   IntColumn get amount => integer()(); // Budget limit in TZS cents
-  TextColumn get groupId =>
-      text().nullable()(); // FK to BudgetGroups — null = standalone legacy budget
+  TextColumn get groupId => text()
+      .nullable()(); // FK to BudgetGroups — null = standalone legacy budget
   BoolColumn get rollover => boolean().withDefault(const Constant(false))();
   TextColumn get rolloverType =>
       text().withDefault(const Constant('none'))(); // all, capped, none

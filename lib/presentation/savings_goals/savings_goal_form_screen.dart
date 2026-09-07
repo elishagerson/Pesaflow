@@ -379,9 +379,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         item['icon'],
                                         color: isSelected
                                             ? themeCol
-                                            : context.appColors.onBgColor.withValues(
-                                                alpha: 0.6,
-                                              ),
+                                            : context.appColors.onBgColor
+                                                  .withValues(alpha: 0.6),
                                         size: 22,
                                       ),
                                     ),
@@ -440,7 +439,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         style: theme.textTheme.titleMedium!
                                             .copyWith(
                                               fontWeight: FontWeight.bold,
-                                              color: context.appColors.onBgColor,
+                                              color:
+                                                  context.appColors.onBgColor,
                                             ),
                                       ),
                               ),

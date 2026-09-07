@@ -79,12 +79,7 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
       if (context.isReducedMotion) {
         _controller.value = 1.0;
       } else {
-        final spring = SpringSimulation(
-          MotionTokens.springGentle,
-          0,
-          1,
-          0,
-        );
+        final spring = SpringSimulation(MotionTokens.springGentle, 0, 1, 0);
         _controller.animateWith(spring);
       }
     }
@@ -112,8 +107,7 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
     if (!_isDragging) return;
     _isDragging = false;
     final velocity = details.velocity.pixelsPerSecond.dy;
-    final fraction =
-        _sheetHeight > 0 ? _dragOffset / _sheetHeight : 0.0;
+    final fraction = _sheetHeight > 0 ? _dragOffset / _sheetHeight : 0.0;
 
     // Fling down or dragged past threshold → dismiss
     if (velocity > MotionTokens.sheetDismissVelocity ||
@@ -133,14 +127,15 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
     // Animate drag offset back to zero
     final startOffset = _dragOffset;
     late final AnimationController snapController;
-    snapController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    )..addListener(() {
-        setState(() {
-          _dragOffset = startOffset * (1 - snapController.value);
+    snapController =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 300),
+        )..addListener(() {
+          setState(() {
+            _dragOffset = startOffset * (1 - snapController.value);
+          });
         });
-      });
     snapController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         snapController.dispose();
@@ -168,8 +163,8 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
           curve: Curves.easeInCubic,
         )
         .then((_) {
-      if (mounted) Navigator.of(context).pop();
-    });
+          if (mounted) Navigator.of(context).pop();
+        });
   }
 
   @override
@@ -286,10 +281,7 @@ class _MeasureSize extends StatefulWidget {
   final ValueChanged<Size> onSizeChanged;
   final Widget child;
 
-  const _MeasureSize({
-    required this.onSizeChanged,
-    required this.child,
-  });
+  const _MeasureSize({required this.onSizeChanged, required this.child});
 
   @override
   State<_MeasureSize> createState() => _MeasureSizeState();
@@ -321,4 +313,3 @@ class _MeasureSizeState extends State<_MeasureSize> {
     return SizedBox(key: _key, child: widget.child);
   }
 }
-

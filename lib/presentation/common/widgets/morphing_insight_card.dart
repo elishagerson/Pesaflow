@@ -398,4 +398,3 @@ class PulseIcon extends StatelessWidget {
     return Icon(icon, size: size, color: color);
   }
 }
-

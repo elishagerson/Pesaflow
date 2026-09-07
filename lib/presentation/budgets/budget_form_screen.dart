@@ -48,8 +48,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   String _rolloverType = 'none';
   double _threshold = 0.8;
   bool _isSaving = false;
-  DateTime _startDate =
-      DateTime(DateTime.now().year, DateTime.now().month, 1);
+  DateTime _startDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
 
   bool get _isDirty {
     if (_isSaving) return false;
@@ -204,22 +203,15 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(
-            context,
-            rootNavigator: true,
-          ).pop(false),
+          onPressed: () =>
+              Navigator.of(context, rootNavigator: true).pop(false),
           child: const Text('Cancel'),
         ),
         TextButton(
-          onPressed: () => Navigator.of(
-            context,
-            rootNavigator: true,
-          ).pop(true),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
           child: Text(
             'Delete',
-            style: TextStyle(
-              color: context.appColors.expenseColor,
-            ),
+            style: TextStyle(color: context.appColors.expenseColor),
           ),
         ),
       ],
@@ -765,20 +757,23 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           ),
                         ),
                         const SizedBox(height: kSpacing8),
-                        ref.watch(budgetGroupsProvider).maybeWhen(
-                          data: (groups) {
-                            if (groups.isEmpty) return const SizedBox.shrink();
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                sectionLabel('BUDGET GROUP'),
-                                _buildGroupSelector(groups, theme),
-                                const SizedBox(height: kSpacing8),
-                              ],
-                            );
-                          },
-                          orElse: () => const SizedBox.shrink(),
-                        ),
+                        ref
+                            .watch(budgetGroupsProvider)
+                            .maybeWhen(
+                              data: (groups) {
+                                if (groups.isEmpty)
+                                  return const SizedBox.shrink();
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    sectionLabel('BUDGET GROUP'),
+                                    _buildGroupSelector(groups, theme),
+                                    const SizedBox(height: kSpacing8),
+                                  ],
+                                );
+                              },
+                              orElse: () => const SizedBox.shrink(),
+                            ),
                         sectionLabel('START DATE'),
                         StaggeredFadeSlide(
                           index: 2,
@@ -800,10 +795,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     prefixIcon: PesaFlowIcons.calendar,
                                     firstDate: DateTime(2020),
                                     lastDate: DateTime(2030),
-                                    onChanged: (d) => setState(() =>
-                                        _startDate = _period == 'monthly'
-                                            ? DateTime(d.year, d.month, 1)
-                                            : d),
+                                    onChanged: (d) => setState(
+                                      () => _startDate = _period == 'monthly'
+                                          ? DateTime(d.year, d.month, 1)
+                                          : d,
+                                    ),
                                   ),
                                   if (_period == 'monthly')
                                     Padding(
@@ -1121,27 +1117,28 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     ),
                                   ],
                                 ),
-                                        child: _isSaving
-                                            ? SizedBox(
-                                                width: 20,
-                                                height: 20,
-                                                child: CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  color: context.appColors.onBgColor,
-                                                ),
-                                              )
-                                            : Text(
-                                                isEditing
-                                                    ? 'Update Budget'
-                                                    : 'Create Budget',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium!
-                                                    .copyWith(
-                                                      fontWeight: FontWeight.bold,
-                                                      color: context.appColors.onBgColor,
-                                                    ),
-                                              ),
+                                child: _isSaving
+                                    ? SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: context.appColors.onBgColor,
+                                        ),
+                                      )
+                                    : Text(
+                                        isEditing
+                                            ? 'Update Budget'
+                                            : 'Create Budget',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  context.appColors.onBgColor,
+                                            ),
+                                      ),
                               ),
                             ),
                           ),
@@ -1228,8 +1225,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                     onSelected: (selected) {
                       if (selected) setState(() => _selectedGroupId = null);
                     },
-                    selectedColor:
-                        theme.colorScheme.primary.withValues(alpha: 0.15),
+                    selectedColor: theme.colorScheme.primary.withValues(
+                      alpha: 0.15,
+                    ),
                   ),
                   for (final g in groups)
                     ChoiceChip(
@@ -1245,8 +1243,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           _selectedGroupId = selected ? g.group.id : null;
                         });
                       },
-                      selectedColor:
-                          hexToColor(g.group.color).withValues(alpha: 0.15),
+                      selectedColor: hexToColor(
+                        g.group.color,
+                      ).withValues(alpha: 0.15),
                     ),
                 ],
               ),
@@ -1258,7 +1257,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         .where((g) => g.group.id == _selectedGroupId)
                         .firstOrNull;
                     if (selectedGroup == null) return const SizedBox.shrink();
-                    final remaining = selectedGroup.group.allocatedAmount -
+                    final remaining =
+                        selectedGroup.group.allocatedAmount -
                         selectedGroup.totalAllocated;
                     return Text(
                       'Group budget: ${CurrencyFormatter.formatCents(selectedGroup.group.allocatedAmount)} (${remaining >= 0 ? "${CurrencyFormatter.formatCents(remaining)} available" : "over-allocated"})',

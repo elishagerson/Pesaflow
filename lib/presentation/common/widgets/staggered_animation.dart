@@ -66,18 +66,16 @@ class _StaggeredFadeSlideState extends State<StaggeredFadeSlide>
         return;
       }
       // Cap total stagger delay at 300ms
-      final delay = (widget.index * MotionTokens.staggerDelayMs)
-          .round()
-          .clamp(0, MotionTokens.staggerMaxDelay.inMilliseconds);
+      final delay = (widget.index * MotionTokens.staggerDelayMs).round().clamp(
+        0,
+        MotionTokens.staggerMaxDelay.inMilliseconds,
+      );
       _delayTimer = Timer(Duration(milliseconds: delay), () {
         if (!mounted) return;
         _controller
-            .animateWith(SpringSimulation(
-              MotionTokens.springStiff,
-              0.0,
-              1.0,
-              0.0,
-            ))
+            .animateWith(
+              SpringSimulation(MotionTokens.springStiff, 0.0, 1.0, 0.0),
+            )
             .then((_) => _hasAnimated = true);
       });
     });

@@ -99,7 +99,9 @@ class _RecurringTransactionListScreenState
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: context.appColors.onBgColor.withValues(alpha: 0.1),
+                        color: context.appColors.onBgColor.withValues(
+                          alpha: 0.1,
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -293,7 +295,9 @@ class _RecurringTransactionListScreenState
                                                   children: [
                                                     Icon(
                                                       PesaFlowIcons.success,
-                                                      color: context.appColors.onBgColor,
+                                                      color: context
+                                                          .appColors
+                                                          .onBgColor,
                                                       size: 24,
                                                     ),
                                                     const SizedBox(
@@ -305,7 +309,9 @@ class _RecurringTransactionListScreenState
                                                           .textTheme
                                                           .labelSmall
                                                           ?.copyWith(
-                                                            color: context.appColors.onBgColor,
+                                                            color: context
+                                                                .appColors
+                                                                .onBgColor,
                                                             fontWeight:
                                                                 FontWeight.w600,
                                                           ),
@@ -337,7 +343,9 @@ class _RecurringTransactionListScreenState
                                                           ? PesaFlowIcons.pause
                                                           : PesaFlowIcons
                                                                 .success,
-                                                      color: context.appColors.onBgColor,
+                                                      color: context
+                                                          .appColors
+                                                          .onBgColor,
                                                       size: 24,
                                                     ),
                                                     const SizedBox(
@@ -352,7 +360,9 @@ class _RecurringTransactionListScreenState
                                                           .textTheme
                                                           .labelSmall
                                                           ?.copyWith(
-                                                            color: context.appColors.onBgColor,
+                                                            color: context
+                                                                .appColors
+                                                                .onBgColor,
                                                             fontWeight:
                                                                 FontWeight.w600,
                                                           ),

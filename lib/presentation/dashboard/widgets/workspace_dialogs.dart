@@ -271,13 +271,17 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
                       border: Border.all(
                         color: isSel
                             ? theme.colorScheme.primary
-                            : Colors.grey.withValues(alpha: 0.2),
+                            : theme.colorScheme.onSurfaceVariant.withValues(
+                                alpha: 0.2,
+                              ),
                         width: 1.5,
                       ),
                     ),
                     child: Icon(
                       getTrackerIcon(ico),
-                      color: isSel ? theme.colorScheme.primary : Colors.grey,
+                      color: isSel
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurfaceVariant,
                       size: 20,
                     ),
                   ),
@@ -444,13 +448,17 @@ void showManageTrackerDialog(
                       border: Border.all(
                         color: isSel
                             ? theme.colorScheme.primary
-                            : Colors.grey.withValues(alpha: 0.2),
+                            : theme.colorScheme.onSurfaceVariant.withValues(
+                                alpha: 0.2,
+                              ),
                         width: 1.5,
                       ),
                     ),
                     child: Icon(
                       getTrackerIcon(ico),
-                      color: isSel ? theme.colorScheme.primary : Colors.grey,
+                      color: isSel
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurfaceVariant,
                       size: 20,
                     ),
                   ),

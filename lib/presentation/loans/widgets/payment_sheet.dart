@@ -239,615 +239,566 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                   const SizedBox(height: kSpacing12),
                   Expanded(
                     child: RawScrollbar(
-                          controller: scrollController,
-                          child: SingleChildScrollView(
-                            controller: scrollController,
-                            physics: const ClampingScrollPhysics(),
-                            padding: const EdgeInsets.fromLTRB(
-                              kSpacing20,
-                              0,
-                              kSpacing20,
-                              kSpacing24,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                      controller: scrollController,
+                      child: SingleChildScrollView(
+                        controller: scrollController,
+                        physics: const ClampingScrollPhysics(),
+                        padding: const EdgeInsets.fromLTRB(
+                          kSpacing20,
+                          0,
+                          kSpacing20,
+                          kSpacing24,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(kSpacing10),
-                                      decoration: BoxDecoration(
-                                        color: context.appColors.incomeColor
-                                            .withValues(alpha: 0.12),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        PesaFlowIcons.cash,
-                                        color: context.appColors.incomeColor,
-                                        size: 22,
-                                      ),
-                                    ),
-                                    const SizedBox(width: kSpacing14),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Make a Payment',
-                                          style: context.ts(
-                                            22,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: kSpacing2),
-                                        Text(
-                                          'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
-                                          style: theme.textTheme.bodySmall!
-                                              .copyWith(
-                                                color: onSurface.withValues(
-                                                  alpha: 0.6,
-                                                ),
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: kSpacing24),
-                                LoanProgressRing(
-                                  loan: loan,
-                                  remainingCents: remainingCents,
-                                ),
-                                const SizedBox(height: kSpacing24),
-                                Text(
-                                  'PAYMENT AMOUNT',
-                                  style: theme.textTheme.labelSmall!.copyWith(
-                                    letterSpacing: 0.5,
+                                Container(
+                                  padding: const EdgeInsets.all(kSpacing10),
+                                  decoration: BoxDecoration(
+                                    color: context.appColors.incomeColor
+                                        .withValues(alpha: 0.12),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    PesaFlowIcons.cash,
+                                    color: context.appColors.incomeColor,
+                                    size: 22,
                                   ),
                                 ),
-                                const SizedBox(height: kSpacing8),
-                                _buildAmountField(
-                                  context: context,
-                                  theme: theme,
-                                  amountController: amountController,
-                                  paymentAmount: paymentAmount,
-                                  setSheetState: setSheetState,
-                                ),
-                                const SizedBox(height: kSpacing16),
-                                Row(
-                                  children: [
-                                    QuickAmountChip(
-                                      label: '25%',
-                                      amount: (remainingCents * 0.25).round(),
-                                      isActive:
-                                          paymentAmount() ==
-                                          (remainingCents * 0.25).round(),
-                                      onTap: () {
-                                        amountController.text =
-                                            ((remainingCents * 0.25).round() /
-                                                    100)
-                                                .toStringAsFixed(0);
-                                        amountController.selection =
-                                            TextSelection.fromPosition(
-                                              TextPosition(
-                                                offset: amountController
-                                                    .text
-                                                    .length,
-                                              ),
-                                            );
-                                        setSheetState(() {});
-                                      },
-                                    ),
-                                    const SizedBox(width: kSpacing8),
-                                    QuickAmountChip(
-                                      label: '50%',
-                                      amount: (remainingCents * 0.5).round(),
-                                      isActive:
-                                          paymentAmount() ==
-                                          (remainingCents * 0.5).round(),
-                                      onTap: () {
-                                        amountController.text =
-                                            ((remainingCents * 0.5).round() /
-                                                    100)
-                                                .toStringAsFixed(0);
-                                        amountController.selection =
-                                            TextSelection.fromPosition(
-                                              TextPosition(
-                                                offset: amountController
-                                                    .text
-                                                    .length,
-                                              ),
-                                            );
-                                        setSheetState(() {});
-                                      },
-                                    ),
-                                    const SizedBox(width: kSpacing8),
-                                    QuickAmountChip(
-                                      label: '75%',
-                                      amount: (remainingCents * 0.75).round(),
-                                      isActive:
-                                          paymentAmount() ==
-                                          (remainingCents * 0.75).round(),
-                                      onTap: () {
-                                        amountController.text =
-                                            ((remainingCents * 0.75).round() /
-                                                    100)
-                                                .toStringAsFixed(0);
-                                        amountController.selection =
-                                            TextSelection.fromPosition(
-                                              TextPosition(
-                                                offset: amountController
-                                                    .text
-                                                    .length,
-                                              ),
-                                            );
-                                        setSheetState(() {});
-                                      },
-                                    ),
-                                    const SizedBox(width: kSpacing8),
-                                    QuickAmountChip(
-                                      label: '100%',
-                                      amount: remainingCents,
-                                      isActive:
-                                          paymentAmount() == remainingCents,
-                                      onTap: () {
-                                        amountController.text =
-                                            (remainingCents / 100)
-                                                .toStringAsFixed(0);
-                                        amountController.selection =
-                                            TextSelection.fromPosition(
-                                              TextPosition(
-                                                offset: amountController
-                                                    .text
-                                                    .length,
-                                              ),
-                                            );
-                                        setSheetState(() {});
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: kSpacing24),
-                                Text(
-                                  'MEMO',
-                                  style: theme.textTheme.labelSmall!.copyWith(
-                                    letterSpacing: 0.5,
-                                  ),
-                                ),
-                                const SizedBox(height: kSpacing8),
-                                TextField(
-                                  controller: descriptionController,
-                                  textCapitalization:
-                                      TextCapitalization.sentences,
-                                  style: context.ts(14, color: onSurface),
-                                  decoration: context.inputDecoration(
-                                    hintText: 'Add a note (optional)',
-                                    prefixIcon: Icon(
-                                      PesaFlowIcons.edit,
-                                      size: 20,
-                                      color: onSurface.withValues(alpha: 0.32),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: kSpacing24),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                const SizedBox(width: kSpacing14),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'FROM ACCOUNT',
-                                      style: theme.textTheme.labelSmall!
-                                          .copyWith(letterSpacing: 0.5),
+                                      'Make a Payment',
+                                      style: context.ts(
+                                        22,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                    if (selectedAccountId != null)
-                                      GestureDetector(
-                                        onTap: () => setSheetState(
-                                          () => selectedAccountId = null,
+                                    const SizedBox(height: kSpacing2),
+                                    Text(
+                                      'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
+                                      style: theme.textTheme.bodySmall!
+                                          .copyWith(
+                                            color: onSurface.withValues(
+                                              alpha: 0.6,
+                                            ),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: kSpacing24),
+                            LoanProgressRing(
+                              loan: loan,
+                              remainingCents: remainingCents,
+                            ),
+                            const SizedBox(height: kSpacing24),
+                            Text(
+                              'PAYMENT AMOUNT',
+                              style: theme.textTheme.labelSmall!.copyWith(
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing8),
+                            _buildAmountField(
+                              context: context,
+                              theme: theme,
+                              amountController: amountController,
+                              paymentAmount: paymentAmount,
+                              setSheetState: setSheetState,
+                            ),
+                            const SizedBox(height: kSpacing16),
+                            Row(
+                              children: [
+                                QuickAmountChip(
+                                  label: '25%',
+                                  amount: (remainingCents * 0.25).round(),
+                                  isActive:
+                                      paymentAmount() ==
+                                      (remainingCents * 0.25).round(),
+                                  onTap: () {
+                                    amountController.text =
+                                        ((remainingCents * 0.25).round() / 100)
+                                            .toStringAsFixed(0);
+                                    amountController
+                                        .selection = TextSelection.fromPosition(
+                                      TextPosition(
+                                        offset: amountController.text.length,
+                                      ),
+                                    );
+                                    setSheetState(() {});
+                                  },
+                                ),
+                                const SizedBox(width: kSpacing8),
+                                QuickAmountChip(
+                                  label: '50%',
+                                  amount: (remainingCents * 0.5).round(),
+                                  isActive:
+                                      paymentAmount() ==
+                                      (remainingCents * 0.5).round(),
+                                  onTap: () {
+                                    amountController.text =
+                                        ((remainingCents * 0.5).round() / 100)
+                                            .toStringAsFixed(0);
+                                    amountController
+                                        .selection = TextSelection.fromPosition(
+                                      TextPosition(
+                                        offset: amountController.text.length,
+                                      ),
+                                    );
+                                    setSheetState(() {});
+                                  },
+                                ),
+                                const SizedBox(width: kSpacing8),
+                                QuickAmountChip(
+                                  label: '75%',
+                                  amount: (remainingCents * 0.75).round(),
+                                  isActive:
+                                      paymentAmount() ==
+                                      (remainingCents * 0.75).round(),
+                                  onTap: () {
+                                    amountController.text =
+                                        ((remainingCents * 0.75).round() / 100)
+                                            .toStringAsFixed(0);
+                                    amountController
+                                        .selection = TextSelection.fromPosition(
+                                      TextPosition(
+                                        offset: amountController.text.length,
+                                      ),
+                                    );
+                                    setSheetState(() {});
+                                  },
+                                ),
+                                const SizedBox(width: kSpacing8),
+                                QuickAmountChip(
+                                  label: '100%',
+                                  amount: remainingCents,
+                                  isActive: paymentAmount() == remainingCents,
+                                  onTap: () {
+                                    amountController.text =
+                                        (remainingCents / 100).toStringAsFixed(
+                                          0,
+                                        );
+                                    amountController
+                                        .selection = TextSelection.fromPosition(
+                                      TextPosition(
+                                        offset: amountController.text.length,
+                                      ),
+                                    );
+                                    setSheetState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: kSpacing24),
+                            Text(
+                              'MEMO',
+                              style: theme.textTheme.labelSmall!.copyWith(
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing8),
+                            TextField(
+                              controller: descriptionController,
+                              textCapitalization: TextCapitalization.sentences,
+                              style: context.ts(14, color: onSurface),
+                              decoration: context.inputDecoration(
+                                hintText: 'Add a note (optional)',
+                                prefixIcon: Icon(
+                                  PesaFlowIcons.edit,
+                                  size: 20,
+                                  color: onSurface.withValues(alpha: 0.32),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing24),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'FROM ACCOUNT',
+                                  style: theme.textTheme.labelSmall!.copyWith(
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                                if (selectedAccountId != null)
+                                  GestureDetector(
+                                    onTap: () => setSheetState(
+                                      () => selectedAccountId = null,
+                                    ),
+                                    child: Text(
+                                      'Clear',
+                                      style: theme.textTheme.labelMedium!
+                                          .copyWith(
+                                            color: context
+                                                .appColors
+                                                .expenseColor
+                                                .withValues(alpha: 0.8),
+                                          ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: kSpacing8),
+                            FutureBuilder<List<Account>>(
+                              future: ref
+                                  .read(accountRepositoryProvider)
+                                  .getAllAccounts(),
+                              builder: (context, snapshot) {
+                                final accounts = snapshot.data ?? [];
+                                if (accounts.isEmpty) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(kSpacing16),
+                                    decoration: BoxDecoration(
+                                      color: context.appColors.expenseColor
+                                          .withValues(alpha: 0.05),
+                                      borderRadius: BorderRadius.circular(14),
+                                      border: Border.all(
+                                        color: context.appColors.expenseColor
+                                            .withValues(alpha: 0.2),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          PesaFlowIcons.warning,
+                                          size: 18,
+                                          color: context.appColors.expenseColor,
                                         ),
-                                        child: Text(
-                                          'Clear',
-                                          style: theme.textTheme.labelMedium!
+                                        const SizedBox(width: kSpacing10),
+                                        Text(
+                                          'No accounts available. Create one first.',
+                                          style: theme.textTheme.bodySmall!
                                               .copyWith(
                                                 color: context
                                                     .appColors
                                                     .expenseColor
-                                                    .withValues(alpha: 0.8),
+                                                    .withValues(alpha: 0.9),
                                               ),
                                         ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                                return Column(
+                                  children: accounts.map((account) {
+                                    final isSelected =
+                                        account.id == selectedAccountId;
+                                    final balanceCents = account.balance;
+                                    final hasFunds =
+                                        balanceCents >= paymentAmount();
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: kSpacing8,
                                       ),
-                                  ],
-                                ),
-                                const SizedBox(height: kSpacing8),
-                                FutureBuilder<List<Account>>(
-                                  future: ref
-                                      .read(accountRepositoryProvider)
-                                      .getAllAccounts(),
-                                  builder: (context, snapshot) {
-                                    final accounts = snapshot.data ?? [];
-                                    if (accounts.isEmpty) {
-                                      return Container(
-                                        padding: const EdgeInsets.all(
-                                          kSpacing16,
+                                      child: GestureDetector(
+                                        onTap: () => setSheetState(
+                                          () => selectedAccountId = account.id,
                                         ),
-                                        decoration: BoxDecoration(
-                                          color: context.appColors.expenseColor
-                                              .withValues(alpha: 0.05),
-                                          borderRadius: BorderRadius.circular(
-                                            14,
+                                        child: AnimatedContainer(
+                                          duration: const Duration(
+                                            milliseconds: 200,
                                           ),
-                                          border: Border.all(
-                                            color: context
-                                                .appColors
-                                                .expenseColor
-                                                .withValues(alpha: 0.2),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              PesaFlowIcons.warning,
-                                              size: 18,
-                                              color: context
-                                                  .appColors
-                                                  .expenseColor,
+                                          curve: Curves.easeOutCubic,
+                                          padding: const EdgeInsets.all(14),
+                                          decoration: BoxDecoration(
+                                            color: isSelected
+                                                ? context.appColors.incomeColor
+                                                      .withValues(alpha: 0.12)
+                                                : theme.colorScheme.surface,
+                                            borderRadius: BorderRadius.circular(
+                                              14,
                                             ),
-                                            const SizedBox(width: kSpacing10),
-                                            Text(
-                                              'No accounts available. Create one first.',
-                                              style: theme.textTheme.bodySmall!
-                                                  .copyWith(
-                                                    color: context
+                                            border: Border.all(
+                                              color: isSelected
+                                                  ? context
                                                         .appColors
-                                                        .expenseColor
-                                                        .withValues(alpha: 0.9),
-                                                  ),
+                                                        .incomeColor
+                                                        .withValues(alpha: 0.5)
+                                                  : onSurface.withValues(
+                                                      alpha: 0.07,
+                                                    ),
+                                              width: isSelected ? 1.5 : 1,
                                             ),
-                                          ],
-                                        ),
-                                      );
-                                    }
-                                    return Column(
-                                      children: accounts.map((account) {
-                                        final isSelected =
-                                            account.id == selectedAccountId;
-                                        final balanceCents = account.balance;
-                                        final hasFunds =
-                                            balanceCents >= paymentAmount();
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                            bottom: kSpacing8,
                                           ),
-                                          child: GestureDetector(
-                                            onTap: () => setSheetState(
-                                              () => selectedAccountId =
-                                                  account.id,
-                                            ),
-                                            child: AnimatedContainer(
-                                              duration: const Duration(
-                                                milliseconds: 200,
-                                              ),
-                                              curve: Curves.easeOutCubic,
-                                              padding: const EdgeInsets.all(14),
-                                              decoration: BoxDecoration(
-                                                color: isSelected
-                                                    ? context
-                                                          .appColors
-                                                          .incomeColor
-                                                          .withValues(
-                                                            alpha: 0.12,
-                                                          )
-                                                    : theme.colorScheme.surface,
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                                border: Border.all(
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding: const EdgeInsets.all(
+                                                  8,
+                                                ),
+                                                decoration: BoxDecoration(
                                                   color: isSelected
                                                       ? context
                                                             .appColors
                                                             .incomeColor
                                                             .withValues(
-                                                              alpha: 0.5,
+                                                              alpha: 0.2,
                                                             )
                                                       : onSurface.withValues(
-                                                          alpha: 0.07,
+                                                          alpha: 0.05,
                                                         ),
-                                                  width: isSelected ? 1.5 : 1,
+                                                  shape: BoxShape.circle,
                                                 ),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    padding:
-                                                        const EdgeInsets.all(8),
-                                                    decoration: BoxDecoration(
-                                                      color: isSelected
-                                                          ? context
-                                                                .appColors
-                                                                .incomeColor
-                                                                .withValues(
-                                                                  alpha: 0.2,
-                                                                )
-                                                          : onSurface
-                                                                .withValues(
-                                                                  alpha: 0.05,
-                                                                ),
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: Icon(
-                                                      isSelected
-                                                          ? PesaFlowIcons
-                                                                .success
-                                                          : PesaFlowIcons
-                                                                .wallet,
-                                                      size: 20,
-                                                      color: isSelected
-                                                          ? context
-                                                                .appColors
-                                                                .incomeColor
-                                                          : onSurface
-                                                                .withValues(
-                                                                  alpha: 0.55,
-                                                                ),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: kSpacing12,
-                                                  ),
-                                                  Expanded(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          account.name,
-                                                          style: theme
-                                                              .textTheme
-                                                              .bodyMedium!
-                                                              .copyWith(
-                                                                color:
-                                                                    isSelected
-                                                                    ? context
-                                                                          .appColors
-                                                                          .incomeColor
-                                                                    : onSurface,
-                                                              ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 2,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Text(
-                                                              'Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
-                                                              style: theme
-                                                                  .textTheme
-                                                                  .labelMedium!
-                                                                  .copyWith(
-                                                                    color: onSurface
-                                                                        .withValues(
-                                                                          alpha:
-                                                                              0.38,
-                                                                        ),
-                                                                  ),
-                                                            ),
-                                                            if (selectedAccountId !=
-                                                                    null &&
-                                                                !hasFunds &&
-                                                                paymentAmount() >
-                                                                    0) ...[
-                                                              const SizedBox(
-                                                                width: 8,
-                                                              ),
-                                                              Container(
-                                                                padding:
-                                                                    const EdgeInsets.symmetric(
-                                                                      horizontal:
-                                                                          6,
-                                                                      vertical:
-                                                                          2,
-                                                                    ),
-                                                                decoration: BoxDecoration(
-                                                                  color: context
-                                                                      .appColors
-                                                                      .expenseColor
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.12,
-                                                                      ),
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                        4,
-                                                                      ),
-                                                                ),
-                                                                child: Text(
-                                                                  'Insufficient',
-                                                                  style: theme
-                                                                      .extension<
-                                                                        AppTypographyTheme
-                                                                      >()!
-                                                                      .labelMicro
-                                                                      .copyWith(
-                                                                        color: Color(
-                                                                          0xFFE53935,
-                                                                        ),
-                                                                        fontWeight:
-                                                                            FontWeight.w600,
-                                                                      ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  if (isSelected)
-                                                    Container(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                            4,
-                                                          ),
-                                                      decoration: BoxDecoration(
-                                                        color: context
+                                                child: Icon(
+                                                  isSelected
+                                                      ? PesaFlowIcons.success
+                                                      : PesaFlowIcons.wallet,
+                                                  size: 20,
+                                                  color: isSelected
+                                                      ? context
                                                             .appColors
                                                             .incomeColor
-                                                            .withValues(
-                                                              alpha: 0.15,
-                                                            ),
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: const Icon(
-                                                        PesaFlowIcons.check,
-                                                        size: 16,
-                                                        color: Color(
-                                                          0xFF609F8A,
+                                                      : onSurface.withValues(
+                                                          alpha: 0.55,
                                                         ),
-                                                      ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: kSpacing12),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      account.name,
+                                                      style: theme
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .copyWith(
+                                                            color: isSelected
+                                                                ? context
+                                                                      .appColors
+                                                                      .incomeColor
+                                                                : onSurface,
+                                                          ),
                                                     ),
-                                                ],
+                                                    const SizedBox(height: 2),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          'Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
+                                                          style: theme
+                                                              .textTheme
+                                                              .labelMedium!
+                                                              .copyWith(
+                                                                color: onSurface
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.38,
+                                                                    ),
+                                                              ),
+                                                        ),
+                                                        if (selectedAccountId !=
+                                                                null &&
+                                                            !hasFunds &&
+                                                            paymentAmount() >
+                                                                0) ...[
+                                                          const SizedBox(
+                                                            width: 8,
+                                                          ),
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets.symmetric(
+                                                                  horizontal: 6,
+                                                                  vertical: 2,
+                                                                ),
+                                                            decoration: BoxDecoration(
+                                                              color: context
+                                                                  .appColors
+                                                                  .expenseColor
+                                                                  .withValues(
+                                                                    alpha: 0.12,
+                                                                  ),
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    4,
+                                                                  ),
+                                                            ),
+                                                            child: Text(
+                                                              'Insufficient',
+                                                              style: theme
+                                                                  .extension<
+                                                                    AppTypographyTheme
+                                                                  >()!
+                                                                  .labelMicro
+                                                                  .copyWith(
+                                                                    color: Color(
+                                                                      0xFFE53935,
+                                                                    ),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
+                                              if (isSelected)
+                                                Container(
+                                                  padding: const EdgeInsets.all(
+                                                    4,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: context
+                                                        .appColors
+                                                        .incomeColor
+                                                        .withValues(
+                                                          alpha: 0.15,
+                                                        ),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: const Icon(
+                                                    PesaFlowIcons.check,
+                                                    size: 16,
+                                                    color: Color(0xFF609F8A),
+                                                  ),
+                                                ),
+                                            ],
                                           ),
-                                        );
-                                      }).toList(),
-                                    );
-                                  },
-                                ),
-                                const SizedBox(height: kSpacing24),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 54,
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 250),
-                                    curve: Curves.easeOutCubic,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                        AppTheme.radiusCard,
-                                      ),
-                                      boxShadow: canSubmit
-                                          ? [
-                                              BoxShadow(
-                                                color: context
-                                                    .appColors
-                                                    .incomeColor
-                                                    .withValues(alpha: 0.3),
-                                                blurRadius: 12,
-                                                offset: const Offset(0, 4),
-                                              ),
-                                            ]
-                                          : [],
-                                    ),
-                                    child: ElevatedButton(
-                                      onPressed: canSubmit && !sheetIsProcessing
-                                          ? () async {
-                                              final desc = descriptionController
-                                                  .text
-                                                  .trim();
-                                              setSheetState(() {
-                                                sheetIsProcessing = true;
-                                              });
-                                              final success =
-                                                  await processPayment(
-                                                    context: context,
-                                                    ref: ref,
-                                                    loan: loan,
-                                                    amount: paymentAmount(),
-                                                    description: desc.isNotEmpty
-                                                        ? desc
-                                                        : 'Manual loan payment',
-                                                    accountId:
-                                                        selectedAccountId!,
-                                                  );
-                                              if (success) {
-                                                if (sheetContext.mounted) {
-                                                  CustomToast.show(
-                                                    sheetContext,
-                                                    message:
-                                                        'Payment recorded!',
-                                                    type: ToastType.success,
-                                                  );
-                                                  if (sheetContext.mounted) {
-                                                    Navigator.of(
-                                                      sheetContext,
-                                                    ).pop();
-                                                  }
-                                                }
-                                              } else {
-                                                setSheetState(() {
-                                                  sheetIsProcessing = false;
-                                                });
-                                              }
-                                            }
-                                          : null,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            context.appColors.incomeColor,
-                                        foregroundColor:
-                                            theme.colorScheme.onPrimary,
-                                        disabledBackgroundColor: onSurface
-                                            .withValues(alpha: 0.05),
-                                        disabledForegroundColor: onSurface
-                                            .withValues(alpha: 0.25),
-                                        elevation: 0,
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: kSpacing14,
                                         ),
                                       ),
-                                      child: sheetIsProcessing
-                                          ? SizedBox(
-                                              width: 20,
-                                              height: 20,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                                color:
-                                                    theme.colorScheme.onPrimary,
-                                              ),
-                                            )
-                                          : Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                if (paymentAmount() > 0 &&
-                                                    selectedAccountId != null)
-                                                  Icon(
-                                                    PesaFlowIcons.lock,
-                                                    size: 16,
-                                                    color: context.appColors.onBgColor
-                                                        .withValues(alpha: 0.8),
-                                                  ),
-                                                if (paymentAmount() > 0 &&
-                                                    selectedAccountId != null)
-                                                  const SizedBox(
-                                                    width: kSpacing8,
-                                                  ),
-                                                Text(
-                                                  paymentAmount() <= 0
-                                                      ? 'Enter an amount'
-                                                      : selectedAccountId ==
-                                                            null
-                                                      ? 'Select an account'
-                                                      : 'Pay ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                                  style: theme
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                ),
-                                              ],
-                                            ),
+                                    );
+                                  }).toList(),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: kSpacing24),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 54,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 250),
+                                curve: Curves.easeOutCubic,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusCard,
+                                  ),
+                                  boxShadow: canSubmit
+                                      ? [
+                                          BoxShadow(
+                                            color: context.appColors.incomeColor
+                                                .withValues(alpha: 0.3),
+                                            blurRadius: 12,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ]
+                                      : [],
+                                ),
+                                child: ElevatedButton(
+                                  onPressed: canSubmit && !sheetIsProcessing
+                                      ? () async {
+                                          final desc = descriptionController
+                                              .text
+                                              .trim();
+                                          setSheetState(() {
+                                            sheetIsProcessing = true;
+                                          });
+                                          final success = await processPayment(
+                                            context: context,
+                                            ref: ref,
+                                            loan: loan,
+                                            amount: paymentAmount(),
+                                            description: desc.isNotEmpty
+                                                ? desc
+                                                : 'Manual loan payment',
+                                            accountId: selectedAccountId!,
+                                          );
+                                          if (success) {
+                                            if (sheetContext.mounted) {
+                                              CustomToast.show(
+                                                sheetContext,
+                                                message: 'Payment recorded!',
+                                                type: ToastType.success,
+                                              );
+                                              if (sheetContext.mounted) {
+                                                Navigator.of(
+                                                  sheetContext,
+                                                ).pop();
+                                              }
+                                            }
+                                          } else {
+                                            setSheetState(() {
+                                              sheetIsProcessing = false;
+                                            });
+                                          }
+                                        }
+                                      : null,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        context.appColors.incomeColor,
+                                    foregroundColor:
+                                        theme.colorScheme.onPrimary,
+                                    disabledBackgroundColor: onSurface
+                                        .withValues(alpha: 0.05),
+                                    disabledForegroundColor: onSurface
+                                        .withValues(alpha: 0.25),
+                                    elevation: 0,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: kSpacing14,
                                     ),
                                   ),
+                                  child: sheetIsProcessing
+                                      ? SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: theme.colorScheme.onPrimary,
+                                          ),
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            if (paymentAmount() > 0 &&
+                                                selectedAccountId != null)
+                                              Icon(
+                                                PesaFlowIcons.lock,
+                                                size: 16,
+                                                color: context
+                                                    .appColors
+                                                    .onBgColor
+                                                    .withValues(alpha: 0.8),
+                                              ),
+                                            if (paymentAmount() > 0 &&
+                                                selectedAccountId != null)
+                                              const SizedBox(width: kSpacing8),
+                                            Text(
+                                              paymentAmount() <= 0
+                                                  ? 'Enter an amount'
+                                                  : selectedAccountId == null
+                                                  ? 'Select an account'
+                                                  : 'Pay ${CurrencyFormatter.formatCents(paymentAmount())}',
+                                              style: theme
+                                                  .textTheme
+                                                  .titleMedium!
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
+              ),
+            ),
           );
         },
       );

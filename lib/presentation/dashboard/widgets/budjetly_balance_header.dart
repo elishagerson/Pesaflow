@@ -214,43 +214,45 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 children: [
-              Expanded(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: context.isReducedMotion || _isHidden
-                      ? Text(
-                          _isHidden
-                              ? '••••••'
-                              : CurrencyFormatter.formatCents(widget.balance),
-                          style: context.ts(
-                            40,
-                            fontWeight: FontWeight.w900,
-                            color: theme.colorScheme.onSurface,
-                            letterSpacing: -1.0,
-                          ),
-                        )
-                      : TweenAnimationBuilder<double>(
-                          duration: const Duration(milliseconds: 1000),
-                          curve: Curves.easeOutCubic,
-                          tween: Tween<double>(
-                            begin: 0,
-                            end: widget.balance.toDouble(),
-                          ),
-                          builder: (context, value, _) {
-                            return Text(
-                              CurrencyFormatter.formatCents(value.round()),
+                  Expanded(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: context.isReducedMotion || _isHidden
+                          ? Text(
+                              _isHidden
+                                  ? '••••••'
+                                  : CurrencyFormatter.formatCents(
+                                      widget.balance,
+                                    ),
                               style: context.ts(
                                 40,
                                 fontWeight: FontWeight.w900,
                                 color: theme.colorScheme.onSurface,
                                 letterSpacing: -1.0,
                               ),
-                            );
-                          },
-                        ),
-                ),
-              ),
+                            )
+                          : TweenAnimationBuilder<double>(
+                              duration: const Duration(milliseconds: 1000),
+                              curve: Curves.easeOutCubic,
+                              tween: Tween<double>(
+                                begin: 0,
+                                end: widget.balance.toDouble(),
+                              ),
+                              builder: (context, value, _) {
+                                return Text(
+                                  CurrencyFormatter.formatCents(value.round()),
+                                  style: context.ts(
+                                    40,
+                                    fontWeight: FontWeight.w900,
+                                    color: theme.colorScheme.onSurface,
+                                    letterSpacing: -1.0,
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -264,9 +266,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
             });
           },
           icon: Icon(
-            _isHidden
-                ? PesaFlowIcons.visibilityOff
-                : PesaFlowIcons.visibility,
+            _isHidden ? PesaFlowIcons.visibilityOff : PesaFlowIcons.visibility,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             size: 20,
           ),
@@ -301,7 +301,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                     Container(
                       padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
-                        color: context.appColors.incomeColor.withValues(alpha: 0.12),
+                        color: context.appColors.incomeColor.withValues(
+                          alpha: 0.12,
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -315,7 +317,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                       'Total In',
                       style: context.ts(
                         13,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                   ],
@@ -340,7 +344,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                     Container(
                       padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
-                        color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                        color: context.appColors.expenseColor.withValues(
+                          alpha: 0.12,
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -354,7 +360,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                       'Total Out',
                       style: context.ts(
                         13,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                   ],
@@ -434,10 +442,14 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                    color: theme.colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.5,
+                    ),
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
-                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                      color: theme.colorScheme.outlineVariant.withValues(
+                        alpha: 0.4,
+                      ),
                       width: 1,
                     ),
                   ),

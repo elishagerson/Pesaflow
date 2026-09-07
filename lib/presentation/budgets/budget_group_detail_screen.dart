@@ -26,12 +26,15 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 
 /// Provider for loading a specific budget group's full data.
 final budgetGroupDetailProvider =
-    FutureProvider.family<BudgetGroupWithChildren?, String>((ref, groupId) async {
-  ref.watch(dataChangesStreamProvider);
-  final repo = ref.watch(budgetGroupRepositoryProvider);
-  final groups = await repo.getGroupsWithProgress();
-  return groups.where((g) => g.group.id == groupId).firstOrNull;
-});
+    FutureProvider.family<BudgetGroupWithChildren?, String>((
+      ref,
+      groupId,
+    ) async {
+      ref.watch(dataChangesStreamProvider);
+      final repo = ref.watch(budgetGroupRepositoryProvider);
+      final groups = await repo.getGroupsWithProgress();
+      return groups.where((g) => g.group.id == groupId).firstOrNull;
+    });
 
 class BudgetGroupDetailScreen extends ConsumerWidget {
   final String groupId;
@@ -50,9 +53,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
             if (groupData == null) {
               return Column(
                 children: [
-                  const FloatingTopBar(
-                    title: 'Budget Group',
-                  ),
+                  const FloatingTopBar(title: 'Budget Group'),
                   const Expanded(
                     child: EmptyState(
                       icon: PesaFlowIcons.budgets,
@@ -100,14 +101,14 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                           TactileSpringContainer(
                             onTap: () {
                               HapticFeedback.lightImpact();
-                              context.push(
-                                '/budgets/groups/$groupId/add',
-                              );
+                              context.push('/budgets/groups/$groupId/add');
                             },
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
-                                color: context.appColors.onBgColor.withValues(alpha: 0.06),
+                                color: context.appColors.onBgColor.withValues(
+                                  alpha: 0.06,
+                                ),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
@@ -150,7 +151,8 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                                   '${(group.percentage * 100).round()}% of income',
                                   style: context.ts(
                                     12,
-                                    color: context.appColors.onBgColor.withValues(alpha: 0.5),
+                                    color: context.appColors.onBgColor
+                                        .withValues(alpha: 0.5),
                                   ),
                                 ),
                               ],
@@ -203,7 +205,8 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                                         style: context.ts(
                                           28,
                                           fontWeight: FontWeight.w800,
-                                          color: groupData.totalSpent >
+                                          color:
+                                              groupData.totalSpent >
                                                   groupData.totalAllocated
                                               ? context.appColors.expenseColor
                                               : onSurface,
@@ -271,15 +274,12 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                                             value: value,
                                             strokeWidth: 7,
                                             strokeCap: StrokeCap.round,
-                                            backgroundColor:
-                                                onSurface.withValues(
-                                                  alpha: 0.05,
-                                                ),
-                                            color: groupData.totalSpent >
+                                            backgroundColor: onSurface
+                                                .withValues(alpha: 0.05),
+                                            color:
+                                                groupData.totalSpent >
                                                     groupData.totalAllocated
-                                                ? context
-                                                      .appColors
-                                                      .expenseColor
+                                                ? context.appColors.expenseColor
                                                 : groupColor,
                                           );
                                         },
@@ -324,11 +324,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
 
                         // Sub-budget list
                         if (groupData.subBudgets.isEmpty)
-                          _buildEmptySubBudgets(
-                            context,
-                            theme,
-                            groupColor,
-                          )
+                          _buildEmptySubBudgets(context, theme, groupColor)
                         else
                           ...groupData.subBudgets.asMap().entries.map((entry) {
                             final i = entry.key;
@@ -361,9 +357,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
           },
           loading: () => Column(
             children: [
-              const FloatingTopBar(
-                title: 'Budget Group',
-              ),
+              const FloatingTopBar(title: 'Budget Group'),
               const Expanded(
                 child: Padding(
                   padding: EdgeInsets.all(kSpacing20),
@@ -483,10 +477,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
           Expanded(
             child: Text(
               '${CurrencyFormatter.formatCents(unallocated)} unallocated in this group',
-              style: context.ts(
-                12,
-                color: onSurface.withValues(alpha: 0.7),
-              ),
+              style: context.ts(12, color: onSurface.withValues(alpha: 0.7)),
             ),
           ),
         ],
@@ -536,8 +527,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
           child: const Text('Cancel'),
         ),
         TextButton(
-          onPressed: () =>
-              Navigator.of(context, rootNavigator: true).pop(true),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
           child: Text(
             'Delete Group',
             style: TextStyle(color: context.appColors.expenseColor),
@@ -586,10 +576,7 @@ class _SubBudgetCard extends ConsumerWidget {
   final BudgetWithChildProgress subBudget;
   final Color groupColor;
 
-  const _SubBudgetCard({
-    required this.subBudget,
-    required this.groupColor,
-  });
+  const _SubBudgetCard({required this.subBudget, required this.groupColor});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -714,76 +701,71 @@ class _SubBudgetCard extends ConsumerWidget {
                         size: 20,
                       ),
                     ),
-                  const SizedBox(width: kSpacing12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          subBudget.category.name,
-                          style: context.ts(
-                            14,
-                            fontWeight: FontWeight.w600,
-                            color: onSurface,
+                    const SizedBox(width: kSpacing12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            subBudget.category.name,
+                            style: context.ts(
+                              14,
+                              fontWeight: FontWeight.w600,
+                              color: onSurface,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '${CurrencyFormatter.formatCents(subBudget.spentInPeriod)} of ${CurrencyFormatter.formatCents(allocated)}',
-                          style: context.ts(
-                            11,
-                            color: onSurface.withValues(alpha: 0.5),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${CurrencyFormatter.formatCents(subBudget.spentInPeriod)} of ${CurrencyFormatter.formatCents(allocated)}',
+                            style: context.ts(
+                              11,
+                              color: onSurface.withValues(alpha: 0.5),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: paceColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      isOver
-                          ? 'Over'
-                          : '${(pct * 100).round()}%',
-                      style: context.ts(
-                        10,
-                        fontWeight: FontWeight.w700,
-                        color: paceColor,
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: kSpacing10),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                child: TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 800),
-                  curve: Curves.easeOutCubic,
-                  tween: Tween<double>(
-                    begin: 0,
-                    end: pct.clamp(0.0, 1.0),
-                  ),
-                  builder: (context, value, _) {
-                    return LinearProgressIndicator(
-                      value: value,
-                      backgroundColor: onSurface.withValues(alpha: 0.05),
-                      color: paceColor,
-                      minHeight: 6,
-                    );
-                  },
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: paceColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        isOver ? 'Over' : '${(pct * 100).round()}%',
+                        style: context.ts(
+                          10,
+                          fontWeight: FontWeight.w700,
+                          color: paceColor,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: kSpacing10),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                  child: TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeOutCubic,
+                    tween: Tween<double>(begin: 0, end: pct.clamp(0.0, 1.0)),
+                    builder: (context, value, _) {
+                      return LinearProgressIndicator(
+                        value: value,
+                        backgroundColor: onSurface.withValues(alpha: 0.05),
+                        color: paceColor,
+                        minHeight: 6,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }

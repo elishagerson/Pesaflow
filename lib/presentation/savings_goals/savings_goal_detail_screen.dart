@@ -823,14 +823,14 @@ class _SavingsGoalDetailScreenState
                         ],
                       ),
                       const SizedBox(height: kSpacing12),
-                       Text(
-                         goal.name,
-                         style: context.ts(
-                           28,
-                           fontWeight: FontWeight.w700,
-                           letterSpacing: -0.8,
-                           color: context.appColors.onBgColor,
-                         ),
+                      Text(
+                        goal.name,
+                        style: context.ts(
+                          28,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.8,
+                          color: context.appColors.onBgColor,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -843,15 +843,17 @@ class _SavingsGoalDetailScreenState
                             color: goalColor,
                           ),
                           const SizedBox(width: kSpacing6),
-                           Text(
-                             remainingDays > 0
-                                 ? '$remainingDays days remaining'
-                                 : 'Target date reached',
-                             style: context.ts(
-                               12,
-                               color: context.appColors.onBgColor.withValues(alpha: 0.45),
-                             ),
-                           ),
+                          Text(
+                            remainingDays > 0
+                                ? '$remainingDays days remaining'
+                                : 'Target date reached',
+                            style: context.ts(
+                              12,
+                              color: context.appColors.onBgColor.withValues(
+                                alpha: 0.45,
+                              ),
+                            ),
+                          ),
                           const SizedBox(width: kSpacing10),
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -938,25 +940,24 @@ class _SavingsGoalDetailScreenState
                                     ),
                                   ),
                                   const SizedBox(height: kSpacing16),
-                                   AmountText(
-                                     amountInCents: totalSaved,
-                                     style: context.ts(
-                                       32,
-                                       fontWeight: FontWeight.w800,
-                                       letterSpacing: -0.8,
-                                       color: context.appColors.onBgColor,
-                                     ),
-                                   ),
+                                  AmountText(
+                                    amountInCents: totalSaved,
+                                    style: context.ts(
+                                      32,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: -0.8,
+                                      color: context.appColors.onBgColor,
+                                    ),
+                                  ),
                                   const SizedBox(height: kSpacing2),
-                                   Text(
-                                     'of ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                                     style: context.ts(
-                                       13,
-                                       color: context.appColors.onBgColor.withValues(
-                                         alpha: 0.4,
-                                       ),
-                                     ),
-                                   ),
+                                  Text(
+                                    'of ${CurrencyFormatter.formatCents(goal.targetAmount)}',
+                                    style: context.ts(
+                                      13,
+                                      color: context.appColors.onBgColor
+                                          .withValues(alpha: 0.4),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -1079,14 +1080,14 @@ class _SavingsGoalDetailScreenState
                         // ── Contribution History ──
                         Row(
                           children: [
-                             Text(
-                               'Contribution History',
-                               style: context.ts(
-                                 15,
-                                 fontWeight: FontWeight.w600,
-                                 color: context.appColors.onBgColor,
-                               ),
-                             ),
+                            Text(
+                              'Contribution History',
+                              style: context.ts(
+                                15,
+                                fontWeight: FontWeight.w600,
+                                color: context.appColors.onBgColor,
+                              ),
+                            ),
                             const Spacer(),
                           ],
                         ),
@@ -1099,17 +1100,16 @@ class _SavingsGoalDetailScreenState
                                 padding: const EdgeInsets.symmetric(
                                   vertical: kSpacing32,
                                 ),
-                                   child: Center(
-                                     child: Text(
-                                       'No contributions yet. Tap Deposit to get started.',
-                                       style: context.ts(
-                                         13,
-                                         color: context.appColors.onBgColor.withValues(
-                                           alpha: 0.35,
-                                         ),
-                                       ),
-                                     ),
-                                   ),
+                                child: Center(
+                                  child: Text(
+                                    'No contributions yet. Tap Deposit to get started.',
+                                    style: context.ts(
+                                      13,
+                                      color: context.appColors.onBgColor
+                                          .withValues(alpha: 0.35),
+                                    ),
+                                  ),
+                                ),
                               );
                             }
 
@@ -1164,32 +1164,36 @@ class _SavingsGoalDetailScreenState
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                               Text(
-                                                 isPos
-                                                     ? 'Deposit'
-                                                     : 'Withdrawal',
-                                                 style: context.ts(
-                                                   13,
-                                                   fontWeight: FontWeight.w600,
-                                                   color: context.appColors.onBgColor,
-                                                 ),
-                                               ),
+                                              Text(
+                                                isPos
+                                                    ? 'Deposit'
+                                                    : 'Withdrawal',
+                                                style: context.ts(
+                                                  13,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: context
+                                                      .appColors
+                                                      .onBgColor,
+                                                ),
+                                              ),
                                               if (log.notes != null &&
                                                   log.notes!.isNotEmpty) ...[
                                                 const SizedBox(
                                                   height: kSpacing2,
                                                 ),
-                                                 Text(
-                                                   log.notes!,
-                                                   style: context.ts(
-                                                     11,
-                                                     color: context.appColors.onBgColor
-                                                         .withValues(alpha: 0.4),
-                                                   ),
-                                                   maxLines: 1,
-                                                   overflow:
-                                                       TextOverflow.ellipsis,
-                                                 ),
+                                                Text(
+                                                  log.notes!,
+                                                  style: context.ts(
+                                                    11,
+                                                    color: context
+                                                        .appColors
+                                                        .onBgColor
+                                                        .withValues(alpha: 0.4),
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
                                               ],
                                             ],
                                           ),
@@ -1213,15 +1217,16 @@ class _SavingsGoalDetailScreenState
                                               ),
                                             ),
                                             const SizedBox(height: kSpacing2),
-                                             Text(
-                                               '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year}',
-                                               style: context.ts(
-                                                 10,
-                                                 color: context.appColors.onBgColor.withValues(
-                                                   alpha: 0.3,
-                                                 ),
-                                               ),
-                                             ),
+                                            Text(
+                                              '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year}',
+                                              style: context.ts(
+                                                10,
+                                                color: context
+                                                    .appColors
+                                                    .onBgColor
+                                                    .withValues(alpha: 0.3),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                         const SizedBox(width: kSpacing8),
@@ -1280,13 +1285,12 @@ class _SavingsGoalDetailScreenState
                                               );
                                             }
                                           },
-                                           child: Icon(
-                                             PesaFlowIcons.delete,
-                                             size: 14,
-                                             color: context.appColors.onBgColor.withValues(
-                                               alpha: 0.2,
-                                             ),
-                                           ),
+                                          child: Icon(
+                                            PesaFlowIcons.delete,
+                                            size: 14,
+                                            color: context.appColors.onBgColor
+                                                .withValues(alpha: 0.2),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1383,7 +1387,10 @@ class _GoalStatCard extends StatelessWidget {
           children: [
             Text(
               label,
-              style: context.ts(10, color: context.appColors.onBgColor.withValues(alpha: 0.4)),
+              style: context.ts(
+                10,
+                color: context.appColors.onBgColor.withValues(alpha: 0.4),
+              ),
             ),
             const SizedBox(height: kSpacing4),
             FittedBox(

@@ -60,21 +60,12 @@ class _SpringButtonState extends State<SpringButton>
 
   void _pressDown() {
     if (widget.onTap == null) return;
-    tweenAnimate(
-      _controller,
-      1.0,
-      duration: widget.pressDuration,
-    );
+    tweenAnimate(_controller, 1.0, duration: widget.pressDuration);
   }
 
   void _springBack() {
     if (widget.onTap == null) return;
-    springAnimate(
-      _controller,
-      widget.spring,
-      _controller.value,
-      0.0,
-    );
+    springAnimate(_controller, widget.spring, _controller.value, 0.0);
   }
 
   @override

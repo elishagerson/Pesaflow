@@ -84,9 +84,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 body: Column(
                   children: [
-                    const FloatingTopBar(
-                      title: 'Budget Details',
-                    ),
+                    const FloatingTopBar(title: 'Budget Details'),
                     const Expanded(
                       child: EmptyState(
                         icon: PesaFlowIcons.budgets,
@@ -175,8 +173,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                                 if (!context.mounted) return;
                                 final budget = bp.budget;
                                 final savedBudgetName = budget.name;
-                                final budgetRepo =
-                                    ref.read(budgetRepositoryProvider);
+                                final budgetRepo = ref.read(
+                                  budgetRepositoryProvider,
+                                );
 
                                 // Pop immediately to caller (prevents "Budget Not Found" empty state flicker)
                                 context.pop();
@@ -212,9 +211,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                         groupId: budget.groupId,
                                       );
                                       ref.invalidate(budgetGroupsProvider);
-                                      ref.invalidate(
-                                        standaloneBudgetsProvider,
-                                      );
+                                      ref.invalidate(standaloneBudgetsProvider);
                                       ref.invalidate(
                                         activeBudgetsStreamProvider,
                                       );
@@ -261,28 +258,37 @@ class BudgetDetailScreen extends ConsumerWidget {
                               vertical: kSpacing4,
                             ),
                             decoration: BoxDecoration(
-                              color: context.appColors.onBgColor.withValues(alpha: 0.12),
+                              color: context.appColors.onBgColor.withValues(
+                                alpha: 0.12,
+                              ),
                               borderRadius: BorderRadius.circular(
                                 AppTheme.radiusPill,
                               ),
                               border: Border.all(
-                                color: context.appColors.onBgColor.withValues(alpha: 0.15),
+                                color: context.appColors.onBgColor.withValues(
+                                  alpha: 0.15,
+                                ),
                               ),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                    PesaFlowIcons.back,
-                                    size: 12,
-                                    color: context.appColors.onBgColor.withValues(alpha: 0.7),
+                                  PesaFlowIcons.back,
+                                  size: 12,
+                                  color: context.appColors.onBgColor.withValues(
+                                    alpha: 0.7,
+                                  ),
                                 ),
                                 const SizedBox(width: 4),
                                 Consumer(
                                   builder: (context, ref, _) {
                                     final groups =
-                                        ref.watch(budgetGroupsProvider).asData?.value ??
-                                            [];
+                                        ref
+                                            .watch(budgetGroupsProvider)
+                                            .asData
+                                            ?.value ??
+                                        [];
                                     final group = groups
                                         .where(
                                           (g) =>
@@ -309,7 +315,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                       Row(
                         children: [
                           Expanded(
-                            child:                             Text(
+                            child: Text(
                               bp.budget.name,
                               style: context.ts(
                                 28,
@@ -374,13 +380,15 @@ class BudgetDetailScreen extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(width: kSpacing8),
-                              Text(
-                                bp.budget.period.toUpperCase(),
-                                style: context.ts(
-                                  11,
-                                  fontWeight: FontWeight.w500,
-                                  color: context.appColors.onBgColor.withValues(alpha: 0.4),
-                                ),
+                          Text(
+                            bp.budget.period.toUpperCase(),
+                            style: context.ts(
+                              11,
+                              fontWeight: FontWeight.w500,
+                              color: context.appColors.onBgColor.withValues(
+                                alpha: 0.4,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -509,9 +517,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                           ),
                         ),
                         if ((bp.category.name.toLowerCase() == 'emergencies' ||
-                                bp.budget.name
-                                    .toLowerCase()
-                                    .contains('emergenc')) &&
+                                bp.budget.name.toLowerCase().contains(
+                                  'emergenc',
+                                )) &&
                             status.remaining > 0) ...[
                           const SizedBox(height: kSpacing12),
                           StaggeredFadeSlide(
@@ -525,11 +533,13 @@ class BudgetDetailScreen extends ConsumerWidget {
                                   Row(
                                     children: [
                                       Container(
-                                        padding:
-                                            const EdgeInsets.all(kSpacing8),
+                                        padding: const EdgeInsets.all(
+                                          kSpacing8,
+                                        ),
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFFE11D48)
-                                              .withValues(alpha: 0.15),
+                                          color: const Color(
+                                            0xFFE11D48,
+                                          ).withValues(alpha: 0.15),
                                           shape: BoxShape.circle,
                                         ),
                                         child: const Icon(
@@ -559,7 +569,8 @@ class BudgetDetailScreen extends ConsumerWidget {
                                               style: context.ts(
                                                 11,
                                                 color: theme
-                                                    .colorScheme.onSurface
+                                                    .colorScheme
+                                                    .onSurface
                                                     .withValues(alpha: 0.6),
                                               ),
                                             ),
@@ -571,8 +582,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                                   const SizedBox(height: kSpacing12),
                                   TactileSpringContainer(
                                     onTap: () async {
-                                      final repo =
-                                          ref.read(budgetRepositoryProvider);
+                                      final repo = ref.read(
+                                        budgetRepositoryProvider,
+                                      );
                                       final moved = await repo
                                           .moveEmergencyBudgetRemainderToSavings(
                                             bp.budget.id,
@@ -611,14 +623,16 @@ class BudgetDetailScreen extends ConsumerWidget {
                                         horizontal: kSpacing14,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFFE11D48)
-                                            .withValues(alpha: 0.12),
+                                        color: const Color(
+                                          0xFFE11D48,
+                                        ).withValues(alpha: 0.12),
                                         borderRadius: BorderRadius.circular(
                                           AppTheme.radiusSmall,
                                         ),
                                         border: Border.all(
-                                          color: const Color(0xFFE11D48)
-                                              .withValues(alpha: 0.35),
+                                          color: const Color(
+                                            0xFFE11D48,
+                                          ).withValues(alpha: 0.35),
                                         ),
                                       ),
                                       child: Row(

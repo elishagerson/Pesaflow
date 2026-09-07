@@ -179,474 +179,436 @@ class _SavingsGoalDetailSheetState
                       const SizedBox(height: kSpacing12),
                       Expanded(
                         child: RawScrollbar(
-                              controller: scrollController,
-                              child: SingleChildScrollView(
-                                controller: scrollController,
-                                physics: const ClampingScrollPhysics(),
-                                padding: const EdgeInsets.fromLTRB(
-                                  20,
-                                  0,
-                                  20,
-                                  24,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                          controller: scrollController,
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            physics: const ClampingScrollPhysics(),
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Header
+                                Row(
                                   children: [
-                                    // Header
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(
-                                            kSpacing10,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: accentColor.withValues(
-                                              alpha: 0.12,
-                                            ),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(
+                                    Container(
+                                      padding: const EdgeInsets.all(kSpacing10),
+                                      decoration: BoxDecoration(
+                                        color: accentColor.withValues(
+                                          alpha: 0.12,
+                                        ),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        isDeposit
+                                            ? PesaFlowIcons.savings
+                                            : PesaFlowIcons.wallet,
+                                        color: accentColor,
+                                        size: 22,
+                                      ),
+                                    ),
+                                    const SizedBox(width: kSpacing14),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
                                             isDeposit
-                                                ? PesaFlowIcons.savings
-                                                : PesaFlowIcons.wallet,
-                                            color: accentColor,
-                                            size: 22,
+                                                ? 'Deposit Savings'
+                                                : 'Withdraw Savings',
+                                            style: theme.textTheme.titleLarge!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                          ),
+                                          const SizedBox(height: kSpacing2),
+                                          Text(
+                                            isDeposit
+                                                ? 'Add money to your savings goal'
+                                                : 'Take money out of your savings goal',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium!
+                                                .copyWith(
+                                                  color: onSurface.withValues(
+                                                    alpha: 0.6,
+                                                  ),
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: kSpacing24),
+
+                                // Amount Entry
+                                Text(
+                                  'AMOUNT',
+                                  style: Theme.of(context).textTheme.labelSmall!
+                                      .copyWith(letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: kSpacing8),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.surface,
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusCard,
+                                    ),
+                                    border: Border.all(
+                                      color: onSurface.withValues(alpha: 0.07),
+                                    ),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 4,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'TSh',
+                                        style: theme.textTheme.titleMedium!
+                                            .copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              color: accentColor,
+                                            ),
+                                      ),
+                                      const SizedBox(width: kSpacing12),
+                                      Expanded(
+                                        child: TextFormField(
+                                          controller: _amountController,
+                                          keyboardType: TextInputType.number,
+                                          autofocus: true,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                          ],
+                                          validator: (v) {
+                                            final val =
+                                                int.tryParse(v ?? '') ?? 0;
+                                            if (val <= 0) {
+                                              return 'Enter a valid amount';
+                                            }
+                                            return null;
+                                          },
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: onSurface,
+                                              ),
+                                          decoration: context.inputDecoration(
+                                            hintText: '0',
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                  horizontal: 16,
+                                                  vertical: 12,
+                                                ),
                                           ),
                                         ),
-                                        const SizedBox(width: kSpacing14),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                isDeposit
-                                                    ? 'Deposit Savings'
-                                                    : 'Withdraw Savings',
-                                                style: theme
-                                                    .textTheme
-                                                    .titleLarge!
-                                                    .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
+                                      ),
+                                      if (_amountController.text.isNotEmpty)
+                                        GestureDetector(
+                                          onTap: () {
+                                            _amountController.clear();
+                                            setModalState(() {});
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: BoxDecoration(
+                                              color: onSurface.withValues(
+                                                alpha: 0.07,
                                               ),
-                                              const SizedBox(height: kSpacing2),
-                                              Text(
-                                                isDeposit
-                                                    ? 'Add money to your savings goal'
-                                                    : 'Take money out of your savings goal',
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              PesaFlowIcons.close,
+                                              size: 18,
+                                              color: onSurface.withValues(
+                                                alpha: 0.5,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: kSpacing20),
+
+                                // Note
+                                Text(
+                                  'MEMO',
+                                  style: Theme.of(context).textTheme.labelSmall!
+                                      .copyWith(letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: kSpacing8),
+                                TextFormField(
+                                  controller: _noteController,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  style: Theme.of(context).textTheme.bodyMedium!
+                                      .copyWith(color: onSurface),
+                                  decoration: context.inputDecoration(
+                                    hintText:
+                                        'Add an optional note (e.g. Salary bonus)',
+                                    prefixIcon: Icon(
+                                      PesaFlowIcons.edit,
+                                      size: 20,
+                                      color: onSurface.withValues(alpha: 0.32),
+                                    ),
+
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 14,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: kSpacing20),
+
+                                // Wallet deduct toggle
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.surface,
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(
+                                      color: onSurface.withValues(alpha: 0.07),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                          vertical: 12,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    isDeposit
+                                                        ? 'Deduct from Wallet'
+                                                        : 'Refund to Wallet',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: onSurface,
+                                                        ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: kSpacing2,
+                                                  ),
+                                                  Text(
+                                                    'Updates real balance & logs a transaction',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelMedium!
+                                                        .copyWith(
+                                                          color: onSurface
+                                                              .withValues(
+                                                                alpha: 0.38,
+                                                              ),
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            CupertinoSwitch(
+                                              value: _deductFromWallet,
+                                              activeTrackColor: accentColor,
+                                              onChanged: (v) {
+                                                setModalState(() {
+                                                  _deductFromWallet = v;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      if (_deductFromWallet) ...[
+                                        Divider(
+                                          height: 0.5,
+                                          thickness: 0.5,
+                                          color: onSurface.withValues(
+                                            alpha: 0.07,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 8,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                PesaFlowIcons.wallet,
+                                                size: 18,
+                                                color: onSurface.withValues(
+                                                  alpha: 0.38,
+                                                ),
+                                              ),
+                                              const SizedBox(width: kSpacing10),
+                                              Expanded(
+                                                child: Text(
+                                                  'Source Account',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                ),
+                                              ),
+                                              DropdownButton<String>(
+                                                value: _selectedAccountId,
+                                                dropdownColor:
+                                                    theme.colorScheme.surface,
+                                                underline: const SizedBox(),
+                                                icon: Icon(
+                                                  Icons
+                                                      .keyboard_arrow_down_rounded,
+                                                  size: 20,
+                                                  color: onSurface.withValues(
+                                                    alpha: 0.5,
+                                                  ),
+                                                ),
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .labelMedium!
-                                                    .copyWith(
-                                                      color: onSurface
-                                                          .withValues(
-                                                            alpha: 0.6,
-                                                          ),
+                                                    .titleSmall!
+                                                    .copyWith(color: onSurface),
+                                                items: accounts.map((acc) {
+                                                  return DropdownMenuItem<
+                                                    String
+                                                  >(
+                                                    value: acc.id,
+                                                    child: Text(
+                                                      '${acc.name} (${CurrencyFormatter.formatCents(acc.balance)})',
                                                     ),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (v) {
+                                                  setModalState(() {
+                                                    _selectedAccountId = v;
+                                                  });
+                                                },
                                               ),
                                             ],
                                           ),
                                         ),
                                       ],
-                                    ),
-                                    const SizedBox(height: kSpacing24),
-
-                                    // Amount Entry
-                                    Text(
-                                      'AMOUNT',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall!
-                                          .copyWith(letterSpacing: 0.5),
-                                    ),
-                                    const SizedBox(height: kSpacing8),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: theme.colorScheme.surface,
-                                        borderRadius: BorderRadius.circular(
-                                          AppTheme.radiusCard,
-                                        ),
-                                        border: Border.all(
-                                          color: onSurface.withValues(
-                                            alpha: 0.07,
-                                          ),
-                                        ),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 4,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            'TSh',
-                                            style: theme.textTheme.titleMedium!
-                                                .copyWith(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: accentColor,
-                                                ),
-                                          ),
-                                          const SizedBox(width: kSpacing12),
-                                          Expanded(
-                                            child: TextFormField(
-                                              controller: _amountController,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              autofocus: true,
-                                              inputFormatters: [
-                                                FilteringTextInputFormatter
-                                                    .digitsOnly,
-                                              ],
-                                              validator: (v) {
-                                                final val =
-                                                    int.tryParse(v ?? '') ?? 0;
-                                                if (val <= 0) {
-                                                  return 'Enter a valid amount';
-                                                }
-                                                return null;
-                                              },
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headlineMedium!
-                                                  .copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: onSurface,
-                                                  ),
-                                              decoration: context.inputDecoration(
-                                                hintText: '0',
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 16,
-                                                      vertical: 12,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                          if (_amountController.text.isNotEmpty)
-                                            GestureDetector(
-                                              onTap: () {
-                                                _amountController.clear();
-                                                setModalState(() {});
-                                              },
-                                              child: Container(
-                                                padding: const EdgeInsets.all(
-                                                  4,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: onSurface.withValues(
-                                                    alpha: 0.07,
-                                                  ),
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Icon(
-                                                  PesaFlowIcons.close,
-                                                  size: 18,
-                                                  color: onSurface.withValues(
-                                                    alpha: 0.5,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: kSpacing20),
-
-                                    // Note
-                                    Text(
-                                      'MEMO',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall!
-                                          .copyWith(letterSpacing: 0.5),
-                                    ),
-                                    const SizedBox(height: kSpacing8),
-                                    TextFormField(
-                                      controller: _noteController,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(color: onSurface),
-                                      decoration: context.inputDecoration(
-                                        hintText:
-                                            'Add an optional note (e.g. Salary bonus)',
-                                        prefixIcon: Icon(
-                                          PesaFlowIcons.edit,
-                                          size: 20,
-                                          color: onSurface.withValues(
-                                            alpha: 0.32,
-                                          ),
-                                        ),
-
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 14,
-                                            ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: kSpacing20),
-
-                                    // Wallet deduct toggle
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: theme.colorScheme.surface,
-                                        borderRadius: BorderRadius.circular(14),
-                                        border: Border.all(
-                                          color: onSurface.withValues(
-                                            alpha: 0.07,
-                                          ),
-                                        ),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 12,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        isDeposit
-                                                            ? 'Deduct from Wallet'
-                                                            : 'Refund to Wallet',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyMedium!
-                                                            .copyWith(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              color: onSurface,
-                                                            ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: kSpacing2,
-                                                      ),
-                                                      Text(
-                                                        'Updates real balance & logs a transaction',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .labelMedium!
-                                                            .copyWith(
-                                                              color: onSurface
-                                                                  .withValues(
-                                                                    alpha: 0.38,
-                                                                  ),
-                                                            ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                CupertinoSwitch(
-                                                  value: _deductFromWallet,
-                                                  activeTrackColor: accentColor,
-                                                  onChanged: (v) {
-                                                    setModalState(() {
-                                                      _deductFromWallet = v;
-                                                    });
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          if (_deductFromWallet) ...[
-                                            Divider(
-                                              height: 0.5,
-                                              thickness: 0.5,
-                                              color: onSurface.withValues(
-                                                alpha: 0.07,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 16,
-                                                    vertical: 8,
-                                                  ),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    PesaFlowIcons.wallet,
-                                                    size: 18,
-                                                    color: onSurface.withValues(
-                                                      alpha: 0.38,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: kSpacing10,
-                                                  ),
-                                                  Expanded(
-                                                    child: Text(
-                                                      'Source Account',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyMedium!
-                                                          .copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                  DropdownButton<String>(
-                                                    value: _selectedAccountId,
-                                                    dropdownColor: theme
-                                                        .colorScheme
-                                                        .surface,
-                                                    underline: const SizedBox(),
-                                                    icon: Icon(
-                                                      Icons
-                                                          .keyboard_arrow_down_rounded,
-                                                      size: 20,
-                                                      color: onSurface
-                                                          .withValues(
-                                                            alpha: 0.5,
-                                                          ),
-                                                    ),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleSmall!
-                                                        .copyWith(
-                                                          color: onSurface,
-                                                        ),
-                                                    items: accounts.map((acc) {
-                                                      return DropdownMenuItem<
-                                                        String
-                                                      >(
-                                                        value: acc.id,
-                                                        child: Text(
-                                                          '${acc.name} (${CurrencyFormatter.formatCents(acc.balance)})',
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                                    onChanged: (v) {
-                                                      setModalState(() {
-                                                        _selectedAccountId = v;
-                                                      });
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: kSpacing28),
-
-                                    // Action Submit Button
-                                    SizedBox(
-                                      width: double.infinity,
-                                      height: 54,
-                                      child: AnimatedContainer(
-                                        duration: const Duration(
-                                          milliseconds: 250,
-                                        ),
-                                        curve: Curves.easeOutCubic,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            AppTheme.radiusCard,
-                                          ),
-                                          boxShadow: !_isOperationLoading
-                                              ? [
-                                                  BoxShadow(
-                                                    color: accentColor
-                                                        .withValues(alpha: 0.3),
-                                                    blurRadius: 12,
-                                                    offset: const Offset(0, 4),
-                                                  ),
-                                                ]
-                                              : [],
-                                        ),
-                                        child: ElevatedButton(
-                                          onPressed: _isOperationLoading
-                                              ? null
-                                              : () {
-                                                  if (!_formKey.currentState!
-                                                      .validate()) {
-                                                    return;
-                                                  }
-                                                  _handleContribution(
-                                                    isDeposit,
-                                                  );
-                                                },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: accentColor,
-                                            foregroundColor: theme.colorScheme.onPrimary,
-                                            disabledBackgroundColor: onSurface
-                                                .withValues(alpha: 0.05),
-                                            elevation: 0,
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 14,
-                                            ),
-                                          ),
-                                          child: _isOperationLoading
-                                              ? SizedBox(
-                                                  width: 22,
-                                                  height: 22,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 2.5,
-                                                        color: context.appColors.onBgColor,
-                                                      ),
-                                                )
-                                              : Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                      isDeposit
-                                                          ? PesaFlowIcons.add
-                                                          : Icons
-                                                                .remove_circle_outline_rounded,
-                                                      size: 18,
-                                                      color: context.appColors.onBgColor
-                                                          .withValues(
-                                                            alpha: 0.8,
-                                                          ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: kSpacing8,
-                                                    ),
-                                                    Text(
-                                                      isDeposit
-                                                          ? 'Confirm Deposit'
-                                                          : 'Confirm Withdrawal',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .titleMedium!
-                                                          .copyWith(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(height: kSpacing28),
+
+                                // Action Submit Button
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 54,
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 250),
+                                    curve: Curves.easeOutCubic,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusCard,
+                                      ),
+                                      boxShadow: !_isOperationLoading
+                                          ? [
+                                              BoxShadow(
+                                                color: accentColor.withValues(
+                                                  alpha: 0.3,
+                                                ),
+                                                blurRadius: 12,
+                                                offset: const Offset(0, 4),
+                                              ),
+                                            ]
+                                          : [],
+                                    ),
+                                    child: ElevatedButton(
+                                      onPressed: _isOperationLoading
+                                          ? null
+                                          : () {
+                                              if (!_formKey.currentState!
+                                                  .validate()) {
+                                                return;
+                                              }
+                                              _handleContribution(isDeposit);
+                                            },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: accentColor,
+                                        foregroundColor:
+                                            theme.colorScheme.onPrimary,
+                                        disabledBackgroundColor: onSurface
+                                            .withValues(alpha: 0.05),
+                                        elevation: 0,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 14,
+                                        ),
+                                      ),
+                                      child: _isOperationLoading
+                                          ? SizedBox(
+                                              width: 22,
+                                              height: 22,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2.5,
+                                                color:
+                                                    context.appColors.onBgColor,
+                                              ),
+                                            )
+                                          : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  isDeposit
+                                                      ? PesaFlowIcons.add
+                                                      : Icons
+                                                            .remove_circle_outline_rounded,
+                                                  size: 18,
+                                                  color: context
+                                                      .appColors
+                                                      .onBgColor
+                                                      .withValues(alpha: 0.8),
+                                                ),
+                                                const SizedBox(
+                                                  width: kSpacing8,
+                                                ),
+                                                Text(
+                                                  isDeposit
+                                                      ? 'Confirm Deposit'
+                                                      : 'Confirm Withdrawal',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium!
+                                                      .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
         );
       },
     );

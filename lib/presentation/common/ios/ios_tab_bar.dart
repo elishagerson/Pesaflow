@@ -140,13 +140,16 @@ class IosTabBar extends StatelessWidget {
                                       switchOutCurve: Curves.easeInCubic,
                                       transitionBuilder: (child, anim) {
                                         return ScaleTransition(
-                                          scale: Tween<double>(
-                                            begin: 0.82,
-                                            end: 1.0,
-                                          ).animate(CurvedAnimation(
-                                            parent: anim,
-                                            curve: Curves.easeOutBack,
-                                          )),
+                                          scale:
+                                              Tween<double>(
+                                                begin: 0.82,
+                                                end: 1.0,
+                                              ).animate(
+                                                CurvedAnimation(
+                                                  parent: anim,
+                                                  curve: Curves.easeOutBack,
+                                                ),
+                                              ),
                                           child: child,
                                         );
                                       },

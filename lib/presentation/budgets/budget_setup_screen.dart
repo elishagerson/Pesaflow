@@ -77,27 +77,22 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
       final settingsRepo = ref.read(settingsRepositoryProvider);
 
       // Save income and rule to settings
-      await settingsRepo.setSetting(
-        'monthly_income',
-        incomeCents.toString(),
-      );
-      await settingsRepo.setSetting(
-        'budget_rule',
-        _selectedRule.toDbString(),
-      );
+      await settingsRepo.setSetting('monthly_income', incomeCents.toString());
+      await settingsRepo.setSetting('budget_rule', _selectedRule.toDbString());
 
       // Create the 3 budget groups
       await groupRepo.createBudgetPlan(
         rule: _selectedRule,
         monthlyIncomeCents: incomeCents,
-        customNeeds:
-            _selectedRule == BudgetRuleType.custom ? _customNeeds : null,
-        customWants:
-            _selectedRule == BudgetRuleType.custom ? _customWants : null,
-        customInvestments:
-            _selectedRule == BudgetRuleType.custom
-                ? _customInvestments
-                : null,
+        customNeeds: _selectedRule == BudgetRuleType.custom
+            ? _customNeeds
+            : null,
+        customWants: _selectedRule == BudgetRuleType.custom
+            ? _customWants
+            : null,
+        customInvestments: _selectedRule == BudgetRuleType.custom
+            ? _customInvestments
+            : null,
       );
 
       // Invalidate providers
@@ -238,8 +233,8 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                               _goToStep(_currentStep + 1);
                             }
                           : _isSaving
-                              ? null
-                              : _save,
+                          ? null
+                          : _save,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: kSpacing14,
@@ -441,7 +436,11 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           // Rule options
           ...BudgetRuleType.values.map((rule) {
             final isSelected = _selectedRule == rule;
-            final (needsPct, wantsPct, investPct) = rule == BudgetRuleType.custom
+            final (
+              needsPct,
+              wantsPct,
+              investPct,
+            ) = rule == BudgetRuleType.custom
                 ? (_customNeeds, _customWants, _customInvestments)
                 : rule.percentages;
 
@@ -461,9 +460,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                       color: isSelected
                           ? theme.colorScheme.primary.withValues(alpha: 0.08)
                           : onSurface.withValues(alpha: 0.03),
-                      borderRadius: BorderRadius.circular(
-                        AppTheme.radiusCard,
-                      ),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                       border: Border.all(
                         color: isSelected
                             ? theme.colorScheme.primary.withValues(alpha: 0.4)
@@ -533,8 +530,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                           ),
                         ],
                         // Custom sliders
-                        if (isSelected &&
-                            rule == BudgetRuleType.custom) ...[
+                        if (isSelected && rule == BudgetRuleType.custom) ...[
                           const SizedBox(height: kSpacing16),
                           _buildCustomSlider(
                             'Needs',
@@ -574,10 +570,14 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           _customNeeds = value;
           final remaining = 1.0 - value;
           if (_customWants + _customInvestments > 0) {
-            final ratio = remaining /
+            final ratio =
+                remaining /
                 (_customWants + _customInvestments).clamp(0.01, 1.0);
             _customWants = (_customWants * ratio).clamp(0.0, 1.0);
-            _customInvestments = (1.0 - _customNeeds - _customWants).clamp(0.0, 1.0);
+            _customInvestments = (1.0 - _customNeeds - _customWants).clamp(
+              0.0,
+              1.0,
+            );
           } else {
             _customWants = remaining / 2;
             _customInvestments = remaining / 2;
@@ -586,10 +586,14 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           _customWants = value;
           final remaining = 1.0 - value;
           if (_customNeeds + _customInvestments > 0) {
-            final ratio = remaining /
+            final ratio =
+                remaining /
                 (_customNeeds + _customInvestments).clamp(0.01, 1.0);
             _customNeeds = (_customNeeds * ratio).clamp(0.0, 1.0);
-            _customInvestments = (1.0 - _customNeeds - _customWants).clamp(0.0, 1.0);
+            _customInvestments = (1.0 - _customNeeds - _customWants).clamp(
+              0.0,
+              1.0,
+            );
           } else {
             _customNeeds = remaining / 2;
             _customInvestments = remaining / 2;
@@ -598,10 +602,13 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           _customInvestments = value;
           final remaining = 1.0 - value;
           if (_customNeeds + _customWants > 0) {
-            final ratio = remaining /
-                (_customNeeds + _customWants).clamp(0.01, 1.0);
+            final ratio =
+                remaining / (_customNeeds + _customWants).clamp(0.01, 1.0);
             _customNeeds = (_customNeeds * ratio).clamp(0.0, 1.0);
-            _customWants = (1.0 - _customNeeds - _customInvestments).clamp(0.0, 1.0);
+            _customWants = (1.0 - _customNeeds - _customInvestments).clamp(
+              0.0,
+              1.0,
+            );
           } else {
             _customNeeds = remaining / 2;
             _customWants = remaining / 2;
@@ -624,11 +631,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
             width: 80,
             child: Text(
               '$label ${(value * 100).round()}%',
-              style: context.ts(
-                12,
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
+              style: context.ts(12, fontWeight: FontWeight.w600, color: color),
             ),
           ),
           Expanded(
@@ -638,9 +641,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                 inactiveTrackColor: color.withValues(alpha: 0.15),
                 thumbColor: color,
                 trackHeight: 4,
-                thumbShape: const RoundSliderThumbShape(
-                  enabledThumbRadius: 8,
-                ),
+                thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
               ),
               child: Slider(
                 value: value.clamp(0.05, 0.90),
@@ -660,18 +661,22 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
   // ════════════════════════════════════════════════════════════════════════════
   Widget _buildReviewStep(ThemeData theme, Color onSurface) {
     final incomeCents = _incomeCents;
-    final (needsPct, wantsPct, investPct) =
-        _selectedRule == BudgetRuleType.custom
-            ? (_customNeeds, _customWants, _customInvestments)
-            : _selectedRule.percentages;
+    final (
+      needsPct,
+      wantsPct,
+      investPct,
+    ) = _selectedRule == BudgetRuleType.custom
+        ? (_customNeeds, _customWants, _customInvestments)
+        : _selectedRule.percentages;
 
     final allocations = BudgetEngine.computeGroupAllocations(
       monthlyIncome: incomeCents,
       rule: _selectedRule,
       customNeeds: _selectedRule == BudgetRuleType.custom ? _customNeeds : null,
       customWants: _selectedRule == BudgetRuleType.custom ? _customWants : null,
-      customInvestments:
-          _selectedRule == BudgetRuleType.custom ? _customInvestments : null,
+      customInvestments: _selectedRule == BudgetRuleType.custom
+          ? _customInvestments
+          : null,
     );
 
     return SingleChildScrollView(
@@ -760,9 +765,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                     ),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(
-                        AppTheme.radiusPill,
-                      ),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                     ),
                     child: Text(
                       _selectedRule.displayName,
@@ -905,7 +908,10 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
         PesaFlowIcons.income,
         const Color(0xFF4CAF50),
       ),
-      BudgetGroupType.custom => (PesaFlowIcons.budgets, const Color(0xFF6B7280)),
+      BudgetGroupType.custom => (
+        PesaFlowIcons.budgets,
+        const Color(0xFF6B7280),
+      ),
     };
   }
 }
@@ -964,27 +970,9 @@ class _SplitPreviewBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _legendItem(
-              'Needs',
-              needsPct,
-              needsColor,
-              onSurface,
-              context,
-            ),
-            _legendItem(
-              'Wants',
-              wantsPct,
-              wantsColor,
-              onSurface,
-              context,
-            ),
-            _legendItem(
-              'Invest',
-              investPct,
-              investColor,
-              onSurface,
-              context,
-            ),
+            _legendItem('Needs', needsPct, needsColor, onSurface, context),
+            _legendItem('Wants', wantsPct, wantsColor, onSurface, context),
+            _legendItem('Invest', investPct, investColor, onSurface, context),
           ],
         ),
       ],

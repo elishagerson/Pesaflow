@@ -305,8 +305,9 @@ final budgetProgressProvider = FutureProvider<List<BudgetWithProgress>>((
 });
 
 /// Budget groups with their child budgets and progress.
-final budgetGroupsProvider =
-    FutureProvider<List<BudgetGroupWithChildren>>((ref) async {
+final budgetGroupsProvider = FutureProvider<List<BudgetGroupWithChildren>>((
+  ref,
+) async {
   ref.watch(_transactionChangesProvider);
   ref.watch(dataChangesStreamProvider);
   final repo = ref.watch(budgetGroupRepositoryProvider);
@@ -314,8 +315,9 @@ final budgetGroupsProvider =
 });
 
 /// Standalone (ungrouped) budgets with progress.
-final standaloneBudgetsProvider =
-    FutureProvider<List<BudgetWithProgress>>((ref) async {
+final standaloneBudgetsProvider = FutureProvider<List<BudgetWithProgress>>((
+  ref,
+) async {
   ref.watch(_transactionChangesProvider);
   ref.watch(dataChangesStreamProvider);
   final repo = ref.watch(budgetGroupRepositoryProvider);

@@ -54,10 +54,7 @@ class ModernDialog extends StatelessWidget {
         final scaleValue = Tween<double>(
           begin: 0.85,
           end: 1.0,
-        ).animate(CurvedAnimation(
-          parent: anim1,
-          curve: Curves.easeOutCubic,
-        ));
+        ).animate(CurvedAnimation(parent: anim1, curve: Curves.easeOutCubic));
         return ScaleTransition(
           scale: scaleValue,
           child: FadeTransition(opacity: anim1, child: dialog),
@@ -88,10 +85,7 @@ class ModernDialog extends StatelessWidget {
         final scaleValue = Tween<double>(
           begin: 0.85,
           end: 1.0,
-        ).animate(CurvedAnimation(
-          parent: anim1,
-          curve: Curves.easeOutCubic,
-        ));
+        ).animate(CurvedAnimation(parent: anim1, curve: Curves.easeOutCubic));
         return ScaleTransition(
           scale: scaleValue,
           child: FadeTransition(opacity: anim1, child: child),
@@ -214,9 +208,7 @@ class _StaggeredActionsState extends State<_StaggeredActions>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(
-        milliseconds: 200 + (widget.actions.length * 40),
-      ),
+      duration: Duration(milliseconds: 200 + (widget.actions.length * 40)),
     );
   }
 
@@ -251,8 +243,7 @@ class _StaggeredActionsState extends State<_StaggeredActions>
           mainAxisAlignment: MainAxisAlignment.end,
           children: List.generate(widget.actions.length, (i) {
             // Each action fades in with 40ms stagger
-            final start = (i * 40) /
-                (200 + widget.actions.length * 40);
+            final start = (i * 40) / (200 + widget.actions.length * 40);
             final end = start + 0.5;
             final t = Interval(
               start.clamp(0.0, 1.0),

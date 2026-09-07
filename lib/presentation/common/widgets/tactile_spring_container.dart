@@ -36,8 +36,7 @@ class TactileSpringContainer extends StatefulWidget {
   });
 
   @override
-  State<TactileSpringContainer> createState() =>
-      _TactileSpringContainerState();
+  State<TactileSpringContainer> createState() => _TactileSpringContainerState();
 }
 
 class _TactileSpringContainerState extends State<TactileSpringContainer>
@@ -68,11 +67,7 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
 
   void _pressDown() {
     if (widget.onTap == null) return;
-    tweenAnimate(
-      _controller,
-      1.0,
-      duration: MotionTokens.durationFast,
-    );
+    tweenAnimate(_controller, 1.0, duration: MotionTokens.durationFast);
   }
 
   void _springBack() {

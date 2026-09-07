@@ -119,7 +119,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: context.appColors.onBgColor.withValues(alpha: 0.1),
+                              color: context.appColors.onBgColor.withValues(
+                                alpha: 0.1,
+                              ),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
@@ -148,7 +150,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: context.appColors.onBgColor.withValues(alpha: 0.1),
+                            color: context.appColors.onBgColor.withValues(
+                              alpha: 0.1,
+                            ),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(

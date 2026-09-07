@@ -78,10 +78,7 @@ class EmptyState extends StatelessWidget {
             ],
             if (action != null) ...[
               SizedBox(height: context.isCompactView ? 20 : 28),
-              StaggeredFadeSlide(
-                index: 3,
-                child: action!,
-              ),
+              StaggeredFadeSlide(index: 3, child: action!),
             ],
           ],
         ),
@@ -113,14 +110,17 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
       vsync: this,
       duration: const Duration(milliseconds: 450),
     );
-    _opacityAnim =
-        CurvedAnimation(parent: _entranceController, curve: Curves.easeOut);
-    _slideAnim = Tween<Offset>(
-      begin: const Offset(0, 0.06),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _entranceController, curve: Curves.easeOutCubic),
+    _opacityAnim = CurvedAnimation(
+      parent: _entranceController,
+      curve: Curves.easeOut,
     );
+    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _entranceController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
   }
 
   bool _initialized = false;
@@ -151,10 +151,7 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
     }
     return FadeTransition(
       opacity: _opacityAnim,
-      child: SlideTransition(
-        position: _slideAnim,
-        child: widget.child,
-      ),
+      child: SlideTransition(position: _slideAnim, child: widget.child),
     );
   }
 }

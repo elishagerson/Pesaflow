@@ -7,7 +7,7 @@ class BudgetEngine {
   ///
   /// Returns a list of (type, percentage, amount) for each group.
   static List<({BudgetGroupType type, double percentage, int amount})>
-      computeGroupAllocations({
+  computeGroupAllocations({
     required int monthlyIncome,
     required BudgetRuleType rule,
     double? customNeeds,
@@ -32,16 +32,8 @@ class BudgetEngine {
     final amounts = _distributeAmount(monthlyIncome, percentages);
 
     return [
-      (
-        type: BudgetGroupType.needs,
-        percentage: needsPct,
-        amount: amounts[0],
-      ),
-      (
-        type: BudgetGroupType.wants,
-        percentage: wantsPct,
-        amount: amounts[1],
-      ),
+      (type: BudgetGroupType.needs, percentage: needsPct, amount: amounts[0]),
+      (type: BudgetGroupType.wants, percentage: wantsPct, amount: amounts[1]),
       (
         type: BudgetGroupType.investments,
         percentage: investPct,

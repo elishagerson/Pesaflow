@@ -57,10 +57,7 @@ class LoanListScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // ── Floating Top Bar ──
-                const FloatingTopBar(
-                  title: 'Loans',
-                  padding: EdgeInsets.zero,
-                ),
+                const FloatingTopBar(title: 'Loans', padding: EdgeInsets.zero),
                 const SizedBox(height: 16),
 
                 // Outstanding header

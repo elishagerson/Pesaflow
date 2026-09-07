@@ -77,11 +77,7 @@ class BudgetRepository {
     final budgetId = _uuid.v4();
     final normalizedStart = period == 'monthly'
         ? DateTime(startDate.year, startDate.month, 1)
-        : DateTime(
-            startDate.year,
-            startDate.month,
-            startDate.day,
-          );
+        : DateTime(startDate.year, startDate.month, startDate.day);
     final periodEnd = BudgetEngine.computePeriodEnd(normalizedStart, period);
 
     final budget = Budget(
@@ -174,8 +170,10 @@ class BudgetRepository {
             currentPeriod.periodStart.month,
             1,
           );
-          final alignedEnd =
-              BudgetEngine.computePeriodEnd(alignedStart, 'monthly');
+          final alignedEnd = BudgetEngine.computePeriodEnd(
+            alignedStart,
+            'monthly',
+          );
           final alignedPeriod = currentPeriod.copyWith(
             periodStart: alignedStart,
             periodEnd: alignedEnd,
@@ -288,8 +286,7 @@ class BudgetRepository {
       // Look for an Emergency Fund goal first, or any active goal
       SavingsGoal? targetGoal = allGoals
           .where(
-            (g) =>
-                g.name.toLowerCase().contains('emergenc') && !g.isCompleted,
+            (g) => g.name.toLowerCase().contains('emergenc') && !g.isCompleted,
           )
           .firstOrNull;
 
@@ -305,8 +302,7 @@ class BudgetRepository {
         // Auto-create dedicated Emergency Fund savings goal
         final now = DateTime.now();
         final newGoalId = _uuid.v4();
-        final target =
-            remaining * 6 > 100000000 ? remaining * 6 : 100000000;
+        final target = remaining * 6 > 100000000 ? remaining * 6 : 100000000;
         final newGoal = SavingsGoal(
           id: newGoalId,
           name: 'Emergency Fund',
@@ -388,9 +384,7 @@ class BudgetRepository {
     );
 
     // Adjust period allocation so remaining is 0 and won't re-trigger at period close
-    final updatedPeriod = currentPeriod.copyWith(
-      allocated: spent,
-    );
+    final updatedPeriod = currentPeriod.copyWith(allocated: spent);
     await _budgetDao.updatePeriod(updatedPeriod);
     return true;
   }

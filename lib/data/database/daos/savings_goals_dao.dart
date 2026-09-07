@@ -32,11 +32,9 @@ class SavingsGoalsDao extends DatabaseAccessor<AppDatabase>
 
   /// Returns all savings goals across all trackers/unassigned trackers.
   Future<List<SavingsGoal>> getAllGoals() {
-    return (select(savingsGoals)
-          ..orderBy([
-            (t) =>
-                OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
-          ]))
+    return (select(savingsGoals)..orderBy([
+          (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
+        ]))
         .get();
   }
 

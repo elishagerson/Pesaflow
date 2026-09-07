@@ -174,4 +174,3 @@ class PesaFlowIcons {
   static const IconData hobbies = Icons.palette_rounded;
   static const IconData fines = Icons.report_problem_rounded;
 }
-

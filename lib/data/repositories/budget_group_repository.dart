@@ -176,9 +176,7 @@ class BudgetGroupRepository {
     final groups = await _groupDao.getAllActiveGroups();
     for (final group in groups) {
       final newAmount = (newMonthlyIncomeCents * group.percentage).round();
-      await _groupDao.updateGroup(
-        group.copyWith(allocatedAmount: newAmount),
-      );
+      await _groupDao.updateGroup(group.copyWith(allocatedAmount: newAmount));
     }
   }
 

@@ -71,7 +71,9 @@ class LoanDetailScreen extends ConsumerWidget {
                       child: Container(
                         padding: const EdgeInsets.all(kSpacing10),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.08,
+                          ),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -464,7 +466,7 @@ class LoanDetailScreen extends ConsumerWidget {
                         ? context.appColors.expenseColor
                         : event.isCompleted
                         ? context.appColors.incomeColor
-                         : theme.colorScheme.onSurfaceVariant,
+                        : theme.colorScheme.onSurfaceVariant,
                     shape: BoxShape.circle,
                   ),
                 ),

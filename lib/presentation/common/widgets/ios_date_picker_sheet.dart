@@ -7,7 +7,7 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 /// Shows an iOS-style bottom sheet date picker.
-/// 
+///
 /// Replaces the standard Material [showDatePicker] for a more tactile,
 /// physical interaction.
 Future<DateTime?> showIosDatePicker(
@@ -19,14 +19,14 @@ Future<DateTime?> showIosDatePicker(
   String? title,
 }) async {
   DateTime selectedDate = initialDate;
-  
+
   return showSpringSheet<DateTime>(
     context,
     useSafeArea: true,
     builder: (BuildContext ctx) {
       final theme = Theme.of(ctx);
       final appColors = theme.extension<AppColorsTheme>()!;
-      
+
       return Container(
         height: 320,
         decoration: BoxDecoration(
@@ -55,17 +55,14 @@ Future<DateTime?> showIosDatePicker(
                       ),
                       child: Text(
                         'Cancel',
-                        style: ctx.ts(16).copyWith(
-                          color: theme.colorScheme.primary,
-                        ),
+                        style: ctx
+                            .ts(16)
+                            .copyWith(color: theme.colorScheme.primary),
                       ),
                     ),
                   ),
                   if (title != null)
-                    Text(
-                      title,
-                      style: ctx.ts(16, fontWeight: FontWeight.w600),
-                    ),
+                    Text(title, style: ctx.ts(16, fontWeight: FontWeight.w600)),
                   TactileSpringContainer(
                     onTap: () => Navigator.of(ctx).pop(selectedDate),
                     child: Padding(
@@ -75,9 +72,9 @@ Future<DateTime?> showIosDatePicker(
                       ),
                       child: Text(
                         'Done',
-                        style: ctx.ts(16, fontWeight: FontWeight.w600).copyWith(
-                          color: theme.colorScheme.primary,
-                        ),
+                        style: ctx
+                            .ts(16, fontWeight: FontWeight.w600)
+                            .copyWith(color: theme.colorScheme.primary),
                       ),
                     ),
                   ),
