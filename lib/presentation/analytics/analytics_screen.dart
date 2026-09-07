@@ -286,11 +286,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               ),
               Expanded(
                 child: TabBarView(
-                  children: [
-                    _OverviewTab(),
-                    _TrendsTab(),
-                    const InsightsTab(),
-                  ],
+                  children: [_OverviewTab(), _TrendsTab(), const InsightsTab()],
                 ),
               ),
             ],
@@ -739,8 +735,9 @@ class _OverviewTab extends ConsumerWidget {
                           ),
                         ],
                       ),
-                    ),
-                  },
+                    );
+                  }
+                },
                 loading: () => const SizedBox(
                   height: 100,
                   child: Center(
@@ -1395,7 +1392,6 @@ class _TrendsTab extends ConsumerWidget {
             ),
           ),
         ],
-      ),
       ),
     );
   }

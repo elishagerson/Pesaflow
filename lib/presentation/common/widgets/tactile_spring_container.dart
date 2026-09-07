@@ -18,12 +18,21 @@ class TactileSpringContainer extends StatefulWidget {
   /// PocketCal pattern: haptic confirms the action, not the intent.
   final HapticType? haptic;
 
+  /// Optional semantic label for accessibility (VoiceOver / TalkBack).
+  final String? semanticLabel;
+
+  /// Whether this widget should be announced as a button by screen readers.
+  /// Defaults to `true` when [onTap] is non-null.
+  final bool? semanticButton;
+
   const TactileSpringContainer({
     super.key,
     required this.child,
     this.onTap,
     this.scaleFactor = MotionTokens.scalePress,
     this.haptic,
+    this.semanticLabel,
+    this.semanticButton,
   });
 
   @override
@@ -78,7 +87,8 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    final hasButton = widget.semanticButton ?? (widget.onTap != null);
+    final core = GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTapDown: (_) => _pressDown(),
       onTapUp: (_) {
@@ -97,6 +107,14 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
         },
         child: widget.child,
       ),
+    );
+
+    if (widget.semanticLabel == null && !hasButton) return core;
+    return Semantics(
+      label: widget.semanticLabel,
+      button: hasButton,
+      enabled: widget.onTap != null,
+      child: core,
     );
   }
 }

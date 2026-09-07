@@ -471,10 +471,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
       0,
       (sum, g) => sum + g.group.allocatedAmount,
     );
-    final totalSpent = groups.fold<int>(
-      0,
-      (sum, g) => sum + g.totalSpent,
-    );
+    final totalSpent = groups.fold<int>(0, (sum, g) => sum + g.totalSpent);
     final overallPct = totalAllocated > 0
         ? (totalSpent / totalAllocated).clamp(0.0, 2.0)
         : 0.0;
@@ -702,8 +699,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   color: isOverBudget
                       ? context.appColors.expenseColor
                       : (overallPct > 0.85
-                          ? context.appColors.warningColor
-                          : theme.colorScheme.primary),
+                            ? context.appColors.warningColor
+                            : theme.colorScheme.primary),
                   minHeight: 6,
                 ),
               );
@@ -757,8 +754,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           child: const Text('Cancel'),
         ),
         TextButton(
-          onPressed: () =>
-              Navigator.of(context, rootNavigator: true).pop(true),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
           child: Text(
             'Delete Plan',
             style: TextStyle(color: context.appColors.expenseColor),
@@ -884,67 +880,124 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           ),
         ),
         child: TactileSpringContainer(
-        onTap: () => context.push('/budgets/groups/${g.group.id}'),
-        child: GlassCard(
-          padding: const EdgeInsets.all(kSpacing16),
-          borderRadius: AppTheme.radiusCard,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-                    ),
-                    child: Icon(icon, color: color, size: 22),
-                  ),
-                  const SizedBox(width: kSpacing12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              g.group.name,
-                              style: context.ts(
-                                17,
-                                fontWeight: FontWeight.w700,
-                                color: onSurface,
-                              ),
-                            ),
-                            const SizedBox(width: kSpacing8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: color.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(
-                                  AppTheme.radiusPill,
-                                ),
-                              ),
-                              child: Text(
-                                '${(g.group.percentage * 100).round()}%',
-                                style: context.ts(
-                                  10,
-                                  fontWeight: FontWeight.w700,
-                                  color: color,
-                                ),
-                              ),
-                            ),
-                          ],
+          onTap: () => context.push('/budgets/groups/${g.group.id}'),
+          child: GlassCard(
+            padding: const EdgeInsets.all(kSpacing16),
+            borderRadius: AppTheme.radiusCard,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusInput,
                         ),
-                        const SizedBox(height: 2),
+                      ),
+                      child: Icon(icon, color: color, size: 22),
+                    ),
+                    const SizedBox(width: kSpacing12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                g.group.name,
+                                style: context.ts(
+                                  17,
+                                  fontWeight: FontWeight.w700,
+                                  color: onSurface,
+                                ),
+                              ),
+                              const SizedBox(width: kSpacing8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: color.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusPill,
+                                  ),
+                                ),
+                                child: Text(
+                                  '${(g.group.percentage * 100).round()}%',
+                                  style: context.ts(
+                                    10,
+                                    fontWeight: FontWeight.w700,
+                                    color: color,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            g.subBudgets.isEmpty
+                                ? 'No envelopes yet'
+                                : '${g.subBudgets.length} envelopes',
+                            style: context.ts(
+                              12,
+                              color: onSurface.withValues(alpha: 0.5),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    TactileSpringContainer(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        context.push('/budgets/groups/${g.group.id}/add');
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: onSurface.withValues(alpha: 0.06),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          PesaFlowIcons.add,
+                          size: 16,
+                          color: onSurface.withValues(alpha: 0.8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: kSpacing4),
+                    Icon(
+                      PesaFlowIcons.chevronRight,
+                      size: 18,
+                      color: onSurface.withValues(alpha: 0.35),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: kSpacing14),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        AmountText(
+                          amountInCents: spent,
+                          style: context.ts(
+                            16,
+                            fontWeight: FontWeight.w800,
+                            color: isOver
+                                ? context.appColors.expenseColor
+                                : onSurface,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
                         Text(
-                          g.subBudgets.isEmpty
-                              ? 'No envelopes yet'
-                              : '${g.subBudgets.length} envelopes',
+                          'of ${CurrencyFormatter.formatCents(allocated)}',
                           style: context.ts(
                             12,
                             color: onSurface.withValues(alpha: 0.5),
@@ -952,148 +1005,95 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         ),
                       ],
                     ),
-                  ),
-                  TactileSpringContainer(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      context.push('/budgets/groups/${g.group.id}/add');
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: onSurface.withValues(alpha: 0.06),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        PesaFlowIcons.add,
-                        size: 16,
-                        color: onSurface.withValues(alpha: 0.8),
+                    Text(
+                      '${(pct * 100).round()}%',
+                      style: context.ts(
+                        13,
+                        fontWeight: FontWeight.w700,
+                        color: progressColor,
                       ),
                     ),
-                  ),
-                  const SizedBox(width: kSpacing4),
-                  Icon(
-                    PesaFlowIcons.chevronRight,
-                    size: 18,
-                    color: onSurface.withValues(alpha: 0.35),
-                  ),
-                ],
-              ),
-              const SizedBox(height: kSpacing14),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      AmountText(
-                        amountInCents: spent,
-                        style: context.ts(
-                          16,
-                          fontWeight: FontWeight.w800,
-                          color: isOver
-                              ? context.appColors.expenseColor
-                              : onSurface,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'of ${CurrencyFormatter.formatCents(allocated)}',
-                        style: context.ts(
-                          12,
-                          color: onSurface.withValues(alpha: 0.5),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    '${(pct * 100).round()}%',
-                    style: context.ts(
-                      13,
-                      fontWeight: FontWeight.w700,
-                      color: progressColor,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: kSpacing8),
-              TweenAnimationBuilder<double>(
-                duration: const Duration(milliseconds: 800),
-                curve: Curves.easeOutCubic,
-                tween: Tween<double>(begin: 0, end: pct.clamp(0.0, 1.0)),
-                builder: (context, value, _) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                    child: LinearProgressIndicator(
-                      value: value,
-                      backgroundColor: onSurface.withValues(alpha: 0.05),
-                      color: progressColor,
-                      minHeight: 6,
-                    ),
-                  );
-                },
-              ),
-              if (g.subBudgets.isNotEmpty) ...[
-                const SizedBox(height: kSpacing10),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  child: Row(
-                    children: g.subBudgets.take(4).map((sub) {
-                      final catColor = hexToColor(sub.category.color);
-                      return Container(
-                        margin: const EdgeInsets.only(right: kSpacing6),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing8,
-                          vertical: kSpacing4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: onSurface.withValues(alpha: 0.04),
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusPill,
-                          ),
-                          border: Border.all(
-                            color: onSurface.withValues(alpha: 0.06),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              getCategoryIcon(sub.category.icon),
-                              size: 12,
-                              color: catColor,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              sub.category.name,
-                              style: context.ts(
-                                11,
-                                fontWeight: FontWeight.w500,
-                                color: onSurface.withValues(alpha: 0.7),
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              CurrencyFormatter.formatCents(sub.spentInPeriod),
-                              style: context.ts(
-                                10,
-                                fontWeight: FontWeight.w700,
-                                color: onSurface.withValues(alpha: 0.5),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                  ],
                 ),
+                const SizedBox(height: kSpacing8),
+                TweenAnimationBuilder<double>(
+                  duration: const Duration(milliseconds: 800),
+                  curve: Curves.easeOutCubic,
+                  tween: Tween<double>(begin: 0, end: pct.clamp(0.0, 1.0)),
+                  builder: (context, value, _) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                      child: LinearProgressIndicator(
+                        value: value,
+                        backgroundColor: onSurface.withValues(alpha: 0.05),
+                        color: progressColor,
+                        minHeight: 6,
+                      ),
+                    );
+                  },
+                ),
+                if (g.subBudgets.isNotEmpty) ...[
+                  const SizedBox(height: kSpacing10),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    child: Row(
+                      children: g.subBudgets.take(4).map((sub) {
+                        final catColor = hexToColor(sub.category.color);
+                        return Container(
+                          margin: const EdgeInsets.only(right: kSpacing6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing8,
+                            vertical: kSpacing4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: onSurface.withValues(alpha: 0.04),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusPill,
+                            ),
+                            border: Border.all(
+                              color: onSurface.withValues(alpha: 0.06),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                getCategoryIcon(sub.category.icon),
+                                size: 12,
+                                color: catColor,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                sub.category.name,
+                                style: context.ts(
+                                  11,
+                                  fontWeight: FontWeight.w500,
+                                  color: onSurface.withValues(alpha: 0.7),
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                CurrencyFormatter.formatCents(
+                                  sub.spentInPeriod,
+                                ),
+                                style: context.ts(
+                                  10,
+                                  fontWeight: FontWeight.w700,
+                                  color: onSurface.withValues(alpha: 0.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -1109,7 +1109,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
       allocated: bp.currentPeriod?.allocated ?? bp.budget.amount,
       spent: bp.spentInPeriod,
       periodStart: bp.currentPeriod?.periodStart ?? bp.budget.startDate,
-      periodEnd: bp.currentPeriod?.periodEnd ??
+      periodEnd:
+          bp.currentPeriod?.periodEnd ??
           DateTime.now().add(const Duration(days: 30)),
     );
     final catColor = hexToColor(bp.category.color);
@@ -1203,152 +1204,143 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           ),
         ),
         child: Hero(
-        tag: 'budget-${bp.budget.id}',
-        child: TactileSpringContainer(
-          onTap: () => context.push('/budgets/${bp.budget.id}'),
-          child: GlassCard(
-            padding: const EdgeInsets.all(kSpacing16),
-            borderRadius: AppTheme.radiusCard,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(kSpacing10),
-                      decoration: BoxDecoration(
-                        color: catColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusInput,
+          tag: 'budget-${bp.budget.id}',
+          child: TactileSpringContainer(
+            onTap: () => context.push('/budgets/${bp.budget.id}'),
+            child: GlassCard(
+              padding: const EdgeInsets.all(kSpacing16),
+              borderRadius: AppTheme.radiusCard,
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(kSpacing10),
+                        decoration: BoxDecoration(
+                          color: catColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusInput,
+                          ),
+                        ),
+                        child: Icon(
+                          getCategoryIcon(bp.category.icon),
+                          color: catColor,
+                          size: 24,
                         ),
                       ),
-                      child: Icon(
-                        getCategoryIcon(bp.category.icon),
-                        color: catColor,
-                        size: 24,
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            bp.category.name,
-                            style: context.ts(
-                              16,
-                              fontWeight: FontWeight.bold,
-                              color: onSurface,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: paceColor.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  status.paceLabel,
-                                  style: context.ts(
-                                    10,
-                                    fontWeight: FontWeight.w700,
-                                    color: paceColor,
-                                  ),
-                                ),
+                      const SizedBox(width: kSpacing16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              bp.category.name,
+                              style: context.ts(
+                                16,
+                                fontWeight: FontWeight.bold,
+                                color: onSurface,
                               ),
-                              if (status.daysLeft > 0) ...[
-                                const SizedBox(width: 8),
-                                Text(
-                                  '${status.daysLeft} days left',
-                                  style: context.ts(
-                                    11,
-                                    color: onSurface.withValues(
-                                      alpha: 0.5,
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: paceColor.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    status.paceLabel,
+                                    style: context.ts(
+                                      10,
+                                      fontWeight: FontWeight.w700,
+                                      color: paceColor,
                                     ),
                                   ),
                                 ),
+                                if (status.daysLeft > 0) ...[
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '${status.daysLeft} days left',
+                                    style: context.ts(
+                                      11,
+                                      color: onSurface.withValues(alpha: 0.5),
+                                    ),
+                                  ),
+                                ],
                               ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          AmountText(
+                            amountInCents: bp.spentInPeriod,
+                            style: context.ts(
+                              16,
+                              fontWeight: FontWeight.w800,
+                              color: status.isOverBudget
+                                  ? context.appColors.expenseColor
+                                  : onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Row(
+                            children: [
+                              Text(
+                                'of ',
+                                style: context.ts(
+                                  12,
+                                  color: onSurface.withValues(alpha: 0.5),
+                                ),
+                              ),
+                              AmountText(
+                                amountInCents:
+                                    bp.currentPeriod?.allocated ??
+                                    bp.budget.amount,
+                                style: context.ts(
+                                  12,
+                                  fontWeight: FontWeight.w700,
+                                  color: onSurface.withValues(alpha: 0.7),
+                                ),
+                              ),
                             ],
                           ),
                         ],
                       ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        AmountText(
-                          amountInCents: bp.spentInPeriod,
-                          style: context.ts(
-                            16,
-                            fontWeight: FontWeight.w800,
-                            color: status.isOverBudget
-                                ? context.appColors.expenseColor
-                                : onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Row(
-                          children: [
-                            Text(
-                              'of ',
-                              style: context.ts(
-                                12,
-                                color: onSurface.withValues(
-                                  alpha: 0.5,
-                                ),
-                              ),
-                            ),
-                            AmountText(
-                              amountInCents: bp.currentPeriod?.allocated ??
-                                  bp.budget.amount,
-                              style: context.ts(
-                                12,
-                                fontWeight: FontWeight.w700,
-                                color: onSurface.withValues(
-                                  alpha: 0.7,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing12),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    AppTheme.radiusPill,
+                    ],
                   ),
-                  child: TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 600),
-                    curve: Curves.easeOutCubic,
-                    tween: Tween<double>(
-                      begin: 0,
-                      end: status.percentage.clamp(0.0, 1.0),
+                  const SizedBox(height: kSpacing12),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                    child: TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 600),
+                      curve: Curves.easeOutCubic,
+                      tween: Tween<double>(
+                        begin: 0,
+                        end: status.percentage.clamp(0.0, 1.0),
+                      ),
+                      builder: (context, value, _) {
+                        return LinearProgressIndicator(
+                          value: value,
+                          backgroundColor: onSurface.withValues(alpha: 0.05),
+                          color: paceColor,
+                          minHeight: 8,
+                        );
+                      },
                     ),
-                    builder: (context, value, _) {
-                      return LinearProgressIndicator(
-                        value: value,
-                        backgroundColor: onSurface.withValues(
-                          alpha: 0.05,
-                        ),
-                        color: paceColor,
-                        minHeight: 8,
-                      );
-                    },
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
       ),
     );
   }

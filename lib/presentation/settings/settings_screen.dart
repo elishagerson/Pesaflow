@@ -40,6 +40,9 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+
+  static void showAccountsManager(BuildContext context, WidgetRef ref) =>
+      _SettingsScreenState._showAccountsManager(context, ref);
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
@@ -65,7 +68,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
-  static void showAccountsManager(BuildContext context, WidgetRef _) {
+  static void _showAccountsManager(BuildContext context, WidgetRef _) {
     final theme = Theme.of(context);
     IosBottomSheet.show(
       context: context,
@@ -1126,7 +1129,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         size: 18,
                         color: context.appColors.textMedium,
                       ),
-                      onTap: () => showAccountsManager(context, ref),
+                      onTap: () => _showAccountsManager(context, ref),
                     ),
                     IosListRow(
                       leading: Icon(
@@ -1349,7 +1352,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   header: 'Data',
                   rows: [
                     TactileSpringContainer(
-                      onTap: () => showAccountsManager(context, ref),
+                      onTap: () => _showAccountsManager(context, ref),
                       child: IosListRow(
                         leading: Icon(
                           PesaFlowIcons.wallet,
@@ -1360,7 +1363,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         subtitle: const Text(
                           'Manage bank, mobile money & cash wallets',
                         ),
-                        onTap: () => showAccountsManager(context, ref),
+                        onTap: () => _showAccountsManager(context, ref),
                       ),
                     ),
                     TactileSpringContainer(
