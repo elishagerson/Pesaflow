@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/ios_date_picker_sheet.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
@@ -785,32 +786,15 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     );
   }
 
-  void _showDatePickerSheet(BuildContext context) {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (_) => Container(
-        height: 250,
-        color: Theme.of(context).colorScheme.surface,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 190,
-              child: CupertinoDatePicker(
-                initialDateTime: _selectedDate,
-                mode: CupertinoDatePickerMode.date,
-                onDateTimeChanged: (val) {
-                  setState(() => _selectedDate = val);
-                },
-              ),
-            ),
-            CupertinoButton(
-              child: const Text('Done'),
-              onPressed: () => context.pop(),
-            ),
-          ],
-        ),
-      ),
+  Future<void> _showDatePickerSheet(BuildContext context) async {
+    final picked = await showIosDatePicker(
+      context,
+      initialDate: _selectedDate,
+      title: 'Select Date',
     );
+    if (picked != null) {
+      setState(() => _selectedDate = picked);
+    }
   }
 
   Widget _buildActionPill({

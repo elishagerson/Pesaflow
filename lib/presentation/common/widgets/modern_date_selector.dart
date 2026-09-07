@@ -7,7 +7,7 @@ import 'tactile_spring_container.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
-import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
+import 'package:pesaflow/presentation/common/widgets/ios_date_picker_sheet.dart';
 
 class ModernDateSelector extends FormField<DateTime> {
   final String labelText;
@@ -76,89 +76,17 @@ class _ModernDateSelectorWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TactileSpringContainer(
-          onTap: () {
-            showSpringSheet(
+          onTap: () async {
+            final picked = await showIosDatePicker(
               context,
-              builder: (ctx) {
-                final theme = Theme.of(context);
-                return Container(
-                  height: 300,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHigh,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(24),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing16,
-                          vertical: kSpacing10,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(ctx),
-                              child: Text(
-                                'Cancel',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              'Select Date',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(ctx),
-                              child: Text(
-                                'Done',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Divider(height: 1),
-                      Expanded(
-                        child: CupertinoTheme(
-                          data: CupertinoThemeData(
-                            brightness: theme.brightness,
-                            textTheme: CupertinoTextThemeData(
-                              dateTimePickerTextStyle: context.ts(
-                                18,
-                                color: theme.colorScheme.onSurface,
-                              ),
-                            ),
-                          ),
-                          child: CupertinoDatePicker(
-                            initialDateTime: value,
-                            mode: CupertinoDatePickerMode.date,
-                            onDateTimeChanged: (picked) {
-                              onChanged(picked);
-                            },
-                            minimumDate:
-                                firstDate ??
-                                DateTime.now().subtract(
-                                  const Duration(days: 365),
-                                ),
-                            maximumDate: lastDate ?? DateTime(2035),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+              initialDate: value,
+              firstDate: firstDate,
+              lastDate: lastDate,
+              title: 'Select Date',
             );
+            if (picked != null) {
+              onChanged(picked);
+            }
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),

@@ -12,7 +12,8 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
-import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/ios_date_picker_sheet.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -93,8 +94,8 @@ class _RecurringTransactionFormScreenState
 
   Future<void> _pickDate({required bool endDate}) async {
     final now = DateTime.now();
-    final picked = await showDatePicker(
-      context: context,
+    final picked = await showIosDatePicker(
+      context,
       initialDate: endDate
           ? (_endDate ?? now.add(const Duration(days: 365)))
           : (_nextDate.isBefore(now) ? now : _nextDate),
@@ -102,6 +103,7 @@ class _RecurringTransactionFormScreenState
       lastDate: endDate
           ? now.add(const Duration(days: 365 * 10))
           : now.add(const Duration(days: 365 * 5)),
+      title: endDate ? 'End Date' : 'Start Date',
     );
     if (picked != null) {
       setState(() {
