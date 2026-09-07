@@ -296,7 +296,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                       style: context.ts(
                                         12,
                                         fontWeight: FontWeight.w600,
-                                        color: Colors.white,
+                                        color: context.appColors.onBgColor,
                                       ),
                                     );
                                   },
@@ -309,13 +309,13 @@ class BudgetDetailScreen extends ConsumerWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: Text(
+                            child:                             Text(
                               bp.budget.name,
                               style: context.ts(
                                 28,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: -0.8,
-                                color: Colors.white,
+                                color: context.appColors.onBgColor,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
