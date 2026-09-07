@@ -1400,6 +1400,7 @@ class _TrendsTab extends ConsumerWidget {
           ),
         ],
       ),
+      ),
     );
   }
 }
