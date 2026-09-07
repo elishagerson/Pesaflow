@@ -737,11 +737,6 @@ class _OverviewTab extends ConsumerWidget {
                               ),
                             ),
                           ),
-        ],
-      ),
-    );
-  }
-}
                 },
                 loading: () => const SizedBox(
                   height: 100,
