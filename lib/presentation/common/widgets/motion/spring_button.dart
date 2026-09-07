@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 
+/// A spring-physics button with configurable spring parameters.
+///
+/// For most cases, prefer [TactileSpringContainer] which uses the standard
+/// spring preset. Use [SpringButton] when you need custom spring tuning
+/// (e.g., a bouncier celebration button or a stiffer nav element).
 class SpringButton extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
   final double scaleFactor;
-  final double springMass;
-  final double springStiffness;
-  final double springDamping;
+  final SpringDescription spring;
   final Duration pressDuration;
+
+  /// Haptic fires on tap-up (confirms the action, not the intent).
   final HapticType? haptic;
 
   const SpringButton({
     super.key,
     required this.child,
     this.onTap,
-    this.scaleFactor = 0.96,
-    this.springMass = 0.8,
-    this.springStiffness = 350.0,
-    this.springDamping = 14.0,
-    this.pressDuration = const Duration(milliseconds: 100),
+    this.scaleFactor = MotionTokens.scalePress,
+    this.spring = MotionTokens.springSnappy,
+    this.pressDuration = MotionTokens.durationFast,
     this.haptic,
   });
 
@@ -33,6 +37,7 @@ class _SpringButtonState extends State<SpringButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  late Animation<double> _opacityAnimation;
 
   @override
   void initState() {
@@ -41,6 +46,10 @@ class _SpringButtonState extends State<SpringButton>
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: widget.scaleFactor,
+    ).animate(_controller);
+    _opacityAnimation = Tween<double>(
+      begin: 1.0,
+      end: MotionTokens.opacityPress,
     ).animate(_controller);
   }
 
@@ -65,17 +74,16 @@ class _SpringButtonState extends State<SpringButton>
 
   void _springBack() {
     if (widget.onTap == null) return;
-    if (widget.haptic != null) triggerHaptic(widget.haptic!);
     if (context.isReducedMotion) {
       _controller.value = 0.0;
       return;
     }
-    final spring = SpringDescription(
-      mass: widget.springMass,
-      stiffness: widget.springStiffness,
-      damping: widget.springDamping,
+    final simulation = SpringSimulation(
+      widget.spring,
+      _controller.value,
+      0.0,
+      0.0,
     );
-    final simulation = SpringSimulation(spring, _controller.value, 0.0, 0.0);
     _controller.animateWith(simulation);
   }
 
@@ -85,11 +93,22 @@ class _SpringButtonState extends State<SpringButton>
       behavior: HitTestBehavior.opaque,
       onTapDown: (_) => _pressDown(),
       onTapUp: (_) {
+        // Haptic on release — confirms the action, not the intent
+        if (widget.haptic != null) triggerHaptic(widget.haptic!);
         _springBack();
         widget.onTap?.call();
       },
       onTapCancel: () => _springBack(),
-      child: ScaleTransition(scale: _scaleAnimation, child: widget.child),
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Opacity(
+            opacity: _opacityAnimation.value,
+            child: ScaleTransition(scale: _scaleAnimation, child: child),
+          );
+        },
+        child: widget.child,
+      ),
     );
   }
 }
