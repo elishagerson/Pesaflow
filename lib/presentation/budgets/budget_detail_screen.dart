@@ -691,16 +691,13 @@ class BudgetDetailScreen extends ConsumerWidget {
                                     final label = rolled > 0 ? 'roll' : 'def';
                                     return Text(
                                       '$prefix ${CurrencyFormatter.formatCents(rolled.abs())} $label',
-                                      style: theme.textTheme.labelSmall
-                                          ?.copyWith(
-                                            color: rolled > 0
-                                                ? context.appColors.incomeColor
-                                                : context
-                                                      .appColors
-                                                      .expenseColor,
-                                            fontSize: 9,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                      style: context.ts(
+                                        9,
+                                        color: rolled > 0
+                                            ? context.appColors.incomeColor
+                                            : context.appColors.expenseColor,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     );
                                   }(),
                                 ),
@@ -820,12 +817,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                                           ),
                                                       child: Text(
                                                         '$day',
-                                                        style: theme
-                                                            .textTheme
-                                                            .labelSmall
-                                                            ?.copyWith(
-                                                              fontSize: 9,
-                                                            ),
+                                                        style: context.ts(9),
                                                       ),
                                                     );
                                                   }

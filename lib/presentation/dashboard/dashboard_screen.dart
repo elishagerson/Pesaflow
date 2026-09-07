@@ -345,15 +345,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 ),
                                                 child: Text(
                                                   '$pendingReviewCount',
-                                                  style: theme
-                                                      .textTheme
-                                                      .labelSmall
-                                                      ?.copyWith(
-                                                        color: Colors.white,
-                                                        fontSize: 8,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
+                                                  style: context.ts(
+                                                    8,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w700,
+                                                  ),
                                                 ),
                                               ),
                                             ),
