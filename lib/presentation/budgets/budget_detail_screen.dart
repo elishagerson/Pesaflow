@@ -86,7 +86,6 @@ class BudgetDetailScreen extends ConsumerWidget {
                   children: [
                     const FloatingTopBar(
                       title: 'Budget Details',
-                      forceWhite: true,
                     ),
                     const Expanded(
                       child: EmptyState(
@@ -120,7 +119,6 @@ class BudgetDetailScreen extends ConsumerWidget {
                     children: [
                       FloatingTopBar(
                         padding: EdgeInsets.zero,
-                        forceWhite: true,
                         actions: [
                           TactileSpringContainer(
                             onTap: () =>
@@ -128,13 +126,15 @@ class BudgetDetailScreen extends ConsumerWidget {
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.06),
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.08,
+                                ),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 PesaFlowIcons.edit,
                                 size: 18,
-                                color: Colors.white,
+                                color: theme.colorScheme.onSurface,
                               ),
                             ),
                           ),
@@ -1009,7 +1009,7 @@ class BudgetDetailScreen extends ConsumerWidget {
             backgroundColor: theme.scaffoldBackgroundColor,
             body: Column(
               children: [
-                const FloatingTopBar(title: 'Budget Details', forceWhite: true),
+                const FloatingTopBar(title: 'Budget Details'),
                 const Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(kSpacing20),
@@ -1029,7 +1029,7 @@ class BudgetDetailScreen extends ConsumerWidget {
             backgroundColor: theme.scaffoldBackgroundColor,
             body: Column(
               children: [
-                const FloatingTopBar(title: 'Budget Details', forceWhite: true),
+                const FloatingTopBar(title: 'Budget Details'),
                 Expanded(
                   child: ErrorState(
                     title: 'Failed to Load Budget details',

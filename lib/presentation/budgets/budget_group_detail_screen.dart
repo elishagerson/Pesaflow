@@ -52,7 +52,6 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                 children: [
                   const FloatingTopBar(
                     title: 'Budget Group',
-                    forceWhite: true,
                   ),
                   const Expanded(
                     child: EmptyState(
@@ -79,14 +78,15 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                     children: [
                       FloatingTopBar(
                         padding: EdgeInsets.zero,
-                        forceWhite: true,
                         actions: [
                           TactileSpringContainer(
                             onTap: () => _deleteGroup(context, ref, groupData),
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.06),
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.08,
+                                ),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
@@ -363,7 +363,6 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
             children: [
               const FloatingTopBar(
                 title: 'Budget Group',
-                forceWhite: true,
               ),
               const Expanded(
                 child: Padding(

@@ -208,7 +208,7 @@ class LoanDetailScreen extends ConsumerWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(
           children: [
-            const FloatingTopBar(title: 'Loan Details', forceWhite: true),
+            const FloatingTopBar(title: 'Loan Details'),
             const Expanded(
               child: Padding(
                 padding: EdgeInsets.all(kSpacing20),
@@ -228,7 +228,7 @@ class LoanDetailScreen extends ConsumerWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(
           children: [
-            const FloatingTopBar(title: 'Loan Details', forceWhite: true),
+            const FloatingTopBar(title: 'Loan Details'),
             Expanded(
               child: ErrorState(
                 title: 'Failed to Load Loan Details',

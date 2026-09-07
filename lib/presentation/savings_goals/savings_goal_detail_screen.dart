@@ -740,7 +740,7 @@ class _SavingsGoalDetailScreenState
             body: SafeArea(
               child: Column(
                 children: [
-                  const FloatingTopBar(forceWhite: true),
+                  const FloatingTopBar(),
                   Expanded(
                     child: EmptyState(
                       icon: PesaFlowIcons.savings,
@@ -776,7 +776,7 @@ class _SavingsGoalDetailScreenState
             bottom: false,
             child: Column(
               children: [
-                // ── OLED Black Header ──
+                // ── Header ──
                 Container(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                   child: Column(
@@ -784,7 +784,6 @@ class _SavingsGoalDetailScreenState
                     children: [
                       FloatingTopBar(
                         padding: EdgeInsets.zero,
-                        forceWhite: true,
                         actions: [
                           TactileSpringContainer(
                             onTap: () =>
@@ -792,13 +791,15 @@ class _SavingsGoalDetailScreenState
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.06),
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.08,
+                                ),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 PesaFlowIcons.edit,
                                 size: 18,
-                                color: Colors.white,
+                                color: theme.colorScheme.onSurface,
                               ),
                             ),
                           ),
@@ -1320,7 +1321,7 @@ class _SavingsGoalDetailScreenState
         body: SafeArea(
           child: Column(
             children: [
-              const FloatingTopBar(forceWhite: true),
+              const FloatingTopBar(),
               const Padding(
                 padding: EdgeInsets.all(kSpacing20),
                 child: Column(
@@ -1340,7 +1341,7 @@ class _SavingsGoalDetailScreenState
         body: SafeArea(
           child: Column(
             children: [
-              const FloatingTopBar(forceWhite: true),
+              const FloatingTopBar(),
               Expanded(
                 child: ErrorState(
                   title: 'Failed to Load Goal Details',
