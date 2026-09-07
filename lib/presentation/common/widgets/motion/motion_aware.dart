@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 /// Mixin for widgets that need reduced-motion-aware animations.
 ///
@@ -18,8 +19,7 @@ import 'package:pesaflow/core/theme/motion_constants.dart';
 /// ```
 mixin MotionAwareMixin<T extends StatefulWidget> on State<T> {
   /// Whether the user prefers reduced motion.
-  bool get shouldAnimate =>
-      !(MediaQuery.maybeOf(context)?.disableAnimations ?? false);
+  bool get shouldAnimate => !context.isReducedMotion;
 
   /// Animates [controller] with spring physics if motion is allowed,
   /// otherwise jumps instantly to [target].
