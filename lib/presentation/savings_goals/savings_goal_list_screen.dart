@@ -405,11 +405,17 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                   onTap: () => context.push(
                                     '/savings-goals/${goal.id}/edit',
                                   ),
-                                  child: Text(
-                                    'Edit',
-                                    style: theme.textTheme.labelSmall?.copyWith(
-                                      color: theme.colorScheme.primary,
-                                      fontWeight: FontWeight.bold,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: kSpacing8,
+                                      vertical: kSpacing4,
+                                    ),
+                                    child: Text(
+                                      'Edit',
+                                      style: theme.textTheme.labelSmall?.copyWith(
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
