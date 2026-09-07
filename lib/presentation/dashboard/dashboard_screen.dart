@@ -1076,7 +1076,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                       mainAxisSize:
                                                           MainAxisSize.min,
                                                       children: [
-                                                        const Icon(
+                                                        Icon(
                                                           PesaFlowIcons.add,
                                                           color: theme.colorScheme.onPrimary,
                                                           size: 18,

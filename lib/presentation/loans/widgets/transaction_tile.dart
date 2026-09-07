@@ -107,7 +107,7 @@ class _OfflineBadge extends StatelessWidget {
         vertical: kSpacing2,
       ),
       decoration: BoxDecoration(
-        color: Colors.grey.withValues(alpha: 0.15),
+        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(kSpacing4),
       ),
       child: Text(

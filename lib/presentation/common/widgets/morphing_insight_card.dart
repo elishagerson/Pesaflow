@@ -307,14 +307,14 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
     final theme = Theme.of(context);
     return Row(
       children: [
-        Icon(icon, size: 14, color: Colors.grey),
+        Icon(icon, size: 14, color: theme.colorScheme.onSurfaceVariant),
         const SizedBox(width: kSpacing6),
         Text(
           label,
           style: context.ts(
             11,
             fontWeight: FontWeight.w500,
-            color: Colors.grey,
+            color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(width: kSpacing8),

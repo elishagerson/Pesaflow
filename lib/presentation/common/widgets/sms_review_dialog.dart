@@ -273,7 +273,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         subtitle: Text(
                           cat.type.toUpperCase(),
                           style: context.appTypography.labelMicro.copyWith(
-                            color: Colors.grey,
+                            color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                         trailing: isSelected

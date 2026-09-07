@@ -141,7 +141,7 @@ class ModernNumpad extends StatelessWidget {
                       ),
                       alignment: Alignment.center,
                       child: isDoneLoading
-                          ? const SizedBox(
+                          ? SizedBox(
                               height: 24,
                               width: 24,
                               child: CircularProgressIndicator(

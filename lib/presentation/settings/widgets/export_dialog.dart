@@ -214,7 +214,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
       TextButton(
         onPressed: () => context.pop(),
         style: TextButton.styleFrom(
-          foregroundColor: Colors.grey[600],
+          foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
           padding: const EdgeInsets.symmetric(
             horizontal: kSpacing20,
             vertical: kSpacing12,

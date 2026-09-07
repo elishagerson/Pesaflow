@@ -741,7 +741,7 @@ class _RecurringTransactionFormScreenState
                                     child: Icon(
                                       PesaFlowIcons.close,
                                       size: 18,
-                                      color: Colors.grey[500],
+                                      color: theme.colorScheme.onSurfaceVariant,
                                     ),
                                   ),
                               ],
@@ -761,14 +761,14 @@ class _RecurringTransactionFormScreenState
                             ),
                             decoration: BoxDecoration(
                               color: _isLoading
-                                  ? Colors.grey
-                                  : Theme.of(context).colorScheme.primary,
+                                ? theme.colorScheme.onSurfaceVariant
+                                   : theme.colorScheme.primary,
                               borderRadius: BorderRadius.circular(
                                 AppTheme.radiusInput,
                               ),
                             ),
                             child: _isLoading
-                                ? const Center(
+                                ? Center(
                                     child: SizedBox(
                                       width: 20,
                                       height: 20,

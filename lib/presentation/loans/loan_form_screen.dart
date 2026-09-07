@@ -564,7 +564,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                                     child: Icon(
                                       PesaFlowIcons.close,
                                       size: 18,
-                                      color: Colors.grey[500],
+                                      color: theme.colorScheme.onSurfaceVariant,
                                     ),
                                   ),
                               ],

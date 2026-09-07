@@ -464,7 +464,7 @@ class LoanDetailScreen extends ConsumerWidget {
                         ? context.appColors.expenseColor
                         : event.isCompleted
                         ? context.appColors.incomeColor
-                        : Colors.grey[400],
+                         : theme.colorScheme.onSurfaceVariant,
                     shape: BoxShape.circle,
                   ),
                 ),
