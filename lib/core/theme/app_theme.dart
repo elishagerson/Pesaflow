@@ -324,7 +324,9 @@ class AppTheme {
         color: Colors.transparent,
       ),
       chipTheme: ChipThemeData(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radiusHero)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTheme.radiusHero),
+        ),
         side: BorderSide.none,
       ),
       dialogTheme: DialogThemeData(

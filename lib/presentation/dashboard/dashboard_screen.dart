@@ -258,12 +258,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       vertical: 8,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                                      color: theme
+                                          .colorScheme
+                                          .surfaceContainerHighest
+                                          .withValues(alpha: 0.5),
                                       borderRadius: BorderRadius.circular(
                                         AppTheme.radiusPill,
                                       ),
                                       border: Border.all(
-                                        color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                                        color: theme.colorScheme.outlineVariant
+                                            .withValues(alpha: 0.4),
                                         width: 1,
                                       ),
                                     ),
@@ -301,10 +305,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         width: 44,
                                         height: 44,
                                         decoration: BoxDecoration(
-                                          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                                          color: theme
+                                              .colorScheme
+                                              .surfaceContainerHighest
+                                              .withValues(alpha: 0.5),
                                           shape: BoxShape.circle,
                                           border: Border.all(
-                                            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                                            color: theme
+                                                .colorScheme
+                                                .outlineVariant
+                                                .withValues(alpha: 0.4),
                                             width: 1,
                                           ),
                                         ),
@@ -326,10 +336,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             width: 44,
                                             height: 44,
                                             decoration: BoxDecoration(
-                                              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                                              color: theme
+                                                  .colorScheme
+                                                  .surfaceContainerHighest
+                                                  .withValues(alpha: 0.5),
                                               shape: BoxShape.circle,
                                               border: Border.all(
-                                                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                                                color: theme
+                                                    .colorScheme
+                                                    .outlineVariant
+                                                    .withValues(alpha: 0.4),
                                                 width: 1,
                                               ),
                                             ),
@@ -337,7 +353,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             child: Icon(
                                               PesaFlowIcons.sms,
                                               size: 18,
-                                              color: theme.colorScheme.onSurface,
+                                              color:
+                                                  theme.colorScheme.onSurface,
                                             ),
                                           ),
                                           if (pendingReviewCount > 0)
@@ -369,9 +386,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   '$pendingReviewCount',
                                                   style: context.ts(
                                                     9,
-                                                    color: theme.colorScheme.onPrimary,
-                                                    fontWeight:
-                                                        FontWeight.w700,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .onPrimary,
+                                                    fontWeight: FontWeight.w700,
                                                   ),
                                                 ),
                                               ),
@@ -476,8 +494,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             border: Border.all(
                                               color: isSelected
                                                   ? theme.colorScheme.primary
-                                                  : theme.colorScheme.outlineVariant
-                                                        .withValues(alpha: 0.35),
+                                                  : theme
+                                                        .colorScheme
+                                                        .outlineVariant
+                                                        .withValues(
+                                                          alpha: 0.35,
+                                                        ),
                                               width: isSelected ? 1.2 : 0.8,
                                             ),
                                           ),
@@ -511,18 +533,32 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               ),
                                               const SizedBox(width: kSpacing8),
                                               Container(
-                                                padding: const EdgeInsets.symmetric(
-                                                  horizontal: 6,
-                                                  vertical: 1.5,
-                                                ),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 6,
+                                                      vertical: 1.5,
+                                                    ),
                                                 decoration: BoxDecoration(
                                                   color: isSelected
-                                                      ? theme.colorScheme.primary.withValues(alpha: 0.12)
-                                                      : theme.colorScheme.onSurface.withValues(alpha: 0.06),
-                                                  borderRadius: BorderRadius.circular(6),
+                                                      ? theme
+                                                            .colorScheme
+                                                            .primary
+                                                            .withValues(
+                                                              alpha: 0.12,
+                                                            )
+                                                      : theme
+                                                            .colorScheme
+                                                            .onSurface
+                                                            .withValues(
+                                                              alpha: 0.06,
+                                                            ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
                                                 ),
                                                 child: Text(
-                                                  _formatCompact(account.balance),
+                                                  _formatCompact(
+                                                    account.balance,
+                                                  ),
                                                   style: AppTheme.getMonospaceStyle(
                                                     theme.textTheme.labelSmall!
                                                         .copyWith(
@@ -537,7 +573,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                                     .colorScheme
                                                                     .onSurface
                                                                     .withValues(
-                                                                      alpha: 0.8,
+                                                                      alpha:
+                                                                          0.8,
                                                                     ),
                                                         ),
                                                   ),
@@ -1086,11 +1123,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 direction:
                                                     DismissDirection.endToStart,
                                                 confirmDismiss: (_) async {
-                                                  return await ModernDialog.show<bool>(
+                                                  return await ModernDialog.show<
+                                                        bool
+                                                      >(
                                                         context: context,
-                                                        title: const Text('Delete Transaction'),
-                                                        titleIcon: PesaFlowIcons.warning,
-                                                        iconColor: theme.colorScheme.error,
+                                                        title: const Text(
+                                                          'Delete Transaction',
+                                                        ),
+                                                        titleIcon: PesaFlowIcons
+                                                            .warning,
+                                                        iconColor: theme
+                                                            .colorScheme
+                                                            .error,
                                                         content: Text(
                                                           'Delete "${trans.description.length > 30 ? '${trans.description.substring(0, 30)}…' : trans.description}" (${CurrencyFormatter.formatCents(trans.amount)})?',
                                                         ),
@@ -1099,7 +1143,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                             onPressed: () =>
                                                                 Navigator.of(
                                                                   context,
-                                                                  rootNavigator: true,
+                                                                  rootNavigator:
+                                                                      true,
                                                                 ).pop(false),
                                                             child: const Text(
                                                               'Cancel',
@@ -1107,12 +1152,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                           ),
                                                           ElevatedButton(
                                                             style: ElevatedButton.styleFrom(
-                                                              backgroundColor: theme.colorScheme.error,
+                                                              backgroundColor:
+                                                                  theme
+                                                                      .colorScheme
+                                                                      .error,
                                                             ),
                                                             onPressed: () =>
                                                                 Navigator.of(
                                                                   context,
-                                                                  rootNavigator: true,
+                                                                  rootNavigator:
+                                                                      true,
                                                                 ).pop(true),
                                                             child: const Text(
                                                               'Delete',
@@ -1139,7 +1188,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   ),
                                                   child: Icon(
                                                     PesaFlowIcons.delete,
-                                                    color: theme.colorScheme.onError,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .onError,
                                                   ),
                                                 ),
                                                 onDismissed: (_) async {
@@ -1198,22 +1249,44 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                           children: [
                                                             Builder(
                                                               builder: (context) {
-                                                                final catColor = hexToColor(item.category.color);
+                                                                final catColor =
+                                                                    hexToColor(
+                                                                      item
+                                                                          .category
+                                                                          .color,
+                                                                    );
                                                                 return Container(
                                                                   width: 44,
                                                                   height: 44,
                                                                   decoration: BoxDecoration(
-                                                                    color: catColor.withValues(alpha: 0.12),
-                                                                    borderRadius: BorderRadius.circular(12),
+                                                                    color: catColor
+                                                                        .withValues(
+                                                                          alpha:
+                                                                              0.12,
+                                                                        ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          12,
+                                                                        ),
                                                                     border: Border.all(
-                                                                      color: catColor.withValues(alpha: 0.20),
+                                                                      color: catColor.withValues(
+                                                                        alpha:
+                                                                            0.20,
+                                                                      ),
                                                                       width: 1,
                                                                     ),
                                                                   ),
-                                                                  alignment: Alignment.center,
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
                                                                   child: Icon(
-                                                                    getCategoryIcon(item.category.icon),
-                                                                    color: catColor,
+                                                                    getCategoryIcon(
+                                                                      item
+                                                                          .category
+                                                                          .icon,
+                                                                    ),
+                                                                    color:
+                                                                        catColor,
                                                                     size: 22,
                                                                   ),
                                                                 );

@@ -33,13 +33,9 @@ class SkeletonCrossfade extends StatelessWidget {
       transitionBuilder: (child, animation) {
         final isContent = child.key != const ValueKey('skeleton');
         if (isContent) {
-          final scaleAnimation = Tween<double>(
-            begin: 0.99,
-            end: 1.0,
-          ).animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOutCubic,
-          ));
+          final scaleAnimation = Tween<double>(begin: 0.99, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
+          );
           return FadeTransition(
             opacity: animation,
             child: ScaleTransition(scale: scaleAnimation, child: child),

@@ -418,31 +418,41 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       color: theme.colorScheme.onError,
                                     ),
                                   ),
-                                   confirmDismiss: (_) async {
+                                  confirmDismiss: (_) async {
                                     return await ModernDialog.show<bool>(
-                                      context: context,
-                                      title: const Text('Delete Transaction'),
-                                      titleIcon: PesaFlowIcons.warning,
-                                      iconColor: context.appColors.expenseColor,
-                                      content: const Text(
-                                        'This action cannot be undone.',
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context, rootNavigator: true).pop(false),
-                                          child: const Text('Cancel'),
-                                        ),
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: context.appColors.expenseColor,
+                                          context: context,
+                                          title: const Text(
+                                            'Delete Transaction',
                                           ),
-                                          onPressed: () =>
-                                              Navigator.of(context, rootNavigator: true).pop(true),
-                                          child: const Text('Delete'),
-                                        ),
-                                      ],
-                                    ) ?? false;
+                                          titleIcon: PesaFlowIcons.warning,
+                                          iconColor:
+                                              context.appColors.expenseColor,
+                                          content: const Text(
+                                            'This action cannot be undone.',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).pop(false),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: context
+                                                    .appColors
+                                                    .expenseColor,
+                                              ),
+                                              onPressed: () => Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).pop(true),
+                                              child: const Text('Delete'),
+                                            ),
+                                          ],
+                                        ) ??
+                                        false;
                                   },
                                   onDismissed: (_) {
                                     final tx = trans;
@@ -841,7 +851,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                 Container(
                                   height: 44,
                                   decoration: BoxDecoration(
-                                    color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                                    color: theme
+                                        .colorScheme
+                                        .surfaceContainerHighest
+                                        .withValues(alpha: 0.5),
                                     borderRadius: BorderRadius.circular(
                                       AppTheme.radiusHero,
                                     ),
@@ -880,9 +893,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       Container(
                                         width: 1,
                                         height: 18,
-                                        color: theme.colorScheme.onSurfaceVariant.withValues(
-                                          alpha: 0.2,
-                                        ),
+                                        color: theme
+                                            .colorScheme
+                                            .onSurfaceVariant
+                                            .withValues(alpha: 0.2),
                                       ),
                                       TactileSpringContainer(
                                         onTap: () {
@@ -911,9 +925,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                             size: 17,
                                             color: _isSearchVisible
                                                 ? theme.colorScheme.primary
-                                                : theme.colorScheme.onSurfaceVariant.withValues(
-                                                    alpha: 0.6,
-                                                  ),
+                                                : theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant
+                                                      .withValues(alpha: 0.6),
                                           ),
                                         ),
                                       ),
@@ -965,9 +980,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                             icon: Icon(
                                               PesaFlowIcons.clear,
                                               size: 16,
-                                              color: theme.colorScheme.onSurfaceVariant.withValues(
-                                                alpha: 0.6,
-                                              ),
+                                              color: theme
+                                                  .colorScheme
+                                                  .onSurfaceVariant
+                                                  .withValues(alpha: 0.6),
                                             ),
                                             onPressed: () {
                                               _searchController.clear();
@@ -1030,9 +1046,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                         border: Border.all(
                                           color: isSelected
                                               ? theme.colorScheme.primary
-                                              : theme.colorScheme.outlineVariant.withValues(
-                                                  alpha: 0.3,
-                                                ),
+                                              : theme.colorScheme.outlineVariant
+                                                    .withValues(alpha: 0.3),
                                           width: 1.0,
                                         ),
                                       ),
@@ -1043,7 +1058,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                           13,
                                           color: isSelected
                                               ? theme.colorScheme.onPrimary
-                                              : theme.colorScheme.onSurfaceVariant,
+                                              : theme
+                                                    .colorScheme
+                                                    .onSurfaceVariant,
                                           fontWeight: isSelected
                                               ? FontWeight.bold
                                               : FontWeight.w600,

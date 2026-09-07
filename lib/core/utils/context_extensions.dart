@@ -311,7 +311,9 @@ class ResponsiveCard extends StatelessWidget {
       margin: margin,
       decoration: BoxDecoration(
         color: color ?? theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(borderRadius ?? AppTheme.radiusHero),
+        borderRadius: BorderRadius.circular(
+          borderRadius ?? AppTheme.radiusHero,
+        ),
         boxShadow:
             boxShadow ??
             [
