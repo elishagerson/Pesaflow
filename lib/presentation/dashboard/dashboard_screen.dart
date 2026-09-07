@@ -1133,9 +1133,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                           AppTheme.radiusCard,
                                                         ),
                                                   ),
-                                                  child: const Icon(
+                                                  child: Icon(
                                                     PesaFlowIcons.delete,
-                                                    color: Colors.white,
+                                                    color: theme.colorScheme.onError,
                                                   ),
                                                 ),
                                                 onDismissed: (_) async {
