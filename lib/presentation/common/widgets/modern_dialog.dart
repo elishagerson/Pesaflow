@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -35,8 +37,8 @@ class ModernDialog extends StatelessWidget {
       barrierLabel: 'Dismiss',
       barrierColor: Colors.black.withValues(alpha: 0.6),
       transitionDuration: reduced
-          ? const Duration(milliseconds: 100)
-          : const Duration(milliseconds: 320),
+          ? MotionTokens.durationFast
+          : MotionTokens.durationSlow,
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, child) {
         final dialog = ModernDialog(
@@ -49,9 +51,16 @@ class ModernDialog extends StatelessWidget {
         if (reduced) {
           return FadeTransition(opacity: anim1, child: dialog);
         }
-        final curve = CurvedAnimation(parent: anim1, curve: Curves.easeOutBack);
+        // Spring-based scale — snappy without the cheap bounce of easeOutBack
+        final scaleValue = Tween<double>(
+          begin: 0.85,
+          end: 1.0,
+        ).animate(CurvedAnimation(
+          parent: anim1,
+          curve: Curves.easeOutCubic,
+        ));
         return ScaleTransition(
-          scale: curve,
+          scale: scaleValue,
           child: FadeTransition(opacity: anim1, child: dialog),
         );
       },
@@ -70,16 +79,22 @@ class ModernDialog extends StatelessWidget {
       barrierLabel: 'Dismiss',
       barrierColor: Colors.black.withValues(alpha: 0.6),
       transitionDuration: reduced
-          ? const Duration(milliseconds: 100)
-          : const Duration(milliseconds: 320),
+          ? MotionTokens.durationFast
+          : MotionTokens.durationSlow,
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, childWidget) {
         if (reduced) {
           return FadeTransition(opacity: anim1, child: child);
         }
-        final curve = CurvedAnimation(parent: anim1, curve: Curves.easeOutBack);
+        final scaleValue = Tween<double>(
+          begin: 0.85,
+          end: 1.0,
+        ).animate(CurvedAnimation(
+          parent: anim1,
+          curve: Curves.easeOutCubic,
+        ));
         return ScaleTransition(
-          scale: curve,
+          scale: scaleValue,
           child: FadeTransition(opacity: anim1, child: child),
         );
       },
@@ -163,19 +178,11 @@ class ModernDialog extends StatelessWidget {
                   ),
                 ),
               ),
-              // Actions
+              // Actions — with staggered appearance
               if (actions != null && actions!.isNotEmpty) ...[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 24.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: actions!.map((act) {
-                      return Padding(
-                        padding: const EdgeInsets.only(left: kSpacing12),
-                        child: act,
-                      );
-                    }).toList(),
-                  ),
+                  child: _StaggeredActions(actions: actions!),
                 ),
               ] else ...[
                 const SizedBox(height: kSpacing24),
@@ -185,5 +192,87 @@ class ModernDialog extends StatelessWidget {
         ), // Container
       ), // GlassCard
     ); // Dialog
+  }
+}
+
+/// Staggers action button appearances with 40ms delay each.
+class _StaggeredActions extends StatefulWidget {
+  final List<Widget> actions;
+
+  const _StaggeredActions({required this.actions});
+
+  @override
+  State<_StaggeredActions> createState() => _StaggeredActionsState();
+}
+
+class _StaggeredActionsState extends State<_StaggeredActions>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: 200 + (widget.actions.length * 40),
+      ),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _initialized = true;
+      if (context.isReducedMotion) {
+        _controller.value = 1.0;
+      } else {
+        // Delay slightly after dialog entrance completes
+        Future.delayed(const Duration(milliseconds: 200), () {
+          if (mounted) _controller.forward();
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: List.generate(widget.actions.length, (i) {
+            // Each action fades in with 40ms stagger
+            final start = (i * 40) /
+                (200 + widget.actions.length * 40);
+            final end = start + 0.5;
+            final t = Interval(
+              start.clamp(0.0, 1.0),
+              end.clamp(0.0, 1.0),
+              curve: Curves.easeOut,
+            ).transform(_controller.value);
+            return Padding(
+              padding: EdgeInsets.only(left: i > 0 ? kSpacing12 : 0),
+              child: Opacity(
+                opacity: t,
+                child: Transform.translate(
+                  offset: Offset(0, 4 * (1 - t)),
+                  child: widget.actions[i],
+                ),
+              ),
+            );
+          }),
+        );
+      },
+    );
   }
 }

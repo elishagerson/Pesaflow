@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -61,17 +62,26 @@ class _ToastWidget extends StatefulWidget {
 }
 
 class _ToastWidgetState extends State<_ToastWidget>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+    with TickerProviderStateMixin {
+  late AnimationController _entryController;
+  late AnimationController _timerController;
   Timer? _timer;
   bool _initialized = false;
+  double _swipeOffset = 0.0;
+  bool _isSwiping = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
+    _entryController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: MotionTokens.durationSheet,
+    );
+
+    // Timer progress ring
+    _timerController = AnimationController(
+      vsync: this,
+      duration: widget.duration,
     );
 
     _timer = Timer(widget.duration, () {
@@ -86,31 +96,33 @@ class _ToastWidgetState extends State<_ToastWidget>
     _initialized = true;
 
     if (context.isReducedMotion) {
-      _controller.value = 1.0;
+      _entryController.value = 1.0;
+      _timerController.forward();
       return;
     }
 
     // Physics-based spring simulation for premium entry feel
-    final spring = SpringDescription(
-      mass: 0.6, // lightweight
-      stiffness: 180, // snappy
-      damping: 14, // smooth bounce
+    final spring = SpringSimulation(
+      MotionTokens.springBouncy,
+      0.0,
+      1.0,
+      0.0,
     );
-    final simulation = SpringSimulation(spring, 0.0, 1.0, 0.0);
-    _controller.animateWith(simulation);
+    _entryController.animateWith(spring);
+    _timerController.forward();
   }
 
   void _dismiss() {
     if (!mounted) return;
+    _timer?.cancel();
     if (context.isReducedMotion) {
       widget.onDismiss();
       return;
     }
-    // Snappy slide-out transition
-    _controller
+    _entryController
         .animateTo(
           0.0,
-          duration: const Duration(milliseconds: 250),
+          duration: MotionTokens.durationExit,
           curve: Curves.easeInCubic,
         )
         .then((_) {
@@ -118,10 +130,32 @@ class _ToastWidgetState extends State<_ToastWidget>
         });
   }
 
+  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+    _isSwiping = true;
+    setState(() {
+      _swipeOffset += details.delta.dx;
+    });
+  }
+
+  void _onHorizontalDragEnd(DragEndDetails details) {
+    if (!_isSwiping) return;
+    _isSwiping = false;
+    final velocity = details.velocity.pixelsPerSecond.dx.abs();
+    if (_swipeOffset.abs() > 60 || velocity > 400) {
+      // Swipe to dismiss
+      _timer?.cancel();
+      widget.onDismiss();
+    } else {
+      // Snap back
+      setState(() => _swipeOffset = 0.0);
+    }
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
-    _controller.dispose();
+    _entryController.dispose();
+    _timerController.dispose();
     super.dispose();
   }
 
@@ -147,135 +181,187 @@ class _ToastWidgetState extends State<_ToastWidget>
       right: kSpacing24,
       child: SafeArea(
         child: AnimatedBuilder(
-          animation: _controller,
+          animation: _entryController,
           builder: (context, child) {
-            final t = _controller.value;
-            // Spring-based translate & scale curves
+            final t = _entryController.value;
             final translateY = (1.0 - t) * 64.0;
             final scale = 0.85 + (0.15 * t);
             final opacity = t.clamp(0.0, 1.0);
 
             return Transform.translate(
-              offset: Offset(0.0, translateY),
-              child: Transform.scale(
-                scale: scale,
-                child: Opacity(
-                  opacity: opacity,
-                  child: Center(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: ClipRRect(
+              offset: Offset(_swipeOffset, translateY),
+              child: Opacity(
+                opacity: (opacity - (_swipeOffset.abs() / 200))
+                    .clamp(0.0, 1.0),
+                child: Transform.scale(
+                  scale: scale,
+                  child: child,
+                ),
+              ),
+            );
+          },
+          child: GestureDetector(
+            onHorizontalDragUpdate: _onHorizontalDragUpdate,
+            onHorizontalDragEnd: _onHorizontalDragEnd,
+            child: Center(
+              child: Material(
+                color: Colors.transparent,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.radiusPill,
+                  ),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing20,
+                        vertical: kSpacing12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainerHigh
+                            .withValues(
+                              alpha: theme.brightness == Brightness.dark
+                                  ? 0.70
+                                  : 0.85,
+                            ),
                         borderRadius: BorderRadius.circular(
                           AppTheme.radiusPill,
                         ),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kSpacing20,
-                              vertical: kSpacing12,
-                            ),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainerHigh
-                                  .withValues(
-                                    alpha: theme.brightness == Brightness.dark
-                                        ? 0.70
-                                        : 0.85,
+                        border: Border.all(
+                          color: brandColor.withValues(alpha: 0.15),
+                          width: 1.0,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: brandColor.withValues(alpha: 0.08),
+                            blurRadius: 24,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Icon with timer ring
+                          _TimerRingIcon(
+                            icon: icon,
+                            brandColor: brandColor,
+                            progress: _timerController,
+                          ),
+                          const SizedBox(width: kSpacing10),
+                          Flexible(
+                            child: Text(
+                              widget.message,
+                              style: theme.textTheme.labelMedium
+                                  ?.copyWith(
+                                    color: theme.colorScheme.onSurface,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.2,
                                   ),
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusPill,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                          ),
+                          if (widget.actionLabel != null &&
+                              widget.onAction != null) ...[
+                            const SizedBox(width: kSpacing8),
+                            Container(
+                              height: 24,
+                              width: 1,
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.1),
+                            ),
+                            const SizedBox(width: kSpacing4),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: kSpacing12,
+                                ),
+                                minimumSize: Size.zero,
+                                tapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
                               ),
-                              border: Border.all(
-                                color: brandColor.withValues(alpha: 0.15),
-                                width: 1.0,
+                              onPressed: () {
+                                widget.onAction!();
+                                _dismiss();
+                              },
+                              child: Text(
+                                widget.actionLabel!.toUpperCase(),
+                                style: context.ts(
+                                  12,
+                                  fontWeight: FontWeight.bold,
+                                  color: brandColor,
+                                ),
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: brandColor.withValues(alpha: 0.08),
-                                  blurRadius: 24,
-                                  spreadRadius: 2,
-                                  offset: const Offset(0, 8),
-                                ),
-                              ],
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Snappy spring-scaled icon reveal
-                                Transform.scale(
-                                  scale: t.clamp(0.0, 1.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      color: brandColor.withValues(alpha: 0.12),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      icon,
-                                      color: brandColor,
-                                      size: 16,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: kSpacing10),
-                                Flexible(
-                                  child: Text(
-                                    widget.message,
-                                    style: theme.textTheme.labelMedium
-                                        ?.copyWith(
-                                          color: theme.colorScheme.onSurface,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: 0.2,
-                                        ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                  ),
-                                ),
-                                if (widget.actionLabel != null &&
-                                    widget.onAction != null) ...[
-                                  const SizedBox(width: kSpacing8),
-                                  Container(
-                                    height: 24,
-                                    width: 1,
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.1),
-                                  ),
-                                  const SizedBox(width: kSpacing4),
-                                  TextButton(
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: kSpacing12,
-                                      ),
-                                      minimumSize: Size.zero,
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    onPressed: () {
-                                      widget.onAction!();
-                                      _dismiss();
-                                    },
-                                    child: Text(
-                                      widget.actionLabel!.toUpperCase(),
-                                      style: context.ts(
-                                        12,
-                                        fontWeight: FontWeight.bold,
-                                        color: brandColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ), // Container
-                        ), // BackdropFilter
-                      ), // ClipRRect
-                    ), // Material
-                  ), // Center
-                ), // Opacity
-              ), // Transform.scale
-            ); // Transform.translate
-          },
+                          ],
+                        ],
+                      ),
+                    ), // Container
+                  ), // BackdropFilter
+                ), // ClipRRect
+              ), // Material
+            ), // Center
+          ), // GestureDetector
         ),
+      ),
+    );
+  }
+}
+
+/// Icon with a circular timer ring that "empties" as time passes.
+class _TimerRingIcon extends StatelessWidget {
+  final IconData icon;
+  final Color brandColor;
+  final Animation<double> progress;
+
+  const _TimerRingIcon({
+    required this.icon,
+    required this.brandColor,
+    required this.progress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 28,
+      height: 28,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Timer ring
+          AnimatedBuilder(
+            animation: progress,
+            builder: (context, _) {
+              return SizedBox(
+                width: 28,
+                height: 28,
+                child: CircularProgressIndicator(
+                  value: 1.0 - progress.value,
+                  strokeWidth: 1.5,
+                  backgroundColor: brandColor.withValues(alpha: 0.08),
+                  valueColor: AlwaysStoppedAnimation(
+                    brandColor.withValues(alpha: 0.3),
+                  ),
+                ),
+              );
+            },
+          ),
+          // Icon
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              color: brandColor.withValues(alpha: 0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: brandColor,
+              size: 14,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -281,43 +281,44 @@ class _HandleBar extends StatelessWidget {
   }
 }
 
-/// Measures the size of a widget after layout.
-class _MeasureSize extends SingleChildRenderObjectWidget {
+/// Reports its child's size after layout via a callback.
+class _MeasureSize extends StatefulWidget {
   final ValueChanged<Size> onSizeChanged;
+  final Widget child;
 
   const _MeasureSize({
     required this.onSizeChanged,
-    required Widget child,
-  }) : super(child: child);
+    required this.child,
+  });
 
   @override
-  RenderObject createRenderObject(BuildContext context) {
-    return _MeasureSizeRenderObject(onSizeChanged);
-  }
-
-  @override
-  void updateRenderObject(
-    BuildContext context,
-    covariant _MeasureSizeRenderObject renderObject,
-  ) {
-    renderObject.onSizeChanged = onSizeChanged;
-  }
+  State<_MeasureSize> createState() => _MeasureSizeState();
 }
 
-class _MeasureSizeRenderObject extends RenderProxyBox {
-  ValueChanged<Size> onSizeChanged;
-  Size _previousSize = Size.zero;
-
-  _MeasureSizeRenderObject(this.onSizeChanged);
+class _MeasureSizeState extends State<_MeasureSize> {
+  final _key = GlobalKey();
+  Size _lastSize = Size.zero;
 
   @override
-  void performLayout() {
-    super.performLayout();
-    if (size != _previousSize) {
-      _previousSize = size;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        onSizeChanged(size);
-      });
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _measure());
+  }
+
+  void _measure() {
+    final box = _key.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) return;
+    final newSize = box.size;
+    if (newSize != _lastSize) {
+      _lastSize = newSize;
+      widget.onSizeChanged(newSize);
     }
   }
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _measure());
+    return SizedBox(key: _key, child: widget.child);
+  }
 }
+
