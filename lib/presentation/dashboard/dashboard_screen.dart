@@ -22,8 +22,6 @@ import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
-import 'package:pesaflow/presentation/common/widgets/motion/spring_button.dart';
-import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_widgets.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/category_budget_card.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -255,23 +253,37 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   onTap: () {},
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                      vertical: 10,
+                                      horizontal: 14,
+                                      vertical: 8,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.05),
+                                      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                                       borderRadius: BorderRadius.circular(
-                                        AppTheme.radiusDialog,
+                                        AppTheme.radiusPill,
+                                      ),
+                                      border: Border.all(
+                                        color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                                        width: 1,
                                       ),
                                     ),
-                                    child: Text(
-                                      'Personal',
-                                      style: context.ts(
-                                        15,
-                                        color: theme.colorScheme.onSurface,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          PesaFlowIcons.person,
+                                          size: 15,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          'Personal',
+                                          style: context.ts(
+                                            13,
+                                            color: theme.colorScheme.onSurface,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -285,12 +297,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           )
                                           .toggle(),
                                       child: Container(
-                                        padding: const EdgeInsets.all(10),
+                                        width: 40,
+                                        height: 40,
                                         decoration: BoxDecoration(
-                                          color: theme.colorScheme.onSurface
-                                              .withValues(alpha: 0.08),
+                                          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                                           shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                                            width: 1,
+                                          ),
                                         ),
+                                        alignment: Alignment.center,
                                         child: Icon(
                                           PesaFlowIcons.search,
                                           color: theme.colorScheme.onSurface,
@@ -305,17 +322,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         clipBehavior: Clip.none,
                                         children: [
                                           Container(
-                                            padding: const EdgeInsets.all(10),
+                                            width: 40,
+                                            height: 40,
                                             decoration: BoxDecoration(
-                                              color: theme.colorScheme.onSurface
-                                                  .withValues(alpha: 0.08),
+                                              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                                               shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                                                width: 1,
+                                              ),
                                             ),
+                                            alignment: Alignment.center,
                                             child: Icon(
-                                              Icons.menu,
+                                              PesaFlowIcons.sms,
                                               size: 18,
-                                              color:
-                                                  theme.colorScheme.onSurface,
+                                              color: theme.colorScheme.onSurface,
                                             ),
                                           ),
                                           if (pendingReviewCount > 0)
@@ -325,7 +346,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               child: Container(
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                      horizontal: kSpacing4,
+                                                      horizontal: kSpacing6,
                                                       vertical: kSpacing2,
                                                     ),
                                                 decoration: BoxDecoration(
@@ -346,7 +367,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 child: Text(
                                                   '$pendingReviewCount',
                                                   style: context.ts(
-                                                    8,
+                                                    9,
                                                     color: Colors.white,
                                                     fontWeight:
                                                         FontWeight.w700,
@@ -444,7 +465,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           decoration: BoxDecoration(
                                             color: isSelected
                                                 ? theme.colorScheme.primary
-                                                      .withValues(alpha: 0.25)
+                                                      .withValues(alpha: 0.16)
                                                 : theme
                                                       .colorScheme
                                                       .surfaceContainerHigh,
@@ -454,10 +475,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             border: Border.all(
                                               color: isSelected
                                                   ? theme.colorScheme.primary
-                                                        .withValues(alpha: 0.6)
-                                                  : theme.colorScheme.onSurface
-                                                        .withValues(alpha: 0.1),
-                                              width: isSelected ? 1.5 : 0.8,
+                                                  : theme.colorScheme.outlineVariant
+                                                        .withValues(alpha: 0.35),
+                                              width: isSelected ? 1.2 : 0.8,
                                             ),
                                           ),
                                           child: Row(
@@ -489,27 +509,37 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                     ),
                                               ),
                                               const SizedBox(width: kSpacing8),
-                                              Text(
-                                                _formatCompact(account.balance),
-                                                style: AppTheme.getMonospaceStyle(
-                                                  theme.textTheme.labelSmall!
-                                                      .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: isSelected
-                                                            ? theme
-                                                                  .colorScheme
-                                                                  .primary
-                                                                  .withValues(
-                                                                    alpha: 0.9,
-                                                                  )
-                                                            : theme
-                                                                  .colorScheme
-                                                                  .onSurface
-                                                                  .withValues(
-                                                                    alpha: 0.8,
-                                                                  ),
-                                                      ),
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                  horizontal: 6,
+                                                  vertical: 1.5,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: isSelected
+                                                      ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                                                      : theme.colorScheme.onSurface.withValues(alpha: 0.06),
+                                                  borderRadius: BorderRadius.circular(6),
+                                                ),
+                                                child: Text(
+                                                  _formatCompact(account.balance),
+                                                  style: AppTheme.getMonospaceStyle(
+                                                    theme.textTheme.labelSmall!
+                                                        .copyWith(
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: isSelected
+                                                              ? theme
+                                                                    .colorScheme
+                                                                    .primary
+                                                              : theme
+                                                                    .colorScheme
+                                                                    .onSurface
+                                                                    .withValues(
+                                                                      alpha: 0.8,
+                                                                    ),
+                                                        ),
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -1162,25 +1192,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                             ),
                                                         child: Row(
                                                           children: [
-                                                            Container(
-                                                              width: 46,
-                                                              height: 46,
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              child: Icon(
-                                                                getCategoryIcon(
-                                                                  item
-                                                                      .category
-                                                                      .icon,
-                                                                ),
-                                                                color: hexToColor(
-                                                                  item
-                                                                      .category
-                                                                      .color,
-                                                                ),
-                                                                size: 28,
-                                                              ),
+                                                            Builder(
+                                                              builder: (context) {
+                                                                final catColor = hexToColor(item.category.color);
+                                                                return Container(
+                                                                  width: 44,
+                                                                  height: 44,
+                                                                  decoration: BoxDecoration(
+                                                                    color: catColor.withValues(alpha: 0.12),
+                                                                    borderRadius: BorderRadius.circular(12),
+                                                                    border: Border.all(
+                                                                      color: catColor.withValues(alpha: 0.20),
+                                                                      width: 1,
+                                                                    ),
+                                                                  ),
+                                                                  alignment: Alignment.center,
+                                                                  child: Icon(
+                                                                    getCategoryIcon(item.category.icon),
+                                                                    color: catColor,
+                                                                    size: 22,
+                                                                  ),
+                                                                );
+                                                              },
                                                             ),
                                                             const SizedBox(
                                                               width: kSpacing14,
@@ -1473,27 +1506,53 @@ class _QuickActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Expanded(
-      child: SpringButton(
-        haptic: HapticType.selection,
+      child: TactileSpringContainer(
         onTap: onTap,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: kSpacing12),
+          padding: const EdgeInsets.symmetric(
+            vertical: kSpacing12,
+            horizontal: kSpacing4,
+          ),
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: color.withValues(alpha: 0.12)),
+            color: theme.colorScheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: color, size: 22),
-              const SizedBox(height: kSpacing4),
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                alignment: Alignment.center,
+                child: Icon(icon, color: color, size: 20),
+              ),
+              const SizedBox(height: kSpacing8),
               Text(
                 label,
-                style: Theme.of(
-                  context,
-                ).textTheme.labelSmall!.copyWith(color: color),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: context.ts(
+                  12,
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface,
+                ),
               ),
             ],
           ),
