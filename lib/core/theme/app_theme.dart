@@ -312,7 +312,7 @@ class AppTheme {
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: SegmentedButton.styleFrom(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(AppTheme.radiusHero),
           ),
           selectedBackgroundColor: scheme.primary,
           selectedForegroundColor: scheme.onPrimary,
@@ -324,7 +324,7 @@ class AppTheme {
         color: Colors.transparent,
       ),
       chipTheme: ChipThemeData(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radiusHero)),
         side: BorderSide.none,
       ),
       dialogTheme: DialogThemeData(

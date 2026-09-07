@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors_theme.dart';
-import '../theme/app_typography_theme.dart';
+import '../theme/app_theme.dart';
 import 'responsive.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -168,29 +168,29 @@ extension PesaFlowContext on BuildContext {
       filled: true,
       fillColor: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
         borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
         borderSide: BorderSide(
           color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
           width: 0.8,
         ),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
         borderSide: BorderSide(
           color: theme.colorScheme.primary.withValues(alpha: 0.5),
           width: 1.5,
         ),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
         borderSide: BorderSide(color: theme.colorScheme.error, width: 1.0),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
         borderSide: BorderSide(color: theme.colorScheme.error, width: 1.5),
       ),
       contentPadding:
@@ -311,7 +311,7 @@ class ResponsiveCard extends StatelessWidget {
       margin: margin,
       decoration: BoxDecoration(
         color: color ?? theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(borderRadius ?? 20),
+        borderRadius: BorderRadius.circular(borderRadius ?? AppTheme.radiusHero),
         boxShadow:
             boxShadow ??
             [
