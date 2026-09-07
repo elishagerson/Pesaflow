@@ -287,8 +287,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               Expanded(
                 child: TabBarView(
                   children: [
-                    const _OverviewTab(),
-                    const _TrendsTab(),
+                    _OverviewTab(),
+                    _TrendsTab(),
                     const InsightsTab(),
                   ],
                 ),
@@ -315,7 +315,7 @@ Gradient _getCategoryNeonGradient(Color baseColor) {
 }
 
 class _OverviewTab extends ConsumerWidget {
-  const _OverviewTab();
+  _OverviewTab();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1000,7 +1000,7 @@ class _OverviewTab extends ConsumerWidget {
 }
 
 class _TrendsTab extends ConsumerWidget {
-  const _TrendsTab();
+  _TrendsTab();
 
   Widget _buildRangeButton(
     TrendRange range,
