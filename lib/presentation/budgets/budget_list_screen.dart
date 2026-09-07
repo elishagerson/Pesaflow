@@ -49,17 +49,17 @@ final budgetActiveTabProvider = NotifierProvider<BudgetActiveTabNotifier, int>(
 class BudgetListScreen extends ConsumerStatefulWidget {
   const BudgetListScreen({super.key});
 
-  int _calculateDaysRemaining(DateTime targetDate) {
-    final diff = targetDate.difference(DateTime.now()).inDays;
-    return diff < 0 ? 0 : diff;
-  }
-
   @override
   ConsumerState<BudgetListScreen> createState() => _BudgetListScreenState();
 }
 
 class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
   final ScrollController _scrollController = ScrollController();
+
+  int _calculateDaysRemaining(DateTime targetDate) {
+    final diff = targetDate.difference(DateTime.now()).inDays;
+    return diff < 0 ? 0 : diff;
+  }
 
   @override
   void dispose() {

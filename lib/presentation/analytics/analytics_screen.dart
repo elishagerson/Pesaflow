@@ -296,6 +296,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             ],
           ),
         ),
+      ),
     );
   }
 }
