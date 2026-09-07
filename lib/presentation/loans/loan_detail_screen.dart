@@ -870,7 +870,7 @@ class LoanDetailScreen extends ConsumerWidget {
         loan.status == 'paid'
             ? 'Remove "${loan.description ?? loan.provider ?? 'Loan'}" from your records? All linked payment transactions will also be deleted.'
             : '"${loan.description ?? loan.provider ?? 'Loan'}" has an outstanding balance of ${CurrencyFormatter.formatCents(loan.remaining)}. Deleting it will also remove all linked payment transactions.',
-        style: Theme.of(context).textTheme.titleSmall!,
+        style: context.ts(14, fontWeight: FontWeight.bold),
       ),
       actions: [
         TextButton(
