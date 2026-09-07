@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';
@@ -72,19 +74,26 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
   }
 
   @override
+  void _animateExpand(bool expand) {
+    if (context.isReducedMotion) {
+      _expandController.value = expand ? 1.0 : 0.0;
+      return;
+    }
+    final sim = SpringSimulation(
+      MotionTokens.springGentle,
+      _expandController.value,
+      expand ? 1.0 : 0.0,
+      0.0,
+    );
+    _expandController.animateWith(sim);
+  }
+
+  @override
   void didUpdateWidget(covariant MorphingInsightCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.expanded != null && widget.expanded != oldWidget.expanded) {
       _expanded = widget.expanded!;
-      if (context.isReducedMotion) {
-        _expandController.value = _expanded ? 1.0 : 0.0;
-      } else {
-        if (_expanded) {
-          _expandController.forward();
-        } else {
-          _expandController.reverse();
-        }
-      }
+      _animateExpand(_expanded);
     }
   }
 
@@ -118,15 +127,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
           widget.onTap!();
         } else {
           setState(() => _expanded = !_expanded);
-          if (context.isReducedMotion) {
-            _expandController.value = _expanded ? 1.0 : 0.0;
-          } else {
-            if (_expanded) {
-              _expandController.forward();
-            } else {
-              _expandController.reverse();
-            }
-          }
+          _animateExpand(_expanded);
         }
       },
       child: AnimatedBuilder(
