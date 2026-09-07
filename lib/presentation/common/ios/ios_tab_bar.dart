@@ -34,32 +34,32 @@ class IosTabBar extends StatelessWidget {
       _TabConfig(
         routeIndex: 0,
         label: 'Home',
-        icon: Icons.home_outlined,
-        activeIcon: Icons.home_rounded,
+        icon: PesaFlowIcons.home,
+        activeIcon: PesaFlowIcons.home,
       ),
       _TabConfig(
         routeIndex: 1,
         label: 'Transactions',
-        icon: Icons.swap_horiz_outlined,
-        activeIcon: Icons.swap_horiz_rounded,
+        icon: PesaFlowIcons.transfer,
+        activeIcon: PesaFlowIcons.transfer,
       ),
       _TabConfig(
         routeIndex: 2,
         label: 'Budgets',
-        icon: Icons.savings_outlined,
-        activeIcon: Icons.savings_rounded,
+        icon: PesaFlowIcons.savings,
+        activeIcon: PesaFlowIcons.savings,
       ),
       _TabConfig(
         routeIndex: 3,
         label: 'Analytics',
-        icon: Icons.leaderboard_outlined,
-        activeIcon: Icons.leaderboard_rounded,
+        icon: PesaFlowIcons.analytics,
+        activeIcon: PesaFlowIcons.analytics,
       ),
       _TabConfig(
         routeIndex: 4,
         label: 'Account',
-        icon: Icons.person_outline_rounded,
-        activeIcon: Icons.person_rounded,
+        icon: PesaFlowIcons.personOutline,
+        activeIcon: PesaFlowIcons.person,
       ),
     ];
 

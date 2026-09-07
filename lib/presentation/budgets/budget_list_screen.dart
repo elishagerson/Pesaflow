@@ -573,11 +573,11 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     color: onSurface.withValues(alpha: 0.06),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    Icons.more_horiz,
-                    size: 16,
-                    color: onSurface.withValues(alpha: 0.7),
-                  ),
+                    child: Icon(
+                      PesaFlowIcons.more,
+                      size: 16,
+                      color: onSurface.withValues(alpha: 0.7),
+                    ),
                 ),
               ),
             ],

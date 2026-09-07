@@ -1512,7 +1512,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       onTap: () => context.push('/debug/sms-parser'),
                       child: IosListRow(
                         leading: Icon(
-                          Icons.bug_report,
+                          PesaFlowIcons.info,
                           color: Colors.orange,
                           size: 24,
                         ),

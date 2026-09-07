@@ -150,7 +150,7 @@ class ModernNumpad extends StatelessWidget {
                               ),
                             )
                           : Icon(
-                              Icons.check,
+                              PesaFlowIcons.check,
                               size: 36,
                               color: theme.colorScheme.onPrimary,
                             ),

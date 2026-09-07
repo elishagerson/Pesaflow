@@ -1085,7 +1085,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               ],
                               const SizedBox(width: kSpacing4),
                               Icon(
-                                Icons.keyboard_arrow_down,
+                                PesaFlowIcons.chevronDown,
                                 size: 16,
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),

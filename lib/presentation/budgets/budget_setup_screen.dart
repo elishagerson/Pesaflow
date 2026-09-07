@@ -491,7 +491,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                               ),
                               child: isSelected
                                   ? Icon(
-                                      Icons.check,
+                                      PesaFlowIcons.check,
                                       size: 14,
                                       color: theme.colorScheme.onPrimary,
                                     )

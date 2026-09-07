@@ -310,8 +310,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           children: [
                             Icon(
                               _selectAll
-                                  ? Icons.deselect_rounded
-                                  : Icons.done_all_rounded,
+                                  ? PesaFlowIcons.deselect
+                                  : PesaFlowIcons.check,
                               size: 16,
                               color: _selectAll
                                   ? theme.colorScheme.primary
@@ -401,7 +401,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Icon(
-                                            Icons.swipe_rounded,
+                                            PesaFlowIcons.compareArrows,
                                             size: 12,
                                             color: theme
                                                 .colorScheme
@@ -813,7 +813,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                               .reference!
                                                               .isNotEmpty) ...[
                                                         Icon(
-                                                          Icons.tag_rounded,
+                                                          PesaFlowIcons.tag,
                                                           size: 12,
                                                           color: theme
                                                               .colorScheme
@@ -1266,8 +1266,8 @@ class _RawSmsPreviewState extends State<_RawSmsPreview> {
                 children: [
                   Icon(
                     _expanded
-                        ? Icons.keyboard_arrow_up_rounded
-                        : Icons.keyboard_arrow_down_rounded,
+                        ? PesaFlowIcons.chevronUp
+                        : PesaFlowIcons.chevronDown,
                     size: 14,
                     color: theme.colorScheme.onSurfaceVariant.withValues(
                       alpha: 0.5,
