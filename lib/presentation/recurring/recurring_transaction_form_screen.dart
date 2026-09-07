@@ -258,7 +258,7 @@ class _RecurringTransactionFormScreenState
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.appColors.expenseColor,
-                foregroundColor: Colors.white,
+                foregroundColor: theme.colorScheme.onPrimary,
               ),
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(true),

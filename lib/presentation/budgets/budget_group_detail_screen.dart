@@ -107,13 +107,13 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.06),
+                                color: context.appColors.onBgColor.withValues(alpha: 0.06),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 PesaFlowIcons.add,
                                 size: 18,
-                                color: Colors.white,
+                                color: context.appColors.onBgColor,
                               ),
                             ),
                           ),
@@ -143,14 +143,14 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                                     26,
                                     fontWeight: FontWeight.w700,
                                     letterSpacing: -0.8,
-                                    color: Colors.white,
+                                    color: context.appColors.onBgColor,
                                   ),
                                 ),
                                 Text(
                                   '${(group.percentage * 100).round()}% of income',
                                   style: context.ts(
                                     12,
-                                    color: Colors.white.withValues(alpha: 0.5),
+                                    color: context.appColors.onBgColor.withValues(alpha: 0.5),
                                   ),
                                 ),
                               ],

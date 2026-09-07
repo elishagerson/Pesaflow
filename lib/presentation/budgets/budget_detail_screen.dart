@@ -374,13 +374,13 @@ class BudgetDetailScreen extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(width: kSpacing8),
-                          Text(
-                            bp.budget.period.toUpperCase(),
-                            style: context.ts(
-                              11,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white.withValues(alpha: 0.4),
-                            ),
+                              Text(
+                                bp.budget.period.toUpperCase(),
+                                style: context.ts(
+                                  11,
+                                  fontWeight: FontWeight.w500,
+                                  color: context.appColors.onBgColor.withValues(alpha: 0.4),
+                                ),
                           ),
                         ],
                       ),
