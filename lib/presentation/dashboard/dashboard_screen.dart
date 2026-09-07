@@ -477,115 +477,129 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           });
                                         },
                                         child: Semantics(
-                                          label: '${account.name}, ${_formatCompact(account.balance)}${isSelected ? ', selected filter' : ''}',
+                                          label:
+                                              '${account.name}, ${_formatCompact(account.balance)}${isSelected ? ', selected filter' : ''}',
                                           button: true,
                                           selected: isSelected,
                                           child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: kSpacing14,
-                                            vertical: kSpacing6,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: isSelected
-                                                ? theme.colorScheme.primary
-                                                      .withValues(alpha: 0.16)
-                                                : theme
-                                                      .colorScheme
-                                                      .surfaceContainerHigh,
-                                            borderRadius: BorderRadius.circular(
-                                              AppTheme.radiusPill,
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: kSpacing14,
+                                              vertical: kSpacing6,
                                             ),
-                                            border: Border.all(
+                                            decoration: BoxDecoration(
                                               color: isSelected
                                                   ? theme.colorScheme.primary
+                                                        .withValues(alpha: 0.16)
                                                   : theme
                                                         .colorScheme
-                                                        .outlineVariant
-                                                        .withValues(
-                                                          alpha: 0.35,
-                                                        ),
-                                              width: isSelected ? 1.2 : 0.8,
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(
-                                                getAccountIcon(account.icon),
-                                                size: 14,
+                                                        .surfaceContainerHigh,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                    AppTheme.radiusPill,
+                                                  ),
+                                              border: Border.all(
                                                 color: isSelected
                                                     ? theme.colorScheme.primary
                                                     : theme
                                                           .colorScheme
-                                                          .onSurface,
+                                                          .outlineVariant
+                                                          .withValues(
+                                                            alpha: 0.35,
+                                                          ),
+                                                width: isSelected ? 1.2 : 0.8,
                                               ),
-                                              const SizedBox(width: kSpacing6),
-                                              Text(
-                                                account.name,
-                                                style: theme.textTheme.bodySmall
-                                                    ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: isSelected
-                                                          ? theme
-                                                                .colorScheme
-                                                                .primary
-                                                          : theme
-                                                                .colorScheme
-                                                                .onSurface,
-                                                    ),
-                                              ),
-                                              const SizedBox(width: kSpacing8),
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 6,
-                                                      vertical: 1.5,
-                                                    ),
-                                                decoration: BoxDecoration(
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  getAccountIcon(account.icon),
+                                                  size: 14,
                                                   color: isSelected
                                                       ? theme
                                                             .colorScheme
                                                             .primary
-                                                            .withValues(
-                                                              alpha: 0.12,
-                                                            )
                                                       : theme
                                                             .colorScheme
-                                                            .onSurface
-                                                            .withValues(
-                                                              alpha: 0.06,
-                                                            ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
+                                                            .onSurface,
                                                 ),
-                                                child: Text(
-                                                  _formatCompact(
-                                                    account.balance,
-                                                  ),
-                                                  style: AppTheme.getMonospaceStyle(
-                                                    theme.textTheme.labelSmall!
-                                                        .copyWith(
-                                                          fontSize: 10,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: isSelected
-                                                              ? theme
-                                                                    .colorScheme
-                                                                    .primary
-                                                              : theme
-                                                                    .colorScheme
-                                                                    .onSurface
-                                                                    .withValues(
-                                                                      alpha:
-                                                                          0.8,
-                                                                    ),
+                                                const SizedBox(
+                                                  width: kSpacing6,
+                                                ),
+                                                Text(
+                                                  account.name,
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: isSelected
+                                                            ? theme
+                                                                  .colorScheme
+                                                                  .primary
+                                                            : theme
+                                                                  .colorScheme
+                                                                  .onSurface,
+                                                      ),
+                                                ),
+                                                const SizedBox(
+                                                  width: kSpacing8,
+                                                ),
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 6,
+                                                        vertical: 1.5,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    color: isSelected
+                                                        ? theme
+                                                              .colorScheme
+                                                              .primary
+                                                              .withValues(
+                                                                alpha: 0.12,
+                                                              )
+                                                        : theme
+                                                              .colorScheme
+                                                              .onSurface
+                                                              .withValues(
+                                                                alpha: 0.06,
+                                                              ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          6,
                                                         ),
                                                   ),
+                                                  child: Text(
+                                                    _formatCompact(
+                                                      account.balance,
+                                                    ),
+                                                    style: AppTheme.getMonospaceStyle(
+                                                      theme
+                                                          .textTheme
+                                                          .labelSmall!
+                                                          .copyWith(
+                                                            fontSize: 10,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: isSelected
+                                                                ? theme
+                                                                      .colorScheme
+                                                                      .primary
+                                                                : theme
+                                                                      .colorScheme
+                                                                      .onSurface
+                                                                      .withValues(
+                                                                        alpha:
+                                                                            0.8,
+                                                                      ),
+                                                          ),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -1241,188 +1255,185 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                     '/transactions/${trans.id}',
                                                   ),
                                                   child: Semantics(
-                                                    label: '${trans.description.isNotEmpty ? trans.description : item.category.name}, ${CurrencyFormatter.formatCents(trans.amount)} ${trans.type}',
+                                                    label:
+                                                        '${trans.description.isNotEmpty ? trans.description : item.category.name}, ${CurrencyFormatter.formatCents(trans.amount)} ${trans.type}',
                                                     button: true,
                                                     child: Column(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets.symmetric(
-                                                              horizontal:
-                                                                  kSpacing20,
-                                                              vertical:
-                                                                  kSpacing12,
-                                                            ),
-                                                        child: Row(
-                                                          children: [
-                                                            Builder(
-                                                              builder: (context) {
-                                                                final catColor =
-                                                                    hexToColor(
-                                                                      item
-                                                                          .category
-                                                                          .color,
-                                                                    );
-                                                                return Container(
-                                                                  width: 44,
-                                                                  height: 44,
-                                                                  decoration: BoxDecoration(
-                                                                    color: catColor
-                                                                        .withValues(
-                                                                          alpha:
-                                                                              0.12,
-                                                                        ),
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                          12,
-                                                                        ),
-                                                                    border: Border.all(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal:
+                                                                    kSpacing20,
+                                                                vertical:
+                                                                    kSpacing12,
+                                                              ),
+                                                          child: Row(
+                                                            children: [
+                                                              Builder(
+                                                                builder: (context) {
+                                                                  final catColor =
+                                                                      hexToColor(
+                                                                        item
+                                                                            .category
+                                                                            .color,
+                                                                      );
+                                                                  return Container(
+                                                                    width: 44,
+                                                                    height: 44,
+                                                                    decoration: BoxDecoration(
                                                                       color: catColor.withValues(
                                                                         alpha:
-                                                                            0.20,
+                                                                            0.12,
                                                                       ),
-                                                                      width: 1,
-                                                                    ),
-                                                                  ),
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  child: Icon(
-                                                                    getCategoryIcon(
-                                                                      item
-                                                                          .category
-                                                                          .icon,
-                                                                    ),
-                                                                    color:
-                                                                        catColor,
-                                                                    size: 22,
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ),
-                                                            const SizedBox(
-                                                              width: kSpacing14,
-                                                            ),
-                                                            // Content
-                                                            Expanded(
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Text(
-                                                                    trans
-                                                                            .description
-                                                                            .isNotEmpty
-                                                                        ? trans
-                                                                              .description
-                                                                        : item
-                                                                              .category
-                                                                              .name,
-                                                                    style: theme
-                                                                        .textTheme
-                                                                        .titleMedium
-                                                                        ?.copyWith(
-                                                                          fontWeight:
-                                                                              FontWeight.w800,
-                                                                          color:
-                                                                              onSurface,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                            12,
+                                                                          ),
+                                                                      border: Border.all(
+                                                                        color: catColor.withValues(
+                                                                          alpha:
+                                                                              0.20,
                                                                         ),
-                                                                    maxLines: 1,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height:
-                                                                        kSpacing4,
-                                                                  ),
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        item.account?.name ??
-                                                                            'Offline',
-                                                                        style: theme.textTheme.labelSmall?.copyWith(
-                                                                          color: theme
-                                                                              .colorScheme
-                                                                              .onSurface
-                                                                              .withValues(
-                                                                                alpha: 0.6,
-                                                                              ),
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                      ),
-                                                                      const SizedBox(
                                                                         width:
-                                                                            kSpacing8,
+                                                                            1,
                                                                       ),
-                                                                      Text(
-                                                                        DateFormat(
-                                                                          'MMM d, yyyy',
-                                                                        ).format(
-                                                                          trans
-                                                                              .createdAt,
-                                                                        ),
-                                                                        style: theme
-                                                                            .textTheme
-                                                                            .labelSmall
-                                                                            ?.copyWith(
-                                                                              color: theme.colorScheme.onSurfaceVariant,
+                                                                    ),
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    child: Icon(
+                                                                      getCategoryIcon(
+                                                                        item
+                                                                            .category
+                                                                            .icon,
+                                                                      ),
+                                                                      color:
+                                                                          catColor,
+                                                                      size: 22,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                              const SizedBox(
+                                                                width:
+                                                                    kSpacing14,
+                                                              ),
+                                                              // Content
+                                                              Expanded(
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                      trans.description.isNotEmpty
+                                                                          ? trans.description
+                                                                          : item.category.name,
+                                                                      style: theme
+                                                                          .textTheme
+                                                                          .titleMedium
+                                                                          ?.copyWith(
+                                                                            fontWeight:
+                                                                                FontWeight.w800,
+                                                                            color:
+                                                                                onSurface,
+                                                                          ),
+                                                                      maxLines:
+                                                                          1,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      height:
+                                                                          kSpacing4,
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        Text(
+                                                                          item.account?.name ??
+                                                                              'Offline',
+                                                                          style: theme.textTheme.labelSmall?.copyWith(
+                                                                            color: theme.colorScheme.onSurface.withValues(
+                                                                              alpha: 0.6,
                                                                             ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ],
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                          ),
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          width:
+                                                                              kSpacing8,
+                                                                        ),
+                                                                        Text(
+                                                                          DateFormat(
+                                                                            'MMM d, yyyy',
+                                                                          ).format(
+                                                                            trans.createdAt,
+                                                                          ),
+                                                                          style: theme
+                                                                              .textTheme
+                                                                              .labelSmall
+                                                                              ?.copyWith(
+                                                                                color: theme.colorScheme.onSurfaceVariant,
+                                                                              ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                               ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: kSpacing12,
-                                                            ),
-                                                            // Amount
-                                                            AmountText(
-                                                              amountInCents:
-                                                                  trans.amount,
-                                                              type: amtType,
-                                                              showDecimals:
-                                                                  true,
-                                                              style: context.ts(
-                                                                16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w800,
-                                                                color:
-                                                                    amtType ==
-                                                                        AmountType
-                                                                            .income
-                                                                    ? AppTheme
-                                                                          .transferColorDark
-                                                                    : (amtType ==
-                                                                              AmountType.expense
-                                                                          ? const Color(
-                                                                              0xFFFF453A,
-                                                                            )
-                                                                          : theme.colorScheme.onSurfaceVariant),
+                                                              const SizedBox(
+                                                                width:
+                                                                    kSpacing12,
                                                               ),
-                                                            ),
-                                                          ],
+                                                              // Amount
+                                                              AmountText(
+                                                                amountInCents:
+                                                                    trans
+                                                                        .amount,
+                                                                type: amtType,
+                                                                showDecimals:
+                                                                    true,
+                                                                style: context.ts(
+                                                                  16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w800,
+                                                                  color:
+                                                                      amtType ==
+                                                                          AmountType
+                                                                              .income
+                                                                      ? AppTheme
+                                                                            .transferColorDark
+                                                                      : (amtType ==
+                                                                                AmountType.expense
+                                                                            ? const Color(
+                                                                                0xFFFF453A,
+                                                                              )
+                                                                            : theme.colorScheme.onSurfaceVariant),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                      if (index <
-                                                          filteredTransactions
-                                                                  .length -
-                                                              1)
-                                                        Divider(
-                                                          height: 1,
-                                                          thickness: 0.5,
-                                                          color: onSurface
-                                                              .withValues(
-                                                                alpha: 0.05,
-                                                              ),
-                                                          indent: 20 + 46 + 14,
-                                                        ),
-                                                    ],
-                                                  ),
+                                                        if (index <
+                                                            filteredTransactions
+                                                                    .length -
+                                                                1)
+                                                          Divider(
+                                                            height: 1,
+                                                            thickness: 0.5,
+                                                            color: onSurface
+                                                                .withValues(
+                                                                  alpha: 0.05,
+                                                                ),
+                                                            indent:
+                                                                20 + 46 + 14,
+                                                          ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -1601,51 +1612,51 @@ class _QuickActionButton extends StatelessWidget {
           button: true,
           onTap: onTap,
           child: Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: kSpacing12,
-            horizontal: kSpacing4,
-          ),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerLow,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
-              width: 1,
+            padding: const EdgeInsets.symmetric(
+              vertical: kSpacing12,
+              horizontal: kSpacing4,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
-                blurRadius: 6,
-                offset: const Offset(0, 2),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerLow,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
+                width: 1,
               ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
                 ),
-                alignment: Alignment.center,
-                child: Icon(icon, color: color, size: 20),
-              ),
-              const SizedBox(height: kSpacing8),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: context.ts(
-                  12,
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(icon, color: color, size: 20),
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(height: kSpacing8),
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.ts(
+                    12,
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

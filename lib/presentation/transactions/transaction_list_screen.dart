@@ -486,94 +486,82 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       '/transactions/${trans.id}',
                                     ),
                                     child: Semantics(
-                                      label: '${trans.description.isNotEmpty ? trans.description : item.category.name}, ${CurrencyFormatter.formatCents(trans.amount)} ${trans.type}',
+                                      label:
+                                          '${trans.description.isNotEmpty ? trans.description : item.category.name}, ${CurrencyFormatter.formatCents(trans.amount)} ${trans.type}',
                                       button: true,
                                       child: Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: kSpacing20,
-                                            vertical: kSpacing12,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: 40,
-                                                height: 40,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  color: categoryColor
-                                                      .withValues(alpha: 0.12),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        AppTheme.radiusCompact,
-                                                      ),
-                                                ),
-                                                child: Icon(
-                                                  getCategoryIcon(
-                                                    item.category.icon,
-                                                  ),
-                                                  color: categoryColor,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                              const SizedBox(width: kSpacing14),
-                                              // Content
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      trans
-                                                              .description
-                                                              .isNotEmpty
-                                                          ? trans.description
-                                                          : item.category.name,
-                                                      style: theme
-                                                          .textTheme
-                                                          .bodyMedium
-                                                          ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: onSurface,
-                                                          ),
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    const SizedBox(
-                                                      height: kSpacing2,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          item.account?.name ??
-                                                              'Offline',
-                                                          style: theme
-                                                              .textTheme
-                                                              .bodySmall
-                                                              ?.copyWith(
-                                                                color: onSurface
-                                                                    .withValues(
-                                                                      alpha:
-                                                                          0.6,
-                                                                    ),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                              ),
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: kSpacing20,
+                                              vertical: kSpacing12,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 40,
+                                                  height: 40,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    color: categoryColor
+                                                        .withValues(
+                                                          alpha: 0.12,
                                                         ),
-                                                        if (trans.reference !=
-                                                                null &&
-                                                            trans
-                                                                .reference!
-                                                                .isNotEmpty) ...[
-                                                          const SizedBox(
-                                                            width: kSpacing6,
-                                                          ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          AppTheme
+                                                              .radiusCompact,
+                                                        ),
+                                                  ),
+                                                  child: Icon(
+                                                    getCategoryIcon(
+                                                      item.category.icon,
+                                                    ),
+                                                    color: categoryColor,
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: kSpacing14,
+                                                ),
+                                                // Content
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        trans
+                                                                .description
+                                                                .isNotEmpty
+                                                            ? trans.description
+                                                            : item
+                                                                  .category
+                                                                  .name,
+                                                        style: theme
+                                                            .textTheme
+                                                            .bodyMedium
+                                                            ?.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: onSurface,
+                                                            ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                      const SizedBox(
+                                                        height: kSpacing2,
+                                                      ),
+                                                      Row(
+                                                        children: [
                                                           Text(
-                                                            '•',
+                                                            item
+                                                                    .account
+                                                                    ?.name ??
+                                                                'Offline',
                                                             style: theme
                                                                 .textTheme
                                                                 .bodySmall
@@ -581,16 +569,23 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                                   color: onSurface
                                                                       .withValues(
                                                                         alpha:
-                                                                            0.11,
+                                                                            0.6,
                                                                       ),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
                                                                 ),
                                                           ),
-                                                          const SizedBox(
-                                                            width: kSpacing6,
-                                                          ),
-                                                          Flexible(
-                                                            child: Text(
-                                                              trans.reference!,
+                                                          if (trans.reference !=
+                                                                  null &&
+                                                              trans
+                                                                  .reference!
+                                                                  .isNotEmpty) ...[
+                                                            const SizedBox(
+                                                              width: kSpacing6,
+                                                            ),
+                                                            Text(
+                                                              '•',
                                                               style: theme
                                                                   .textTheme
                                                                   .bodySmall
@@ -598,108 +593,130 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                                     color: onSurface
                                                                         .withValues(
                                                                           alpha:
-                                                                              0.34,
+                                                                              0.11,
                                                                         ),
                                                                   ),
-                                                              maxLines: 1,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
                                                             ),
-                                                          ),
-                                                        ],
-                                                        if (trans.source
-                                                            .startsWith(
-                                                              'sms',
-                                                            )) ...[
-                                                          const SizedBox(
-                                                            width: kSpacing6,
-                                                          ),
-                                                          Container(
-                                                            padding:
-                                                                const EdgeInsets.symmetric(
-                                                                  horizontal:
+                                                            const SizedBox(
+                                                              width: kSpacing6,
+                                                            ),
+                                                            Flexible(
+                                                              child: Text(
+                                                                trans
+                                                                    .reference!,
+                                                                style: theme
+                                                                    .textTheme
+                                                                    .bodySmall
+                                                                    ?.copyWith(
+                                                                      color: onSurface.withValues(
+                                                                        alpha:
+                                                                            0.34,
+                                                                      ),
+                                                                    ),
+                                                                maxLines: 1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                          if (trans.source
+                                                              .startsWith(
+                                                                'sms',
+                                                              )) ...[
+                                                            const SizedBox(
+                                                              width: kSpacing6,
+                                                            ),
+                                                            Container(
+                                                              padding:
+                                                                  const EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        kSpacing6,
+                                                                    vertical:
+                                                                        kSpacing2,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .primary
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.05,
+                                                                    ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
                                                                       kSpacing6,
-                                                                  vertical:
-                                                                      kSpacing2,
-                                                                ),
-                                                            decoration: BoxDecoration(
-                                                              color: theme
-                                                                  .colorScheme
-                                                                  .primary
-                                                                  .withValues(
-                                                                    alpha: 0.05,
-                                                                  ),
-                                                              borderRadius:
-                                                                  BorderRadius.circular(
-                                                                    kSpacing6,
-                                                                  ),
+                                                                    ),
+                                                              ),
+                                                              child: Icon(
+                                                                PesaFlowIcons
+                                                                    .sms,
+                                                                size: 11,
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .primary,
+                                                              ),
                                                             ),
-                                                            child: Icon(
-                                                              PesaFlowIcons.sms,
-                                                              size: 11,
-                                                              color: theme
-                                                                  .colorScheme
-                                                                  .primary,
-                                                            ),
-                                                          ),
+                                                          ],
                                                         ],
-                                                      ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: kSpacing12,
+                                                ),
+                                                // Amount & Time
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    AmountText(
+                                                      amountInCents:
+                                                          trans.amount,
+                                                      type: amtType,
+                                                      showDecimals: true,
+                                                      style: theme
+                                                          .textTheme
+                                                          .titleSmall
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: kSpacing4,
+                                                    ),
+                                                    Text(
+                                                      formattedTime,
+                                                      style: theme
+                                                          .textTheme
+                                                          .labelSmall
+                                                          ?.copyWith(
+                                                            color: onSurface
+                                                                .withValues(
+                                                                  alpha: 0.38,
+                                                                ),
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
                                                     ),
                                                   ],
                                                 ),
-                                              ),
-                                              const SizedBox(width: kSpacing12),
-                                              // Amount & Time
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  AmountText(
-                                                    amountInCents: trans.amount,
-                                                    type: amtType,
-                                                    showDecimals: true,
-                                                    style: theme
-                                                        .textTheme
-                                                        .titleSmall
-                                                        ?.copyWith(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: kSpacing4,
-                                                  ),
-                                                  Text(
-                                                    formattedTime,
-                                                    style: theme
-                                                        .textTheme
-                                                        .labelSmall
-                                                        ?.copyWith(
-                                                          color: onSurface
-                                                              .withValues(
-                                                                alpha: 0.38,
-                                                              ),
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        if (index < dayItems.length - 1)
-                                          Divider(
-                                            height: 1,
-                                            thickness: 0.5,
-                                            color: onSurface.withValues(
-                                              alpha: 0.06,
+                                              ],
                                             ),
-                                            indent: 20 + 40 + 14,
                                           ),
-                                      ],
-                                    ),
+                                          if (index < dayItems.length - 1)
+                                            Divider(
+                                              height: 1,
+                                              thickness: 0.5,
+                                              color: onSurface.withValues(
+                                                alpha: 0.06,
+                                              ),
+                                              indent: 20 + 40 + 14,
+                                            ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
