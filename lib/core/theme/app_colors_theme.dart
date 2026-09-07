@@ -203,6 +203,14 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       sectionHeader: Color.lerp(sectionHeader, other.sectionHeader, t)!,
       accentSubtle: Color.lerp(accentSubtle, other.accentSubtle, t)!,
       warningColor: Color.lerp(warningColor, other.warningColor, t)!,
+      shadowSubtle: Color.lerp(shadowSubtle, other.shadowSubtle, t)!,
+      shadowMedium: Color.lerp(shadowMedium, other.shadowMedium, t)!,
+      shadowStrong: Color.lerp(shadowStrong, other.shadowStrong, t)!,
+      needsColor: Color.lerp(needsColor, other.needsColor, t)!,
+      wantsColor: Color.lerp(wantsColor, other.wantsColor, t)!,
+      investColor: Color.lerp(investColor, other.investColor, t)!,
+      dangerColor: Color.lerp(dangerColor, other.dangerColor, t)!,
+      neutralColor: Color.lerp(neutralColor, other.neutralColor, t)!,
     );
   }
 }
