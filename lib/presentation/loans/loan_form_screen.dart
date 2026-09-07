@@ -373,7 +373,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.appColors.expenseColor,
-                foregroundColor: Colors.white,
+                foregroundColor: theme.colorScheme.onPrimary,
               ),
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(true),
@@ -629,7 +629,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                               ),
                             ),
                             child: _isSaving
-                                ? const SizedBox(
+                                ? SizedBox(
                                     height: 20,
                                     width: 20,
                                     child: Center(
@@ -638,7 +638,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                                         width: 18,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          color: Colors.white,
+                                          color: theme.colorScheme.onPrimary,
                                         ),
                                       ),
                                     ),
@@ -653,7 +653,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                                         .titleMedium!
                                         .copyWith(
                                           fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: theme.colorScheme.onPrimary,
                                   ),
                             ),
                           ),

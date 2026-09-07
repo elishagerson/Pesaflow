@@ -1137,7 +1137,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                           style: context.ts(
                                             13,
                                             fontWeight: FontWeight.w600,
-                                            color: Colors.white,
+                                            color: context.appColors.onBgColor,
                                           ),
                                         ),
                                       ),
@@ -1716,7 +1716,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                               'APPROVE',
                               style: Theme.of(context).textTheme.titleMedium
                                   ?.copyWith(
-                                    color: Colors.white,
+                                    color: context.appColors.onBgColor,
                                     fontWeight: FontWeight.w700,
                                     letterSpacing: 1.5,
                                   ),
@@ -1770,7 +1770,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                               'REJECT',
                               style: Theme.of(context).textTheme.titleMedium
                                   ?.copyWith(
-                                    color: Colors.white,
+                                    color: context.appColors.onBgColor,
                                     fontWeight: FontWeight.w700,
                                     letterSpacing: 1.5,
                                   ),

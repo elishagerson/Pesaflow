@@ -414,7 +414,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
               onPressed: _confirmImport,
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: theme.colorScheme.onPrimary,
                 padding: const EdgeInsets.symmetric(vertical: kSpacing12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppTheme.radiusInput),

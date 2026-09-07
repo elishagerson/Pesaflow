@@ -145,14 +145,14 @@ class ModernNumpad extends StatelessWidget {
                               height: 24,
                               width: 24,
                               child: CircularProgressIndicator(
-                                color: Colors.white,
+                                color: theme.colorScheme.onPrimary,
                                 strokeWidth: 2,
                               ),
                             )
-                          : const Icon(
+                          : Icon(
                               Icons.check,
                               size: 36,
-                              color: Colors.white,
+                              color: theme.colorScheme.onPrimary,
                             ),
                     ),
                   ),

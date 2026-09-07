@@ -389,7 +389,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                                       ? hexToColor(cat.color)
                                       : null,
                                   textColor: activeCategory == cat.id
-                                      ? Colors.white
+                                      ? theme.colorScheme.onPrimary
                                       : null,
                                   onTap: () {
                                     ref

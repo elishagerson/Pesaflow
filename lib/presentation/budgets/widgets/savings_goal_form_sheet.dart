@@ -415,12 +415,12 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           ],
                         ),
                         child: _isLoading
-                            ? const SizedBox(
+                            ? SizedBox(
                                 height: 20,
                                 width: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.white,
+                                  color: context.appColors.onBgColor,
                                 ),
                               )
                             : Text(
@@ -430,7 +430,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                 style: Theme.of(context).textTheme.titleMedium!
                                     .copyWith(
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                      color: context.appColors.onBgColor,
                                     ),
                               ),
                       ),

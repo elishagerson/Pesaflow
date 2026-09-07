@@ -243,7 +243,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Colors.white,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
           elevation: 0,
           padding: const EdgeInsets.symmetric(
             horizontal: kSpacing24,

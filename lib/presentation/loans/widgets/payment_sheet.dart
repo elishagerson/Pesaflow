@@ -812,7 +812,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                   Icon(
                                                     PesaFlowIcons.lock,
                                                     size: 16,
-                                                    color: Colors.white
+                                                    color: context.appColors.onBgColor
                                                         .withValues(alpha: 0.8),
                                                   ),
                                                 if (paymentAmount() > 0 &&

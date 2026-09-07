@@ -592,13 +592,13 @@ class _SavingsGoalDetailSheetState
                                             ),
                                           ),
                                           child: _isOperationLoading
-                                              ? const SizedBox(
+                                              ? SizedBox(
                                                   width: 22,
                                                   height: 22,
                                                   child:
                                                       CircularProgressIndicator(
                                                         strokeWidth: 2.5,
-                                                        color: Colors.white,
+                                                        color: context.appColors.onBgColor,
                                                       ),
                                                 )
                                               : Row(
@@ -611,7 +611,7 @@ class _SavingsGoalDetailSheetState
                                                           : Icons
                                                                 .remove_circle_outline_rounded,
                                                       size: 18,
-                                                      color: Colors.white
+                                                      color: context.appColors.onBgColor
                                                           .withValues(
                                                             alpha: 0.8,
                                                           ),

@@ -251,7 +251,7 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                     ),
                                     border: Border.all(
                                       color: isSelected
-                                          ? Colors.white
+                                          ? theme.colorScheme.onPrimary
                                           : Colors.transparent,
                                       width: isSelected ? 1.5 : 0.0,
                                     ),

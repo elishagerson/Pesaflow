@@ -28,7 +28,7 @@ class FloatingTopBar extends StatelessWidget {
     final showPop = canPop && Navigator.of(context).canPop();
     final theme = Theme.of(context);
     final effectiveColor = forceWhite
-        ? Colors.white
+        ? theme.colorScheme.onPrimary
         : customColor ?? theme.colorScheme.onSurface;
 
     return Padding(
