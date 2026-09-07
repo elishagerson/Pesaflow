@@ -30,6 +30,7 @@ import 'package:pesaflow/services/home_widgets_renderer.dart';
 import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -1085,36 +1086,39 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 direction:
                                                     DismissDirection.endToStart,
                                                 confirmDismiss: (_) async {
-                                                  return await showDialog<bool>(
+                                                  return await ModernDialog.show<bool>(
                                                         context: context,
-                                                        builder: (ctx) => AlertDialog(
-                                                          title: const Text(
-                                                            'Delete Transaction',
-                                                          ),
-                                                          content: Text(
-                                                            'Delete "${trans.description.length > 30 ? '${trans.description.substring(0, 30)}…' : trans.description}" (${CurrencyFormatter.formatCents(trans.amount)})?',
-                                                          ),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () =>
-                                                                  Navigator.of(
-                                                                    ctx,
-                                                                  ).pop(false),
-                                                              child: const Text(
-                                                                'Cancel',
-                                                              ),
-                                                            ),
-                                                            TextButton(
-                                                              onPressed: () =>
-                                                                  Navigator.of(
-                                                                    ctx,
-                                                                  ).pop(true),
-                                                              child: const Text(
-                                                                'Delete',
-                                                              ),
-                                                            ),
-                                                          ],
+                                                        title: const Text('Delete Transaction'),
+                                                        titleIcon: PesaFlowIcons.warning,
+                                                        iconColor: theme.colorScheme.error,
+                                                        content: Text(
+                                                          'Delete "${trans.description.length > 30 ? '${trans.description.substring(0, 30)}…' : trans.description}" (${CurrencyFormatter.formatCents(trans.amount)})?',
                                                         ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                  context,
+                                                                  rootNavigator: true,
+                                                                ).pop(false),
+                                                            child: const Text(
+                                                              'Cancel',
+                                                            ),
+                                                          ),
+                                                          ElevatedButton(
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: theme.colorScheme.error,
+                                                            ),
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                  context,
+                                                                  rootNavigator: true,
+                                                                ).pop(true),
+                                                            child: const Text(
+                                                              'Delete',
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ) ??
                                                       false;
                                                 },

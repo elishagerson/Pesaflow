@@ -28,6 +28,7 @@ import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 
 class TransactionListScreen extends ConsumerStatefulWidget {
   const TransactionListScreen({super.key});
@@ -417,37 +418,31 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       color: theme.colorScheme.onError,
                                     ),
                                   ),
-                                  confirmDismiss: (_) async {
-                                    return await showDialog<bool>(
+                                   confirmDismiss: (_) async {
+                                    return await ModernDialog.show<bool>(
                                       context: context,
-                                      builder: (ctx) => AlertDialog(
-                                        title: const Text(
-                                          'Delete transaction?',
-                                        ),
-                                        content: const Text(
-                                          'This action cannot be undone.',
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(ctx, false),
-                                            child: const Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(ctx, true),
-                                            child: Text(
-                                              'Delete',
-                                              style: TextStyle(
-                                                color: context
-                                                    .appColors
-                                                    .expenseColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                      title: const Text('Delete Transaction'),
+                                      titleIcon: PesaFlowIcons.warning,
+                                      iconColor: context.appColors.expenseColor,
+                                      content: const Text(
+                                        'This action cannot be undone.',
                                       ),
-                                    );
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context, rootNavigator: true).pop(false),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: context.appColors.expenseColor,
+                                          ),
+                                          onPressed: () =>
+                                              Navigator.of(context, rootNavigator: true).pop(true),
+                                          child: const Text('Delete'),
+                                        ),
+                                      ],
+                                    ) ?? false;
                                   },
                                   onDismissed: (_) {
                                     final tx = trans;

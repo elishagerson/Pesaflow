@@ -496,7 +496,7 @@ class SettingsScreen extends ConsumerWidget {
         ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: theme.colorScheme.error,
-            foregroundColor: Colors.white,
+            foregroundColor: theme.colorScheme.onError,
           ),
           onPressed: () async {
             Navigator.of(context, rootNavigator: true).pop();
@@ -821,8 +821,8 @@ class SettingsScreen extends ConsumerWidget {
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.orange,
-            foregroundColor: Colors.white,
+            backgroundColor: context.appColors.warningColor,
+            foregroundColor: theme.colorScheme.onTertiary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),
@@ -1073,6 +1073,7 @@ class SettingsScreen extends ConsumerWidget {
                     34,
                     fontWeight: FontWeight.w800,
                     color: theme.colorScheme.onSurface,
+                    letterSpacing: -0.5,
                   ),
                 ),
               ),
