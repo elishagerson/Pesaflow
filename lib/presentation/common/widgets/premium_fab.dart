@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'tactile_spring_container.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -18,7 +20,8 @@ class PremiumFab extends StatelessWidget {
 
     return TactileSpringContainer(
       onTap: onPressed,
-      scaleFactor: 0.92,
+      scaleFactor: MotionTokens.scaleFabPress,
+      haptic: HapticType.impact,
       child: Container(
         width: 56,
         height: 56,
@@ -75,7 +78,8 @@ class PremiumExtendedFab extends StatelessWidget {
 
     return TactileSpringContainer(
       onTap: onPressed,
-      scaleFactor: 0.95,
+      scaleFactor: MotionTokens.scalePress,
+      haptic: HapticType.impact,
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: kSpacing20,

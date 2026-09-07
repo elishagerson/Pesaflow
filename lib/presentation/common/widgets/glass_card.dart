@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 enum CardElevation { none, low, medium, high }
@@ -44,6 +45,7 @@ class GlassCard extends StatefulWidget {
 class _GlassCardState extends State<GlassCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  bool _hasShimmered = false;
 
   @override
   void initState() {
@@ -58,6 +60,45 @@ class _GlassCardState extends State<GlassCard>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  /// Shadow parameters that respond to press state.
+  /// When pressed, shadow offset decreases and blur shrinks
+  /// → creates "card pushed into surface" illusion.
+  _ShadowParams _resolveShadows(CardElevation elevation, bool isDark, double pressT) {
+    final base = switch (elevation) {
+      CardElevation.low => _ShadowParams(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.20)
+                : Colors.black.withValues(alpha: 0.04),
+            blur: 8.0,
+            offsetY: 2.0,
+          ),
+      CardElevation.medium => _ShadowParams(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.28)
+                : Colors.black.withValues(alpha: 0.06),
+            blur: 16.0,
+            offsetY: 4.0,
+          ),
+      CardElevation.high => _ShadowParams(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.35)
+                : Colors.black.withValues(alpha: 0.08),
+            blur: 24.0,
+            offsetY: 8.0,
+          ),
+      CardElevation.none => null,
+    };
+
+    if (base == null) return _ShadowParams.none;
+
+    // Lerp shadow down on press — card "sinks into" surface
+    return _ShadowParams(
+      color: base.color,
+      blur: lerpDouble(base.blur, base.blur * 0.5, pressT)!,
+      offsetY: lerpDouble(base.offsetY, base.offsetY * 0.25, pressT)!,
+    );
   }
 
   @override
@@ -77,38 +118,6 @@ class _GlassCardState extends State<GlassCard>
     }
 
     final bool isDark = context.isDark;
-
-    // Single clean shadow — no ornate multi-layer
-    final List<BoxShadow> shadows = switch (widget.elevation) {
-      CardElevation.low => [
-        BoxShadow(
-          color: isDark
-              ? Colors.black.withValues(alpha: 0.20)
-              : Colors.black.withValues(alpha: 0.04),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-        ),
-      ],
-      CardElevation.medium => [
-        BoxShadow(
-          color: isDark
-              ? Colors.black.withValues(alpha: 0.28)
-              : Colors.black.withValues(alpha: 0.06),
-          blurRadius: 16,
-          offset: const Offset(0, 4),
-        ),
-      ],
-      CardElevation.high => [
-        BoxShadow(
-          color: isDark
-              ? Colors.black.withValues(alpha: 0.35)
-              : Colors.black.withValues(alpha: 0.08),
-          blurRadius: 24,
-          offset: const Offset(0, 8),
-        ),
-      ],
-      CardElevation.none => [],
-    };
 
     // Clean card — standard rounded rect
     Widget innerContent = Container(
@@ -141,6 +150,7 @@ class _GlassCardState extends State<GlassCard>
             ),
             child: widget.child,
           ),
+          // Shimmer — fires only once on first tap
           if (widget.onTap != null && !context.isReducedMotion)
             Positioned.fill(
               child: IgnorePointer(
@@ -148,6 +158,7 @@ class _GlassCardState extends State<GlassCard>
                   animation: _controller,
                   builder: (context, child) {
                     if (_controller.value == 0) return const SizedBox.shrink();
+                    if (_hasShimmered) return const SizedBox.shrink();
                     return FractionalTranslation(
                       translation: Offset((_controller.value * 1.8) - 0.9, 0),
                       child: Container(
@@ -185,11 +196,44 @@ class _GlassCardState extends State<GlassCard>
       );
     }
 
+    if (widget.onTap != null) {
+      final reducedMotion = context.isReducedMotion;
+      return Semantics(
+        container: true,
+        label: 'Card',
+        button: true,
+        child: GestureDetector(
+          onTapDown: reducedMotion
+              ? null
+              : (_) {
+                  if (!_hasShimmered) {
+                    _controller.forward().then((_) {
+                      _hasShimmered = true;
+                    });
+                  }
+                },
+          onTapUp: reducedMotion ? null : (_) => _controller.reverse(),
+          onTapCancel: reducedMotion ? null : () => _controller.reverse(),
+          onTap: widget.onTap,
+          child: reducedMotion
+              ? _buildBody(isDark, 0.0)
+              : AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    return _buildBody(isDark, _controller.value, child: child);
+                  },
+                  child: innerContent,
+                ),
+        ),
+      );
+    }
+
+    // Non-interactive card
     Widget body = RepaintBoundary(
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.borderRadius),
-          boxShadow: shadows,
+          boxShadow: _resolveShadows(widget.elevation, isDark, 0.0).toList(),
         ),
         child: CustomPaint(
           foregroundPainter: widget.hasBorder
@@ -204,33 +248,67 @@ class _GlassCardState extends State<GlassCard>
       body = Padding(padding: widget.margin!, child: body);
     }
 
-    if (widget.onTap != null) {
-      final reducedMotion = context.isReducedMotion;
-      return Semantics(
-        container: true,
-        label: 'Card',
-        button: true,
-        child: GestureDetector(
-          onTapDown: reducedMotion ? null : (_) => _controller.forward(),
-          onTapUp: reducedMotion ? null : (_) => _controller.reverse(),
-          onTapCancel: reducedMotion ? null : () => _controller.reverse(),
-          onTap: widget.onTap,
-          child: reducedMotion
-              ? body
-              : AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, child) {
-                    return Transform.scale(
-                      scale: 1.0 - (_controller.value * 0.035),
-                      child: child,
-                    );
-                  },
-                  child: body,
-                ),
-        ),
-      );
-    }
     return Semantics(container: true, label: 'Card', child: body);
+  }
+
+  Widget _buildBody(bool isDark, double pressT, {Widget? child}) {
+    final shadow = _resolveShadows(widget.elevation, isDark, pressT);
+    final scale = 1.0 - (pressT * (1.0 - MotionTokens.scaleCardPress));
+    final opacity = 1.0 - (pressT * (1.0 - MotionTokens.opacityPress));
+
+    Widget body = RepaintBoundary(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+          boxShadow: shadow.toList(),
+        ),
+        child: CustomPaint(
+          foregroundPainter: widget.hasBorder
+              ? _GradientBorderPainter(widget.borderRadius, isDark)
+              : null,
+          child: child,
+        ),
+      ),
+    );
+
+    if (widget.margin != null) {
+      body = Padding(padding: widget.margin!, child: body);
+    }
+
+    return Opacity(
+      opacity: opacity,
+      child: Transform.scale(scale: scale, child: body),
+    );
+  }
+}
+
+/// Shadow parameters that animate with press state.
+class _ShadowParams {
+  final Color color;
+  final double blur;
+  final double offsetY;
+
+  const _ShadowParams({
+    required this.color,
+    required this.blur,
+    required this.offsetY,
+  });
+
+  static const none = _ShadowParams(
+    color: Colors.transparent,
+    blur: 0,
+    offsetY: 0,
+  );
+
+  List<BoxShadow> toList() {
+    if (blur == 0 && offsetY == 0) return [];
+    return [
+      BoxShadow(
+        color: color,
+        blurRadius: blur,
+        offset: Offset(0, offsetY),
+      ),
+    ];
   }
 }
 
