@@ -357,7 +357,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               color: isSelected
                                   ? themeCol.withValues(alpha: 0.15)
                                   : theme.colorScheme.surfaceContainerHigh,
-                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusCard,
+                              ),
                               border: Border.all(
                                 color: isSelected
                                     ? themeCol

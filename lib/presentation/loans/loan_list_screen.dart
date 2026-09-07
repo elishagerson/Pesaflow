@@ -448,7 +448,9 @@ class LoanListScreen extends ConsumerWidget {
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.primary
                                           .withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusSmall,
+                                      ),
                                     ),
                                     child: Text(
                                       loan.category!,
@@ -591,7 +593,9 @@ class LoanListScreen extends ConsumerWidget {
                                 decoration: BoxDecoration(
                                   color: context.appColors.incomeColor
                                       .withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusSmall,
+                                  ),
                                 ),
                                 child: Text(
                                   loan.category!,

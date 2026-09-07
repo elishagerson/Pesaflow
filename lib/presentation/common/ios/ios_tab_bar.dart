@@ -124,7 +124,9 @@ class IosTabBar extends StatelessWidget {
                                 color: isSelected
                                     ? navFgColor.withValues(alpha: 0.15)
                                     : Colors.transparent,
-                                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusPill,
+                                ),
                               ),
                               alignment: Alignment.center,
                               child: SingleChildScrollView(

@@ -447,7 +447,9 @@ class SavingsGoalListScreen extends ConsumerWidget {
                           tween: Tween<double>(begin: 0, end: goalPct),
                           builder: (context, value, child) {
                             return ClipRRect(
-                              borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusSmall,
+                              ),
                               child: LinearProgressIndicator(
                                 value: value,
                                 backgroundColor: goalColor.withValues(

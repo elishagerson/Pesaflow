@@ -320,7 +320,9 @@ class ResponsiveCard extends StatelessWidget {
             boxShadow ??
             [
               BoxShadow(
-                color: Theme.of(context).extension<AppColorsTheme>()!.shadowSubtle,
+                color: Theme.of(
+                  context,
+                ).extension<AppColorsTheme>()!.shadowSubtle,
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),

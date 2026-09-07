@@ -403,7 +403,9 @@ class _SavingsGoalDetailScreenState
                                   Container(
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
-                                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusCard,
+                                      ),
                                       border: Border.all(
                                         color: onSurface.withValues(
                                           alpha: 0.07,
@@ -862,7 +864,9 @@ class _SavingsGoalDetailScreenState
                             ),
                             decoration: BoxDecoration(
                               color: goalColor.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusSmall,
+                              ),
                             ),
                             child: Text(
                               '$percentInt%',
@@ -1012,7 +1016,9 @@ class _SavingsGoalDetailScreenState
                                   decoration: BoxDecoration(
                                     color: context.appColors.incomeColor
                                         .withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusCard,
+                                    ),
                                   ),
                                   alignment: Alignment.center,
                                   child: Row(
@@ -1048,7 +1054,9 @@ class _SavingsGoalDetailScreenState
                                   decoration: BoxDecoration(
                                     color: context.appColors.expenseColor
                                         .withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusCard,
+                                    ),
                                   ),
                                   alignment: Alignment.center,
                                   child: Row(

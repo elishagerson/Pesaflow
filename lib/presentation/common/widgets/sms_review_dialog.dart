@@ -177,7 +177,9 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       ),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusInput,
+                        ),
                       ),
                       child: Text(
                         widget.item.account!.name,
@@ -247,7 +249,9 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                           alpha: 0.08,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusCompact,
+                          ),
                         ),
                         leading: Container(
                           padding: const EdgeInsets.all(kSpacing6),
@@ -302,7 +306,9 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         ),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.error.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusInput,
+                          ),
                           border: Border.all(
                             color: theme.colorScheme.error.withValues(
                               alpha: 0.3,
@@ -341,7 +347,9 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         ),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.primary,
-                          borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusInput,
+                          ),
                           boxShadow: [
                             BoxShadow(
                               color: theme.colorScheme.primary.withValues(

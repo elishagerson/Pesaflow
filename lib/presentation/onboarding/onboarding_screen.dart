@@ -236,7 +236,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                       ),
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusPill,
+                                  ),
                                   boxShadow: [
                                     BoxShadow(
                                       color: theme.colorScheme.primary
@@ -268,7 +270,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                     color: theme.colorScheme.outline,
                                     width: 1.5,
                                   ),
-                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusPill,
+                                  ),
                                 ),
                                 child: Text(
                                   'Start Fresh',
@@ -308,7 +312,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                       ),
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusPill,
+                                  ),
                                   boxShadow: [
                                     BoxShadow(
                                       color: theme.colorScheme.primary

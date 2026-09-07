@@ -301,7 +301,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 )
                               : theme.colorScheme.surfaceContainerHighest
                                     .withValues(alpha: 0.3),
-                          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusSmall,
+                          ),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -1703,7 +1705,9 @@ class _SwipeableCardState extends State<SwipeableCard>
                             ),
                             decoration: BoxDecoration(
                               color: context.appColors.incomeColor,
-                              borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusInput,
+                              ),
                               boxShadow: [
                                 BoxShadow(
                                   color: context.appColors.incomeColor
@@ -1757,7 +1761,9 @@ class _SwipeableCardState extends State<SwipeableCard>
                             ),
                             decoration: BoxDecoration(
                               color: context.appColors.expenseColor,
-                              borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusInput,
+                              ),
                               boxShadow: [
                                 BoxShadow(
                                   color: context.appColors.expenseColor

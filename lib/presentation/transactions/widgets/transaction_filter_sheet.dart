@@ -437,7 +437,9 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       ),
                       padding: const EdgeInsets.symmetric(vertical: kSpacing16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusCard,
+                        ),
                       ),
                     ),
                     child: const Text(
@@ -488,7 +490,9 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       elevation: 0,
                       padding: const EdgeInsets.symmetric(vertical: kSpacing16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusCard,
+                        ),
                       ),
                     ),
                     child: Text(

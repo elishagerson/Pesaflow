@@ -397,7 +397,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         alpha: 0.08,
                                       )
                                     : theme.colorScheme.surface,
-                                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusCard,
+                                ),
                                 border: Border.all(
                                   color: isSelected
                                       ? theme.colorScheme.primary.withValues(
@@ -806,7 +808,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         ),
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
           border: borderColor != null
               ? Border.all(color: borderColor, width: 0.8)
               : null,
@@ -1038,7 +1040,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           ),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusCard,
+                            ),
                             border: Border.all(
                               color: theme.colorScheme.onSurface.withValues(
                                 alpha: 0.08,

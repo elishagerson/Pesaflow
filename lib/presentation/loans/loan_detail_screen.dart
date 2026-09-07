@@ -649,7 +649,9 @@ class LoanDetailScreen extends ConsumerWidget {
                                 alpha: 0.12,
                               )
                             : AppTheme.tertiaryLight.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusSmall,
+                        ),
                       ),
                       child: Text(
                         isPaid ? 'Paid' : 'Pending',

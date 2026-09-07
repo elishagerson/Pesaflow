@@ -1940,7 +1940,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                       ),
                                       const SizedBox(height: kSpacing8),
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusSmall,
+                                        ),
                                         child: LinearProgressIndicator(
                                           value: goalPct,
                                           backgroundColor: goalColor.withValues(

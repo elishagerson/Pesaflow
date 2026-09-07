@@ -236,7 +236,9 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                         height: 40,
                         decoration: BoxDecoration(
                           color: hexToColor(widget.selectedColorHex),
-                          borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusCompact,
+                          ),
                           border: Border.all(
                             color: theme.colorScheme.outlineVariant,
                             width: 1,
@@ -285,7 +287,9 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                       height: 12,
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusSmall,
+                        ),
                         gradient: const LinearGradient(
                           colors: [
                             Colors.red,
@@ -335,7 +339,9 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                       height: 12,
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusSmall,
+                        ),
                         gradient: LinearGradient(
                           colors: [
                             Colors.white,
@@ -380,7 +386,9 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                       height: 12,
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusSmall,
+                        ),
                         gradient: LinearGradient(
                           colors: [
                             Colors.black,
