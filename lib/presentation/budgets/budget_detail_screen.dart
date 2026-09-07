@@ -261,12 +261,12 @@ class BudgetDetailScreen extends ConsumerWidget {
                               vertical: kSpacing4,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.12),
+                              color: context.appColors.onBgColor.withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(
                                 AppTheme.radiusPill,
                               ),
                               border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.15),
+                                color: context.appColors.onBgColor.withValues(alpha: 0.15),
                               ),
                             ),
                             child: Row(
