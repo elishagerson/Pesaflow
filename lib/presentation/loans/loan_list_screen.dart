@@ -403,6 +403,7 @@ class LoanListScreen extends ConsumerWidget {
       tag: 'loan-${loan.id}',
       child: TactileSpringContainer(
         onTap: () => context.push('/loans/${loan.id}'),
+        selectedColor: theme.colorScheme.onSurface,
         child: Column(
           children: [
             Padding(
@@ -550,6 +551,7 @@ class LoanListScreen extends ConsumerWidget {
       tag: 'loan-${loan.id}',
       child: TactileSpringContainer(
         onTap: () => context.push('/loans/${loan.id}'),
+        selectedColor: theme.colorScheme.onSurface,
         child: Column(
           children: [
             Padding(

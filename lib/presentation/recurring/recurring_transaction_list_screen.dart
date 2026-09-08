@@ -761,6 +761,7 @@ class _RecurringTransactionListScreenState
 
     final Widget card = TactileSpringContainer(
       onTap: () => context.push('/recurring/${recurring.id}/edit'),
+      selectedColor: theme.colorScheme.onSurface,
       child: Column(
         children: [
           Padding(

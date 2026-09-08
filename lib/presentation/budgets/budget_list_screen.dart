@@ -31,6 +31,7 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/ios_large_title_header.dart';
 
 class BudgetActiveTabNotifier extends Notifier<int> {
   @override
@@ -94,78 +95,63 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
         child: Column(
           children: [
             // ── Floating Top Bar ──
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    activeTab == 0 ? 'Budgets' : 'Savings Goals',
-                    style: context.ts(
-                      34,
-                      fontWeight: FontWeight.w800,
-                      color: context.appColors.onBgColor,
-                      letterSpacing: -0.5,
+            IosLargeTitleHeader(
+              title: activeTab == 0 ? 'Budgets' : 'Savings Goals',
+              scrollController: _scrollController,
+              actions: [
+                if (activeTab == 0) ...[
+                  TactileSpringContainer(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      context.push('/budgets/setup');
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: context.appColors.onBgColor.withValues(
+                          alpha: 0.1,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        PesaFlowIcons.settings,
+                        color: context.appColors.onBgColor,
+                        size: 20,
+                      ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      if (activeTab == 0) ...[
-                        TactileSpringContainer(
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                            context.push('/budgets/setup');
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: context.appColors.onBgColor.withValues(
-                                alpha: 0.1,
-                              ),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              PesaFlowIcons.settings,
-                              color: context.appColors.onBgColor,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: kSpacing8),
-                      ],
-                      TactileSpringContainer(
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          if (activeTab == 0) {
-                            context.push('/budgets/add');
-                          } else {
-                            showSpringSheet(
-                              context,
-                              isScrollControlled: true,
-                              builder: (context) =>
-                                  const SavingsGoalFormSheet(),
-                            );
-                          }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: context.appColors.onBgColor.withValues(
-                              alpha: 0.1,
-                            ),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            PesaFlowIcons.add,
-                            color: context.appColors.onBgColor,
-                            size: 22,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  const SizedBox(width: kSpacing8),
                 ],
-              ),
+                TactileSpringContainer(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    if (activeTab == 0) {
+                      context.push('/budgets/add');
+                    } else {
+                      showSpringSheet(
+                        context,
+                        isScrollControlled: true,
+                        builder: (context) =>
+                            const SavingsGoalFormSheet(),
+                      );
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: context.appColors.onBgColor.withValues(
+                        alpha: 0.1,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      PesaFlowIcons.add,
+                      color: context.appColors.onBgColor,
+                      size: 22,
+                    ),
+                  ),
+                ),
+              ],
             ),
 
             // HIG Segmented Control Slider
@@ -885,6 +871,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
         ),
         child: TactileSpringContainer(
           onTap: () => context.push('/budgets/groups/${g.group.id}'),
+          selectedColor: theme.colorScheme.onSurface,
           child: GlassCard(
             padding: const EdgeInsets.all(kSpacing16),
             borderRadius: AppTheme.radiusCard,
@@ -1211,6 +1198,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           tag: 'budget-${bp.budget.id}',
           child: TactileSpringContainer(
             onTap: () => context.push('/budgets/${bp.budget.id}'),
+            selectedColor: theme.colorScheme.onSurface,
             child: GlassCard(
               padding: const EdgeInsets.all(kSpacing16),
               borderRadius: AppTheme.radiusCard,
