@@ -274,7 +274,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         );
       }
 
-      HapticFeedback.mediumImpact();
+      PesaHaptics.success();
 
       if (mounted) {
         CustomToast.show(
@@ -285,7 +285,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         context.pop();
       }
     } catch (e) {
-      HapticFeedback.heavyImpact();
+      PesaHaptics.error();
       if (!mounted) return;
       setState(() => _isSaving = false);
       CustomToast.show(
@@ -533,7 +533,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         behavior: HitTestBehavior.opaque,
         onTap: () {
           if (!isSelected) {
-            HapticFeedback.selectionClick();
+            PesaHaptics.selection();
             setState(() {
               _isDirty = true;
               _transactionType = title;
@@ -651,7 +651,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
                     return GestureDetector(
                       onTap: () {
-                        HapticFeedback.lightImpact();
+                        PesaHaptics.light();
                         setState(() {
                           _isDirty = true;
                           _lastCategoryByType[_transactionType] = cat.id;

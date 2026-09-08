@@ -1,0 +1,66 @@
+import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/spring_rect_tween.dart';
+
+/// A page route that uses Hero for smooth list→detail card transitions.
+/// The hero tag should be unique per item (e.g., 'budget_budget.id').
+///
+/// [page] is the destination screen widget.
+/// [heroTag] must match the Hero tag on the source card in the list.
+/// [barrierColor] controls the scrim behind the route during flight.
+class HeroCardRoute<T> extends PageRouteBuilder<T> {
+  final Widget page;
+  final String heroTag;
+
+  HeroCardRoute({
+    required this.page,
+    required this.heroTag,
+    super.settings,
+  }) : super(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) => page,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOut,
+              ),
+              child: child,
+            );
+          },
+          opaque: false,
+          barrierDismissible: true,
+          barrierColor: Colors.black45,
+        );
+}
+
+/// Push a [HeroCardRoute] with spring-based rect interpolation for the
+/// Hero flight, or a simple fade when the device has reduced motion enabled.
+Future<T?> pushHeroCard<T>(
+  BuildContext context,
+  Widget page,
+  String heroTag,
+) {
+  if (context.isReducedMotion) {
+    return Navigator.of(context).push<T>(
+      PageRouteBuilder(
+        settings: RouteSettings(name: heroTag),
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOut,
+            ),
+            child: child,
+          );
+        },
+        barrierDismissible: true,
+        barrierColor: Colors.black45,
+      ),
+    );
+  }
+  return Navigator.of(context).push<T>(
+    HeroCardRoute<T>(page: page, heroTag: heroTag),
+  );
+}

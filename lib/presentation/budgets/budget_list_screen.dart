@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -28,6 +29,8 @@ import 'package:pesaflow/data/repositories/budget_group_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
+import 'package:pesaflow/presentation/common/widgets/hero_card_route.dart';
+import 'package:pesaflow/presentation/budgets/budget_detail_screen.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -234,7 +237,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                HapticFeedback.selectionClick();
+                PesaHaptics.selection();
                 ref.read(budgetActiveTabProvider.notifier).state = 1;
               },
               behavior: HitTestBehavior.opaque,
@@ -517,13 +520,13 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               const Spacer(),
               TactileSpringContainer(
                 onTap: () {
-                  HapticFeedback.lightImpact();
-                  context.push('/budgets/setup');
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing10,
-                    vertical: kSpacing4,
+                   PesaHaptics.light();
+                   context.push('/budgets/setup');
+                 },
+                 child: Container(
+                   padding: const EdgeInsets.symmetric(
+                     horizontal: kSpacing10,
+                     vertical: kSpacing4,
                   ),
                   decoration: BoxDecoration(
                     color: onSurface.withValues(alpha: 0.06),
@@ -944,8 +947,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     ),
                     TactileSpringContainer(
                       onTap: () {
-                        HapticFeedback.lightImpact();
-                        context.push('/budgets/groups/${g.group.id}/add');
+                         PesaHaptics.light();
+                         context.push('/budgets/groups/${g.group.id}/add');
                       },
                       child: Container(
                         padding: const EdgeInsets.all(8),
@@ -1195,9 +1198,13 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           ),
         ),
         child: Hero(
-          tag: 'budget-${bp.budget.id}',
+          tag: 'budget_${bp.budget.id}',
           child: TactileSpringContainer(
-            onTap: () => context.push('/budgets/${bp.budget.id}'),
+            onTap: () => pushHeroCard(
+              context,
+              BudgetDetailScreen(budgetId: bp.budget.id),
+              'budget_${bp.budget.id}',
+            ),
             selectedColor: theme.colorScheme.onSurface,
             child: GlassCard(
               padding: const EdgeInsets.all(kSpacing16),
@@ -1383,13 +1390,13 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           const SizedBox(width: kSpacing8),
           TactileSpringContainer(
             onTap: () {
-              HapticFeedback.lightImpact();
-              context.push('/budgets/setup');
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: kSpacing12,
-                vertical: kSpacing8,
+               PesaHaptics.light();
+               context.push('/budgets/setup');
+             },
+             child: Container(
+               padding: const EdgeInsets.symmetric(
+                 horizontal: kSpacing12,
+                 vertical: kSpacing8,
               ),
               decoration: BoxDecoration(
                 color: theme.colorScheme.primary,
@@ -1422,13 +1429,13 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
         children: [
           TactileSpringContainer(
             onTap: () {
-              HapticFeedback.lightImpact();
-              context.push('/budgets/setup');
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: kSpacing24,
-                vertical: kSpacing14,
+               PesaHaptics.light();
+               context.push('/budgets/setup');
+             },
+             child: Container(
+               padding: const EdgeInsets.symmetric(
+                 horizontal: kSpacing24,
+                 vertical: kSpacing14,
               ),
               decoration: BoxDecoration(
                 color: theme.colorScheme.primary,
@@ -1464,8 +1471,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           const SizedBox(height: kSpacing12),
           TextButton(
             onPressed: () {
-              HapticFeedback.lightImpact();
-              context.push('/budgets/add');
+               PesaHaptics.light();
+               context.push('/budgets/add');
             },
             child: Text(
               'Create Single Envelope Budget',
@@ -1517,12 +1524,12 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
             illustration: PesaFlowIllustration.emptyGoals(),
             action: TactileSpringContainer(
               onTap: () {
-                HapticFeedback.lightImpact();
-                showSpringSheet(
-                  context,
-                  isScrollControlled: true,
-                  builder: (context) => const SavingsGoalFormSheet(),
-                );
+                 PesaHaptics.light();
+                 showSpringSheet(
+                   context,
+                   isScrollControlled: true,
+                   builder: (context) => const SavingsGoalFormSheet(),
+                 );
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(

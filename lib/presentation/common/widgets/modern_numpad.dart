@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -22,7 +22,7 @@ class ModernNumpad extends StatelessWidget {
   });
 
   void _onKeyPress(String value) {
-    HapticFeedback.lightImpact();
+    PesaHaptics.light();
     if (controller.text.length >= maxLength) return;
 
     if (controller.text == '0' && value != '.') {
@@ -33,7 +33,7 @@ class ModernNumpad extends StatelessWidget {
   }
 
   void _onBackspace() {
-    HapticFeedback.lightImpact();
+    PesaHaptics.light();
     if (controller.text.isNotEmpty) {
       controller.text = controller.text.substring(
         0,
@@ -113,7 +113,7 @@ class ModernNumpad extends StatelessWidget {
                   child: TactileSpringContainer(
                     onTap: () {
                       if (onDone != null && !isDoneLoading) {
-                        HapticFeedback.mediumImpact();
+                        PesaHaptics.medium();
                         onDone!();
                       }
                     },

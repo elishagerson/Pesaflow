@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +8,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
@@ -93,7 +93,7 @@ class _RecurringTransactionListScreenState
                   ),
                   TactileSpringContainer(
                     onTap: () {
-                      HapticFeedback.lightImpact();
+                      PesaHaptics.light();
                       context.push('/recurring/add');
                     },
                     child: Container(
@@ -639,7 +639,7 @@ class _RecurringTransactionListScreenState
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          HapticFeedback.selectionClick();
+          PesaHaptics.selection();
           setState(() => _activeFilter = filter);
         },
         behavior: HitTestBehavior.opaque,
@@ -956,7 +956,7 @@ class _RecurringTransactionListScreenState
                   const SizedBox(height: kSpacing10),
                   GestureDetector(
                     onTap: () {
-                      HapticFeedback.lightImpact();
+                      PesaHaptics.light();
                       showMarkRecurringPaymentSheet(
                         context: context,
                         ref: ref,

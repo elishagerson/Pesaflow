@@ -19,6 +19,8 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
+import 'package:pesaflow/presentation/common/widgets/hero_card_route.dart';
+import 'package:pesaflow/presentation/savings_goals/savings_goal_detail_screen.dart';
 
 class SavingsGoalListScreen extends ConsumerWidget {
   const SavingsGoalListScreen({super.key});
@@ -272,9 +274,15 @@ class SavingsGoalListScreen extends ConsumerWidget {
     final daysLeft = diff < 0 ? 0 : diff;
 
     return TactileSpringContainer(
-      onTap: () => context.push('/savings-goals/${goal.id}'),
+      onTap: () => pushHeroCard(
+        context,
+        SavingsGoalDetailScreen(goalId: goal.id),
+        'goal_${goal.id}',
+      ),
       selectedColor: theme.colorScheme.onSurface,
-      child: Column(
+      child: Hero(
+        tag: 'goal_${goal.id}',
+        child: Column(
         children: [
           IntrinsicHeight(
             child: Row(
@@ -484,6 +492,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
               indent: 4 + 16,
             ),
         ],
+      ),
       ),
     );
   }
