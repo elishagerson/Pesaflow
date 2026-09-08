@@ -29,6 +29,7 @@ import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.da
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
 import 'package:pesaflow/presentation/analytics/widgets/insights_tab.dart';
 import 'package:pesaflow/presentation/analytics/widgets/insights_carousel.dart';
+import 'package:pesaflow/presentation/common/widgets/ios_large_title_header.dart';
 
 enum TrendRange { days, weeks, months }
 
@@ -222,32 +223,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Analytics',
-                      style: context.ts(
-                        28,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.8,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Spending trends & insights',
-                      style: context.ts(
-                        13,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.6,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              IosLargeTitleHeader(
+                title: 'Analytics',
+                scrollController: _scrollController,
               ),
               // iOS-style sliding capsule control
               Container(

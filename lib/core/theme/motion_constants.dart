@@ -96,8 +96,17 @@ class MotionTokens {
   // ── Thresholds ───────────────────────────────────────────────────────
 
   /// Minimum fling velocity to trigger sheet dismiss (px/s).
-  static const double sheetDismissVelocity = 800.0;
+  static const double sheetDismissVelocity = 400.0;
 
   /// Sheet drag fraction of height to trigger dismiss (without fling).
-  static const double sheetDismissFraction = 0.35;
+  static const double sheetDismissFraction = 0.4;
+
+  /// Upward fling velocity threshold — snaps sheet to full open (px/s).
+  static const double sheetSnapUpVelocity = -400.0;
+
+  /// Lower bound of the half-open (peek) snap zone as a fraction of sheet height.
+  static const double sheetHalfOpenFractionLower = 0.15;
+
+  /// Visible fraction of sheet height when snapped to peek mode.
+  static const double sheetHalfOpenVisibleFraction = 0.4;
 }
