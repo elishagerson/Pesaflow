@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
-import 'package:pesaflow/presentation/common/widgets/motion/spring_rect_tween.dart';
 
 /// A page route that uses Hero for smooth list→detail card transitions.
 /// The hero tag should be unique per item (e.g., 'budget_budget.id').
@@ -17,7 +16,6 @@ class HeroCardRoute<T> extends PageRouteBuilder<T> {
     required this.heroTag,
     super.settings,
   }) : super(
-          settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => page,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
@@ -34,8 +32,8 @@ class HeroCardRoute<T> extends PageRouteBuilder<T> {
         );
 }
 
-/// Push a [HeroCardRoute] with spring-based rect interpolation for the
-/// Hero flight, or a simple fade when the device has reduced motion enabled.
+/// Push a [HeroCardRoute] for smooth card→detail transitions, or a simple
+/// fade when the device has reduced motion enabled.
 Future<T?> pushHeroCard<T>(
   BuildContext context,
   Widget page,
