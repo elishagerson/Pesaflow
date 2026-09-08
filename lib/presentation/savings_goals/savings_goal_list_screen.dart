@@ -273,6 +273,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
 
     return TactileSpringContainer(
       onTap: () => context.push('/savings-goals/${goal.id}'),
+      selectedColor: theme.colorScheme.onSurface,
       child: Column(
         children: [
           IntrinsicHeight(
