@@ -25,6 +25,13 @@ class TactileSpringContainer extends StatefulWidget {
   /// Defaults to `true` when [onTap] is non-null.
   final bool? semanticButton;
 
+  /// Optional background color shown instantly on press-down (Apple-style selection tint).
+  /// When non-null, the container gets this background color at [selectedOpacity] opacity on touch.
+  final Color? selectedColor;
+
+  /// Opacity of the selection highlight. Defaults to 0.08 (Apple's default).
+  final double selectedOpacity;
+
   const TactileSpringContainer({
     super.key,
     required this.child,
@@ -33,6 +40,8 @@ class TactileSpringContainer extends StatefulWidget {
     this.haptic,
     this.semanticLabel,
     this.semanticButton,
+    this.selectedColor,
+    this.selectedOpacity = 0.08,
   });
 
   @override
@@ -44,6 +53,7 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _opacityAnimation;
+  bool _isPressed = false;
 
   @override
   void initState() {
@@ -67,11 +77,13 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
 
   void _pressDown() {
     if (widget.onTap == null) return;
+    setState(() => _isPressed = true);
     tweenAnimate(_controller, 1.0, duration: MotionTokens.durationFast);
   }
 
   void _springBack() {
     if (widget.onTap == null) return;
+    setState(() => _isPressed = false);
     springAnimate(
       _controller,
       MotionTokens.springSnappy,
@@ -97,7 +109,15 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
         builder: (context, child) {
           return Opacity(
             opacity: _opacityAnimation.value,
-            child: ScaleTransition(scale: _scaleAnimation, child: child),
+            child: ScaleTransition(
+              scale: _scaleAnimation,
+              child: Container(
+                color: _isPressed && widget.selectedColor != null
+                    ? widget.selectedColor!.withValues(alpha: widget.selectedOpacity)
+                    : null,
+                child: child,
+              ),
+            ),
           );
         },
         child: widget.child,

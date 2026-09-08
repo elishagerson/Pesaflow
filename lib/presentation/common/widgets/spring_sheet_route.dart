@@ -23,7 +23,7 @@ Future<T?> showSpringSheet<T>(
     context: context,
     barrierDismissible: true,
     barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-    barrierColor: Colors.black.withValues(alpha: 0.45),
+    barrierColor: Colors.transparent,
     transitionDuration: Duration.zero,
     pageBuilder: (ctx, anim, secAnim) => _SpringSheetContent(
       builder: builder(ctx),
@@ -109,31 +109,43 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
     final velocity = details.velocity.pixelsPerSecond.dy;
     final fraction = _sheetHeight > 0 ? _dragOffset / _sheetHeight : 0.0;
 
-    // Fling down or dragged past threshold → dismiss
-    if (velocity > MotionTokens.sheetDismissVelocity ||
-        fraction > MotionTokens.sheetDismissFraction) {
+    // Velocity-based direction detection (takes priority over position)
+    if (velocity < MotionTokens.sheetSnapUpVelocity) {
+      _snapTo(0.0);
+      return;
+    }
+    if (velocity > MotionTokens.sheetDismissVelocity) {
       _dismiss();
+      return;
+    }
+
+    // Position-based snap zones (slow drag / low velocity)
+    if (fraction > MotionTokens.sheetDismissFraction) {
+      _dismiss();
+    } else if (fraction > MotionTokens.sheetHalfOpenFractionLower) {
+      final peekOffset =
+          _sheetHeight * (1.0 - MotionTokens.sheetHalfOpenVisibleFraction);
+      _snapTo(peekOffset);
     } else {
-      // Spring back to position
-      _springBack();
+      _snapTo(0.0);
     }
   }
 
-  void _springBack() {
+  void _snapTo(double targetOffset) {
     if (context.isReducedMotion) {
-      setState(() => _dragOffset = 0.0);
+      setState(() => _dragOffset = targetOffset);
       return;
     }
-    // Animate drag offset back to zero
     final startOffset = _dragOffset;
+    final delta = targetOffset - startOffset;
     late final AnimationController snapController;
     snapController =
         AnimationController(
           vsync: this,
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 400),
         )..addListener(() {
           setState(() {
-            _dragOffset = startOffset * (1 - snapController.value);
+            _dragOffset = startOffset + delta * snapController.value;
           });
         });
     snapController.addStatusListener((status) {
@@ -174,74 +186,99 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
     final bottomInset = widget.useSafeArea
         ? MediaQuery.viewInsetsOf(context).bottom
         : 0.0;
+    final dragFraction = _sheetHeight > 0
+        ? (_dragOffset / _sheetHeight).clamp(0.0, 1.0)
+        : 0.0;
 
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (_, child) {
-        final t = _animation.value;
-        final scale = 1.0 - (0.08 * (1 - t));
-        final translateY = (1 - t) * 60 + _dragOffset;
-        final opacity = (0.5 + (0.5 * t)).clamp(0.0, 1.0);
-
-        return Transform.translate(
-          offset: Offset(0, translateY),
-          child: FadeTransition(
-            opacity: AlwaysStoppedAnimation(opacity),
-            child: Transform.scale(scale: scale, child: child),
-          ),
-        );
-      },
-      child: GestureDetector(
-        onVerticalDragStart: _onDragStart,
-        onVerticalDragUpdate: _onDragUpdate,
-        onVerticalDragEnd: _onDragEnd,
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final maxH = widget.isScrollControlled
-                  ? MediaQuery.sizeOf(context).height * 0.9
-                  : MediaQuery.sizeOf(context).height * 0.5;
-              return ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-                child: Material(
-                  color: bgColor,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                  child: Container(
-                    width: double.infinity,
-                    constraints: BoxConstraints(maxHeight: maxH),
-                    child: _MeasureSize(
-                      onSizeChanged: (size) {
-                        _sheetHeight = size.height;
-                      },
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Handle bar
-                          _HandleBar(dragOffset: _dragOffset),
-                          // Sheet content
-                          Flexible(
-                            child: Padding(
-                              padding: EdgeInsets.only(bottom: bottomInset),
-                              child: widget.builder,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+    return Stack(
+      children: [
+        // Animated scrim — fades as user drags down
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => _dismiss(),
+          child: AnimatedBuilder(
+            animation: _animation,
+            builder: (_, _) {
+              final baseAlpha = 0.45 * _animation.value;
+              final scrimAlpha =
+                  (baseAlpha * (1.0 - dragFraction)).clamp(0.0, 1.0);
+              return Container(
+                color: Colors.black.withValues(alpha: scrimAlpha),
               );
             },
           ),
         ),
-      ),
+        // Sheet content
+        AnimatedBuilder(
+          animation: _animation,
+          builder: (_, child) {
+            final t = _animation.value;
+            final scale = 1.0 - (0.08 * (1 - t));
+            final translateY = (1 - t) * 60 + _dragOffset;
+            final opacity = (0.5 + (0.5 * t)).clamp(0.0, 1.0);
+
+            return Transform.translate(
+              offset: Offset(0, translateY),
+              child: FadeTransition(
+                opacity: AlwaysStoppedAnimation(opacity),
+                child: Transform.scale(scale: scale, child: child),
+              ),
+            );
+          },
+          child: GestureDetector(
+            onVerticalDragStart: _onDragStart,
+            onVerticalDragUpdate: _onDragUpdate,
+            onVerticalDragEnd: _onDragEnd,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final maxH = widget.isScrollControlled
+                      ? MediaQuery.sizeOf(context).height * 0.9
+                      : MediaQuery.sizeOf(context).height * 0.5;
+                  return ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                    child: Material(
+                      color: bgColor,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                      child: Container(
+                        width: double.infinity,
+                        constraints: BoxConstraints(maxHeight: maxH),
+                        child: _MeasureSize(
+                          onSizeChanged: (size) {
+                            _sheetHeight = size.height;
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Handle bar
+                              _HandleBar(dragOffset: _dragOffset),
+                              // Sheet content
+                              Flexible(
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.only(bottom: bottomInset),
+                                  child: widget.builder,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
