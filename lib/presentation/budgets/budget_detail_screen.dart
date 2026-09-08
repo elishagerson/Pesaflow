@@ -110,7 +110,9 @@ class BudgetDetailScreen extends ConsumerWidget {
 
             return Column(
               children: [
-                Container(
+                Hero(
+                  tag: 'budget_$budgetId',
+                  child: Container(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -396,6 +398,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
+                ),
                 ),
                 Expanded(
                   child: SingleChildScrollView(
