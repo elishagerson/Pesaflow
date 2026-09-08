@@ -52,7 +52,7 @@ class _SpringSheetContent extends StatefulWidget {
 }
 
 class _SpringSheetContentState extends State<_SpringSheetContent>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
