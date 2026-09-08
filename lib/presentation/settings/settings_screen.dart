@@ -8,6 +8,7 @@ import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
@@ -96,8 +97,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       style: context.ts(22, fontWeight: FontWeight.bold),
                     ),
                     TactileSpringContainer(
+                      haptic: HapticType.soft,
                       onTap: () {
-                        PesaHaptics.light();
                         showAddAccountDialog(context, ref);
                       },
                       child: Container(

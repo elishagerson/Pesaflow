@@ -7,6 +7,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/data/repositories/budget_group_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/domain/budget/budget_engine.dart';
@@ -449,8 +450,8 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
               child: StaggeredFadeSlide(
                 index: rule.index + 1,
                 child: TactileSpringContainer(
+                  haptic: HapticType.soft,
                   onTap: () {
-                    PesaHaptics.light();
                     setState(() => _selectedRule = rule);
                   },
                   child: AnimatedContainer(

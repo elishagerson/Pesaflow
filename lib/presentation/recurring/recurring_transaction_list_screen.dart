@@ -9,6 +9,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
@@ -92,8 +93,8 @@ class _RecurringTransactionListScreenState
                     ),
                   ),
                   TactileSpringContainer(
+                    haptic: HapticType.soft,
                     onTap: () {
-                      PesaHaptics.light();
                       context.push('/recurring/add');
                     },
                     child: Container(

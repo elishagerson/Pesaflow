@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -103,8 +104,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               actions: [
                 if (activeTab == 0) ...[
                   TactileSpringContainer(
+                    haptic: HapticType.soft,
                     onTap: () {
-                       PesaHaptics.light();
                        context.push('/budgets/setup');
                     },
                     child: Container(
@@ -125,8 +126,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   const SizedBox(width: kSpacing8),
                 ],
                 TactileSpringContainer(
+                  haptic: HapticType.soft,
                   onTap: () {
-                    PesaHaptics.light();
                     if (activeTab == 0) {
                       context.push('/budgets/add');
                     } else {
@@ -518,8 +519,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               ),
               const Spacer(),
               TactileSpringContainer(
+                haptic: HapticType.soft,
                 onTap: () {
-                   PesaHaptics.light();
                    context.push('/budgets/setup');
                  },
                  child: Container(
@@ -945,8 +946,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       ),
                     ),
                     TactileSpringContainer(
+                      haptic: HapticType.soft,
                       onTap: () {
-                         PesaHaptics.light();
                          context.push('/budgets/groups/${g.group.id}/add');
                       },
                       child: Container(
@@ -1388,8 +1389,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           ),
           const SizedBox(width: kSpacing8),
           TactileSpringContainer(
+            haptic: HapticType.soft,
             onTap: () {
-               PesaHaptics.light();
                context.push('/budgets/setup');
              },
              child: Container(
@@ -1427,8 +1428,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TactileSpringContainer(
+            haptic: HapticType.soft,
             onTap: () {
-               PesaHaptics.light();
                context.push('/budgets/setup');
              },
              child: Container(
@@ -1522,8 +1523,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                 'Set visual targets for big purchases, safety vaults, or long-term dreams. Log progress with optional account wallet deductions.',
             illustration: PesaFlowIllustration.emptyGoals(),
             action: TactileSpringContainer(
+              haptic: HapticType.soft,
               onTap: () {
-                 PesaHaptics.light();
                  showSpringSheet(
                    context,
                    isScrollControlled: true,

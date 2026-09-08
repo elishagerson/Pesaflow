@@ -3,6 +3,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 class ModernNumpad extends StatelessWidget {
@@ -111,9 +112,9 @@ class ModernNumpad extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(kSpacing4),
                   child: TactileSpringContainer(
+                    haptic: HapticType.impact,
                     onTap: () {
                       if (onDone != null && !isDoneLoading) {
-                        PesaHaptics.medium();
                         onDone!();
                       }
                     },

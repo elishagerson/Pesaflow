@@ -1,5 +1,3 @@
-import 'package:flutter/widgets.dart';
-import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 
 enum HapticType {
@@ -51,12 +49,3 @@ void triggerHaptic(HapticType type) {
   }
 }
 
-/// Fires haptic only if the user hasn't enabled reduced motion.
-///
-/// Use when haptic is paired with an animation that gets skipped
-/// under reduced motion — the haptic alone without the visual context
-/// can be confusing.
-void triggerHapticIf(BuildContext context, HapticType type) {
-  if (context.isReducedMotion) return;
-  triggerHaptic(type);
-}

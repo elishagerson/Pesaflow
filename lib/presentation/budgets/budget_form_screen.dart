@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
-import 'package:pesaflow/core/utils/haptics.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:intl/intl.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -283,8 +283,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
               return Padding(
                 padding: const EdgeInsets.only(right: kSpacing12),
                 child: TactileSpringContainer(
+                  haptic: HapticType.soft,
                   onTap: () {
-                    PesaHaptics.light();
                     setState(() {
                       _selectedCategoryId = cat.id;
                     });
@@ -1422,8 +1422,8 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
             ),
             if (_showClear && _isFocused)
               TactileSpringContainer(
+                haptic: HapticType.soft,
                 onTap: () {
-                  PesaHaptics.light();
                   widget.controller.clear();
                 },
                 child: Padding(

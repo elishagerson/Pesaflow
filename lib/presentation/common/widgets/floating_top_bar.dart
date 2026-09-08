@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
-import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:go_router/go_router.dart';
 
@@ -40,8 +40,8 @@ class FloatingTopBar extends StatelessWidget {
             children: [
               if (showPop)
                 TactileSpringContainer(
+                  haptic: HapticType.soft,
                   onTap: () {
-                    PesaHaptics.light();
                     context.pop();
                   },
                   child: Container(
