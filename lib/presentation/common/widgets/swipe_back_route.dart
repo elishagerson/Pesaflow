@@ -6,11 +6,12 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
-/// A page route that supports iOS-style interactive back-swipe gesture.
+/// A page route that supports iOS-native forward push and interactive back-swipe.
 ///
-/// The current page slides right to reveal a dark scrim over the previous route.
-/// Drag from the left edge (within 30px) to initiate. Release triggers either
-/// a spring-dismiss (past 35% width or fling > 800px/s) or spring-back.
+/// Forward push slides the page in from the RIGHT (matching CupertinoPageRoute).
+/// Back gesture: drag from the left edge (within 30px) to slide the page off
+/// to the right, revealing a dark scrim. Release triggers either a spring-dismiss
+/// (past 35% width or fling > 800px/s) or spring-back with iOS ease-out curve.
 ///
 /// Usage:
 /// ```dart
@@ -142,7 +143,13 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
     }
   }
 
-  // ── Spring Animations ─────────────────────────────────────────────────
+  // ── iOS-native Animations ─────────────────────────────────────────────
+
+  /// iOS standard navigation transition duration (350ms).
+  static const Duration _kDuration = Duration(milliseconds: 350);
+
+  /// iOS default curve for back gesture spring-back (ease-out).
+  static final Curve _kBackCurve = Curves.easeOut;
 
   void _animateDismiss({double velocity = 0}) {
     if (context.isReducedMotion) {
@@ -151,14 +158,14 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
     }
 
     final startProgress = _dragProgress;
-    // Map fling velocity to a starting speed — negative = leftward = dismiss.
     final startVelocity = velocity < 0 ? -velocity / 1000 : 1.0;
 
+    // Use spring physics with iOS-like feel for dismiss
     final simulation = SpringSimulation(
       MotionTokens.springSnappy,
       startProgress,
       1.0,
-      -startVelocity, // negative = toward 1.0 (dismiss direction)
+      -startVelocity,
     );
 
     _animController
@@ -176,16 +183,15 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
 
     final startProgress = _dragProgress;
 
-    final simulation = SpringSimulation(
-      MotionTokens.springSnappy,
-      startProgress,
-      0.0,
-      0.0,
-    );
-
+    // Use iOS ease-out curve for spring-back (smooth deceleration)
     _animController
       ..value = startProgress
-      ..animateWith(simulation).then((_) {
+      ..animateTo(
+        0.0,
+        duration: _kDuration,
+        curve: _kBackCurve,
+      )
+      .then((_) {
         if (mounted) setState(() => _dragProgress = 0.0);
       });
   }
@@ -197,14 +203,12 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
     return AnimatedBuilder(
       animation: Listenable.merge([widget.animation, _animController]),
       builder: (_, _) {
-        // Use the maximum of the push animation and the drag — whichever is
-        // further along dominates. During drag _dragProgress > 0; during push
-        // forward widget.animation drives from 0→1.
         final pushValue = widget.animation.value;
         final progress = math.max(pushValue, _dragProgress);
 
         final screenWidth = MediaQuery.sizeOf(context).width;
-        final slideOffset = -screenWidth * (1.0 - progress);
+        // iOS-native: slide from RIGHT (positive offset = off-screen right)
+        final slideOffset = screenWidth * (1.0 - progress);
 
         return GestureDetector(
           onHorizontalDragStart: _onDragStart,
@@ -224,7 +228,28 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
                   ),
                 ),
               ),
-              // The actual page content, sliding in from left
+              // Cupertino-style shadow on the trailing edge for depth
+              Positioned(
+                top: 0,
+                bottom: 0,
+                left: slideOffset - 12,
+                width: 12,
+                child: IgnorePointer(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.06 * progress),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // The actual page content, sliding in from right (iOS native)
               Transform.translate(
                 offset: Offset(slideOffset, 0),
                 child: SizedBox(
