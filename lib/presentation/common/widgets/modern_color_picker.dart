@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -134,7 +134,7 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                   widget.selectedColorHex.toUpperCase() == hex.toUpperCase();
               return TactileSpringContainer(
                 onTap: () {
-                  HapticFeedback.selectionClick();
+                  PesaHaptics.light();
                   widget.onColorChanged(hex);
                 },
                 child: Container(

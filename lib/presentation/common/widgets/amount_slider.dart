@@ -1,10 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
 class AmountSlider extends StatefulWidget {
@@ -57,9 +57,9 @@ class _AmountSliderState extends State<AmountSlider> {
     final oldThousands = (oldValue / 10000).floor();
     final newThousands = (newValue / 10000).floor();
     if (oldThousands != newThousands) {
-      HapticFeedback.mediumImpact();
+      PesaHaptics.medium();
     } else {
-      HapticFeedback.selectionClick();
+      PesaHaptics.selection();
     }
   }
 

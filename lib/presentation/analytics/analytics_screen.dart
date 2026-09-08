@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
@@ -20,7 +21,6 @@ import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.da
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/analytics_repository.dart';
-import 'package:flutter/services.dart';
 
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -493,7 +493,7 @@ class _OverviewTab extends ConsumerWidget {
                             index: index,
                             child: GestureDetector(
                               onTap: () {
-                                HapticFeedback.mediumImpact();
+                                PesaHaptics.light();
                                 showSpringSheet(
                                   context,
                                   isScrollControlled: true,
@@ -692,7 +692,7 @@ class _OverviewTab extends ConsumerWidget {
                             height: 44,
                             child: ElevatedButton.icon(
                               onPressed: () {
-                                HapticFeedback.lightImpact();
+                                PesaHaptics.light();
                                 showSpringSheet(
                                   context,
                                   isScrollControlled: true,
@@ -985,7 +985,7 @@ class _TrendsTab extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        PesaHaptics.selection();
         ref.read(trendRangeProvider.notifier).select(range);
       },
       child: AnimatedContainer(

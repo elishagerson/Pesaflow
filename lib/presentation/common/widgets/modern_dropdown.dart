@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
-import 'package:flutter/services.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -178,7 +178,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
   }
 
   void _showSelectionSheet(BuildContext context) {
-    HapticFeedback.mediumImpact();
+    PesaHaptics.medium();
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
 
@@ -251,7 +251,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () {
-                              HapticFeedback.lightImpact();
+                              PesaHaptics.light();
                               onChanged(item.value);
                               context.pop();
                             },

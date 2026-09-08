@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -100,7 +100,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                           const SizedBox(width: kSpacing8),
                           TactileSpringContainer(
                             onTap: () {
-                              HapticFeedback.lightImpact();
+                              PesaHaptics.light();
                               context.push('/budgets/groups/$groupId/add');
                             },
                             child: Container(
@@ -416,7 +416,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
           const SizedBox(height: kSpacing16),
           TactileSpringContainer(
             onTap: () {
-              HapticFeedback.lightImpact();
+              PesaHaptics.light();
               context.push('/budgets/groups/$groupId/add');
             },
             child: Container(

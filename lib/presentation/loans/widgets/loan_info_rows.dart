@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 
@@ -46,7 +47,7 @@ class CopyableInfoRow extends StatelessWidget {
     return InkWell(
       onTap: () {
         Clipboard.setData(ClipboardData(text: value));
-        HapticFeedback.lightImpact();
+        PesaHaptics.light();
         CustomToast.show(
           context,
           message: 'Copied $label to clipboard',

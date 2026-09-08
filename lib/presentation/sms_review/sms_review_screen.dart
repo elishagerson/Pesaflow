@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
-import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -8,6 +7,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
@@ -1553,7 +1553,7 @@ class _SwipeableCardState extends State<SwipeableCard>
 
     final threshold = _screenWidth * 0.35;
     if (newDx.abs() > threshold && !_hapticTriggered) {
-      HapticFeedback.mediumImpact();
+      PesaHaptics.medium();
       _hapticTriggered = true;
     } else if (newDx.abs() <= threshold) {
       _hapticTriggered = false;

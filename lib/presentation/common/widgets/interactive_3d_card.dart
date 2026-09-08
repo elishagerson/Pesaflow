@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 
 /// A premium, state-of-the-art interactive container that provides a 3D perspective
 /// tilt effect, dynamic shadow translation, and a shifting light reflection sheen
@@ -119,7 +119,7 @@ class _Interactive3DCardState extends State<Interactive3DCard>
     final magnitude = Offset(dx, dy).distance;
     if (magnitude > 0.8) {
       if (!_hasTriggeredHaptic) {
-        HapticFeedback.selectionClick();
+        PesaHaptics.light();
         _hasTriggeredHaptic = true;
       }
     } else {

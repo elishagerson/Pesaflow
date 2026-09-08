@@ -32,6 +32,8 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/ios_large_title_header.dart';
+import 'package:pesaflow/presentation/common/widgets/hero_card_route.dart';
+import 'package:pesaflow/presentation/transactions/transaction_detail_screen.dart';
 
 class TransactionListScreen extends ConsumerStatefulWidget {
   const TransactionListScreen({super.key});
@@ -574,11 +576,15 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       );
                                     },
                                     child: TactileSpringContainer(
-                                      onTap: () => context.push(
-                                        '/transactions/${trans.id}',
+                                      onTap: () => pushHeroCard(
+                                        context,
+                                        TransactionDetailScreen(transactionId: trans.id),
+                                        'transaction_${trans.id}',
                                       ),
                                       selectedColor: theme.colorScheme.onSurface,
-                                      child: Semantics(
+                                      child: Hero(
+                                        tag: 'transaction_${trans.id}',
+                                        child: Semantics(
                                         label:
                                             '${trans.description.isNotEmpty ? trans.description : item.category.name}, ${CurrencyFormatter.formatCents(trans.amount)} ${trans.type}',
                                         button: true,
@@ -818,6 +824,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                         ),
                                       ),
                                     ),
+                                  ),
                                   ),
                                 );
                                 if (isNewRow) {

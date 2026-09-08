@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
-import 'package:flutter/services.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:go_router/go_router.dart';
@@ -55,7 +55,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
     final angle = _animation.value * pi;
     if (!_firedMidFlipHaptic && angle >= pi / 2) {
       _firedMidFlipHaptic = true;
-      HapticFeedback.lightImpact();
+      PesaHaptics.light();
     }
   }
 
@@ -67,7 +67,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
   }
 
   void _toggleFlip() {
-    HapticFeedback.lightImpact();
+    PesaHaptics.light();
     _isFront = !_isFront;
     _firedMidFlipHaptic = false;
     if (context.isReducedMotion) {

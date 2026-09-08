@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -230,7 +231,7 @@ Future<void> showMarkRecurringPaymentSheet({
                                     onChanged: isProcessing
                                         ? null
                                         : (v) {
-                                            HapticFeedback.lightImpact();
+                                            PesaHaptics.light();
                                             setSheetState(
                                               () => deductBalance = v,
                                             );
@@ -383,7 +384,7 @@ Future<void> _confirmMarkPaid({
   );
 
   if (context.mounted) {
-    HapticFeedback.mediumImpact();
+    PesaHaptics.success();
     CustomToast.show(
       context,
       message: 'Payment recorded',

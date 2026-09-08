@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
@@ -345,7 +346,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         final themeCol = hexToColor(_selectedColor);
                         return GestureDetector(
                           onTap: () {
-                            HapticFeedback.selectionClick();
+                            PesaHaptics.light();
                             setState(() => _selectedIcon = item['name']);
                           },
                           child: AnimatedContainer(

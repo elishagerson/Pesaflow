@@ -1,11 +1,11 @@
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
@@ -281,7 +281,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       try {
         await ref.read(loanRepositoryProvider).updateLoan(updatedLoan);
         if (!mounted) return;
-        HapticFeedback.mediumImpact();
+        PesaHaptics.success();
         CustomToast.show(
           context,
           message: 'Loan updated!',
@@ -289,7 +289,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
         );
         context.pop();
       } catch (e) {
-        HapticFeedback.heavyImpact();
+        PesaHaptics.error();
         if (!mounted) return;
         CustomToast.show(
           context,
@@ -327,7 +327,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     try {
       await ref.read(loanRepositoryProvider).createLoan(loan);
       if (!mounted) return;
-      HapticFeedback.mediumImpact();
+      PesaHaptics.success();
       CustomToast.show(
         context,
         message: 'Loan created!',
@@ -335,7 +335,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       );
       context.pop();
     } catch (e) {
-      HapticFeedback.heavyImpact();
+      PesaHaptics.error();
       if (!mounted) return;
       CustomToast.show(
         context,

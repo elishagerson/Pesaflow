@@ -7,6 +7,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
@@ -349,7 +350,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                   final themeCol = hexToColor(_selectedColor);
                                   return GestureDetector(
                                     onTap: () {
-                                      HapticFeedback.selectionClick();
+                                      PesaHaptics.light();
                                       setState(
                                         () => _selectedIcon = item['name'],
                                       );

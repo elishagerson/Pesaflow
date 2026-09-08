@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:drift/drift.dart' hide Column;
@@ -8,6 +7,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
@@ -97,7 +97,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                     TactileSpringContainer(
                       onTap: () {
-                        HapticFeedback.lightImpact();
+                        PesaHaptics.light();
                         showAddAccountDialog(context, ref);
                       },
                       child: Container(
@@ -546,7 +546,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ];
             try {
               await ref.read(accountRepositoryProvider).deleteAccount(acc.id);
-              HapticFeedback.mediumImpact();
+              PesaHaptics.medium();
               if (context.mounted) context.pop();
             } catch (e) {
               if (context.mounted) {
@@ -571,7 +571,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         .read(transactionDaoProvider)
                         .writeTransactionWithBalanceAdjustment(tx);
                   }
-                  HapticFeedback.lightImpact();
+                  PesaHaptics.light();
                 } catch (_) {}
               },
               onDelete: () async {},
@@ -1138,7 +1138,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         color: context.appColors.textMedium,
                       ),
                       onTap: () {
-                        HapticFeedback.lightImpact();
+                        PesaHaptics.light();
                         showWorkspaceSelectorSheet(context, ref);
                       },
                     ),
@@ -1196,7 +1196,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                       value: ref.watch(appLockEnabledProvider).value ?? false,
                       onChanged: (val) {
-                        HapticFeedback.lightImpact();
+                        PesaHaptics.light();
                         ref
                             .read(settingsRepositoryProvider)
                             .setSetting('app_lock_enabled', val.toString());
@@ -1216,7 +1216,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           ref.watch(lockScreenBalanceEnabledProvider).value ??
                           false,
                       onChanged: (val) {
-                        HapticFeedback.lightImpact();
+                        PesaHaptics.light();
                         ref
                             .read(settingsRepositoryProvider)
                             .setSetting('lock_screen_balance', val.toString());
@@ -1246,7 +1246,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           ref.watch(currencyShowDecimalsProvider).value ??
                           false,
                       onChanged: (val) {
-                        HapticFeedback.lightImpact();
+                        PesaHaptics.light();
                         ref
                             .read(settingsRepositoryProvider)
                             .setSetting(
@@ -1269,7 +1269,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           ref.watch(smsAutoDeduplicationProvider).value ??
                           false,
                       onChanged: (val) {
-                        HapticFeedback.lightImpact();
+                        PesaHaptics.light();
                         ref
                             .read(settingsRepositoryProvider)
                             .setSetting(
@@ -1320,7 +1320,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       value:
                           ref.watch(autoBudgetEnabledProvider).value ?? false,
                       onChanged: (val) async {
-                        HapticFeedback.lightImpact();
+                        PesaHaptics.light();
                         await ref
                             .read(settingsRepositoryProvider)
                             .setSetting('auto_budget_enabled', val.toString());

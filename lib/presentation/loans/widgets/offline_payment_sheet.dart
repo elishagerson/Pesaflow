@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
@@ -447,10 +448,10 @@ Future<bool> processOfflinePayment({
           paymentAmount: amount,
         );
 
-    HapticFeedback.mediumImpact();
+    PesaHaptics.success();
     return true;
   } catch (e) {
-    HapticFeedback.heavyImpact();
+    PesaHaptics.error();
     if (context.mounted) {
       CustomToast.show(
         context,

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
@@ -95,7 +96,7 @@ class TransactionDetailScreen extends ConsumerWidget {
             ),
             Expanded(
               child: Hero(
-                tag: 'transaction-$transactionId',
+                tag: 'transaction_$transactionId',
                 createRectTween: (begin, end) {
                   return SpringRectTween(begin: begin!, end: end!);
                 },
@@ -689,7 +690,7 @@ class TransactionDetailScreen extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             Clipboard.setData(ClipboardData(text: value));
-            HapticFeedback.lightImpact();
+            PesaHaptics.light();
             CustomToast.show(
               context,
               message: 'Copied $label to clipboard',
@@ -887,7 +888,7 @@ class TransactionDetailScreen extends ConsumerWidget {
 
   void _confirmDelete(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    HapticFeedback.mediumImpact();
+    PesaHaptics.medium();
     final txAsync = ref.read(transactionDetailProvider(transactionId));
     final txData = txAsync.value;
     if (txData == null) return;
