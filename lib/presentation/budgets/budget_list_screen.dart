@@ -102,8 +102,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                 if (activeTab == 0) ...[
                   TactileSpringContainer(
                     onTap: () {
-                      HapticFeedback.lightImpact();
-                      context.push('/budgets/setup');
+                       PesaHaptics.light();
+                       context.push('/budgets/setup');
                     },
                     child: Container(
                       padding: const EdgeInsets.all(10),
@@ -124,7 +124,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                 ],
                 TactileSpringContainer(
                   onTap: () {
-                    HapticFeedback.lightImpact();
+                    PesaHaptics.light();
                     if (activeTab == 0) {
                       context.push('/budgets/add');
                     } else {
@@ -192,7 +192,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                HapticFeedback.selectionClick();
+                PesaHaptics.selection();
                 ref.read(budgetActiveTabProvider.notifier).state = 0;
               },
               behavior: HitTestBehavior.opaque,

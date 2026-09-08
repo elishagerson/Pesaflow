@@ -1,6 +1,6 @@
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 
 enum HapticType {
   /// Confirm a successful action (save, approve).
@@ -28,28 +28,25 @@ enum HapticType {
 void triggerHaptic(HapticType type) {
   switch (type) {
     case HapticType.success:
-      HapticFeedback.mediumImpact();
+      PesaHaptics.success();
       break;
     case HapticType.error:
-      HapticFeedback.heavyImpact();
+      PesaHaptics.error();
       break;
     case HapticType.warning:
-      HapticFeedback.mediumImpact();
+      PesaHaptics.medium();
       break;
     case HapticType.selection:
-      HapticFeedback.selectionClick();
+      PesaHaptics.selection();
       break;
     case HapticType.impact:
-      HapticFeedback.lightImpact();
+      PesaHaptics.light();
       break;
     case HapticType.soft:
-      HapticFeedback.selectionClick();
+      PesaHaptics.light();
       break;
     case HapticType.rigid:
-      HapticFeedback.lightImpact();
-      Future.delayed(const Duration(milliseconds: 50), () {
-        HapticFeedback.lightImpact();
-      });
+      PesaHaptics.heavy();
       break;
   }
 }

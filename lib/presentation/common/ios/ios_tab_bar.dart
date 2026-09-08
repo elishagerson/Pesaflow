@@ -224,7 +224,7 @@ class _IosTabBarState extends State<IosTabBar>
           selected: isSelected,
           child: _ElasticTabButton(
             onTap: () {
-              HapticFeedback.selectionClick();
+              PesaHaptics.selection();
               widget.onDestinationSelected(tab.routeIndex);
             },
             child: Container(
