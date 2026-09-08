@@ -28,6 +28,7 @@ import 'package:pesaflow/presentation/savings_goals/savings_goal_list_screen.dar
 import 'package:pesaflow/presentation/savings_goals/savings_goal_form_screen.dart';
 import 'package:pesaflow/presentation/savings_goals/savings_goal_detail_screen.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/swipe_back_route.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'route_params.dart';
@@ -414,13 +415,13 @@ final GoRouter appRouter = GoRouter(
                   path: 'loans',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _nativeIosPage(const LoanListScreen()),
+                      swipeBackPage(const LoanListScreen()),
                   routes: [
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) =>
-                          _nativeIosPage(const LoanFormScreen()),
+                          swipeBackPage(const LoanFormScreen()),
                     ),
                     GoRoute(
                       path: ':id',
@@ -430,14 +431,14 @@ final GoRouter appRouter = GoRouter(
                         if (id == null) {
                           return _nativeIosPage(const SizedBox.shrink());
                         }
-                        return _nativeIosPage(LoanDetailScreen(loanId: id));
+                        return swipeBackPage(LoanDetailScreen(loanId: id));
                       },
                       routes: [
                         GoRoute(
                           path: 'edit',
                           parentNavigatorKey: _rootNavigatorKey,
                           pageBuilder: (context, state) {
-                            return _nativeIosPage(
+                            return swipeBackPage(
                               LoanFormScreen(
                                 loanId: state.pathParameters['id'],
                               ),
@@ -452,13 +453,13 @@ final GoRouter appRouter = GoRouter(
                   path: 'savings-goals',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _nativeIosPage(const SavingsGoalListScreen()),
+                      swipeBackPage(const SavingsGoalListScreen()),
                   routes: [
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) =>
-                          _nativeIosPage(const SavingsGoalFormScreen()),
+                          swipeBackPage(const SavingsGoalFormScreen()),
                     ),
                     GoRoute(
                       path: ':id',
@@ -468,7 +469,7 @@ final GoRouter appRouter = GoRouter(
                         if (id == null) {
                           return _nativeIosPage(const SizedBox.shrink());
                         }
-                        return _nativeIosPage(
+                        return swipeBackPage(
                           SavingsGoalDetailScreen(goalId: id),
                         );
                       },
@@ -477,7 +478,7 @@ final GoRouter appRouter = GoRouter(
                           path: 'edit',
                           parentNavigatorKey: _rootNavigatorKey,
                           pageBuilder: (context, state) {
-                            return _nativeIosPage(
+                            return swipeBackPage(
                               SavingsGoalFormScreen(
                                 goalId: state.pathParameters['id'],
                               ),
@@ -492,20 +493,19 @@ final GoRouter appRouter = GoRouter(
                   path: 'recurring',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _nativeIosPage(const RecurringTransactionListScreen()),
+                      swipeBackPage(const RecurringTransactionListScreen()),
                   routes: [
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
-                      pageBuilder: (context, state) => _nativeIosPage(
-                        const RecurringTransactionFormScreen(),
-                      ),
+                      pageBuilder: (context, state) =>
+                          swipeBackPage(const RecurringTransactionFormScreen()),
                     ),
                     GoRoute(
                       path: ':id/edit',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
-                        return _nativeIosPage(
+                        return swipeBackPage(
                           RecurringTransactionFormScreen(
                             recurringId: state.param('id'),
                           ),
@@ -532,7 +532,7 @@ final GoRouter appRouter = GoRouter(
                     final params = state.uri.queryParameters;
                     final type = params['type'];
                     final amountStr = params['amount'];
-                    return _nativeIosPage(
+                    return swipeBackPage(
                       TransactionFormScreen(
                         initialType: type,
                         prefillDescription: params['description'],
@@ -550,7 +550,7 @@ final GoRouter appRouter = GoRouter(
                   path: 'edit/:id',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
-                    return _nativeIosPage(
+                    return swipeBackPage(
                       TransactionFormScreen(
                         transactionId: state.optParam('id'),
                       ),
@@ -561,8 +561,10 @@ final GoRouter appRouter = GoRouter(
                   path: ':id',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
-                    return _nativeIosPage(
-                      TransactionDetailScreen(transactionId: state.param('id')),
+                    return swipeBackPage(
+                      TransactionDetailScreen(
+                        transactionId: state.param('id'),
+                      ),
                     );
                   },
                 ),
@@ -581,25 +583,25 @@ final GoRouter appRouter = GoRouter(
                   path: 'setup',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _nativeIosPage(const BudgetSetupScreen()),
+                      swipeBackPage(const BudgetSetupScreen()),
                 ),
                 GoRoute(
                   path: 'add',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _nativeIosPage(const BudgetFormScreen()),
+                      swipeBackPage(const BudgetFormScreen()),
                 ),
                 GoRoute(
                   path: 'groups/:groupId',
                   parentNavigatorKey: _rootNavigatorKey,
-                  pageBuilder: (context, state) => _nativeIosPage(
+                  pageBuilder: (context, state) => swipeBackPage(
                     BudgetGroupDetailScreen(groupId: state.param('groupId')),
                   ),
                   routes: [
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
-                      pageBuilder: (context, state) => _nativeIosPage(
+                      pageBuilder: (context, state) => swipeBackPage(
                         BudgetFormScreen(groupId: state.param('groupId')),
                       ),
                     ),
@@ -609,7 +611,7 @@ final GoRouter appRouter = GoRouter(
                   path: ':id',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
-                    return _nativeIosPage(
+                    return swipeBackPage(
                       BudgetDetailScreen(budgetId: state.param('id')),
                     );
                   },
@@ -618,7 +620,7 @@ final GoRouter appRouter = GoRouter(
                       path: 'edit',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
-                        return _nativeIosPage(
+                        return swipeBackPage(
                           BudgetFormScreen(budgetId: state.optParam('id')),
                         );
                       },
@@ -653,14 +655,14 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/sms-review',
       parentNavigatorKey: _rootNavigatorKey,
-      pageBuilder: (context, state) => _nativeIosPage(const SmsReviewScreen()),
+      pageBuilder: (context, state) => swipeBackPage(const SmsReviewScreen()),
     ),
 
     GoRoute(
       path: '/debug/sms-parser',
       parentNavigatorKey: _rootNavigatorKey,
       pageBuilder: (context, state) =>
-          _nativeIosPage(const SmsParserDebugScreen()),
+          swipeBackPage(const SmsParserDebugScreen()),
     ),
   ],
 );
