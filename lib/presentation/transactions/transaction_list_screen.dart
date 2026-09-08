@@ -31,6 +31,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/ios_large_title_header.dart';
 
 class TransactionListScreen extends ConsumerStatefulWidget {
   const TransactionListScreen({super.key});
@@ -576,6 +577,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       onTap: () => context.push(
                                         '/transactions/${trans.id}',
                                       ),
+                                      selectedColor: theme.colorScheme.onSurface,
                                       child: Semantics(
                                         label:
                                             '${trans.description.isNotEmpty ? trans.description : item.category.name}, ${CurrencyFormatter.formatCents(trans.amount)} ${trans.type}',
@@ -864,201 +866,172 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing20,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                      IosLargeTitleHeader(
+                        title: 'Transactions',
+                        scrollController: _scrollController,
+                        actions: [
+                          if (activeAccount != null ||
+                              activeCategory != null ||
+                              searchQuery.isNotEmpty ||
+                              activeType != 'All' ||
+                              amountMin != null ||
+                              amountMax != null ||
+                              dateFrom != null ||
+                              dateTo != null)
+                            IconButton(
+                              icon: Icon(
+                                PesaFlowIcons.clearAll,
+                                color: theme.colorScheme.error,
+                                size: 20,
+                              ),
+                              tooltip: 'Clear Filters',
+                              onPressed: () {
+                                ref
+                                        .read(
+                                          transactionTypeFilterProvider
+                                              .notifier,
+                                        )
+                                        .state =
+                                    'All';
+                                ref
+                                        .read(
+                                          transactionAccountFilterProvider
+                                              .notifier,
+                                        )
+                                        .state =
+                                    null;
+                                ref
+                                        .read(
+                                          transactionCategoryFilterProvider
+                                              .notifier,
+                                        )
+                                        .state =
+                                    null;
+                                ref
+                                        .read(
+                                          transactionSearchQueryProvider
+                                              .notifier,
+                                        )
+                                        .state =
+                                    '';
+                                ref
+                                        .read(
+                                          transactionAmountMinProvider
+                                              .notifier,
+                                        )
+                                        .state =
+                                    null;
+                                ref
+                                        .read(
+                                          transactionAmountMaxProvider
+                                              .notifier,
+                                        )
+                                        .state =
+                                    null;
+                                ref
+                                        .read(
+                                          transactionDateFromProvider
+                                              .notifier,
+                                        )
+                                        .state =
+                                    null;
+                                ref
+                                        .read(
+                                          transactionDateToProvider
+                                              .notifier,
+                                        )
+                                        .state =
+                                    null;
+                              },
+                            ),
+                          Container(
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: theme
+                                  .colorScheme
+                                  .surfaceContainerHighest
+                                  .withValues(alpha: 0.5),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusHero,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  'Transactions',
-                                  style: theme.textTheme.headlineMedium
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.w700,
-                                        letterSpacing: -0.5,
-                                        color: theme.colorScheme.onSurface,
+                                _FilterButton(
+                                  isActive:
+                                      activeAccount != null ||
+                                      activeCategory != null ||
+                                      amountMin != null ||
+                                      amountMax != null ||
+                                      dateFrom != null ||
+                                      dateTo != null ||
+                                      searchQuery.isNotEmpty ||
+                                      activeType != 'All',
+                                  activeCount: [
+                                    if (activeType != 'All') 1,
+                                    if (activeAccount != null) 1,
+                                    if (activeCategory != null) 1,
+                                    if (searchQuery.isNotEmpty) 1,
+                                    if (amountMin != null ||
+                                        amountMax != null)
+                                      1,
+                                    if (dateFrom != null ||
+                                        dateTo != null)
+                                      1,
+                                  ].length,
+                                  onPressed: () =>
+                                      showTransactionFilterSheet(
+                                        context,
+                                        ref,
                                       ),
                                 ),
-                                Text(
-                                  'Track your recent activity',
-                                  style: context.ts(
-                                    13,
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                if (activeAccount != null ||
-                                    activeCategory != null ||
-                                    searchQuery.isNotEmpty ||
-                                    activeType != 'All' ||
-                                    amountMin != null ||
-                                    amountMax != null ||
-                                    dateFrom != null ||
-                                    dateTo != null)
-                                  IconButton(
-                                    icon: Icon(
-                                      PesaFlowIcons.clearAll,
-                                      color: theme.colorScheme.error,
-                                      size: 20,
-                                    ),
-                                    tooltip: 'Clear Filters',
-                                    onPressed: () {
-                                      ref
-                                              .read(
-                                                transactionTypeFilterProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          'All';
-                                      ref
-                                              .read(
-                                                transactionAccountFilterProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          null;
-                                      ref
-                                              .read(
-                                                transactionCategoryFilterProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          null;
-                                      ref
-                                              .read(
-                                                transactionSearchQueryProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          '';
-                                      ref
-                                              .read(
-                                                transactionAmountMinProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          null;
-                                      ref
-                                              .read(
-                                                transactionAmountMaxProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          null;
-                                      ref
-                                              .read(
-                                                transactionDateFromProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          null;
-                                      ref
-                                              .read(
-                                                transactionDateToProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          null;
-                                    },
-                                  ),
                                 Container(
-                                  height: 44,
-                                  decoration: BoxDecoration(
-                                    color: theme
-                                        .colorScheme
-                                        .surfaceContainerHighest
-                                        .withValues(alpha: 0.5),
-                                    borderRadius: BorderRadius.circular(
-                                      AppTheme.radiusHero,
+                                  width: 1,
+                                  height: 18,
+                                  color: theme
+                                      .colorScheme
+                                      .onSurfaceVariant
+                                      .withValues(alpha: 0.2),
+                                ),
+                                TactileSpringContainer(
+                                  onTap: () {
+                                    setState(() {
+                                      _isSearchVisible =
+                                          !_isSearchVisible;
+                                      if (!_isSearchVisible) {
+                                        _searchController.clear();
+                                        ref
+                                                .read(
+                                                  transactionSearchQueryProvider
+                                                      .notifier,
+                                                )
+                                                .state =
+                                            '';
+                                      }
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 14,
+                                      vertical: 10,
                                     ),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      _FilterButton(
-                                        isActive:
-                                            activeAccount != null ||
-                                            activeCategory != null ||
-                                            amountMin != null ||
-                                            amountMax != null ||
-                                            dateFrom != null ||
-                                            dateTo != null ||
-                                            searchQuery.isNotEmpty ||
-                                            activeType != 'All',
-                                        activeCount: [
-                                          if (activeType != 'All') 1,
-                                          if (activeAccount != null) 1,
-                                          if (activeCategory != null) 1,
-                                          if (searchQuery.isNotEmpty) 1,
-                                          if (amountMin != null ||
-                                              amountMax != null)
-                                            1,
-                                          if (dateFrom != null ||
-                                              dateTo != null)
-                                            1,
-                                        ].length,
-                                        onPressed: () =>
-                                            showTransactionFilterSheet(
-                                              context,
-                                              ref,
-                                            ),
-                                      ),
-                                      Container(
-                                        width: 1,
-                                        height: 18,
-                                        color: theme
-                                            .colorScheme
-                                            .onSurfaceVariant
-                                            .withValues(alpha: 0.2),
-                                      ),
-                                      TactileSpringContainer(
-                                        onTap: () {
-                                          setState(() {
-                                            _isSearchVisible =
-                                                !_isSearchVisible;
-                                            if (!_isSearchVisible) {
-                                              _searchController.clear();
-                                              ref
-                                                      .read(
-                                                        transactionSearchQueryProvider
-                                                            .notifier,
-                                                      )
-                                                      .state =
-                                                  '';
-                                            }
-                                          });
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 14,
-                                            vertical: 10,
-                                          ),
-                                          child: Icon(
-                                            PesaFlowIcons.search,
-                                            size: 17,
-                                            color: _isSearchVisible
-                                                ? theme.colorScheme.primary
-                                                : theme
-                                                      .colorScheme
-                                                      .onSurfaceVariant
-                                                      .withValues(alpha: 0.6),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                    child: Icon(
+                                      PesaFlowIcons.search,
+                                      size: 17,
+                                      color: _isSearchVisible
+                                          ? theme.colorScheme.primary
+                                          : theme
+                                                .colorScheme
+                                                .onSurfaceVariant
+                                                .withValues(alpha: 0.6),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       AnimatedSize(
                         duration: const Duration(milliseconds: 300),

@@ -1,9 +1,22 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import '../theme/app_colors_theme.dart';
 import '../theme/app_theme.dart';
 import 'responsive.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
+double _appleScale(double size, TextScaler textScaler) {
+  final factor = textScaler.scale(14) / 14;
+  if (factor <= 1.0) return size;
+  final exponent = switch (size) {
+    <= 13 => 0.6,
+    <= 17 => 0.75,
+    _ => 0.5,
+  };
+  return size * math.pow(factor, exponent).toDouble();
+}
 
 extension PesaFlowContext on BuildContext {
   ScreenSize get screenSize => getScreenSize(this);
@@ -39,7 +52,7 @@ extension PesaFlowContext on BuildContext {
   }) {
     final t = Theme.of(this).textTheme;
     final textScaler = MediaQuery.textScalerOf(this);
-    final scaledSize = textScaler.scale(size);
+    final scaledSize = _appleScale(size, textScaler);
     final base = switch (size) {
       10 =>
         Theme.of(this).extension<AppTypographyTheme>()?.labelMicro ??
