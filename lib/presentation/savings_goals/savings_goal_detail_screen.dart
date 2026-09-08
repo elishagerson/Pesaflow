@@ -898,7 +898,7 @@ class _SavingsGoalDetailScreenState
                       children: [
                         // ── Hero Progress Card ──
                         Hero(
-                          tag: 'goal-${goal.id}',
+                          tag: 'goal_${goal.id}',
                           child: GlassCard(
                             padding: const EdgeInsets.all(kSpacing24),
                             child: Center(
