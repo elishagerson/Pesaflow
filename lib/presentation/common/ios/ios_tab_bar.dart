@@ -41,7 +41,11 @@ class _IosTabBarState extends State<IosTabBar>
   void initState() {
     super.initState();
     _prevIndex = widget.selectedIndex;
-    _selController = AnimationController(vsync: this, value: 1.0);
+    _selController = AnimationController(
+      vsync: this,
+      value: 1.0,
+      duration: MotionTokens.durationNormal,
+    );
     _selAnim = const AlwaysStoppedAnimation(1.0);
   }
 
@@ -59,10 +63,10 @@ class _IosTabBarState extends State<IosTabBar>
       _selController.value = 1.0;
       return;
     }
-    _selController.forward(from: 0.0);
     _selAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _selController, curve: Curves.easeOutCubic),
     );
+    _selController.forward(from: 0.0);
   }
 
   @override
@@ -486,7 +490,10 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
+    _controller = AnimationController(
+      vsync: this,
+      duration: MotionTokens.durationFast,
+    );
     _scale = Tween<double>(begin: 1.0, end: 0.94).animate(_controller);
   }
 
