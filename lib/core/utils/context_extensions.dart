@@ -189,15 +189,15 @@ extension PesaFlowContext on BuildContext {
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppTheme.radiusInput),
         borderSide: BorderSide(
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
-          width: 0.8,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+          width: 1.0,
         ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppTheme.radiusInput),
         borderSide: BorderSide(
-          color: theme.colorScheme.primary.withValues(alpha: 0.5),
-          width: 1.5,
+          color: theme.colorScheme.primary.withValues(alpha: 0.7),
+          width: 2.0,
         ),
       ),
       errorBorder: OutlineInputBorder(

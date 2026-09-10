@@ -1620,13 +1620,18 @@ class _PeriodRow extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(3),
-                  child: LinearProgressIndicator(
-                    value: pctUsed.clamp(0.0, 1.0),
-                    minHeight: 4,
-                    backgroundColor: theme.colorScheme.onSurface.withValues(
-                      alpha: 0.06,
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0, end: pctUsed.clamp(0.0, 1.0)),
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, _) => LinearProgressIndicator(
+                      value: value,
+                      minHeight: 4,
+                      backgroundColor: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.06,
+                      ),
+                      valueColor: AlwaysStoppedAnimation<Color>(barColor),
                     ),
-                    valueColor: AlwaysStoppedAnimation<Color>(barColor),
                   ),
                 ),
                 const SizedBox(height: kSpacing4),

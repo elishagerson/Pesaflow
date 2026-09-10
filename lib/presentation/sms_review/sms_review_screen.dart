@@ -1259,7 +1259,8 @@ class _RawSmsPreviewState extends State<_RawSmsPreview> {
     return GestureDetector(
       onTap: isLong ? () => setState(() => _expanded = !_expanded) : null,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeOutBack,
         width: double.infinity,
         padding: const EdgeInsets.all(kSpacing10),
         decoration: BoxDecoration(

@@ -51,12 +51,17 @@ class LoanProgressRing extends StatelessWidget {
               SizedBox(
                 width: 64,
                 height: 64,
-                child: CircularProgressIndicator(
-                  value: paidFraction,
-                  strokeWidth: 5,
-                  backgroundColor: onSurface.withValues(alpha: 0.07),
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    context.appColors.incomeColor,
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0, end: paidFraction),
+                  duration: const Duration(milliseconds: 800),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, _) => CircularProgressIndicator(
+                    value: value,
+                    strokeWidth: 5,
+                    backgroundColor: onSurface.withValues(alpha: 0.07),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      context.appColors.incomeColor,
+                    ),
                   ),
                 ),
               ),

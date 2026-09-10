@@ -1949,13 +1949,18 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                         borderRadius: BorderRadius.circular(
                                           AppTheme.radiusSmall,
                                         ),
-                                        child: LinearProgressIndicator(
-                                          value: goalPct,
-                                          backgroundColor: goalColor.withValues(
-                                            alpha: 0.12,
+                                        child: TweenAnimationBuilder<double>(
+                                          tween: Tween<double>(begin: 0, end: goalPct),
+                                          duration: const Duration(milliseconds: 800),
+                                          curve: Curves.easeOutCubic,
+                                          builder: (context, value, _) => LinearProgressIndicator(
+                                            value: value,
+                                            backgroundColor: goalColor.withValues(
+                                              alpha: 0.12,
+                                            ),
+                                            color: goalColor,
+                                            minHeight: 6,
                                           ),
-                                          color: goalColor,
-                                          minHeight: 6,
                                         ),
                                       ),
                                       const SizedBox(height: kSpacing4),

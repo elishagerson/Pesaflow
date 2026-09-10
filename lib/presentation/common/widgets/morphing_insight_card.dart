@@ -44,7 +44,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
     );
     _expandAnimation = CurvedAnimation(
       parent: _expandController,
-      curve: Curves.easeOutCubic,
+      curve: Curves.easeOutBack,
       reverseCurve: Curves.easeInCubic,
     );
     if (_expanded) {
@@ -246,10 +246,8 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                         ),
                         const SizedBox(height: kSpacing8),
                         AnimatedSize(
-                          duration: context.motionDuration(
-                            MotionTokens.durationNormal,
-                          ),
-                          curve: Curves.easeOutCubic,
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.easeOutBack,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

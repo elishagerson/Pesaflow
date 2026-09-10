@@ -338,11 +338,16 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                 const SizedBox(height: kSpacing16),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-                  child: LinearProgressIndicator(
-                    value: ratio.clamp(0.0, 1.0),
-                    backgroundColor: statusColor.withValues(alpha: 0.12),
-                    valueColor: AlwaysStoppedAnimation<Color>(statusColor),
-                    minHeight: 6,
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0, end: ratio.clamp(0.0, 1.0)),
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, _) => LinearProgressIndicator(
+                      value: value,
+                      backgroundColor: statusColor.withValues(alpha: 0.12),
+                      valueColor: AlwaysStoppedAnimation<Color>(statusColor),
+                      minHeight: 6,
+                    ),
                   ),
                 ),
                 const SizedBox(height: kSpacing8),
@@ -601,14 +606,19 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                       const SizedBox(height: kSpacing6),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(kSpacing4),
-                        child: LinearProgressIndicator(
-                          value: ratio.clamp(0.0, 1.0),
-                          backgroundColor: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.1),
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            context.appColors.incomeColor,
+                        child: TweenAnimationBuilder<double>(
+                          tween: Tween<double>(begin: 0, end: ratio.clamp(0.0, 1.0)),
+                          duration: const Duration(milliseconds: 800),
+                          curve: Curves.easeOutCubic,
+                          builder: (context, value, _) => LinearProgressIndicator(
+                            value: value,
+                            backgroundColor: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.1),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              context.appColors.incomeColor,
+                            ),
+                            minHeight: 6,
                           ),
-                          minHeight: 6,
                         ),
                       ),
                     ],

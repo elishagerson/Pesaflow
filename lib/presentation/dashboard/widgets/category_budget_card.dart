@@ -115,13 +115,18 @@ class CategoryBudgetCard extends StatelessWidget {
                 const SizedBox(height: kSpacing10),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                  child: LinearProgressIndicator(
-                    value: pct.clamp(0.0, 1.0),
-                    minHeight: 4,
-                    backgroundColor: theme.colorScheme.onSurface.withValues(
-                      alpha: 0.05,
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0, end: pct.clamp(0.0, 1.0)),
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, _) => LinearProgressIndicator(
+                      value: value,
+                      minHeight: 4,
+                      backgroundColor: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.05,
+                      ),
+                      valueColor: AlwaysStoppedAnimation<Color>(progressColor),
                     ),
-                    valueColor: AlwaysStoppedAnimation<Color>(progressColor),
                   ),
                 ),
               ],
