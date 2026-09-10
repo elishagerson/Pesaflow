@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/analytics/analytics_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_setup_screen.dart';
@@ -238,10 +239,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
                 const SizedBox(width: kSpacing12),
                 Text(
                   'PesaFlow',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: theme.colorScheme.onSurface,
-                  ),
+                  style: context.ts(16, fontWeight: FontWeight.w900, color: theme.colorScheme.onSurface),
                 ),
               ],
             ),
@@ -285,16 +283,11 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
                         const SizedBox(width: kSpacing12),
                         Text(
                           item.$2,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: isSelected
-                                ? FontWeight.w700
-                                : FontWeight.w500,
-                            color: isSelected
+                          style: context.ts(15, fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500, color: isSelected
                                 ? theme.colorScheme.primary
                                 : theme.colorScheme.onSurface.withValues(
                                     alpha: 0.6,
-                                  ),
-                          ),
+                                  )),
                         ),
                       ],
                     ),
@@ -309,7 +302,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
             padding: const EdgeInsets.all(kSpacing16),
             child: Text(
               'PesaFlow v1.0.0',
-              style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+              style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
             ),
           ),
         ],
@@ -340,16 +333,12 @@ class _RouterErrorPage extends StatelessWidget {
                 const SizedBox(height: kSpacing20),
                 Text(
                   'Page not found',
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: context.ts(24, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: kSpacing8),
                 Text(
                   'The screen you are looking for does not exist.',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
+                  style: context.ts(15, color: theme.colorScheme.onSurfaceVariant),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: kSpacing24),
