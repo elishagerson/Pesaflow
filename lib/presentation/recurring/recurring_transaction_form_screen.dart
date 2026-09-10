@@ -760,10 +760,12 @@ class _RecurringTransactionFormScreenState
                       StaggeredFadeSlide(
                         index: 9,
                         child: TactileSpringContainer(
-                          onTap: () {
-                            PesaHaptics.medium();
-                            if (!_isLoading) _submit();
-                          },
+                          onTap: _isLoading
+                              ? null
+                              : () {
+                                  PesaHaptics.medium();
+                                  _submit();
+                                },
                           selectedColor: theme.colorScheme.onSurface,
                           child: Container(
                             width: double.infinity,
