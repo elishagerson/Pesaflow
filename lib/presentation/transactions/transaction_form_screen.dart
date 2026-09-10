@@ -801,7 +801,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }) {
     return TactileSpringContainer(
       onTap: onTap,
-      selectedColor: theme.colorScheme.onSurface,
+      selectedColor: Theme.of(context).colorScheme.onSurface,
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: kSpacing14,
