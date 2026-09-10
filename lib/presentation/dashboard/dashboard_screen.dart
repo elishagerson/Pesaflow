@@ -1044,6 +1044,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   height: kSpacing20,
                                                 ),
                                                 TactileSpringContainer(
+                                                  selectedColor: theme.colorScheme.onSurface,
                                                   onTap: () => context.push(
                                                     '/transactions/add',
                                                   ),
@@ -1260,6 +1261,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   );
                                                 },
                                                 child: TactileSpringContainer(
+                                                  selectedColor: theme.colorScheme.onSurface,
                                                   onTap: () => context.push(
                                                     '/transactions/${trans.id}',
                                                   ),
@@ -1615,6 +1617,7 @@ class _QuickActionButton extends StatelessWidget {
     final theme = Theme.of(context);
     return Expanded(
       child: TactileSpringContainer(
+        selectedColor: theme.colorScheme.onSurface,
         onTap: onTap,
         child: Semantics(
           label: label,
