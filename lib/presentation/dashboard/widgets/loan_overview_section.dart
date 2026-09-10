@@ -86,10 +86,7 @@ class LoanOverviewSection extends ConsumerWidget {
                                 const SizedBox(width: kSpacing8),
                                 Text(
                                   '$paidCount loan${paidCount == 1 ? '' : 's'} paid off',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.6),
-                                  ),
+                                  style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                                 ),
                                 const Spacer(),
                                 Icon(
@@ -175,20 +172,12 @@ class LoanOverviewSection extends ConsumerWidget {
                           children: [
                             Text(
                               CurrencyFormatter.formatCents(totalOutstanding),
-                              style: theme.textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                color: theme.colorScheme.onSurface,
-                                letterSpacing: -0.5,
-                              ),
+                              style: context.ts(24, fontWeight: FontWeight.w900, color: theme.colorScheme.onSurface, letterSpacing: -0.5),
                             ),
                             const SizedBox(height: kSpacing2),
                             Text(
                               '$severityLevel DEBT BURDEN',
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: severityColor,
-                                letterSpacing: 0.8,
-                              ),
+                              style: context.ts(11, fontWeight: FontWeight.w700, color: severityColor, letterSpacing: 0.8),
                             ),
                           ],
                         ),
@@ -206,10 +195,7 @@ class LoanOverviewSection extends ConsumerWidget {
                         ),
                         child: Text(
                           '${activeLoans.length} loan${activeLoans.length == 1 ? '' : 's'}',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.w800,
-                            color: severityColor,
-                          ),
+                          style: context.ts(11, fontWeight: FontWeight.w800, color: severityColor),
                         ),
                       ),
                     ],

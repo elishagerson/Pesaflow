@@ -140,13 +140,7 @@ class ModernDialog extends StatelessWidget {
                     ],
                     Expanded(
                       child: DefaultTextStyle(
-                        style:
-                            (theme.textTheme.titleLarge ??
-                                    theme.textTheme.titleMedium!)
-                                .copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.onSurface,
-                                ),
+                        style: context.ts(22, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                         child: title,
                       ),
                     ),
@@ -159,14 +153,7 @@ class ModernDialog extends StatelessWidget {
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
                   child: DefaultTextStyle(
-                    style:
-                        (theme.textTheme.bodyMedium ??
-                                theme.textTheme.bodySmall!)
-                            .copyWith(
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.6,
-                              ),
-                            ),
+                    style: context.ts(15, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                     child: content,
                   ),
                 ),

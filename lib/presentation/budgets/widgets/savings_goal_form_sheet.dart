@@ -217,11 +217,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
               // ── Details Section ──
               Text(
                 'GOAL DETAILS',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                  letterSpacing: 0.3,
-                ),
+                style: context.ts(13, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5), letterSpacing: 0.3),
               ),
               const SizedBox(height: kSpacing8),
               StaggeredFadeSlide(
@@ -234,8 +230,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       TextFormField(
                         controller: _nameController,
                         textCapitalization: TextCapitalization.words,
-                        style: Theme.of(context).textTheme.titleMedium!
-                            .copyWith(fontWeight: FontWeight.w500),
+                        style: context.ts(16, fontWeight: FontWeight.w500),
                         decoration: inputDeco(
                           label: 'Goal Title',
                           hint: 'e.g. Vacation to Zanzibar',
@@ -252,8 +247,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
-                        style: Theme.of(context).textTheme.titleMedium!
-                            .copyWith(fontWeight: FontWeight.w500),
+                        style: context.ts(16, fontWeight: FontWeight.w500),
                         decoration: inputDeco(
                           label: 'Target Amount (Tsh)',
                           hint: 'e.g. 1500000',
@@ -290,11 +284,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
               // ── Theme Color Section ──
               Text(
                 'THEME COLOR',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                  letterSpacing: 0.3,
-                ),
+                style: context.ts(13, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5), letterSpacing: 0.3),
               ),
               const SizedBox(height: kSpacing8),
               StaggeredFadeSlide(
@@ -318,11 +308,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
               // ── Icon Section ──
               Text(
                 'GOAL ICON',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                  letterSpacing: 0.3,
-                ),
+                style: context.ts(13, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5), letterSpacing: 0.3),
               ),
               const SizedBox(height: kSpacing8),
               StaggeredFadeSlide(
@@ -426,11 +412,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             widget.existingGoal != null
                                 ? 'Update Goal'
                                 : 'Create Savings Goal',
-                            style: Theme.of(context).textTheme.titleMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: context.appColors.onBgColor,
-                                ),
+                            style: context.ts(16, fontWeight: FontWeight.bold, color: context.appColors.onBgColor),
                           ),
                   ),
                 ),

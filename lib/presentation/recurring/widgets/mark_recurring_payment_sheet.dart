@@ -91,9 +91,7 @@ Future<void> showMarkRecurringPaymentSheet({
                       ),
                       child: Text(
                         'Mark Payment',
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: context.ts(22, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Divider(
@@ -115,10 +113,7 @@ Future<void> showMarkRecurringPaymentSheet({
                             value: CurrencyFormatter.formatCents(
                               recurring.amount,
                             ),
-                            valueStyle: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
-                            ),
+                            valueStyle: context.ts(16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                           ),
                           const SizedBox(height: kSpacing14),
                           // Editable amount
@@ -130,7 +125,7 @@ Future<void> showMarkRecurringPaymentSheet({
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
-                              style: theme.textTheme.bodyMedium,
+                              style: context.ts(15),
                               decoration: context.inputDecoration(
                                 labelText: 'Pay amount',
                                 prefixIcon: Padding(
@@ -142,10 +137,7 @@ Future<void> showMarkRecurringPaymentSheet({
                                   ),
                                   child: Text(
                                     'TSh',
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5),
-                                    ),
+                                    style: context.ts(15, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                                   ),
                                 ),
                               ),
@@ -206,22 +198,13 @@ Future<void> showMarkRecurringPaymentSheet({
                                       children: [
                                         Text(
                                           'Deduct from balance',
-                                          style: theme.textTheme.bodyMedium
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                          style: context.ts(15, fontWeight: FontWeight.w600),
                                         ),
                                         const SizedBox(height: kSpacing2),
                                         Text(
                                           'Record as a regular transaction'
                                           ' and adjust account balance',
-                                          style: theme.textTheme.labelSmall
-                                              ?.copyWith(
-                                                color: theme
-                                                    .colorScheme
-                                                    .onSurface
-                                                    .withValues(alpha: 0.5),
-                                              ),
+                                          style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                                         ),
                                       ],
                                     ),

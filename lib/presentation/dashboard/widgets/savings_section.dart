@@ -103,18 +103,12 @@ class SavingsSection extends ConsumerWidget {
                     children: [
                       Text(
                         goal.name,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: context.ts(14, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: kSpacing4),
                       Text(
                         'Saved ${CurrencyFormatter.formatCents(goal.currentAmount)} of ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
-                          ),
-                        ),
+                        style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                       ),
                     ],
                   ),
@@ -205,10 +199,7 @@ class SavingsReminder extends ConsumerWidget {
               Expanded(
                 child: Text(
                   message,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.78),
-                  ),
+                  style: context.ts(13, fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface.withValues(alpha: 0.78)),
                 ),
               ),
             ],

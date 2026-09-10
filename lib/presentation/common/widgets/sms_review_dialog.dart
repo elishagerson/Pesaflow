@@ -121,9 +121,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   const SizedBox(width: kSpacing8),
                   Text(
                     'New Transaction',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: context.ts(16, fontWeight: FontWeight.bold),
                   ),
                   const Spacer(),
                   IconButton(
@@ -164,9 +162,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       trans.description.isNotEmpty
                           ? trans.description
                           : '(no description)',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
+                      style: context.ts(15, color: theme.colorScheme.onSurfaceVariant),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: kSpacing4),
@@ -183,10 +179,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       ),
                       child: Text(
                         widget.item.account!.name,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: context.ts(11, color: theme.colorScheme.primary, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -195,9 +188,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
               const SizedBox(height: kSpacing16),
               Text(
                 'Assign Category',
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: context.ts(14, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: kSpacing8),
               TextField(
@@ -269,11 +260,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         ),
                         title: Text(
                           cat.name,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
+                          style: context.ts(14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
                         ),
                         subtitle: Text(
                           cat.type.toUpperCase(),
@@ -327,10 +314,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                             const SizedBox(width: kSpacing8),
                             Text(
                               'Reject',
-                              style: theme.textTheme.labelLarge?.copyWith(
-                                color: theme.colorScheme.error,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: context.ts(14, color: theme.colorScheme.error, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -372,10 +356,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                             const SizedBox(width: kSpacing8),
                             Text(
                               'Approve',
-                              style: theme.textTheme.labelLarge?.copyWith(
-                                color: theme.colorScheme.onPrimary,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: context.ts(14, color: theme.colorScheme.onPrimary, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),

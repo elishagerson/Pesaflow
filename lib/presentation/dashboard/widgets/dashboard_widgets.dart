@@ -241,9 +241,7 @@ class _CollapsibleSectionState extends State<CollapsibleSection> {
                           const SizedBox(width: kSpacing8),
                           Text(
                             widget.title,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: context.ts(16, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(width: kSpacing6),
                           AnimatedRotation(

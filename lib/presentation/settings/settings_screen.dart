@@ -177,11 +177,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 (acc.phoneNumber != null
                                     ? ' • ${acc.phoneNumber}'
                                     : ''),
-                            style: theme.textTheme.labelMedium!.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.5,
-                              ),
-                            ),
+                            style: context.ts(12, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                           ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,

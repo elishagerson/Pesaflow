@@ -535,21 +535,21 @@ class _RecurringTransactionFormScreenState
                               value: 'income',
                               label: Text(
                                 'Income',
-                                style: theme.textTheme.labelMedium!,
+                                style: context.ts(12),
                               ),
                             ),
                             ButtonSegment(
                               value: 'expense',
                               label: Text(
                                 'Expense',
-                                style: theme.textTheme.labelMedium!,
+                                style: context.ts(12),
                               ),
                             ),
                             ButtonSegment(
                               value: 'transfer',
                               label: Text(
                                 'Transfer',
-                                style: theme.textTheme.labelMedium!,
+                                style: context.ts(12),
                               ),
                             ),
                           ],
@@ -819,13 +819,7 @@ class _RecurringTransactionFormScreenState
                                         ? 'Update Recurring'
                                         : 'Add Recurring',
                                     textAlign: TextAlign.center,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: theme.colorScheme.onPrimary,
-                                        ),
+                                    style: context.ts(16, fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimary),
                                   ),
                           ),
                         ),

@@ -471,10 +471,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                   child: Text(
                     'Tsh $formattedVal',
                     style: AppTheme.getMonospaceStyle(
-                      theme.textTheme.headlineSmall!.copyWith(
-                        color: theme.colorScheme.onSurface,
-                        letterSpacing: -0.5,
-                      ),
+                      context.ts(24, color: theme.colorScheme.onSurface, letterSpacing: -0.5),
                     ).copyWith(fontWeight: FontWeight.w800),
                   ),
                 ),

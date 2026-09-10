@@ -572,27 +572,16 @@ class _OverviewTab extends ConsumerWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Text(
+                                             Text(
                                               goal.name,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall!
-                                                  .copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                              style: context.ts(13, fontWeight: FontWeight.bold),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             const SizedBox(height: kSpacing4),
                                             Text(
                                               '$percentInt% Completed',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelMedium!
-                                                  .copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: goalColor,
-                                                  ),
+                                              style: context.ts(12, fontWeight: FontWeight.bold, color: goalColor),
                                             ),
                                             const SizedBox(height: kSpacing2),
                                             Text(
@@ -668,11 +657,7 @@ class _OverviewTab extends ConsumerWidget {
                               Expanded(
                                 child: Text(
                                   'SET A SAVINGS GOAL',
-                                  style: theme.textTheme.labelSmall?.copyWith(
-                                    color: context.appColors.textMedium,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1.1,
-                                  ),
+                                  style: context.ts(11, color: context.appColors.textMedium, fontWeight: FontWeight.bold, letterSpacing: 1.1),
                                 ),
                               ),
                             ],
@@ -707,10 +692,9 @@ class _OverviewTab extends ConsumerWidget {
                               icon: Icon(PesaFlowIcons.add, size: 16),
                               label: FittedBox(
                                 fit: BoxFit.scaleDown,
-                                child: Text(
+                                child:                                 Text(
                                   'Set Monthly Savings Goal',
-                                  style: Theme.of(context).textTheme.bodySmall!
-                                      .copyWith(fontWeight: FontWeight.w600),
+                                  style: context.ts(13, fontWeight: FontWeight.w600),
                                 ),
                               ),
                             ),
@@ -892,27 +876,14 @@ class _OverviewTab extends ConsumerWidget {
                                               const SizedBox(width: kSpacing8),
                                               Text(
                                                 cat.categoryName,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .labelMedium!
-                                                    .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
+                                                style: context.ts(12, fontWeight: FontWeight.w600),
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ],
                                           ),
                                           Text(
                                             '$pct%',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelSmall!
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color:
-                                                      context.appColors.textLow,
-                                                ),
+                                            style: context.ts(11, fontWeight: FontWeight.bold, color: context.appColors.textLow),
                                           ),
                                         ],
                                       ),
@@ -979,6 +950,7 @@ class _TrendsTab extends ConsumerWidget {
   const _TrendsTab();
 
   Widget _buildRangeButton(
+    BuildContext context,
     TrendRange range,
     String label,
     TrendRange current,
@@ -1005,12 +977,7 @@ class _TrendsTab extends ConsumerWidget {
         ),
         child: Text(
           label,
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: isSelected
-                ? theme.colorScheme.onPrimary
-                : theme.colorScheme.onSurface.withValues(alpha: 0.62),
-            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-          ),
+          style: context.ts(12, color: isSelected ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface.withValues(alpha: 0.62), fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500),
         ),
       ),
     );
@@ -1044,9 +1011,7 @@ class _TrendsTab extends ConsumerWidget {
                     children: [
                       Text(
                         'Income & Expense Trends',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: context.ts(16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: kSpacing4),
                       Text(
@@ -1055,9 +1020,7 @@ class _TrendsTab extends ConsumerWidget {
                             : (currentRange == TrendRange.weeks
                                   ? 'Curved trend waves over the last 8 weeks'
                                   : 'Curved trend waves over the last 6 months'),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
+                        style: context.ts(13, color: theme.colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -1078,6 +1041,7 @@ class _TrendsTab extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       _buildRangeButton(
+                        context,
                         TrendRange.days,
                         'Days',
                         currentRange,
@@ -1085,6 +1049,7 @@ class _TrendsTab extends ConsumerWidget {
                         ref,
                       ),
                       _buildRangeButton(
+                        context,
                         TrendRange.weeks,
                         'Weeks',
                         currentRange,
@@ -1092,6 +1057,7 @@ class _TrendsTab extends ConsumerWidget {
                         ref,
                       ),
                       _buildRangeButton(
+                        context,
                         TrendRange.months,
                         'Months',
                         currentRange,

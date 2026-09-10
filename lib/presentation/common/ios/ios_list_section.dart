@@ -36,11 +36,7 @@ class IosListSection extends StatelessWidget {
             ),
             child: Text(
               header!,
-              style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                letterSpacing: 0.3,
-              ),
+              style: context.ts(13, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5), letterSpacing: 0.3),
             ),
           ),
         GlassCard(
@@ -109,15 +105,13 @@ class IosListRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DefaultTextStyle.merge(
-                  style: theme.textTheme.bodyLarge!,
+                  style: context.ts(17),
                   child: title,
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: kSpacing2),
                   DefaultTextStyle.merge(
-                    style: theme.textTheme.bodySmall!.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                    ),
+                    style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                     child: subtitle!,
                   ),
                 ],
@@ -251,9 +245,7 @@ class IosMetricCard extends StatelessWidget {
           const SizedBox(height: kSpacing2),
           Text(
             label,
-            style: Theme.of(context).textTheme.labelSmall!.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
-            ),
+            style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.45)),
           ),
         ],
       ),

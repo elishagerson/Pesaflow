@@ -67,9 +67,7 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                   children: [
                     Text(
                       'Workspaces',
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: context.ts(24, fontWeight: FontWeight.bold),
                     ),
                     TextButton.icon(
                       onPressed: () {
@@ -140,13 +138,7 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                                 Expanded(
                                   child: Text(
                                     item.name,
-                                    style: theme.textTheme.titleMedium
-                                        ?.copyWith(
-                                          fontWeight: isSelected
-                                              ? FontWeight.bold
-                                              : FontWeight.normal,
-                                          color: isSelected ? itemColor : null,
-                                        ),
+                                    style: context.ts(16, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, color: isSelected ? itemColor : null),
                                   ),
                                 ),
                                 IconButton(
@@ -585,7 +577,7 @@ void confirmDeleteTracker(
     titleIcon: PesaFlowIcons.warning,
     content: Text(
       'Are you sure you want to delete "${tracker.name}"? This will permanently delete all transactions and savings goals in this workspace.',
-      style: theme.textTheme.bodyMedium,
+      style: context.ts(15),
     ),
     actions: [
       TextButton(

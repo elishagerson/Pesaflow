@@ -360,10 +360,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
                           style: AppTheme.getMonospaceStyle(
-                            theme.textTheme.headlineMedium!.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: onSurface,
-                            ),
+                            context.ts(28, fontWeight: FontWeight.w800, color: onSurface),
                           ),
                           decoration: InputDecoration(
                             hintText: '0',

@@ -417,9 +417,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                   children: [
                                     Text(
                                       '📨',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.labelMedium!,
+                                      style:                                       context.ts(12),
                                     ),
                                     const SizedBox(width: kSpacing6),
                                     Text(

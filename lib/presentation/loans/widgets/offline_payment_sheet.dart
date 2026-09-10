@@ -84,20 +84,12 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   children: [
                                     Text(
                                       'Record Offline Payment',
-                                      style: theme.textTheme.titleLarge!
-                                          .copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      style: context.ts(22, fontWeight: FontWeight.bold),
                                     ),
                                     const SizedBox(height: kSpacing2),
                                     Text(
                                       'No wallet account will be affected',
-                                      style: theme.textTheme.labelMedium!
-                                          .copyWith(
-                                            color: onSurface.withValues(
-                                              alpha: 0.6,
-                                            ),
-                                          ),
+                                      style: context.ts(12, color: onSurface.withValues(alpha: 0.6)),
                                     ),
                                   ],
                                 ),
@@ -106,9 +98,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                             const SizedBox(height: kSpacing24),
                             Text(
                               'AMOUNT',
-                              style: theme.textTheme.labelSmall!.copyWith(
-                                letterSpacing: 0.5,
-                              ),
+                              style: context.ts(11, letterSpacing: 0.5),
                             ),
                             const SizedBox(height: kSpacing8),
                             TextField(
@@ -123,10 +113,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   RegExp(r'[\d.,]'),
                                 ),
                               ],
-                              style: theme.textTheme.headlineMedium!.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: onSurface,
-                              ),
+                              style: context.ts(28, fontWeight: FontWeight.bold, color: onSurface),
                               decoration: context.inputDecoration(
                                 hintText: 'Enter amount',
                                 prefixText: 'TSh ',
@@ -254,17 +241,13 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                             const SizedBox(height: kSpacing24),
                             Text(
                               'MEMO',
-                              style: theme.textTheme.labelSmall!.copyWith(
-                                letterSpacing: 0.5,
-                              ),
+                              style: context.ts(11, letterSpacing: 0.5),
                             ),
                             const SizedBox(height: kSpacing8),
                             TextField(
                               controller: descriptionController,
                               textCapitalization: TextCapitalization.sentences,
-                              style: theme.textTheme.bodyMedium!.copyWith(
-                                color: onSurface,
-                              ),
+                              style: context.ts(15, color: onSurface),
                               decoration: context.inputDecoration(
                                 hintText: 'Add a note (optional)',
                                 prefixIcon: Icon(
@@ -307,13 +290,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   Expanded(
                                     child: Text(
                                       'This records the payment without deducting from any wallet account. Use this for cash or external payments.',
-                                      style: theme.textTheme.labelSmall!
-                                          .copyWith(
-                                            color: const Color(
-                                              0xFF609F8A,
-                                            ).withValues(alpha: 0.8),
-                                            height: 1.3,
-                                          ),
+                                      style: context.ts(11, color: const Color(0xFF609F8A).withValues(alpha: 0.8), height: 1.3),
                                     ),
                                   ),
                                 ],
@@ -387,10 +364,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         paymentAmount() <= 0
                                             ? 'Enter an amount'
                                             : 'Record ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                        style: theme.textTheme.titleMedium!
-                                            .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                        style: context.ts(16, fontWeight: FontWeight.bold),
                                       ),
                               ),
                             ),

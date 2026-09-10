@@ -147,9 +147,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     ),
                     child: Text(
                       'Reset',
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: context.ts(13, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -499,9 +497,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     ),
                     child: Text(
                       'Apply Filters',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: context.ts(15, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -561,10 +557,7 @@ class _CategoryChip extends StatelessWidget {
             ],
             Text(
               label,
-              style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                fontWeight: FontWeight.w600,
-                color: fg,
-              ),
+              style: context.ts(13, fontWeight: FontWeight.w600, color: fg),
             ),
           ],
         ),
@@ -605,18 +598,12 @@ class _DateButton extends StatelessWidget {
           children: [
             Text(
               label,
-              style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                color: onSurface.withValues(alpha: 0.38),
-              ),
+              style: context.ts(11, color: onSurface.withValues(alpha: 0.38)),
             ),
             const SizedBox(height: kSpacing4),
             Text(
               date != null ? DateFormat('MMM d, yyyy').format(date!) : 'Any',
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                color: date != null
-                    ? onSurface
-                    : onSurface.withValues(alpha: 0.38),
-              ),
+              style: context.ts(14, color: date != null ? onSurface : onSurface.withValues(alpha: 0.38)),
             ),
           ],
         ),

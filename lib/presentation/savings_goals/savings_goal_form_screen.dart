@@ -244,8 +244,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                     controller: _nameController,
                                     textCapitalization:
                                         TextCapitalization.words,
-                                    style: theme.textTheme.titleMedium!
-                                        .copyWith(fontWeight: FontWeight.w500),
+                                    style: context.ts(16, fontWeight: FontWeight.w500),
                                     validator: (v) {
                                       if (v == null || v.trim().isEmpty) {
                                         return 'Enter a goal name';
@@ -268,8 +267,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                     inputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly,
                                     ],
-                                    style: theme.textTheme.titleMedium!
-                                        .copyWith(fontWeight: FontWeight.w500),
+                                    style: context.ts(16, fontWeight: FontWeight.w500),
                                     validator: (v) {
                                       if (v == null || v.isEmpty) {
                                         return 'Enter a valid amount';
@@ -454,12 +452,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         widget.goalId != null
                                             ? 'Update Goal'
                                             : 'Create Savings Goal',
-                                        style: theme.textTheme.titleMedium!
-                                            .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color:
-                                                  context.appColors.onBgColor,
-                                            ),
+                                        style: context.ts(16, fontWeight: FontWeight.bold, color: context.appColors.onBgColor),
                                       ),
                               ),
                             ),

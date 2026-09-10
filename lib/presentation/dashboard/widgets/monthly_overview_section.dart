@@ -54,19 +54,13 @@ class MonthlyOverviewSection extends ConsumerWidget {
                   const SizedBox(height: kSpacing16),
                   Text(
                     'No transactions yet this month',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: context.ts(16, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: kSpacing8),
                   Text(
                     'Start automatic SMS synchronization or log transactions manually to view your financial charts here.',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.7,
-                      ),
-                    ),
+                    style: context.ts(13, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7)),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -165,12 +159,9 @@ class MonthlyOverviewSection extends ConsumerWidget {
                                     ),
                                   ),
                                   const SizedBox(width: kSpacing8),
-                                  Text(
+                                   Text(
                                     'Income',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
+                                    style: context.ts(13, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurfaceVariant),
                                   ),
                                 ],
                               ),
@@ -201,12 +192,9 @@ class MonthlyOverviewSection extends ConsumerWidget {
                                     ),
                                   ),
                                   const SizedBox(width: kSpacing8),
-                                  Text(
+                                   Text(
                                     'Expense',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
+                                    style: context.ts(13, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurfaceVariant),
                                   ),
                                 ],
                               ),

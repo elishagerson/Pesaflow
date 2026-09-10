@@ -480,8 +480,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                           children: [
                             Text(
                               loan.description ?? loan.sender ?? 'Loan',
-                              style: Theme.of(context).textTheme.titleSmall!
-                                  .copyWith(fontWeight: FontWeight.bold),
+                              style: context.ts(14, fontWeight: FontWeight.bold),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -514,11 +513,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                                 ],
                                 Text(
                                   'Active',
-                                  style: Theme.of(context).textTheme.labelSmall!
-                                      .copyWith(
-                                        fontWeight: FontWeight.w700,
-                                        color: progressColor,
-                                      ),
+                                   style: context.ts(11, fontWeight: FontWeight.w700, color: progressColor),
                                 ),
                               ],
                             ),

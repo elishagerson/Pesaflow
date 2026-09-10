@@ -353,9 +353,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                     _select(results[_selectedIndex]);
                                   }
                                 },
-                                style: theme.textTheme.bodyLarge?.copyWith(
-                                  color: theme.colorScheme.onSurface,
-                                ),
+                                style: context.ts(17, color: theme.colorScheme.onSurface),
                                 decoration: InputDecoration(
                                   hintText: 'Search actions...',
                                   prefixIcon: Icon(
@@ -409,20 +407,14 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                     query.trim().length >= 2
                                         ? 'No results found'
                                         : 'No matching actions',
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5),
-                                    ),
+                                    style: context.ts(15, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                                   ),
                                   const SizedBox(height: kSpacing8),
                                   Text(
                                     query.trim().length >= 2
                                         ? 'Try searching transactions, budgets, goals, or loans'
                                         : 'Try: "Groceries", "Income", "MPESA"',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.3),
-                                    ),
+                                    style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
                                   ),
                                 ],
                               ),
@@ -459,13 +451,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                           ),
                                           child: Text(
                                             category.toUpperCase(),
-                                            style: theme.textTheme.labelSmall
-                                                ?.copyWith(
-                                                  color:
-                                                      theme.colorScheme.primary,
-                                                  fontWeight: FontWeight.bold,
-                                                  letterSpacing: 1.2,
-                                                ),
+                                            style: context.ts(11, color: theme.colorScheme.primary, fontWeight: FontWeight.bold, letterSpacing: 1.2),
                                           ),
                                         ),
                                       );
@@ -547,19 +533,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                                                 MainAxisSize
                                                                     .min,
                                                             children: [
-                                                              Text(
-                                                                action.label,
-                                                                style: theme
-                                                                    .textTheme
-                                                                    .bodyMedium
-                                                                    ?.copyWith(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      color: theme
-                                                                          .colorScheme
-                                                                          .onSurface,
-                                                                    ),
+                                                                Text(
+                                                                  action.label,
+                                                                  style: context.ts(15, fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface),
                                                                 maxLines: 1,
                                                                 overflow:
                                                                     TextOverflow
@@ -571,20 +547,10 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                                                 const SizedBox(
                                                                   height: 2,
                                                                 ),
-                                                                Text(
-                                                                  action
-                                                                      .subtitle!,
-                                                                  style: theme
-                                                                      .textTheme
-                                                                      .bodySmall
-                                                                      ?.copyWith(
-                                                                        color: theme
-                                                                            .colorScheme
-                                                                            .onSurface
-                                                                            .withValues(
-                                                                              alpha: 0.5,
-                                                                            ),
-                                                                      ),
+                                                                 Text(
+                                                                   action
+                                                                       .subtitle!,
+                                                                   style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                                                                   maxLines: 1,
                                                                   overflow:
                                                                       TextOverflow
@@ -596,22 +562,10 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                                         ),
                                                         if (!action
                                                             .isDataResult)
-                                                          Text(
-                                                            '/>',
-                                                            style: theme
-                                                                .textTheme
-                                                                .bodySmall
-                                                                ?.copyWith(
-                                                                  color: theme
-                                                                      .colorScheme
-                                                                      .onSurface
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.3,
-                                                                      ),
-                                                                  fontFamily:
-                                                                      'monospace',
-                                                                ),
+                                                                  Text(
+                                                                    action.subtitle!,
+                                                                    style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                                                          ),
                                                           ),
                                                       ],
                                                     ),

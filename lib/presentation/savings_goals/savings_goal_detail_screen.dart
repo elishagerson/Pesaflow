@@ -311,9 +311,7 @@ class _SavingsGoalDetailScreenState
                                   const SizedBox(height: kSpacing24),
                                   Text(
                                     'AMOUNT',
-                                    style: theme.textTheme.labelSmall!.copyWith(
-                                      letterSpacing: 0.5,
-                                    ),
+                                    style: context.ts(11, letterSpacing: 0.5),
                                   ),
                                   const SizedBox(height: kSpacing8),
                                   Container(
@@ -336,11 +334,7 @@ class _SavingsGoalDetailScreenState
                                       children: [
                                         Text(
                                           'TSh',
-                                          style: theme.textTheme.titleMedium!
-                                              .copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                color: accentColor,
-                                              ),
+                                          style: context.ts(16, fontWeight: FontWeight.w600, color: accentColor),
                                         ),
                                         const SizedBox(width: kSpacing12),
                                         Expanded(
@@ -395,18 +389,14 @@ class _SavingsGoalDetailScreenState
                                   const SizedBox(height: kSpacing20),
                                   Text(
                                     'MEMO',
-                                    style: theme.textTheme.labelSmall!.copyWith(
-                                      letterSpacing: 0.5,
-                                    ),
+                                    style: context.ts(11, letterSpacing: 0.5),
                                   ),
                                   const SizedBox(height: kSpacing8),
                                   TextFormField(
                                     controller: _noteController,
                                     textCapitalization:
                                         TextCapitalization.sentences,
-                                    style: theme.textTheme.bodyMedium!.copyWith(
-                                      color: onSurface,
-                                    ),
+                                    style: context.ts(15, color: onSurface),
                                     decoration: context.inputDecoration(
                                       hintText: 'Add an optional note',
                                       prefixIcon: Icon(

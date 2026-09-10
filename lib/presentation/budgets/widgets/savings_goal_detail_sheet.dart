@@ -655,18 +655,14 @@ class _SavingsGoalDetailSheetState
                     children: [
                       Text(
                         widget.goal.name,
-                        style: theme.textTheme.titleLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: context.ts(22, fontWeight: FontWeight.bold),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: kSpacing4),
                       Text(
                         'Target deadline: ${widget.goal.targetDate.day}/${widget.goal.targetDate.month}/${widget.goal.targetDate.year} ($remainingDays days remaining)',
-                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                          color: onSurface.withValues(alpha: 0.6),
-                        ),
+                        style: context.ts(11, color: onSurface.withValues(alpha: 0.6)),
                       ),
                     ],
                   ),
@@ -727,11 +723,7 @@ class _SavingsGoalDetailSheetState
                               ),
                               Text(
                                 '$percentInt%',
-                                style: Theme.of(context).textTheme.bodyMedium!
-                                    .copyWith(
-                                      fontWeight: FontWeight.w700,
-                                      color: goalColor,
-                                    ),
+                                style: context.ts(15, fontWeight: FontWeight.w700, color: goalColor),
                               ),
                             ],
                           ),
@@ -743,30 +735,19 @@ class _SavingsGoalDetailSheetState
                             children: [
                               Text(
                                 'TOTAL SAVED',
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: context.appColors.textMedium,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.1,
-                                ),
+                                style: context.ts(11, color: context.appColors.textMedium, fontWeight: FontWeight.bold, letterSpacing: 1.1),
                               ),
                               const SizedBox(height: kSpacing4),
                               Text(
                                 CurrencyFormatter.formatCents(
                                   widget.goal.currentAmount,
                                 ),
-                                style: Theme.of(context).textTheme.titleLarge!
-                                    .copyWith(
-                                      fontWeight: FontWeight.w800,
-                                      color: onSurface,
-                                    ),
+                                style: context.ts(22, fontWeight: FontWeight.w800, color: onSurface),
                               ),
                               const SizedBox(height: kSpacing4),
                               Text(
                                 'Goal target: ${CurrencyFormatter.formatCents(widget.goal.targetAmount)}',
-                                style: Theme.of(context).textTheme.labelSmall!
-                                    .copyWith(
-                                      color: context.appColors.textMedium,
-                                    ),
+                                style: context.ts(11, color: context.appColors.textMedium),
                               ),
                             ],
                           ),
@@ -806,11 +787,7 @@ class _SavingsGoalDetailSheetState
                                 const SizedBox(width: kSpacing6),
                                 Text(
                                   'Add Money',
-                                  style: Theme.of(context).textTheme.bodySmall!
-                                      .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: context.appColors.incomeColor,
-                                      ),
+                                  style: context.ts(13, fontWeight: FontWeight.bold, color: context.appColors.incomeColor),
                                 ),
                               ],
                             ),
@@ -845,11 +822,7 @@ class _SavingsGoalDetailSheetState
                                 const SizedBox(width: kSpacing6),
                                 Text(
                                   'Withdraw',
-                                  style: Theme.of(context).textTheme.bodySmall!
-                                      .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: context.appColors.expenseColor,
-                                      ),
+                                  style: context.ts(13, fontWeight: FontWeight.bold, color: context.appColors.expenseColor),
                                 ),
                               ],
                             ),
@@ -865,11 +838,8 @@ class _SavingsGoalDetailSheetState
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'CONTRIBUTION LEDGER',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: context.appColors.textMedium,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.1,
-                      ),
+                      style: context.ts(11, color: context.appColors.textMedium, fontWeight: FontWeight.bold, letterSpacing: 1.1),
+                    ),
                     ),
                   ),
                   const SizedBox(height: kSpacing8),
@@ -884,8 +854,7 @@ class _SavingsGoalDetailSheetState
                           alignment: Alignment.center,
                           child: Text(
                             'No deposits or withdrawals logged yet.',
-                            style: Theme.of(context).textTheme.bodySmall!
-                                .copyWith(color: context.appColors.textMedium),
+                            style: context.ts(13, color: context.appColors.textMedium),
                           ),
                         );
                       }

@@ -292,16 +292,7 @@ class _RecurringTransactionListScreenState
                                                     ),
                                                     Text(
                                                       'Mark Paid',
-                                                      style: theme
-                                                          .textTheme
-                                                          .labelSmall
-                                                          ?.copyWith(
-                                                            color: context
-                                                                .appColors
-                                                                .onBgColor,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
+                                                      style: context.ts(11, color: context.appColors.onBgColor, fontWeight: FontWeight.w600),
                                                     ),
                                                   ],
                                                 ),
@@ -345,16 +336,7 @@ class _RecurringTransactionListScreenState
                                                               'active'
                                                           ? 'Pause'
                                                           : 'Resume',
-                                                      style: theme
-                                                          .textTheme
-                                                          .labelSmall
-                                                          ?.copyWith(
-                                                            color: context
-                                                                .appColors
-                                                                .onBgColor,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
+                                                      style: context.ts(11, color: context.appColors.onBgColor, fontWeight: FontWeight.w600),
                                                     ),
                                                   ],
                                                 ),
@@ -445,20 +427,13 @@ class _RecurringTransactionListScreenState
             if (totals.monthly > 0) ...[
               Text(
                 'COMMITTED MONTHLY',
-                style: theme.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.5,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                ),
+                style: context.ts(11, fontWeight: FontWeight.w800, letterSpacing: 1.5, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
               ),
               const SizedBox(height: kSpacing6),
               AmountText(
                 amountInCents: totals.monthly,
                 type: AmountType.expense,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: theme.colorScheme.primary,
-                ),
+                style: context.ts(24, fontWeight: FontWeight.w900, color: theme.colorScheme.primary),
               ),
               const SizedBox(height: kSpacing12),
               // Cycle chips
@@ -531,19 +506,13 @@ class _RecurringTransactionListScreenState
           ),
           child: Text(
             value,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: color,
-            ),
+            style: context.ts(16, fontWeight: FontWeight.w700, color: color),
           ),
         ),
         const SizedBox(height: kSpacing4),
         Text(
           label,
-          style: theme.textTheme.labelSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-          ),
+          style: context.ts(11, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
         ),
       ],
     );

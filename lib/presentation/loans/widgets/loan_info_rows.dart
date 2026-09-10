@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -21,11 +22,9 @@ class InfoRow extends StatelessWidget {
         children: [
           Text(
             label,
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
+            style: context.ts(12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
           ),
-          Text(value, style: theme.textTheme.labelMedium),
+          Text(value, style: context.ts(12)),
         ],
       ),
     );
@@ -62,14 +61,12 @@ class CopyableInfoRow extends StatelessWidget {
           children: [
             Text(
               label,
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-              ),
+              style: context.ts(12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
             ),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(value, style: theme.textTheme.labelMedium),
+                Text(value, style: context.ts(12)),
                 const SizedBox(width: kSpacing4),
                 Icon(
                   PesaFlowIcons.copy,

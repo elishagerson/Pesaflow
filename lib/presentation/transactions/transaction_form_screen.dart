@@ -352,9 +352,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       const SizedBox(width: kSpacing12),
                       Text(
                         title,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: context.ts(16, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -471,19 +469,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         const SizedBox(height: kSpacing2),
                                         Text(
                                           'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
-                                          style: theme.textTheme.bodySmall
-                                              ?.copyWith(
-                                                color: isDisabled
-                                                    ? theme
-                                                          .colorScheme
-                                                          .onSurface
-                                                          .withValues(
-                                                            alpha: 0.12,
-                                                          )
-                                                    : onSurface.withValues(
-                                                        alpha: 0.38,
-                                                      ),
-                                              ),
+                                          style: context.ts(13, color: isDisabled ? theme.colorScheme.onSurface.withValues(alpha: 0.12) : onSurface.withValues(alpha: 0.38)),
                                         ),
                                       ],
                                     ),
