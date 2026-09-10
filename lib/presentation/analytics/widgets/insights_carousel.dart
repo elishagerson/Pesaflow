@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 import 'package:pesaflow/presentation/state/insight_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/morphing_insight_card.dart';
@@ -28,7 +29,7 @@ class _InsightsCarouselState extends ConsumerState<InsightsCarousel> {
         final double height = _expandedIndices.isNotEmpty ? 176.0 : 114.0;
 
         return AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
+          duration: MotionTokens.durationNormal,
           curve: Curves.easeInOut,
           height: height,
           child: ListView.separated(
