@@ -545,7 +545,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
           context: context,
           title: const Text('Discard Changes?'),
           titleIcon: PesaFlowIcons.warning,
-          iconColor: Colors.orange,
+          iconColor: context.appColors.expenseColor,
           content: const Text(
             'You have unsaved changes. Are you sure you want to go back?',
           ),
@@ -846,7 +846,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                             IosListRow(
                               leading: _buildLeadingIcon(
                                 PesaFlowIcons.replay,
-                                Colors.purple,
+                                context.appColors.transferColor,
                               ),
                               title: const Text('Enable Rollover'),
                               subtitle: const Text(
@@ -1015,7 +1015,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       _threshold >= 0.85
                                       ? context.appColors.expenseColor
                                       : (_threshold >= 0.75
-                                            ? Colors.amber
+                                            ? context.appColors.transferColor
                                             : context.appColors.incomeColor);
 
                                   return Column(

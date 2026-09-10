@@ -17,6 +17,7 @@ import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class BudgetSetupScreen extends ConsumerStatefulWidget {
@@ -149,7 +150,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                         right: i < _totalSteps - 1 ? kSpacing6 : 0,
                       ),
                       child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
+                        duration: MotionTokens.durationNormal,
                         height: 4,
                         decoration: BoxDecoration(
                           color: isActive
