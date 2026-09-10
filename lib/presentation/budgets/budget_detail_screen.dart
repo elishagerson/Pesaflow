@@ -139,7 +139,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
             return Column(
               children: [
                 Hero(
-                  tag: 'budget_$budgetId',
+                  tag: 'budget_${widget.budgetId}',
                   child: Container(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                   child: Column(
@@ -150,7 +150,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                         actions: [
                           TactileSpringContainer(
                             onTap: () =>
-                                context.push('/budgets/$budgetId/edit'),
+                                context.push('/budgets/${widget.budgetId}/edit'),
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
@@ -211,7 +211,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                 context.pop();
 
                                 // Delete immediately
-                                await budgetRepo.deleteBudget(budgetId);
+                                await budgetRepo.deleteBudget(widget.budgetId);
 
                                 // Invalidate providers
                                 ref.invalidate(budgetGroupsProvider);
@@ -631,7 +631,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                             type: ToastType.success,
                                           );
                                           ref.invalidate(
-                                            budgetDetailProvider(budgetId),
+                                            budgetDetailProvider(widget.budgetId),
                                           );
                                           ref.invalidate(
                                             savingsGoalsStreamProvider,
@@ -1042,7 +1042,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                             title: 'Failed to Load Periods',
                             message: e.toString(),
                             onRetry: () =>
-                                ref.invalidate(budgetPeriodsProvider(budgetId)),
+                                ref.invalidate(budgetPeriodsProvider(widget.budgetId)),
                           ),
                         ),
                       ],
@@ -1082,7 +1082,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                     title: 'Failed to Load Budget details',
                     message: e.toString(),
                     onRetry: () =>
-                        ref.invalidate(budgetDetailProvider(budgetId)),
+                        ref.invalidate(budgetDetailProvider(widget.budgetId)),
                   ),
                 ),
               ],

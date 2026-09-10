@@ -187,7 +187,10 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
           'Set a savings target and track your progress.\nEvery journey starts with a goal.',
       illustration: PesaFlowIllustration.emptyGoals(),
       action: TactileSpringContainer(
-        onTap: () => context.push('/savings-goals/add'),
+        onTap: () {
+          PesaHaptics.medium();
+          context.push('/savings-goals/add');
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(
             horizontal: kSpacing28,

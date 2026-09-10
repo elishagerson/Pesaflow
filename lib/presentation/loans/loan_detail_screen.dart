@@ -66,7 +66,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
 
     return loansAsync.when(
       data: (loans) {
-        final loan = loans.where((l) => l.id == loanId).firstOrNull;
+        final loan = loans.where((l) => l.id == widget.loanId).firstOrNull;
         if (loan == null) {
           return Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -222,7 +222,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                           title: 'Failed to Load Payments',
                           message: e.toString(),
                           onRetry: () => ref.invalidate(
-                            loanTransactionsStreamProvider(loanId),
+                            loanTransactionsStreamProvider(widget.loanId),
                           ),
                         ),
                       ),
