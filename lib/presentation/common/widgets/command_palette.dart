@@ -566,7 +566,6 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                                                     action.subtitle!,
                                                                     style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                                                           ),
-                                                          ),
                                                       ],
                                                     ),
                                                   ),

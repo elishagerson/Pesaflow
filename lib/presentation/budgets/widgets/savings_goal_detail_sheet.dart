@@ -840,7 +840,6 @@ class _SavingsGoalDetailSheetState
                       'CONTRIBUTION LEDGER',
                       style: context.ts(11, color: context.appColors.textMedium, fontWeight: FontWeight.bold, letterSpacing: 1.1),
                     ),
-                    ),
                   ),
                   const SizedBox(height: kSpacing8),
 
