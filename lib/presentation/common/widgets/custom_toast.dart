@@ -242,7 +242,8 @@ class _ToastWidgetState extends State<_ToastWidget>
                           Flexible(
                             child: Text(
                               widget.message,
-                              style: theme.textTheme.labelMedium?.copyWith(
+                              style: context.ts(
+                                12,
                                 color: theme.colorScheme.onSurface,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.2,

@@ -124,7 +124,8 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                     children: [
                       Text(
                         labelText,
-                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        style: context.ts(
+                          11,
                           fontWeight: FontWeight.w500,
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.6,
@@ -134,7 +135,8 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                       const SizedBox(height: kSpacing2),
                       Text(
                         formattedDate,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        style: context.ts(
+                          15,
                           fontWeight: FontWeight.w600,
                           color: theme.colorScheme.onSurface,
                         ),
@@ -157,9 +159,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
             padding: const EdgeInsets.only(left: kSpacing12),
             child: Text(
               errorText!,
-              style: Theme.of(
-                context,
-              ).textTheme.labelMedium!.copyWith(color: theme.colorScheme.error),
+              style: context.ts(12, color: theme.colorScheme.error),
             ),
           ),
         ],

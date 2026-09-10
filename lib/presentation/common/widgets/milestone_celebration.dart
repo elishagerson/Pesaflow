@@ -288,7 +288,8 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
                         children: [
                           Text(
                             'Goal reached!',
-                            style: theme.textTheme.headlineSmall?.copyWith(
+                            style: context.ts(
+                              24,
                               color: theme.colorScheme.onSurface,
                               fontWeight: FontWeight.w700,
                             ),
@@ -297,7 +298,8 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
                           const SizedBox(height: kSpacing8),
                           Text(
                             widget.goalName,
-                            style: theme.textTheme.titleMedium?.copyWith(
+                            style: context.ts(
+                              16,
                               color: theme.colorScheme.onSurface.withValues(
                                 alpha: 0.7,
                               ),
@@ -308,14 +310,15 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
                           const SizedBox(height: kSpacing12),
                           Text(
                             'TSh ${_formatAmount(widget.amount)}',
-                            style: theme.textTheme.headlineMedium?.copyWith(
+                            style: context.ts(
+                              28,
                               color: successColor,
                               fontWeight: FontWeight.w700,
                             ),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: kSpacing8),
-                          Text('🎉', style: const TextStyle(fontSize: 24)),
+                          Text('🎉', style: context.ts(24)),
                         ],
                       ),
                     ),

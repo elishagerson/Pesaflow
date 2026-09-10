@@ -125,12 +125,13 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                             Text(
                               page.description,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.titleMedium!
-                                  .copyWith(
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.6),
-                                    height: 1.5,
-                                  ),
+                              style: context.ts(
+                                16,
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.6,
+                                ),
+                                height: 1.5,
+                              ),
                             ),
                           ],
                         ),
@@ -185,8 +186,10 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                           _currentPage < _pages.length - 1
                               ? 'Next'
                               : 'Get Started',
-                          style: Theme.of(context).textTheme.titleMedium!
-                              .copyWith(fontWeight: FontWeight.w700),
+                          style: context.ts(
+                            16,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ],

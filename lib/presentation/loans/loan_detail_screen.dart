@@ -186,9 +186,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                         index: loan.status == 'active' ? 6 : 5,
                         child: Text(
                           'Payment History',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: context.ts(16, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(height: kSpacing8),
@@ -319,9 +317,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                 CurrencyFormatter.formatCents(
                   isActive ? loan.remaining : loan.amount,
                 ),
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
+                style: context.ts(28, fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: kSpacing4),
               Text(
@@ -330,10 +326,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                     : isPaid
                     ? 'Fully Paid'
                     : 'Defaulted',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: statusColor,
-                ),
+                style: context.ts(13, fontWeight: FontWeight.w600, color: statusColor),
               ),
               if (isActive) ...[
                 const SizedBox(height: kSpacing16),
@@ -354,9 +347,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                 const SizedBox(height: kSpacing8),
                 Text(
                   '${(ratio * 100).round()}% remaining of ${CurrencyFormatter.formatCents(loan.amount)}',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
+                  style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                 ),
               ],
             ],
@@ -379,9 +370,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
               padding: const EdgeInsets.all(kSpacing4),
               child: Text(
                 'Loan Information',
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: context.ts(14, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: kSpacing12),
@@ -476,9 +465,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
           children: [
             Text(
               'Status Timeline',
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: context.ts(14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: kSpacing16),
             ...events.map((e) => _buildTimelineRow(context, e, theme)),
@@ -534,26 +521,18 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                 children: [
                   Text(
                     event.title,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: context.ts(13, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: kSpacing2),
                   Text(
                     event.subtitle,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                    ),
+                    style: context.ts(12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                   ),
                   if (event.date != null) ...[
                     const SizedBox(height: kSpacing2),
                     Text(
                       DateFormatter.shortDate(event.date!),
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.5,
-                        ),
-                      ),
+                      style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                     ),
                   ],
                 ],
@@ -585,9 +564,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
           children: [
             Text(
               'Payment Schedule',
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: context.ts(14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: kSpacing12),
             Row(
@@ -598,11 +575,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                     children: [
                       Text(
                         '$paid of $total installments paid',
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
-                          ),
-                        ),
+                        style: context.ts(12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                       ),
                       const SizedBox(height: kSpacing6),
                       ClipRRect(
@@ -678,16 +651,12 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                     Expanded(
                       child: Text(
                         'Installment ${i + 1}',
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: context.ts(12, fontWeight: FontWeight.w600),
                       ),
                     ),
                     Text(
                       CurrencyFormatter.formatCents(amount),
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: context.ts(12, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: kSpacing8),
                     Container(
@@ -853,17 +822,11 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                     children: [
                       Text(
                         'Ready to pay?',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: context.ts(13, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         '${CurrencyFormatter.formatCents(loan.remaining)} remaining',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
-                          ),
-                        ),
+                        style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                       ),
                     ],
                   ),

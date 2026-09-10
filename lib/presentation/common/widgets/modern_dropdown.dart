@@ -137,7 +137,8 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                     children: [
                       Text(
                         labelText,
-                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        style: context.ts(
+                          11,
                           fontWeight: FontWeight.w500,
                           color: onSurface.withValues(alpha: 0.6),
                         ),
@@ -145,7 +146,8 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                       const SizedBox(height: kSpacing2),
                       Text(
                         selectedItem.label,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        style: context.ts(
+                          15,
                           fontWeight: FontWeight.w600,
                           color: onSurface,
                         ),
@@ -167,9 +169,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
             padding: const EdgeInsets.only(left: kSpacing12),
             child: Text(
               errorText!,
-              style: Theme.of(
-                context,
-              ).textTheme.labelMedium!.copyWith(color: theme.colorScheme.error),
+              style: context.ts(12, color: theme.colorScheme.error),
             ),
           ),
         ],
@@ -302,29 +302,25 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                       children: [
                                         Text(
                                           item.label,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                color: isSelected
-                                                    ? itemColor
-                                                    : onSurface.withValues(
-                                                        alpha: 0.78,
-                                                      ),
-                                              ),
+                                          style: context.ts(
+                                            15,
+                                            color: isSelected
+                                                ? itemColor
+                                                : onSurface.withValues(
+                                                    alpha: 0.78,
+                                                  ),
+                                          ),
                                         ),
                                         if (item.subtitle != null) ...[
                                           const SizedBox(height: kSpacing2),
                                           Text(
                                             item.subtitle!,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium!
-                                                .copyWith(
-                                                  color: onSurface.withValues(
-                                                    alpha: 0.6,
-                                                  ),
-                                                ),
+                                            style: context.ts(
+                                              12,
+                                              color: onSurface.withValues(
+                                                alpha: 0.6,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ],

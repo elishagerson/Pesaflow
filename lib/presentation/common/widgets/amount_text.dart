@@ -60,8 +60,7 @@ class _AmountTextState extends ConsumerState<AmountText> {
     final finalShowDecimals = widget.showDecimals || globalShowDecimals;
 
     Widget buildText(double val, Color color) {
-      final TextStyle baseStyle =
-          widget.style ?? theme.textTheme.bodyMedium ?? const TextStyle();
+      final TextStyle baseStyle = widget.style ?? context.ts(15);
       final TextStyle customStyle = widget.useMonospace
           ? AppTheme.getMonospaceStyle(baseStyle).copyWith(color: color)
           : baseStyle.copyWith(

@@ -216,24 +216,14 @@ class _SavingsGoalDetailSheetState
                                             isDeposit
                                                 ? 'Deposit Savings'
                                                 : 'Withdraw Savings',
-                                            style: theme.textTheme.titleLarge!
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                            style: context.ts(22, fontWeight: FontWeight.bold),
                                           ),
                                           const SizedBox(height: kSpacing2),
                                           Text(
                                             isDeposit
                                                 ? 'Add money to your savings goal'
                                                 : 'Take money out of your savings goal',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium!
-                                                .copyWith(
-                                                  color: onSurface.withValues(
-                                                    alpha: 0.6,
-                                                  ),
-                                                ),
+                                            style: context.ts(12, color: onSurface.withValues(alpha: 0.6)),
                                           ),
                                         ],
                                       ),
@@ -245,8 +235,7 @@ class _SavingsGoalDetailSheetState
                                 // Amount Entry
                                 Text(
                                   'AMOUNT',
-                                  style: Theme.of(context).textTheme.labelSmall!
-                                      .copyWith(letterSpacing: 0.5),
+                                  style: context.ts(11, letterSpacing: 0.5),
                                 ),
                                 const SizedBox(height: kSpacing8),
                                 Container(
@@ -267,11 +256,7 @@ class _SavingsGoalDetailSheetState
                                     children: [
                                       Text(
                                         'TSh',
-                                        style: theme.textTheme.titleMedium!
-                                            .copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              color: accentColor,
-                                            ),
+                                        style: context.ts(16, fontWeight: FontWeight.w600, color: accentColor),
                                       ),
                                       const SizedBox(width: kSpacing12),
                                       Expanded(
@@ -339,16 +324,14 @@ class _SavingsGoalDetailSheetState
                                 // Note
                                 Text(
                                   'MEMO',
-                                  style: Theme.of(context).textTheme.labelSmall!
-                                      .copyWith(letterSpacing: 0.5),
+                                  style: context.ts(11, letterSpacing: 0.5),
                                 ),
                                 const SizedBox(height: kSpacing8),
                                 TextFormField(
                                   controller: _noteController,
                                   textCapitalization:
                                       TextCapitalization.sentences,
-                                  style: Theme.of(context).textTheme.bodyMedium!
-                                      .copyWith(color: onSurface),
+                                  style: context.ts(15, color: onSurface),
                                   decoration: context.inputDecoration(
                                     hintText:
                                         'Add an optional note (e.g. Salary bonus)',

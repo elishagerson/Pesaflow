@@ -373,10 +373,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                               children: [
                                 Text(
                                   _formatHeaderDate(firstItemDate),
-                                  style: theme.textTheme.labelLarge?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: onSurface.withValues(alpha: 0.45),
-                                  ),
+                                  style: context.ts(14, fontWeight: FontWeight.w600, color: onSurface.withValues(alpha: 0.45)),
                                 ),
                                 // Monospace Net Change Indicator
                                 AmountText(
@@ -386,9 +383,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       : (dailyNetChange < 0
                                             ? AmountType.expense
                                             : AmountType.neutral),
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: context.ts(15, fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -649,16 +644,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                                 : item
                                                                       .category
                                                                       .name,
-                                                            style: theme
-                                                                .textTheme
-                                                                .bodyMedium
-                                                                ?.copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color:
-                                                                      onSurface,
-                                                                ),
+                                                            style: context.ts(15, fontWeight: FontWeight.bold, color: onSurface),
                                                             maxLines: 1,
                                                             overflow:
                                                                 TextOverflow
@@ -674,18 +660,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                                         .account
                                                                         ?.name ??
                                                                     'Offline',
-                                                                style: theme
-                                                                    .textTheme
-                                                                    .bodySmall
-                                                                    ?.copyWith(
-                                                                      color: onSurface.withValues(
-                                                                        alpha:
-                                                                            0.6,
-                                                                      ),
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                    ),
+                                                                style: context.ts(13, color: onSurface.withValues(alpha: 0.6), fontWeight: FontWeight.w600),
                                                               ),
                                                               if (trans.reference !=
                                                                       null &&
@@ -698,15 +673,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                                 ),
                                                                 Text(
                                                                   '•',
-                                                                  style: theme
-                                                                      .textTheme
-                                                                      .bodySmall
-                                                                      ?.copyWith(
-                                                                        color: onSurface.withValues(
-                                                                          alpha:
-                                                                              0.11,
-                                                                        ),
-                                                                      ),
+                                                                    style: context.ts(13, color: onSurface.withValues(alpha: 0.11)),
                                                                 ),
                                                                 const SizedBox(
                                                                   width:
@@ -716,15 +683,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                                   child: Text(
                                                                     trans
                                                                         .reference!,
-                                                                    style: theme
-                                                                        .textTheme
-                                                                        .bodySmall
-                                                                        ?.copyWith(
-                                                                          color: onSurface.withValues(
-                                                                            alpha:
-                                                                                0.34,
-                                                                          ),
-                                                                        ),
+                                                                    style: context.ts(13, color: onSurface.withValues(alpha: 0.34)),
                                                                     maxLines: 1,
                                                                     overflow:
                                                                         TextOverflow
@@ -789,33 +748,14 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                               trans.amount,
                                                           type: amtType,
                                                           showDecimals: true,
-                                                          style: theme
-                                                              .textTheme
-                                                              .titleSmall
-                                                              ?.copyWith(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
+                                                          style: context.ts(14, fontWeight: FontWeight.bold),
                                                         ),
                                                         const SizedBox(
                                                           height: kSpacing4,
                                                         ),
                                                         Text(
                                                           formattedTime,
-                                                          style: theme
-                                                              .textTheme
-                                                              .labelSmall
-                                                              ?.copyWith(
-                                                                color: onSurface
-                                                                    .withValues(
-                                                                      alpha:
-                                                                          0.38,
-                                                                    ),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
+                                                          style: context.ts(11, color: onSurface.withValues(alpha: 0.38), fontWeight: FontWeight.w500),
                                                         ),
                                                       ],
                                                     ),
@@ -1258,33 +1198,19 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                         children: [
                           Text(
                             'INSIGHTS',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.5,
-                              color: accentColor,
-                            ),
+                            style: context.ts(11, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: accentColor),
                           ),
                           const SizedBox(height: kSpacing8),
                           Text(
                             title,
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: -0.6,
-                              color: theme.colorScheme.onSurface,
-                              height: 1.15,
-                            ),
+                            style: context.ts(22, fontWeight: FontWeight.bold, letterSpacing: -0.6, color: theme.colorScheme.onSurface, height: 1.15),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: kSpacing6),
                           Text(
                             message,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.7,
-                              ),
-                              height: 1.25,
-                            ),
+                            style: context.ts(15, color: theme.colorScheme.onSurface.withValues(alpha: 0.7), height: 1.25),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -1434,18 +1360,12 @@ class _MiniBar extends StatelessWidget {
           children: [
             Text(
               label,
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-              ),
+              style: context.ts(11, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
             ),
             const Spacer(),
             Text(
               formatValue(value),
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
-              ),
+              style: context.ts(11, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface.withValues(alpha: 0.8)),
             ),
           ],
         ),

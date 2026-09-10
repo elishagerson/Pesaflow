@@ -259,7 +259,8 @@ class _SuccessMomentOverlayState extends State<_SuccessMomentOverlay>
                           },
                           child: Text(
                             widget.message!,
-                            style: theme.textTheme.titleMedium?.copyWith(
+                            style: context.ts(
+                              16,
                               color: theme.colorScheme.onSurface,
                               fontWeight: FontWeight.w600,
                             ),
