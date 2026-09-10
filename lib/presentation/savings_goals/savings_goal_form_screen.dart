@@ -175,7 +175,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
           context: context,
           title: const Text('Discard Changes?'),
           titleIcon: PesaFlowIcons.warning,
-          iconColor: Colors.orange,
+          iconColor: context.appColors.expenseColor,
           content: const Text(
             'You have unsaved changes. Are you sure you want to go back?',
           ),

@@ -28,6 +28,7 @@ import 'package:pesaflow/data/database/daos/budget_group_dao.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 class BudgetFormScreen extends ConsumerStatefulWidget {
   final String? budgetId;
@@ -426,7 +427,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         alignment: Alignment.center,
         children: [
           AnimatedContainer(
-            duration: const Duration(milliseconds: 350),
+            duration: MotionTokens.durationNormal,
             width: 140,
             height: 140,
             decoration: BoxDecoration(
@@ -441,7 +442,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
             ),
           ),
           AnimatedContainer(
-            duration: const Duration(milliseconds: 350),
+            duration: MotionTokens.durationNormal,
             width: 130,
             height: 130,
             decoration: BoxDecoration(
@@ -484,7 +485,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
               ),
               const SizedBox(height: kSpacing4),
               AnimatedContainer(
-                duration: const Duration(milliseconds: 350),
+                duration: MotionTokens.durationNormal,
                 padding: const EdgeInsets.symmetric(
                   horizontal: kSpacing8,
                   vertical: kSpacing4,
@@ -866,7 +867,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           ],
                         ),
                         AnimatedSize(
-                          duration: const Duration(milliseconds: 300),
+                          duration: MotionTokens.durationNormal,
                           curve: Curves.easeInOut,
                           child: _rollover
                               ? Padding(
