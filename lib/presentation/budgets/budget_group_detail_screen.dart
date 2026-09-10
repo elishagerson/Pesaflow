@@ -17,6 +17,7 @@ import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
@@ -81,7 +82,11 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                         padding: EdgeInsets.zero,
                         actions: [
                           TactileSpringContainer(
-                            onTap: () => _deleteGroup(context, ref, groupData),
+                            onTap: () {
+                              PesaHaptics.heavy();
+                              _deleteGroup(context, ref, groupData);
+                            },
+                            selectedColor: context.appColors.textMedium,
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
@@ -103,6 +108,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                             onTap: () {
                               context.push('/budgets/groups/$groupId/add');
                             },
+                            selectedColor: context.appColors.textMedium,
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
@@ -419,6 +425,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
             onTap: () {
               context.push('/budgets/groups/$groupId/add');
             },
+            selectedColor: context.appColors.textMedium,
             child: Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: kSpacing20,
@@ -677,7 +684,11 @@ class _SubBudgetCard extends ConsumerWidget {
           ),
         ),
         child: TactileSpringContainer(
-          onTap: () => context.push('/budgets/${subBudget.budget.id}'),
+          onTap: () {
+            PesaHaptics.light();
+            context.push('/budgets/${subBudget.budget.id}');
+          },
+          selectedColor: context.appColors.textMedium,
           child: GlassCard(
             padding: const EdgeInsets.all(kSpacing14),
             borderRadius: AppTheme.radiusCard,

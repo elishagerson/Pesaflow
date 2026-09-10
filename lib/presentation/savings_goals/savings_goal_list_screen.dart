@@ -191,6 +191,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
           PesaHaptics.medium();
           context.push('/savings-goals/add');
         },
+        selectedColor: theme.colorScheme.onSurface,
         child: Container(
           padding: const EdgeInsets.symmetric(
             horizontal: kSpacing28,

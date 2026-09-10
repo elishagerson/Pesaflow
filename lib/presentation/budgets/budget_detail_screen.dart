@@ -151,6 +151,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                               onTap: () => context.push(
                                 '/budgets/${widget.budgetId}/edit',
                               ),
+                              selectedColor: theme.colorScheme.onSurface,
                               child: Container(
                                 padding: const EdgeInsets.all(kSpacing10),
                                 decoration: BoxDecoration(
@@ -617,6 +618,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                   ),
                                   const SizedBox(height: kSpacing12),
                                   TactileSpringContainer(
+                                    selectedColor: theme.colorScheme.onSurface,
                                     onTap: () async {
                                       final repo = ref.read(
                                         budgetRepositoryProvider,
