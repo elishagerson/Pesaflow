@@ -1410,6 +1410,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                                     trans
                                                                         .amount,
                                                                 type: amtType,
+                                                                animate: true,
                                                                 showDecimals:
                                                                     true,
                                                                 style: context.ts(

@@ -601,6 +601,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   const SizedBox(height: kSpacing4),
                   AmountText(
                     amountInCents: totalSpent,
+                    animate: true,
                     style: context.ts(
                       28,
                       fontWeight: FontWeight.w900,
@@ -627,6 +628,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   const SizedBox(height: kSpacing4),
                   AmountText(
                     amountInCents: totalAllocated,
+                    animate: true,
                     style: context.ts(
                       18,
                       fontWeight: FontWeight.w700,
@@ -992,6 +994,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       children: [
                         AmountText(
                           amountInCents: spent,
+                          animate: true,
                           style: context.ts(
                             16,
                             fontWeight: FontWeight.w800,
@@ -1292,6 +1295,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         children: [
                           AmountText(
                             amountInCents: bp.spentInPeriod,
+                            animate: true,
                             style: context.ts(
                               16,
                               fontWeight: FontWeight.w800,
@@ -1314,6 +1318,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                 amountInCents:
                                     bp.currentPeriod?.allocated ??
                                     bp.budget.amount,
+                                animate: true,
                                 style: context.ts(
                                   12,
                                   fontWeight: FontWeight.w700,
@@ -1643,6 +1648,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                               const SizedBox(height: kSpacing2),
                               AmountText(
                                 amountInCents: totalSaved,
+                                animate: true,
                                 style: theme.textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: -0.5,
@@ -1662,6 +1668,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                               const SizedBox(height: kSpacing2),
                               AmountText(
                                 amountInCents: totalTarget,
+                                animate: true,
                                 style: theme.textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: -0.5,
@@ -1928,6 +1935,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                         children: [
                                           AmountText(
                                             amountInCents: goal.currentAmount,
+                                            animate: true,
                                             style: theme.textTheme.titleSmall
                                                 ?.copyWith(
                                                   fontWeight: FontWeight.bold,
