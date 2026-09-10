@@ -276,8 +276,9 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                       }
                                       final val =
                                           CurrencyFormatter.parseToCents(v);
-                                      if (val <= 0)
+                                      if (val <= 0) {
                                         return 'Enter a valid amount';
+                                      }
                                       return null;
                                     },
                                     decoration: inputDeco(
