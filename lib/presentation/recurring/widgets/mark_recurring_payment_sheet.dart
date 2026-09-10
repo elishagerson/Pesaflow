@@ -108,6 +108,7 @@ Future<void> showMarkRecurringPaymentSheet({
                         children: [
                           // Amount
                           _buildSummaryRow(
+                            context: context,
                             theme: theme,
                             label: 'Amount',
                             value: CurrencyFormatter.formatCents(
@@ -151,6 +152,7 @@ Future<void> showMarkRecurringPaymentSheet({
                           ),
                           const SizedBox(height: kSpacing14),
                           _buildSummaryRow(
+                            context: context,
                             theme: theme,
                             label: 'Description',
                             value:
@@ -159,18 +161,21 @@ Future<void> showMarkRecurringPaymentSheet({
                           ),
                           const SizedBox(height: kSpacing14),
                           _buildSummaryRow(
+                            context: context,
                             theme: theme,
                             label: 'Account',
                             value: accountName,
                           ),
                           const SizedBox(height: kSpacing14),
                           _buildSummaryRow(
+                            context: context,
                             theme: theme,
                             label: 'Category',
                             value: categoryName,
                           ),
                           const SizedBox(height: kSpacing14),
                           _buildSummaryRow(
+                            context: context,
                             theme: theme,
                             label: 'Next occurrence',
                             value:

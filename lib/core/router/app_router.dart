@@ -174,10 +174,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
             const SizedBox(height: kSpacing4),
             Text(
               'PesaFlow',
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.w900,
-                color: theme.colorScheme.onSurface,
-              ),
+              style: context.ts(11, fontWeight: FontWeight.w900, color: theme.colorScheme.onSurface),
             ),
           ],
         ),
