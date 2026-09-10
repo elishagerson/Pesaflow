@@ -285,6 +285,7 @@ class _RecurringTransactionFormScreenState
               actions: _isEditing
                   ? [
                       TactileSpringContainer(
+                        selectedColor: theme.colorScheme.onSurface,
                         onTap: () async {
                           final confirm = await ModernDialog.show<bool>(
                             context: context,
@@ -759,7 +760,11 @@ class _RecurringTransactionFormScreenState
                       StaggeredFadeSlide(
                         index: 9,
                         child: TactileSpringContainer(
-                          onTap: _isLoading ? null : _submit,
+                          onTap: () {
+                            PesaHaptics.medium();
+                            if (!_isLoading) _submit();
+                          },
+                          selectedColor: theme.colorScheme.onSurface,
                           child: Container(
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(

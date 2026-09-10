@@ -222,6 +222,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           children: [
                             TactileSpringContainer(
                               onTap: () => _finish(seedDemo: true),
+                              selectedColor: theme.colorScheme.onSurface,
                               child: Container(
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.symmetric(
@@ -260,6 +261,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             const SizedBox(height: kSpacing12),
                             TactileSpringContainer(
                               onTap: () => _finish(seedDemo: false),
+                              selectedColor: theme.colorScheme.onSurface,
                               child: Container(
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.symmetric(
@@ -298,6 +300,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             const Spacer(),
                             TactileSpringContainer(
                               onTap: _nextPage,
+                              selectedColor: theme.colorScheme.onSurface,
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 28,
@@ -604,6 +607,7 @@ class _AccountsPage extends StatelessWidget {
                   index: 2 + i,
                   child: TactileSpringContainer(
                     onTap: () => onToggle(e.key, !isSelected),
+                    selectedColor: theme.colorScheme.onSurface,
                     child: Container(
                       decoration: BoxDecoration(
                         color: isSelected
