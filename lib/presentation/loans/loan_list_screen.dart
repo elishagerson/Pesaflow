@@ -340,7 +340,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
     final severityColor = debtRatio > 1.0
         ? context.appColors.expenseColor
         : debtRatio > 0.5
-        ? const Color(0xFFF59E0B) // Amber — caution
+        ? context.appColors.warningColor
         : context.appColors.transferColor;
 
     return GlassCard(
