@@ -575,10 +575,7 @@ class _RecurringTransactionListScreenState
       ),
       child: Text(
         text,
-        style: theme.textTheme.labelSmall?.copyWith(
-          fontWeight: FontWeight.w700,
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-        ),
+        style: context.ts(10, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
       ),
     );
   }
@@ -670,12 +667,7 @@ class _RecurringTransactionListScreenState
             children: [
               Text(
                 label,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                  color: isActive
-                      ? theme.colorScheme.onSurface
-                      : theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                ),
+                style: context.ts(12, fontWeight: isActive ? FontWeight.w700 : FontWeight.w500, color: isActive ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.5)),
               ),
               if (count > 0) ...[
                 const SizedBox(width: kSpacing4),
