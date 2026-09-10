@@ -19,6 +19,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_color_picker.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/shake_widget.dart';
 
 class SavingsGoalFormScreen extends ConsumerStatefulWidget {
   final String? goalId;
@@ -38,6 +39,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   late String _selectedIcon;
   late DateTime _selectedDate;
   bool _isLoading = false;
+  bool _shakeFields = false;
 
   bool get _isDirty {
     if (_isLoading) return false;

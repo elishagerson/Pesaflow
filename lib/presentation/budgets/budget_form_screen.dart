@@ -22,6 +22,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/shake_widget.dart';
 
 import 'package:pesaflow/data/database/daos/budget_group_dao.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
@@ -49,6 +50,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   String _rolloverType = 'none';
   double _threshold = 0.8;
   bool _isSaving = false;
+  bool _shakeFields = false;
   DateTime _startDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
 
   bool get _isDirty {
@@ -122,7 +124,13 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   Future<void> _save() async {
     if (_isSaving) return;
 
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      setState(() => _shakeFields = true);
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) setState(() => _shakeFields = false);
+      });
+      return;
+    }
 
     final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
 
@@ -595,19 +603,22 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               borderRadius: AppTheme.radiusCard,
                               child: Column(
                                 children: [
-                                  _InteractiveInputRow(
-                                    controller: _nameController,
-                                    label: 'Budget Name',
-                                    hint: 'e.g. Monthly Food',
-                                    icon: PesaFlowIcons.label,
-                                    textCapitalization:
-                                        TextCapitalization.words,
-                                    validator: (v) {
-                                      if (v == null || v.trim().isEmpty) {
-                                        return 'Enter a budget name';
-                                      }
-                                      return null;
-                                    },
+                                  ShakeWidget(
+                                    shaking: _shakeFields,
+                                    child: _InteractiveInputRow(
+                                      controller: _nameController,
+                                      label: 'Budget Name',
+                                      hint: 'e.g. Monthly Food',
+                                      icon: PesaFlowIcons.label,
+                                      textCapitalization:
+                                          TextCapitalization.words,
+                                      validator: (v) {
+                                        if (v == null || v.trim().isEmpty) {
+                                          return 'Enter a budget name';
+                                        }
+                                        return null;
+                                      },
+                                    ),
                                   ),
                                   const SizedBox(height: kSpacing16),
                                   categoriesAsync.when(
@@ -621,27 +632,30 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: kSpacing8),
-                                  _InteractiveInputRow(
-                                    controller: _amountController,
-                                    label: 'Budget Amount (Tsh)',
-                                    hint: 'e.g. 300000',
-                                    icon: PesaFlowIcons.cash,
-                                    keyboardType: TextInputType.number,
-                                    validator: (v) {
-                                      if (v == null || v.isEmpty) {
-                                        return 'Enter a valid amount';
-                                      }
-                                      final val =
-                                          CurrencyFormatter.parseToCents(v);
-                                      if (val <= 0) {
-                                        return 'Enter a valid amount';
-                                      }
-                                      return null;
-                                    },
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(fontWeight: FontWeight.w500),
+                                  ShakeWidget(
+                                    shaking: _shakeFields,
+                                    child: _InteractiveInputRow(
+                                      controller: _amountController,
+                                      label: 'Budget Amount (Tsh)',
+                                      hint: 'e.g. 300000',
+                                      icon: PesaFlowIcons.cash,
+                                      keyboardType: TextInputType.number,
+                                      validator: (v) {
+                                        if (v == null || v.isEmpty) {
+                                          return 'Enter a valid amount';
+                                        }
+                                        final val =
+                                            CurrencyFormatter.parseToCents(v);
+                                        if (val <= 0) {
+                                          return 'Enter a valid amount';
+                                        }
+                                        return null;
+                                      },
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -952,22 +966,25 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                                       const EdgeInsets.only(
                                                         top: kSpacing10,
                                                       ),
-                                                  child: _InteractiveInputRow(
-                                                    controller: _capController,
-                                                    label: 'Max Rollover (Tsh)',
-                                                    hint: 'e.g. 50000',
-                                                    icon:
-                                                        PesaFlowIcons.upcoming,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleMedium!
-                                                        .copyWith(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                  ),
+                                              child: ShakeWidget(
+                                                shaking: _shakeFields,
+                                                child: _InteractiveInputRow(
+                                                  controller: _capController,
+                                                  label: 'Max Rollover (Tsh)',
+                                                  hint: 'e.g. 50000',
+                                                  icon:
+                                                      PesaFlowIcons.upcoming,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium!
+                                                      .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                ),
+                                              ),
                                                 )
                                               : const SizedBox.shrink(),
                                         ),
