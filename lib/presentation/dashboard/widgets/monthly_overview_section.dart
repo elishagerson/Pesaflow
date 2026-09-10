@@ -177,6 +177,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                               AmountText(
                                 amountInCents: income,
                                 type: AmountType.income,
+                                animate: true,
                                 useMonospace: true,
                                 style: context.ts(
                                   13,
@@ -212,6 +213,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                               AmountText(
                                 amountInCents: expense,
                                 type: AmountType.expense,
+                                animate: true,
                                 useMonospace: true,
                                 style: context.ts(
                                   13,
@@ -258,6 +260,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                                 type: netSavings >= 0
                                     ? AmountType.income
                                     : AmountType.expense,
+                                animate: true,
                                 useMonospace: true,
                                 style: context.ts(
                                   13,

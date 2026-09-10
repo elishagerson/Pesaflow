@@ -460,6 +460,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                               children: [
                                 AmountText(
                                   amountInCents: status.remaining.abs(),
+                                  animate: true,
                                   style: context.ts(
                                     40,
                                     fontWeight: FontWeight.w800,
@@ -1197,6 +1198,7 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: kSpacing4),
           AmountText(
             amountInCents: amount.abs(),
+            animate: true,
             style: Theme.of(context).textTheme.titleSmall!.copyWith(
               fontWeight: FontWeight.w700,
               color: color,

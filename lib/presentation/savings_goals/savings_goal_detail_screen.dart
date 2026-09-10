@@ -982,6 +982,7 @@ class _SavingsGoalDetailScreenState
                                   const SizedBox(height: kSpacing16),
                                   AmountText(
                                     amountInCents: totalSaved,
+                                    animate: true,
                                     style: context.ts(
                                       32,
                                       fontWeight: FontWeight.w800,

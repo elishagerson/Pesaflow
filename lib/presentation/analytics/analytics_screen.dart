@@ -355,6 +355,7 @@ class _OverviewTab extends ConsumerWidget {
                                 ),
                                 AmountText(
                                   amountInCents: income,
+                                  animate: true,
                                   style: context.ts(
                                     20,
                                     color: incomeColorVal,
@@ -379,6 +380,7 @@ class _OverviewTab extends ConsumerWidget {
                                 ),
                                 AmountText(
                                   amountInCents: expense,
+                                  animate: true,
                                   style: context.ts(
                                     20,
                                     color: expenseColorVal,
@@ -415,6 +417,7 @@ class _OverviewTab extends ConsumerWidget {
                           ),
                           AmountText(
                             amountInCents: net.abs(),
+                            animate: true,
                             type: net >= 0
                                 ? AmountType.income
                                 : AmountType.expense,
