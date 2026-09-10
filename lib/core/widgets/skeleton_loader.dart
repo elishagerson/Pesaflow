@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
 class SkeletonCard extends StatelessWidget {
@@ -178,7 +179,7 @@ class SkeletonLoader extends StatefulWidget {
     required this.isLoading,
     required this.skeleton,
     required this.child,
-    this.minimumDuration = const Duration(milliseconds: 300),
+    this.minimumDuration = MotionTokens.durationNormal,
   });
 
   @override

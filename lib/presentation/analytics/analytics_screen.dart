@@ -23,6 +23,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/analytics_repository.dart';
 
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.dart';
@@ -202,7 +203,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     } else {
       _scrollController.animateTo(
         0,
-        duration: const Duration(milliseconds: 300),
+        duration: MotionTokens.durationNormal,
         curve: Curves.easeOutCubic,
       );
     }
