@@ -19,6 +19,7 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/shake_widget.dart';
 
 class LoanFormScreen extends ConsumerStatefulWidget {
   final String? loanId;
@@ -40,6 +41,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   Loan? _existingLoan;
   String? _selectedCategory;
   bool _isSaving = false;
+  bool _shakeFields = false;
 
   bool get _isDirty {
     return _amountController.text.trim().isNotEmpty ||
@@ -247,7 +249,13 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
 
   Future<void> _submit() async {
     if (_isSaving) return;
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      setState(() => _shakeFields = true);
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) setState(() => _shakeFields = false);
+      });
+      return;
+    }
 
     setState(() => _isSaving = true);
     final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
@@ -408,25 +416,28 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     children: [
                       StaggeredFadeSlide(
                         index: 0,
-                        child: TextFormField(
-                          controller: _amountController,
-                          keyboardType: TextInputType.number,
-                          validator: (v) {
-                            if (v == null || v.trim().isEmpty) {
-                              return 'Enter a valid amount';
-                            }
-                            final val = CurrencyFormatter.parseToCents(v);
-                            if (val <= 0) {
-                              return 'Enter a valid amount';
-                            }
-                            return null;
-                          },
-                          decoration: context.inputDecoration(
-                            labelText: 'Loan Amount (Tsh)',
-                            hintText: 'e.g. 100000',
-                            prefixIcon: const Icon(
-                              PesaFlowIcons.money,
-                              size: 18,
+                        child: ShakeWidget(
+                          shaking: _shakeFields,
+                          child: TextFormField(
+                            controller: _amountController,
+                            keyboardType: TextInputType.number,
+                            validator: (v) {
+                              if (v == null || v.trim().isEmpty) {
+                                return 'Enter a valid amount';
+                              }
+                              final val = CurrencyFormatter.parseToCents(v);
+                              if (val <= 0) {
+                                return 'Enter a valid amount';
+                              }
+                              return null;
+                            },
+                            decoration: context.inputDecoration(
+                              labelText: 'Loan Amount (Tsh)',
+                              hintText: 'e.g. 100000',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.money,
+                                size: 18,
+                              ),
                             ),
                           ),
                         ),

@@ -260,29 +260,32 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: kSpacing12),
-                                TextFormField(
-                                  controller: _amountController,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  style: theme.textTheme.titleMedium!.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  validator: (v) {
-                                    if (v == null || v.isEmpty) {
-                                      return 'Enter a valid amount';
-                                    }
-                                    final val = CurrencyFormatter.parseToCents(
-                                      v,
-                                    );
-                                    if (val <= 0) return 'Enter a valid amount';
-                                    return null;
-                                  },
-                                  decoration: inputDeco(
-                                    label: 'Target Amount (Tsh)',
-                                    hint: 'e.g. 1500000',
-                                    icon: PesaFlowIcons.cash,
+                                ShakeWidget(
+                                  shaking: _shakeFields,
+                                  child: TextFormField(
+                                    controller: _amountController,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
+                                    style: theme.textTheme.titleMedium!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    validator: (v) {
+                                      if (v == null || v.isEmpty) {
+                                        return 'Enter a valid amount';
+                                      }
+                                      final val = CurrencyFormatter.parseToCents(
+                                        v,
+                                      );
+                                      if (val <= 0) return 'Enter a valid amount';
+                                      return null;
+                                    },
+                                    decoration: inputDeco(
+                                      label: 'Target Amount (Tsh)',
+                                      hint: 'e.g. 1500000',
+                                      icon: PesaFlowIcons.cash,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: kSpacing12),
