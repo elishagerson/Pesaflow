@@ -5,7 +5,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
-class EmptyState extends StatelessWidget {
+class EmptyState extends StatefulWidget {
   final IconData icon;
   final String title;
   final String? subtitle;
@@ -24,8 +24,110 @@ class EmptyState extends StatelessWidget {
   });
 
   @override
+  State<EmptyState> createState() => _EmptyStateState();
+}
+
+class _EmptyStateState extends State<EmptyState>
+    with TickerProviderStateMixin {
+  // Entrance: spring scale from 0.8 → 1.0
+  late AnimationController _entranceController;
+  late Animation<double> _entranceScale;
+
+  // Idle breathing: slow scale oscillation 1.0 → 1.02 → 1.0
+  late AnimationController _breathController;
+  late Animation<double> _breathScale;
+
+  bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _entranceController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+
+    _entranceScale = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _entranceController,
+        curve: Curves.easeOutBack,
+      ),
+    );
+
+    // Breathing: subtle scale oscillation, 3s full cycle
+    _breathController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 3000),
+    );
+
+    _breathScale = Tween<double>(begin: 1.0, end: 1.02).animate(
+      CurvedAnimation(
+        parent: _breathController,
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
+
+    if (context.isReducedMotion) {
+      _entranceController.value = 1.0;
+      // No breathing animation
+    } else {
+      // Entrance spring — starts after first frame
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _entranceController.forward().then((_) {
+          // Begin breathing after entrance completes
+          if (mounted) {
+            _breathController.repeat(reverse: true);
+          }
+        });
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _entranceController.dispose();
+    _breathController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final illustration = widget.illustration ??
+        Semantics(
+          excludeSemantics: true,
+          child: Icon(
+            widget.icon,
+            size: widget.iconSize,
+            color: theme.colorScheme.primary.withValues(alpha: 0.4),
+          ),
+        );
+
+    final animatedIllustration = context.isReducedMotion
+        ? illustration
+        : AnimatedBuilder(
+            animation: Listenable.merge([_entranceController, _breathController]),
+            builder: (context, child) {
+              // Combine entrance scale and breath scale
+              final combinedScale = _entranceScale.value * _breathScale.value;
+              return Transform.scale(
+                scale: combinedScale,
+                child: child,
+              );
+            },
+            child: illustration,
+          );
+
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -35,25 +137,17 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _AnimatedEmptyIllustration(
-              child:
-                  illustration ??
-                  Semantics(
-                    excludeSemantics: true,
-                    child: Icon(
-                      icon,
-                      size: iconSize,
-                      color: theme.colorScheme.primary.withValues(alpha: 0.4),
-                    ),
-                  ),
+            _AnimatedEntranceWrapper(
+              entranceController: _entranceController,
+              child: animatedIllustration,
             ),
             SizedBox(height: context.isCompactView ? 16 : 24),
-            StaggeredFadeSlide(
-              index: 1,
+            _DelayedFadeIn(
+              delay: const Duration(milliseconds: 300),
               child: Semantics(
                 header: true,
                 child: Text(
-                  title,
+                  widget.title,
                   style: context.ts(
                     16,
                     fontWeight: FontWeight.w600,
@@ -62,12 +156,12 @@ class EmptyState extends StatelessWidget {
                 ),
               ),
             ),
-            if (subtitle != null) ...[
+            if (widget.subtitle != null) ...[
               SizedBox(height: context.isCompactView ? 8 : 12),
-              StaggeredFadeSlide(
-                index: 2,
+              _DelayedFadeIn(
+                delay: const Duration(milliseconds: 500),
                 child: Text(
-                  subtitle!,
+                  widget.subtitle!,
                   style: context.ts(
                     13,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
@@ -76,9 +170,12 @@ class EmptyState extends StatelessWidget {
                 ),
               ),
             ],
-            if (action != null) ...[
+            if (widget.action != null) ...[
               SizedBox(height: context.isCompactView ? 20 : 28),
-              StaggeredFadeSlide(index: 3, child: action!),
+              _DelayedFadeIn(
+                delay: const Duration(milliseconds: 700),
+                child: widget.action!,
+              ),
             ],
           ],
         ),
@@ -87,71 +184,93 @@ class EmptyState extends StatelessWidget {
   }
 }
 
-class _AnimatedEmptyIllustration extends StatefulWidget {
+/// Wraps the illustration with a fade-in tied to the entrance controller.
+/// The illustration fades in from 0 opacity as it springs to scale 1.0.
+class _AnimatedEntranceWrapper extends StatelessWidget {
+  final AnimationController entranceController;
   final Widget child;
 
-  const _AnimatedEmptyIllustration({required this.child});
+  const _AnimatedEntranceWrapper({
+    required this.entranceController,
+    required this.child,
+  });
 
   @override
-  State<_AnimatedEmptyIllustration> createState() =>
-      _AnimatedEmptyIllustrationState();
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: entranceController,
+      builder: (context, child) {
+        final opacity = entranceController.value.clamp(0.0, 1.0);
+        return Opacity(
+          opacity: opacity,
+          child: child,
+        );
+      },
+      child: child,
+    );
+  }
 }
 
-class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
+/// Fades in text after a configurable delay.
+/// On reduced motion, appears instantly.
+class _DelayedFadeIn extends StatefulWidget {
+  final Duration delay;
+  final Widget child;
+
+  const _DelayedFadeIn({
+    required this.delay,
+    required this.child,
+  });
+
+  @override
+  State<_DelayedFadeIn> createState() => _DelayedFadeInState();
+}
+
+class _DelayedFadeInState extends State<_DelayedFadeIn>
     with SingleTickerProviderStateMixin {
-  late AnimationController _entranceController;
-  late Animation<double> _opacityAnim;
-  late Animation<Offset> _slideAnim;
+  late AnimationController _controller;
+  late Animation<double> _opacity;
+  bool _started = false;
 
   @override
   void initState() {
     super.initState();
-    _entranceController = AnimationController(
+    _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 450),
+      duration: const Duration(milliseconds: 300),
     );
-    _opacityAnim = CurvedAnimation(
-      parent: _entranceController,
+    _opacity = CurvedAnimation(
+      parent: _controller,
       curve: Curves.easeOut,
     );
-    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero)
-        .animate(
-          CurvedAnimation(
-            parent: _entranceController,
-            curve: Curves.easeOutCubic,
-          ),
-        );
   }
-
-  bool _initialized = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!_initialized) {
-      _initialized = true;
-      if (context.isReducedMotion) {
-        _entranceController.value = 1.0;
-      } else {
-        _entranceController.forward();
-      }
+    if (_started) return;
+    _started = true;
+
+    if (context.isReducedMotion) {
+      _controller.value = 1.0;
+    } else {
+      Future.delayed(widget.delay, () {
+        if (mounted) _controller.forward();
+      });
     }
   }
 
   @override
   void dispose() {
-    _entranceController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (context.isReducedMotion) {
-      return widget.child;
-    }
     return FadeTransition(
-      opacity: _opacityAnim,
-      child: SlideTransition(position: _slideAnim, child: widget.child),
+      opacity: _opacity,
+      child: widget.child,
     );
   }
 }

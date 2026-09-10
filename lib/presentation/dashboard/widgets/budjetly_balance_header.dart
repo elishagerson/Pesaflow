@@ -30,12 +30,26 @@ class BudjetlyBalanceHeader extends StatefulWidget {
 }
 
 class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _isFront = true;
   bool _isHidden = false;
   bool _firedMidFlipHaptic = false;
+
+  // Animated balance (odometer)
+  late final List<AnimationController> _digitControllers;
+  late final List<Animation<double>> _digitAnimations;
+  int _previousBalance = 0;
+  bool _isInitialBuild = true;
+
+  // Gradient shimmer
+  late final AnimationController _shimmerController;
+  late final Animation<double> _shimmerAnimation;
+
+  // Balance-change color highlight
+  late final AnimationController _highlightController;
+  late final Animation<double> _highlightAnimation;
 
   @override
   void initState() {
@@ -47,8 +61,49 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
     _animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutBack),
     );
-    // Mid-flip haptic: fire when crossing 90° threshold
     _animation.addListener(_checkMidFlipHaptic);
+
+    // Digit odometer controllers — one per possible character in formatted string
+    _digitControllers = List.generate(20, (i) {
+      return AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 800 + (9 - (i % 10)) * 40),
+      );
+    });
+    _digitAnimations = List.generate(20, (i) {
+      return Tween<double>(begin: 0, end: 1).animate(
+        CurvedAnimation(
+          parent: _digitControllers[i],
+          curve: Curves.easeOutCubic,
+        ),
+      );
+    });
+
+    // Shimmer sweep — slow, continuous cycle
+    _shimmerController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    );
+    _shimmerAnimation = Tween<double>(begin: -0.5, end: 1.5).animate(
+      CurvedAnimation(parent: _shimmerController, curve: Curves.easeInOut),
+    );
+
+    // Balance-change highlight flash
+    _highlightController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _highlightAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _highlightController,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+      ),
+    );
+
+    _previousBalance = widget.balance;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initDigitAnimations(forceInitial: true);
+    });
   }
 
   void _checkMidFlipHaptic() {
@@ -63,6 +118,11 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
   void dispose() {
     _animation.removeListener(_checkMidFlipHaptic);
     _controller.dispose();
+    for (final c in _digitControllers) {
+      c.dispose();
+    }
+    _shimmerController.dispose();
+    _highlightController.dispose();
     super.dispose();
   }
 
@@ -79,6 +139,58 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
     } else {
       _controller.reverse();
     }
+  }
+
+  void _initDigitAnimations({bool forceInitial = false}) {
+    if (context.isReducedMotion) return;
+    final digits = _balanceDigits(widget.balance);
+    for (var i = 0; i < digits.length && i < _digitControllers.length; i++) {
+      final d = digits[i];
+      if (forceInitial && !_isInitialBuild) {
+        _digitControllers[i].value = d / 9.0;
+      }
+      Future.delayed(Duration(milliseconds: 60 + i * 80), () {
+        if (mounted) {
+          _digitControllers[i].animateTo(
+            d / 9.0,
+            duration: Duration(milliseconds: 800 + (9 - d) * 40),
+          );
+        }
+      });
+    }
+    _isInitialBuild = false;
+    _startShimmer();
+  }
+
+  void _startShimmer() {
+    if (context.isReducedMotion) return;
+    if (!_shimmerController.isAnimating) {
+      _shimmerController.repeat(reverse: true);
+    }
+  }
+
+  /// Digit characters from the balance, skipping currency symbol and separators.
+  List<int> _balanceDigits(int balance) {
+    final text = CurrencyFormatter.formatCents(balance.abs());
+    return text.split('').where((c) => RegExp(r'^\d$').hasMatch(c)).map(int.parse).toList();
+  }
+
+  /// Formatted balance split into characters for per-character rendering.
+  List<String> _formatBalanceDigits(int balance) {
+    final text = CurrencyFormatter.formatCents(balance.abs());
+    return text.split('');
+  }
+
+  TextStyle _digitStyle(String char, int animIdx, TextStyle base) {
+    if (!RegExp(r'^\d$').hasMatch(char)) return base;
+    if (animIdx >= _digitControllers.length) return base;
+    final isAnimating = _digitControllers[animIdx].isAnimating;
+    final isComplete = _digitControllers[animIdx].isCompleted;
+    if (!isAnimating && isComplete) return base;
+    return base.copyWith(
+      color: Colors.transparent,
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
   }
 
   @override
@@ -126,70 +238,139 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
 
     return ClipPath(
       clipper: _TicketClipper(cutoutRadius: 12, cutoutOffset: 135),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: cardColor,
-          borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
-          boxShadow: [
-            BoxShadow(
-              color: context.appColors.shadowMedium,
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+      child: AnimatedBuilder(
+        animation: _highlightAnimation,
+        builder: (context, _) {
+          final highlightValue = _highlightAnimation.value;
+          final Color highlightTint;
+          if (highlightValue > 0) {
+            final isIncome = widget.balance >= _previousBalance;
+            final baseColor = isIncome
+                ? context.appColors.incomeColor
+                : context.appColors.expenseColor;
+            highlightTint = baseColor.withValues(alpha: highlightValue * 0.12);
+          } else {
+            highlightTint = Colors.transparent;
+          }
+          return Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Color.lerp(cardColor, highlightTint, highlightValue > 0 ? 1.0 : 0.0),
+              borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+              boxShadow: [
+                BoxShadow(
+                  color: context.appColors.shadowMedium,
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Top Section
-            Container(
-              height: 135,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-              child: isFront ? _buildFrontTop(context) : _buildBackTop(context),
-            ),
-
-            // Dashed Divider
-            Row(
+            child: Stack(
               children: [
-                const SizedBox(width: 12), // Match cutout radius
-                Expanded(
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      return Flex(
-                        direction: Axis.horizontal,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: List.generate(
-                          (constraints.constrainWidth() / 8).floor(),
-                          (index) => Container(
-                            width: 4,
-                            height: 1,
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.2,
+                // Gradient depth shimmer — subtle light sweep
+                if (_isFront && !context.isReducedMotion)
+                  AnimatedBuilder(
+                    animation: _shimmerAnimation,
+                    builder: (context, _) {
+                      final t = _shimmerAnimation.value;
+                      return Positioned.fill(
+                        child: IgnorePointer(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment(-1.0 + t * 2, -0.5),
+                                end: Alignment(-0.2 + t * 2, 0.5),
+                                colors: [
+                                  Colors.transparent,
+                                  (isDark ? Colors.white : Colors.black54)
+                                      .withValues(alpha: 0.04),
+                                  Colors.transparent,
+                                ],
+                                stops: const [0.0, 0.5, 1.0],
+                              ),
                             ),
                           ),
                         ),
                       );
                     },
                   ),
+                // Content
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Top Section
+                    Container(
+                      height: 135,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 20,
+                      ),
+                      child: isFront
+                          ? _buildFrontTop(context)
+                          : _buildBackTop(context),
+                    ),
+
+                    // Dashed Divider
+                    Row(
+                      children: [
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              return Flex(
+                                direction: Axis.horizontal,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
+                                children: List.generate(
+                                  (constraints.constrainWidth() / 8).floor(),
+                                  (index) => Container(
+                                    width: 4,
+                                    height: 1,
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.2),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                      ],
+                    ),
+
+                    // Bottom Section
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 20,
+                      ),
+                      child: isFront
+                          ? _buildBottomButtons(context)
+                          : _buildBottomButtons(context),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
               ],
             ),
-
-            // Bottom Section
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-              child: isFront
-                  ? _buildBottomButtons(context)
-                  : _buildBottomButtons(context),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant BudjetlyBalanceHeader oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.balance != widget.balance) {
+      _previousBalance = oldWidget.balance;
+      _initDigitAnimations();
+      // Flash highlight for balance changes (skip initial load)
+      if (!_isInitialBuild && !context.isReducedMotion) {
+        _highlightController.forward(from: 0.0);
+      }
+    }
   }
 
   Widget _buildFrontTop(BuildContext context) {

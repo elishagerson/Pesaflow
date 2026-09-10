@@ -15,6 +15,7 @@ import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
+import 'package:pesaflow/presentation/common/widgets/staggeredEntrance.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -57,131 +58,141 @@ class LoanListScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // ── Floating Top Bar ──
-                const FloatingTopBar(title: 'Loans', padding: EdgeInsets.zero),
+                const FloatingTopBar(
+                  title: 'Loans',
+                  padding: EdgeInsets.zero,
+                ),
                 const SizedBox(height: 16),
-
-                // Outstanding header
-                totalOutstandingAsync.when(
-                  data: (total) => total > 0
-                      ? _buildOutstandingHeader(context, total, ref)
-                      : const SizedBox.shrink(),
-                  loading: () => const SizedBox.shrink(),
-                  error: (_, _) => const SizedBox.shrink(),
-                ),
-
-                // Loan burden warning
-                recentLoanCountAsync.when(
-                  data: (count) => count >= 3
-                      ? _buildLoanBurdenWarning(context, count)
-                      : const SizedBox.shrink(),
-                  loading: () => const SizedBox.shrink(),
-                  error: (_, _) => const SizedBox.shrink(),
-                ),
-
-                // Active Loans section
-                activeLoansAsync.when(
-                  data: (activeLoans) {
-                    final paidData = paidLoansAsync.asData?.value;
-                    if (activeLoans.isEmpty &&
-                        (paidData == null || paidData.isEmpty)) {
-                      return _buildEmptyState(theme);
-                    }
-                    if (activeLoans.isEmpty) return const SizedBox.shrink();
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionHeader(
-                          context,
-                          'Active Loans',
-                          '${activeLoans.length} loan${activeLoans.length == 1 ? '' : 's'}',
-                          context.appColors.expenseColor,
-                        ),
-                        const SizedBox(height: kSpacing4),
-                        GlassListContainer(
-                          child: Column(
-                            children: activeLoans
-                                .asMap()
-                                .entries
-                                .map(
-                                  (entry) => _buildLoanTile(
-                                    context,
-                                    entry.value,
-                                    theme,
-                                    entry.key,
-                                    activeLoans.length,
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
-                        const SizedBox(height: kSpacing20),
-                      ],
-                    );
-                  },
-                  loading: () => const Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: kSpacing4,
-                      vertical: kSpacing8,
+                ...StaggeredEntrance(
+                  children: [
+                    // Outstanding header
+                    totalOutstandingAsync.when(
+                      data: (total) => total > 0
+                          ? _buildOutstandingHeader(context, total, ref)
+                          : const SizedBox.shrink(),
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, _) => const SizedBox.shrink(),
                     ),
-                    child: Column(
-                      children: [
-                        SkeletonCard(height: 110),
-                        SizedBox(height: kSpacing8),
-                        SkeletonCard(height: 110),
-                        SizedBox(height: kSpacing8),
-                        SkeletonCard(height: 110),
-                        SizedBox(height: kSpacing8),
-                        SkeletonCard(height: 110),
-                      ],
-                    ),
-                  ),
-                  error: (e, _) => ErrorState(
-                    title: 'Failed to load loans',
-                    message: e.toString(),
-                    onRetry: () {
-                      ref.invalidate(activeLoansStreamProvider);
-                    },
-                  ),
-                ),
 
-                // Paid Loans section
-                paidLoansAsync.when(
-                  data: (paidLoans) {
-                    if (paidLoans.isEmpty) return const SizedBox.shrink();
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionHeader(
-                          context,
-                          'Paid Loans',
-                          '${paidLoans.length} paid',
-                          context.appColors.incomeColor,
+                    // Loan burden warning
+                    recentLoanCountAsync.when(
+                      data: (count) => count >= 3
+                          ? _buildLoanBurdenWarning(context, count)
+                          : const SizedBox.shrink(),
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, _) => const SizedBox.shrink(),
+                    ),
+
+                    // Active Loans section
+                    activeLoansAsync.when(
+                      data: (activeLoans) {
+                        final paidData = paidLoansAsync.asData?.value;
+                        if (activeLoans.isEmpty &&
+                            (paidData == null || paidData.isEmpty)) {
+                          return _buildEmptyState(theme);
+                        }
+                        if (activeLoans.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionHeader(
+                              context,
+                              'Active Loans',
+                              '${activeLoans.length} loan${activeLoans.length == 1 ? '' : 's'}',
+                              context.appColors.expenseColor,
+                            ),
+                            const SizedBox(height: kSpacing4),
+                            GlassListContainer(
+                              child: Column(
+                                children: activeLoans
+                                    .asMap()
+                                    .entries
+                                    .map(
+                                      (entry) => _buildLoanTile(
+                                        context,
+                                        entry.value,
+                                        theme,
+                                        entry.key,
+                                        activeLoans.length,
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing20),
+                          ],
+                        );
+                      },
+                      loading: () => const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: kSpacing4,
+                          vertical: kSpacing8,
                         ),
-                        const SizedBox(height: kSpacing4),
-                        GlassListContainer(
-                          child: Column(
-                            children: paidLoans
-                                .asMap()
-                                .entries
-                                .map(
-                                  (entry) => _buildPaidLoanTile(
-                                    context,
-                                    entry.value,
-                                    theme,
-                                    entry.key,
-                                    paidLoans.length,
-                                  ),
-                                )
-                                .toList(),
-                          ),
+                        child: Column(
+                          children: [
+                            SkeletonCard(height: 110),
+                            SizedBox(height: kSpacing8),
+                            SkeletonCard(height: 110),
+                            SizedBox(height: kSpacing8),
+                            SkeletonCard(height: 110),
+                            SizedBox(height: kSpacing8),
+                            SkeletonCard(height: 110),
+                          ],
                         ),
-                        const SizedBox(height: kSpacing20),
-                      ],
-                    );
-                  },
-                  loading: () => const SizedBox.shrink(),
-                  error: (_, _) => const SizedBox.shrink(),
-                ),
+                      ),
+                      error: (e, _) => ErrorState(
+                        title: 'Failed to load loans',
+                        message: e.toString(),
+                        onRetry: () {
+                          ref.invalidate(activeLoansStreamProvider);
+                        },
+                      ),
+                    ),
+
+                    // Paid Loans section
+                    paidLoansAsync.when(
+                      data: (paidLoans) {
+                        if (paidLoans.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionHeader(
+                              context,
+                              'Paid Loans',
+                              '${paidLoans.length} paid',
+                              context.appColors.incomeColor,
+                            ),
+                            const SizedBox(height: kSpacing4),
+                            GlassListContainer(
+                              child: Column(
+                                children: paidLoans
+                                    .asMap()
+                                    .entries
+                                    .map(
+                                      (entry) => _buildPaidLoanTile(
+                                        context,
+                                        entry.value,
+                                        theme,
+                                        entry.key,
+                                        paidLoans.length,
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing20),
+                          ],
+                        );
+                      },
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, _) => const SizedBox.shrink(),
+                    ),
+                  ],
+                ).children,
               ],
             ),
           ),

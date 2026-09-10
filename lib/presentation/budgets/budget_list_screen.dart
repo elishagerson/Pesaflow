@@ -18,6 +18,7 @@ import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/staggeredEntrance.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
@@ -349,68 +350,74 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildPlanHeroCard(
-                context,
-                theme,
-                groups,
-                monthlyIncome,
-                budgetRule,
-                ref,
-              ),
-              const SizedBox(height: kSpacing20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ...StaggeredEntrance(
                 children: [
-                  Text(
-                    'BUDGET GROUPS',
-                    style: context.ts(
-                      12,
-                      fontWeight: FontWeight.w700,
-                      color: onSurface.withValues(alpha: 0.5),
-                      letterSpacing: 1.0,
-                    ),
+                  _buildPlanHeroCard(
+                    context,
+                    theme,
+                    groups,
+                    monthlyIncome,
+                    budgetRule,
+                    ref,
                   ),
-                  Text(
-                    '${groups.length} groups',
-                    style: context.ts(
-                      12,
-                      fontWeight: FontWeight.w600,
-                      color: onSurface.withValues(alpha: 0.4),
-                    ),
+                  const SizedBox(height: kSpacing20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'BUDGET GROUPS',
+                        style: context.ts(
+                          12,
+                          fontWeight: FontWeight.w700,
+                          color: onSurface.withValues(alpha: 0.5),
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                      Text(
+                        '${groups.length} groups',
+                        style: context.ts(
+                          12,
+                          fontWeight: FontWeight.w600,
+                          color: onSurface.withValues(alpha: 0.4),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: kSpacing12),
-              ...groups.map((g) => _buildGroupCard(context, theme, g, ref)),
-              if (standaloneBudgets.isNotEmpty) ...[
-                const SizedBox(height: kSpacing24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'STANDALONE BUDGETS',
-                      style: context.ts(
-                        12,
-                        fontWeight: FontWeight.w700,
-                        color: onSurface.withValues(alpha: 0.5),
-                        letterSpacing: 1.0,
-                      ),
+                  const SizedBox(height: kSpacing12),
+                  ...groups.map(
+                    (g) => _buildGroupCard(context, theme, g, ref),
+                  ),
+                  if (standaloneBudgets.isNotEmpty) ...[
+                    const SizedBox(height: kSpacing24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'STANDALONE BUDGETS',
+                          style: context.ts(
+                            12,
+                            fontWeight: FontWeight.w700,
+                            color: onSurface.withValues(alpha: 0.5),
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                        Text(
+                          '${standaloneBudgets.length} envelopes',
+                          style: context.ts(
+                            12,
+                            fontWeight: FontWeight.w600,
+                            color: onSurface.withValues(alpha: 0.4),
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      '${standaloneBudgets.length} envelopes',
-                      style: context.ts(
-                        12,
-                        fontWeight: FontWeight.w600,
-                        color: onSurface.withValues(alpha: 0.4),
-                      ),
+                    const SizedBox(height: kSpacing12),
+                    ...standaloneBudgets.map(
+                      (bp) => _buildBudgetCard(context, theme, bp, ref),
                     ),
                   ],
-                ),
-                const SizedBox(height: kSpacing12),
-                ...standaloneBudgets.map(
-                  (bp) => _buildBudgetCard(context, theme, bp, ref),
-                ),
-              ],
+                ],
+              ).children,
             ],
           ),
         ),
@@ -436,11 +443,15 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildUpgradeBanner(context, theme),
-              const SizedBox(height: kSpacing16),
-              ...allBudgets.map(
-                (bp) => _buildBudgetCard(context, theme, bp, ref),
-              ),
+              ...StaggeredEntrance(
+                children: [
+                  _buildUpgradeBanner(context, theme),
+                  const SizedBox(height: kSpacing16),
+                  ...allBudgets.map(
+                    (bp) => _buildBudgetCard(context, theme, bp, ref),
+                  ),
+                ],
+              ).children,
             ],
           ),
         ),

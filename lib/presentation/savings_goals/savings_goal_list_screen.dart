@@ -20,6 +20,7 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/presentation/common/widgets/hero_card_route.dart';
+import 'package:pesaflow/presentation/common/widgets/staggeredEntrance.dart';
 import 'package:pesaflow/presentation/savings_goals/savings_goal_detail_screen.dart';
 
 class SavingsGoalListScreen extends ConsumerWidget {
@@ -83,44 +84,47 @@ class SavingsGoalListScreen extends ConsumerWidget {
                         padding: const EdgeInsets.all(kSpacing16),
                         child: Column(
                           children: [
-                            _buildSummaryCard(
-                              context,
-                              theme,
-                              totalSaved,
-                              totalTarget,
-                              overallPct,
-                            ),
-                            const SizedBox(height: kSpacing20),
-                            Text(
-                              'ACTIVE GOALS',
-                              style: context.ts(
-                                13,
-                                fontWeight: FontWeight.w600,
-                                color: theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.5,
+                            ...StaggeredEntrance(
+                              children: [
+                                _buildSummaryCard(
+                                  context,
+                                  theme,
+                                  totalSaved,
+                                  totalTarget,
+                                  overallPct,
                                 ),
-                                letterSpacing: 0.3,
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing12),
-                            GlassListContainer(
-                              child: Column(
-                                children: goals
-                                    .asMap()
-                                    .entries
-                                    .map(
-                                      (entry) => _buildGoalCard(
-                                        context,
-                                        ref,
-                                        entry.value,
-                                        theme,
-                                        entry.key,
-                                        goals.length,
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ),
+                                const SizedBox(height: kSpacing20),
+                                Text(
+                                  'ACTIVE GOALS',
+                                  style: context.ts(
+                                    13,
+                                    fontWeight: FontWeight.w600,
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.5),
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
+                                const SizedBox(height: kSpacing12),
+                                GlassListContainer(
+                                  child: Column(
+                                    children: goals
+                                        .asMap()
+                                        .entries
+                                        .map(
+                                          (entry) => _buildGoalCard(
+                                            context,
+                                            ref,
+                                            entry.value,
+                                            theme,
+                                            entry.key,
+                                            goals.length,
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                ),
+                              ],
+                            ).children,
                           ],
                         ),
                       ),
