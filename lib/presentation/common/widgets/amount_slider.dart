@@ -167,15 +167,16 @@ class _AmountDisplay extends StatelessWidget {
             ? FadeTransition(
                 opacity: animation,
                 child: SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0, 0.15),
-                    end: Offset.zero,
-                  ).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeOutCubic,
-                    ),
-                  ),
+                  position:
+                      Tween<Offset>(
+                        begin: const Offset(0, 0.15),
+                        end: Offset.zero,
+                      ).animate(
+                        CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeOutCubic,
+                        ),
+                      ),
                   child: child,
                 ),
               )
@@ -189,9 +190,9 @@ class _AmountDisplay extends StatelessWidget {
         children: [
           Text(
             currencyStr,
-            style: context.ts(14, fontWeight: FontWeight.w500).copyWith(
-              color: appColors.textLow,
-            ),
+            style: context
+                .ts(14, fontWeight: FontWeight.w500)
+                .copyWith(color: appColors.textLow),
           ),
           const SizedBox(width: kSpacing4),
           _SlidingDigits(
@@ -217,17 +218,19 @@ class _AmountDisplay extends StatelessWidget {
       children: [
         Text(
           currencyStr,
-          style: context.ts(14, fontWeight: FontWeight.w500).copyWith(
-            color: appColors.textLow,
-          ),
+          style: context
+              .ts(14, fontWeight: FontWeight.w500)
+              .copyWith(color: appColors.textLow),
         ),
         const SizedBox(width: kSpacing4),
         Text(
           amountStr,
-          style: context.ts(32, fontWeight: FontWeight.w700).copyWith(
-            color: accentColor,
-            fontFeatures: const [FontFeature.tabularFigures()],
-          ),
+          style: context
+              .ts(32, fontWeight: FontWeight.w700)
+              .copyWith(
+                color: accentColor,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
         ),
       ],
     );
@@ -238,8 +241,8 @@ class _AmountDisplay extends StatelessWidget {
     final formatted = absVal >= 10000
         ? _commaFormat(absVal.round())
         : absVal >= 1000
-            ? _commaFormat(absVal.round())
-            : absVal.toInt().toString();
+        ? _commaFormat(absVal.round())
+        : absVal.toInt().toString();
     return formatted;
   }
 
@@ -309,20 +312,24 @@ class _SlidingDigitsState extends State<_SlidingDigits> {
         if (isComma) {
           return Text(
             ',',
-            style: context.ts(32, fontWeight: FontWeight.w700).copyWith(
-              color: widget.accentColor,
-              fontFeatures: const [FontFeature.tabularFigures()],
-            ),
+            style: context
+                .ts(32, fontWeight: FontWeight.w700)
+                .copyWith(
+                  color: widget.accentColor,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
           );
         }
 
         if (widget.reducedMotion || previous == current) {
           return Text(
             current,
-            style: context.ts(32, fontWeight: FontWeight.w700).copyWith(
-              color: widget.accentColor,
-              fontFeatures: const [FontFeature.tabularFigures()],
-            ),
+            style: context
+                .ts(32, fontWeight: FontWeight.w700)
+                .copyWith(
+                  color: widget.accentColor,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
           );
         }
 
@@ -391,10 +398,12 @@ class _DigitTransitionState extends State<_DigitTransition>
             offset: Offset(0, slideOffset),
             child: Text(
               widget.digit,
-              style: context.ts(32, fontWeight: FontWeight.w700).copyWith(
-                color: widget.accentColor,
-                fontFeatures: const [FontFeature.tabularFigures()],
-              ),
+              style: context
+                  .ts(32, fontWeight: FontWeight.w700)
+                  .copyWith(
+                    color: widget.accentColor,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                  ),
             ),
           ),
         );
@@ -608,8 +617,8 @@ class _GlassThumb extends StatelessWidget {
           color: isDragging
               ? accentColor.withValues(alpha: 0.6)
               : (isDark
-                  ? Colors.white.withValues(alpha: 0.20)
-                  : Colors.white.withValues(alpha: 0.50)),
+                    ? Colors.white.withValues(alpha: 0.20)
+                    : Colors.white.withValues(alpha: 0.50)),
           width: isDragging ? 2.0 : 1.5,
         ),
         boxShadow: [

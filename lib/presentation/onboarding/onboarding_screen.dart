@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
@@ -81,7 +82,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     }
     if (_currentPage < 3) {
       _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
+        duration: MotionTokens.durationNormal,
         curve: Curves.easeInOut,
       );
     }
@@ -292,7 +293,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             if (_currentPage > 0)
                               TextButton(
                                 onPressed: () => _pageController.previousPage(
-                                  duration: const Duration(milliseconds: 300),
+                                  duration: MotionTokens.durationSlow,
                                   curve: Curves.easeInOut,
                                 ),
                                 child: const Text('Back'),

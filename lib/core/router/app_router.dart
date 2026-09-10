@@ -562,9 +562,7 @@ final GoRouter appRouter = GoRouter(
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
                     return swipeBackPage(
-                      TransactionDetailScreen(
-                        transactionId: state.param('id'),
-                      ),
+                      TransactionDetailScreen(transactionId: state.param('id')),
                     );
                   },
                 ),

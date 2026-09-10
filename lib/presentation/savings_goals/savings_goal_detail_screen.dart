@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -55,7 +56,7 @@ class _SavingsGoalDetailScreenState
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           0,
-          duration: const Duration(milliseconds: 300),
+          duration: MotionTokens.durationSlow,
           curve: Curves.easeOut,
         );
       }
@@ -1033,7 +1034,7 @@ class _SavingsGoalDetailScreenState
                               value: CurrencyFormatter.formatCents(
                                 dailyTarget * 100,
                               ),
-                              color: Colors.orange,
+                              color: context.appColors.expenseColor,
                               theme: theme,
                             ),
                           ],

@@ -38,10 +38,8 @@ class _StaggeredEntranceState extends State<StaggeredEntrance>
     super.initState();
     _controllers = List.generate(
       widget.children.length,
-      (i) => AnimationController(
-        vsync: this,
-        duration: MotionTokens.durationSlow,
-      ),
+      (i) =>
+          AnimationController(vsync: this, duration: MotionTokens.durationSlow),
     );
 
     _fadeAnimations = _controllers

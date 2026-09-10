@@ -43,12 +43,13 @@ class _ShakeWidgetState extends State<ShakeWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    )..addListener(() {
-        setState(() => _offsetX = _shakeAnim.value);
-      });
+    _controller =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 400),
+        )..addListener(() {
+          setState(() => _offsetX = _shakeAnim.value);
+        });
     _shakeAnim = _buildShakeAnimation();
   }
 

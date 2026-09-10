@@ -254,7 +254,7 @@ class _RecurringTransactionFormScreenState
           context: context,
           title: const Text('Discard Changes?'),
           titleIcon: PesaFlowIcons.warning,
-          iconColor: Colors.orange,
+          iconColor: context.appColors.expenseColor,
           content: const Text(
             'You have unsaved changes. Are you sure you want to go back?',
           ),
@@ -513,7 +513,10 @@ class _RecurringTransactionFormScreenState
                               if (v == null || v.trim().isEmpty) {
                                 return 'Enter amount';
                               }
-                              final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
+                              final cleaned = v.replaceAll(
+                                RegExp(r'[^0-9]'),
+                                '',
+                              );
                               final parsed = int.tryParse(cleaned);
                               if (parsed == null || parsed <= 0) {
                                 return 'Enter a valid amount';

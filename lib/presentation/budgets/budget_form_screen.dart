@@ -655,7 +655,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium!
-                                          .copyWith(fontWeight: FontWeight.w500),
+                                          .copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                     ),
                                   ),
                                 ],
@@ -967,25 +969,27 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                                       const EdgeInsets.only(
                                                         top: kSpacing10,
                                                       ),
-                                              child: ShakeWidget(
-                                                shaking: _shakeFields,
-                                                child: _InteractiveInputRow(
-                                                  controller: _capController,
-                                                  label: 'Max Rollover (Tsh)',
-                                                  hint: 'e.g. 50000',
-                                                  icon:
-                                                      PesaFlowIcons.upcoming,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                ),
-                                              ),
+                                                  child: ShakeWidget(
+                                                    shaking: _shakeFields,
+                                                    child: _InteractiveInputRow(
+                                                      controller:
+                                                          _capController,
+                                                      label:
+                                                          'Max Rollover (Tsh)',
+                                                      hint: 'e.g. 50000',
+                                                      icon: PesaFlowIcons
+                                                          .upcoming,
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .titleMedium!
+                                                          .copyWith(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                    ),
+                                                  ),
                                                 )
                                               : const SizedBox.shrink(),
                                         ),

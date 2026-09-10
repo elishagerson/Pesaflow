@@ -113,7 +113,9 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
               scale: _scaleAnimation,
               child: Container(
                 color: _isPressed && widget.selectedColor != null
-                    ? widget.selectedColor!.withValues(alpha: widget.selectedOpacity)
+                    ? widget.selectedColor!.withValues(
+                        alpha: widget.selectedOpacity,
+                      )
                     : null,
                 child: child,
               ),

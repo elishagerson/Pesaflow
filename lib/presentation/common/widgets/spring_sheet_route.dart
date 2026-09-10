@@ -200,8 +200,10 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
             animation: _animation,
             builder: (_, _) {
               final baseAlpha = 0.45 * _animation.value;
-              final scrimAlpha =
-                  (baseAlpha * (1.0 - dragFraction)).clamp(0.0, 1.0);
+              final scrimAlpha = (baseAlpha * (1.0 - dragFraction)).clamp(
+                0.0,
+                1.0,
+              );
               return Container(
                 color: Colors.black.withValues(alpha: scrimAlpha),
               );
@@ -262,8 +264,7 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
                               // Sheet content
                               Flexible(
                                 child: Padding(
-                                  padding:
-                                      EdgeInsets.only(bottom: bottomInset),
+                                  padding: EdgeInsets.only(bottom: bottomInset),
                                   child: widget.builder,
                                 ),
                               ),

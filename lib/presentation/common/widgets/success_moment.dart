@@ -78,7 +78,7 @@ class _SuccessMomentOverlayState extends State<_SuccessMomentOverlay>
 
     _messageController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: MotionTokens.durationNormal,
     );
 
     _dismissController = AnimationController(

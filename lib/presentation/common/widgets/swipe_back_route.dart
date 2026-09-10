@@ -21,17 +21,14 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 /// ```
 class SwipeBackRoute<T> extends PageRouteBuilder<T> {
   SwipeBackRoute({required Widget page})
-      : super(
-          opaque: false,
-          barrierDismissible: false,
-          pageBuilder: (_, _, _) => page,
-          transitionsBuilder: (_, animation, _, child) {
-            return _SwipeBackTransition(
-              animation: animation,
-              child: child,
-            );
-          },
-        );
+    : super(
+        opaque: false,
+        barrierDismissible: false,
+        pageBuilder: (_, _, _) => page,
+        transitionsBuilder: (_, animation, _, child) {
+          return _SwipeBackTransition(animation: animation, child: child);
+        },
+      );
 }
 
 /// Pushes [page] with an interactive iOS-style back-swipe gesture.
@@ -57,10 +54,7 @@ class _SwipeBackTransition extends StatefulWidget {
   final Animation<double> animation;
   final Widget child;
 
-  const _SwipeBackTransition({
-    required this.animation,
-    required this.child,
-  });
+  const _SwipeBackTransition({required this.animation, required this.child});
 
   @override
   State<_SwipeBackTransition> createState() => _SwipeBackTransitionState();
@@ -82,11 +76,7 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(
-      vsync: this,
-      value: 0,
-      upperBound: 1,
-    );
+    _animController = AnimationController(vsync: this, value: 0, upperBound: 1);
 
     // Drive from 0→1 as the route pushes forward; we read the raw value
     // during the transitionsBuilder but the real interactivity comes from
@@ -123,8 +113,10 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
     if (screenWidth <= 0) return;
 
     setState(() {
-      _dragProgress =
-          (_dragProgress + details.delta.dx / screenWidth).clamp(0.0, 1.0);
+      _dragProgress = (_dragProgress + details.delta.dx / screenWidth).clamp(
+        0.0,
+        1.0,
+      );
     });
   }
 
@@ -146,7 +138,7 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
   // ── iOS-native Animations ─────────────────────────────────────────────
 
   /// iOS standard navigation transition duration (350ms).
-  static const Duration _kDuration = Duration(milliseconds: 350);
+  static const Duration _kDuration = MotionTokens.durationNormal;
 
   /// iOS default curve for back gesture spring-back (ease-out).
   static final Curve _kBackCurve = Curves.easeOut;
@@ -186,12 +178,7 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
     // Use iOS ease-out curve for spring-back (smooth deceleration)
     _animController
       ..value = startProgress
-      ..animateTo(
-        0.0,
-        duration: _kDuration,
-        curve: _kBackCurve,
-      )
-      .then((_) {
+      ..animateTo(0.0, duration: _kDuration, curve: _kBackCurve).then((_) {
         if (mounted) setState(() => _dragProgress = 0.0);
       });
   }

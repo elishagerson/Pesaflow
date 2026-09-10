@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -46,7 +47,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
   void _next() {
     if (_currentPage < _pages.length - 1) {
       _controller.nextPage(
-        duration: const Duration(milliseconds: 300),
+        duration: MotionTokens.durationSlow,
         curve: Curves.easeInOut,
       );
     } else {

@@ -102,8 +102,7 @@ class _LargeTitleHeaderRender extends StatelessWidget {
                     title,
                     style: context.ts(
                       fontSize,
-                      fontWeight:
-                          t < 0.3 ? FontWeight.w700 : FontWeight.w600,
+                      fontWeight: t < 0.3 ? FontWeight.w700 : FontWeight.w600,
                       letterSpacing: -0.8,
                     ),
                     maxLines: 1,

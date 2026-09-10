@@ -278,8 +278,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                                 end: Alignment(-0.2 + t * 2, 0.5),
                                 colors: [
                                   Colors.transparent,
-                                  (isDark ? Colors.white : Colors.black54)
-                                      .withValues(alpha: 0.04),
+                                  context.appColors.textLow.withValues(
+                                    alpha: 0.04,
+                                  ),
                                   Colors.transparent,
                                 ],
                                 stops: const [0.0, 0.5, 1.0],

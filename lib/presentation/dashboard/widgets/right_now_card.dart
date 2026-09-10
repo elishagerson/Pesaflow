@@ -34,39 +34,47 @@ class RightNowCard extends ConsumerWidget {
     final budgets = budgetsAsync.value ?? [];
     final overBudgetItems = budgets.where((b) => b.remaining < 0).toList();
 
-    final hasItems = dueItems.isNotEmpty || reviewCount > 0 || overBudgetItems.isNotEmpty;
+    final hasItems =
+        dueItems.isNotEmpty || reviewCount > 0 || overBudgetItems.isNotEmpty;
     if (!hasItems) return const SizedBox.shrink();
 
     final List<_RightNowItem> items = [];
 
     for (final budget in overBudgetItems) {
-      items.add(_RightNowItem(
-        icon: PesaFlowIcons.expense,
-        iconColor: theme.colorScheme.error,
-        title: '${budget.budget.name} is over budget',
-        subtitle: 'Over by ${CurrencyFormatter.formatCents(budget.remaining.abs())}',
-        onTap: () => context.push('/budgets'),
-      ));
+      items.add(
+        _RightNowItem(
+          icon: PesaFlowIcons.expense,
+          iconColor: theme.colorScheme.error,
+          title: '${budget.budget.name} is over budget',
+          subtitle:
+              'Over by ${CurrencyFormatter.formatCents(budget.remaining.abs())}',
+          onTap: () => context.push('/budgets'),
+        ),
+      );
     }
 
     if (reviewCount > 0) {
-      items.add(_RightNowItem(
-        icon: PesaFlowIcons.sms,
-        iconColor: context.appColors.transferColor,
-        title: '$reviewCount SMS to review',
-        subtitle: 'Tap to categorize incoming transactions',
-        onTap: () => context.push('/sms-review'),
-      ));
+      items.add(
+        _RightNowItem(
+          icon: PesaFlowIcons.sms,
+          iconColor: context.appColors.transferColor,
+          title: '$reviewCount SMS to review',
+          subtitle: 'Tap to categorize incoming transactions',
+          onTap: () => context.push('/sms-review'),
+        ),
+      );
     }
 
     for (final due in dueItems.take(3)) {
-      items.add(_RightNowItem(
-        icon: PesaFlowIcons.subscriptions,
-        iconColor: context.appColors.expenseColor,
-        title: due.description ?? 'Recurring payment',
-        subtitle: '${CurrencyFormatter.formatCents(due.amount)} due today',
-        onTap: () => context.push('/recurring'),
-      ));
+      items.add(
+        _RightNowItem(
+          icon: PesaFlowIcons.subscriptions,
+          iconColor: context.appColors.expenseColor,
+          title: due.description ?? 'Recurring payment',
+          subtitle: '${CurrencyFormatter.formatCents(due.amount)} due today',
+          onTap: () => context.push('/recurring'),
+        ),
+      );
     }
 
     return GlassCard(
@@ -110,9 +118,7 @@ class RightNowCard extends ConsumerWidget {
                   onTap: item.onTap,
                   selectedColor: theme.colorScheme.onSurface,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: kSpacing8,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: kSpacing8),
                     child: Row(
                       children: [
                         Container(
@@ -123,7 +129,11 @@ class RightNowCard extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           alignment: Alignment.center,
-                          child: Icon(item.icon, size: 16, color: item.iconColor),
+                          child: Icon(
+                            item.icon,
+                            size: 16,
+                            color: item.iconColor,
+                          ),
                         ),
                         const SizedBox(width: kSpacing12),
                         Expanded(

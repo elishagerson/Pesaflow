@@ -138,7 +138,9 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       context.pop();
                     },
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.redAccent.withValues(alpha: 0.8),
+                      foregroundColor: Theme.of(
+                        context,
+                      ).colorScheme.error.withValues(alpha: 0.8),
                       padding: const EdgeInsets.symmetric(
                         horizontal: kSpacing10,
                       ),

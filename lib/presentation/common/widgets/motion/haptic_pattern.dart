@@ -48,4 +48,3 @@ void triggerHaptic(HapticType type) {
       break;
   }
 }
-

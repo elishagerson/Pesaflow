@@ -3,6 +3,7 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -46,7 +47,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           0,
-          duration: const Duration(milliseconds: 300),
+          duration: MotionTokens.durationSlow,
           curve: Curves.easeOut,
         );
       }
@@ -607,18 +608,22 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(kSpacing4),
                         child: TweenAnimationBuilder<double>(
-                          tween: Tween<double>(begin: 0, end: ratio.clamp(0.0, 1.0)),
+                          tween: Tween<double>(
+                            begin: 0,
+                            end: ratio.clamp(0.0, 1.0),
+                          ),
                           duration: const Duration(milliseconds: 800),
                           curve: Curves.easeOutCubic,
-                          builder: (context, value, _) => LinearProgressIndicator(
-                            value: value,
-                            backgroundColor: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.1),
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              context.appColors.incomeColor,
-                            ),
-                            minHeight: 6,
-                          ),
+                          builder: (context, value, _) =>
+                              LinearProgressIndicator(
+                                value: value,
+                                backgroundColor: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.1),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  context.appColors.incomeColor,
+                                ),
+                                minHeight: 6,
+                              ),
                         ),
                       ),
                     ],

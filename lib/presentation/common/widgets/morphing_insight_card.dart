@@ -80,7 +80,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
       return;
     }
     final sim = SpringSimulation(
-      MotionTokens.springGentle,
+      MotionTokens.springSnappy,
       _expandController.value,
       expand ? 1.0 : 0.0,
       0.0,
@@ -247,7 +247,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                         const SizedBox(height: kSpacing8),
                         AnimatedSize(
                           duration: const Duration(milliseconds: 400),
-                          curve: Curves.easeOutBack,
+                          curve: Curves.easeOutCubic,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

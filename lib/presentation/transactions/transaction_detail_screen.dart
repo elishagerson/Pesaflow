@@ -954,14 +954,14 @@ class DashedDivider extends StatelessWidget {
   final double height;
   final double dashWidth;
   final double dashSpace;
-  final Color color;
+  final Color? color;
 
   const DashedDivider({
     super.key,
     this.height = 1,
     this.dashWidth = 6,
     this.dashSpace = 4,
-    this.color = Colors.grey,
+    this.color,
   });
 
   @override
@@ -976,7 +976,11 @@ class DashedDivider extends StatelessWidget {
             return SizedBox(
               width: dashWidth,
               height: height,
-              child: DecoratedBox(decoration: BoxDecoration(color: color)),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: color ?? Theme.of(context).colorScheme.outline,
+                ),
+              ),
             );
           }),
         );

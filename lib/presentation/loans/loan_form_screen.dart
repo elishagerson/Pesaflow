@@ -369,7 +369,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
           context: context,
           title: const Text('Discard Changes?'),
           titleIcon: PesaFlowIcons.warning,
-          iconColor: Colors.orange,
+          iconColor: context.appColors.expenseColor,
           content: const Text(
             'You have unsaved changes. Are you sure you want to go back?',
           ),
@@ -496,7 +496,10 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                             decoration: context.inputDecoration(
                               labelText: 'Reference (optional)',
                               hintText: 'e.g. loan reference number',
-                              prefixIcon: const Icon(PesaFlowIcons.tag, size: 18),
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.tag,
+                                size: 18,
+                              ),
                             ),
                           ),
                         ),

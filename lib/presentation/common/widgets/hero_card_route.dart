@@ -11,34 +11,24 @@ class HeroCardRoute<T> extends PageRouteBuilder<T> {
   final Widget page;
   final String heroTag;
 
-  HeroCardRoute({
-    required this.page,
-    required this.heroTag,
-    super.settings,
-  }) : super(
-          pageBuilder: (context, animation, secondaryAnimation) => page,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(
-              opacity: CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeOut,
-              ),
-              child: child,
-            );
-          },
-          opaque: false,
-          barrierDismissible: true,
-          barrierColor: Colors.black45,
-        );
+  HeroCardRoute({required this.page, required this.heroTag, super.settings})
+    : super(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
+            child: child,
+          );
+        },
+        opaque: false,
+        barrierDismissible: true,
+        barrierColor: Colors.black45,
+      );
 }
 
 /// Push a [HeroCardRoute] for smooth card→detail transitions, or a simple
 /// fade when the device has reduced motion enabled.
-Future<T?> pushHeroCard<T>(
-  BuildContext context,
-  Widget page,
-  String heroTag,
-) {
+Future<T?> pushHeroCard<T>(BuildContext context, Widget page, String heroTag) {
   if (context.isReducedMotion) {
     return Navigator.of(context).push<T>(
       PageRouteBuilder(
@@ -46,10 +36,7 @@ Future<T?> pushHeroCard<T>(
         pageBuilder: (context, animation, secondaryAnimation) => page,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
-            opacity: CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeOut,
-            ),
+            opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
             child: child,
           );
         },
@@ -58,7 +45,7 @@ Future<T?> pushHeroCard<T>(
       ),
     );
   }
-  return Navigator.of(context).push<T>(
-    HeroCardRoute<T>(page: page, heroTag: heroTag),
-  );
+  return Navigator.of(
+    context,
+  ).push<T>(HeroCardRoute<T>(page: page, heroTag: heroTag));
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -47,7 +48,7 @@ class _EmptyStateState extends State<EmptyState> with TickerProviderStateMixin {
     );
 
     _entranceScale = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _entranceController, curve: Curves.easeOutBack),
+      CurvedAnimation(parent: _entranceController, curve: Curves.easeOutCubic),
     );
 
     // Breathing: subtle scale oscillation, 3s full cycle
@@ -136,7 +137,7 @@ class _EmptyStateState extends State<EmptyState> with TickerProviderStateMixin {
             ),
             SizedBox(height: context.isCompactView ? 16 : 24),
             _DelayedFadeIn(
-              delay: const Duration(milliseconds: 300),
+              delay: MotionTokens.durationSlow,
               child: Semantics(
                 header: true,
                 child: Text(
@@ -224,7 +225,7 @@ class _DelayedFadeInState extends State<_DelayedFadeIn>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: MotionTokens.durationSlow,
     );
     _opacity = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
   }

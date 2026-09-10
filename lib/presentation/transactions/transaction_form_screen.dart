@@ -872,7 +872,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           context: context,
           title: const Text('Discard Changes?'),
           titleIcon: PesaFlowIcons.warning,
-          iconColor: Colors.orange,
+          iconColor: context.appColors.expenseColor,
           content: const Text(
             'You have unsaved changes. Are you sure you want to go back?',
           ),
@@ -1045,7 +1045,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       TactileSpringContainer(
                         onTap: () =>
                             _showCategorySheet(context, theme, categoriesAsync),
-      selectedColor: Theme.of(context).colorScheme.onSurface,
+                        selectedColor: Theme.of(context).colorScheme.onSurface,
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: kSpacing20,

@@ -7,6 +7,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
@@ -43,7 +44,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           0,
-          duration: const Duration(milliseconds: 300),
+          duration: MotionTokens.durationNormal,
           curve: Curves.easeOut,
         );
       }
@@ -66,7 +67,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
   }
 
   Color _providerColor(String? provider) {
-    if (provider == null) return Colors.grey;
+    if (provider == null) return Theme.of(context).colorScheme.outline;
     const colors = {
       'M-Pesa_TZ': Color(0xFFE21A2C),
       'Airtel_TZ': Color(0xFFED1C24),
@@ -77,7 +78,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
       'CRDB_TZ': Color(0xFF0066B3),
       'NBC_TZ': Color(0xFF003366),
     };
-    return colors[provider] ?? Colors.grey;
+    return colors[provider] ?? Theme.of(context).colorScheme.outline;
   }
 
   String _formatTimestamp(DateTime? dt) {
@@ -1260,7 +1261,7 @@ class _RawSmsPreviewState extends State<_RawSmsPreview> {
       onTap: isLong ? () => setState(() => _expanded = !_expanded) : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 400),
-        curve: Curves.easeOutBack,
+        curve: Curves.easeOutCubic,
         width: double.infinity,
         padding: const EdgeInsets.all(kSpacing10),
         decoration: BoxDecoration(
@@ -1522,17 +1523,9 @@ class _SwipeableCardState extends State<SwipeableCard>
 
   double _screenWidth = 400.0;
 
-  final SpringDescription _snapSpring = const SpringDescription(
-    mass: 0.6,
-    stiffness: 200,
-    damping: 18,
-  );
+  final SpringDescription _snapSpring = MotionTokens.springBouncy;
 
-  final SpringDescription _swipeSpring = const SpringDescription(
-    mass: 1.0,
-    stiffness: 300,
-    damping: 30,
-  );
+  final SpringDescription _swipeSpring = MotionTokens.springStiff;
 
   bool _hapticTriggered = false;
 

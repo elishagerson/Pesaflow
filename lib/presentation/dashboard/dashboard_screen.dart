@@ -25,6 +25,7 @@ import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_widgets.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/category_budget_card.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/services/home_widgets_renderer.dart';
 import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
@@ -63,7 +64,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     } else {
       _scrollController.animateTo(
         0,
-        duration: const Duration(milliseconds: 300),
+        duration: MotionTokens.durationNormal,
         curve: Curves.easeOutCubic,
       );
     }
@@ -303,7 +304,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             paletteVisibilityProvider.notifier,
                                           )
                                           .toggle(),
-                                      selectedColor: theme.colorScheme.onSurface,
+                                      selectedColor:
+                                          theme.colorScheme.onSurface,
                                       child: Container(
                                         width: 44,
                                         height: 44,
@@ -332,7 +334,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     const SizedBox(width: kSpacing8),
                                     TactileSpringContainer(
                                       onTap: () => context.push('/sms-review'),
-                                      selectedColor: theme.colorScheme.onSurface,
+                                      selectedColor:
+                                          theme.colorScheme.onSurface,
                                       child: Stack(
                                         clipBehavior: Clip.none,
                                         children: [
@@ -480,7 +483,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             }
                                           });
                                         },
-                                        selectedColor: theme.colorScheme.onSurface,
+                                        selectedColor:
+                                            theme.colorScheme.onSurface,
                                         child: Semantics(
                                           label:
                                               '${account.name}, ${_formatCompact(account.balance)}${isSelected ? ', selected filter' : ''}',
@@ -713,7 +717,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         0,
                                       ),
                                       child: TactileSpringContainer(
-                                        selectedColor: theme.colorScheme.onSurface,
+                                        selectedColor:
+                                            theme.colorScheme.onSurface,
                                         onTap: () => context.push('/budgets'),
                                         child: GlassCard(
                                           padding: const EdgeInsets.symmetric(
@@ -1049,7 +1054,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   height: kSpacing20,
                                                 ),
                                                 TactileSpringContainer(
-                                                  selectedColor: theme.colorScheme.onSurface,
+                                                  selectedColor: theme
+                                                      .colorScheme
+                                                      .onSurface,
                                                   onTap: () => context.push(
                                                     '/transactions/add',
                                                   ),
@@ -1266,7 +1273,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   );
                                                 },
                                                 child: TactileSpringContainer(
-                                                  selectedColor: theme.colorScheme.onSurface,
+                                                  selectedColor: theme
+                                                      .colorScheme
+                                                      .onSurface,
                                                   onTap: () => context.push(
                                                     '/transactions/${trans.id}',
                                                   ),
@@ -1567,7 +1576,7 @@ class _InsightsCarouselState extends ConsumerState<_InsightsCarousel> {
         final double height = _expandedIndices.isNotEmpty ? 176.0 : 114.0;
 
         return AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
+          duration: MotionTokens.durationNormal,
           curve: Curves.easeInOut,
           height: height,
           child: ListView.separated(

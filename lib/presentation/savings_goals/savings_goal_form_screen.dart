@@ -242,10 +242,10 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                   shaking: _shakeFields,
                                   child: TextFormField(
                                     controller: _nameController,
-                                    textCapitalization: TextCapitalization.words,
-                                    style: theme.textTheme.titleMedium!.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                    textCapitalization:
+                                        TextCapitalization.words,
+                                    style: theme.textTheme.titleMedium!
+                                        .copyWith(fontWeight: FontWeight.w500),
                                     validator: (v) {
                                       if (v == null || v.trim().isEmpty) {
                                         return 'Enter a goal name';
@@ -268,17 +268,16 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                     inputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly,
                                     ],
-                                    style: theme.textTheme.titleMedium!.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                    style: theme.textTheme.titleMedium!
+                                        .copyWith(fontWeight: FontWeight.w500),
                                     validator: (v) {
                                       if (v == null || v.isEmpty) {
                                         return 'Enter a valid amount';
                                       }
-                                      final val = CurrencyFormatter.parseToCents(
-                                        v,
-                                      );
-                                      if (val <= 0) return 'Enter a valid amount';
+                                      final val =
+                                          CurrencyFormatter.parseToCents(v);
+                                      if (val <= 0)
+                                        return 'Enter a valid amount';
                                       return null;
                                     },
                                     decoration: inputDeco(

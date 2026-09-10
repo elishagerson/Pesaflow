@@ -325,7 +325,9 @@ class _RecurringTransactionListScreenState
                                                   color:
                                                       sorted[i].status ==
                                                           'active'
-                                                      ? Colors.orange
+                                                      ? context
+                                                            .appColors
+                                                            .expenseColor
                                                       : context
                                                             .appColors
                                                             .incomeColor,

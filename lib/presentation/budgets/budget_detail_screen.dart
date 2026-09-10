@@ -625,11 +625,11 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                     ],
                                   ),
                                   const SizedBox(height: kSpacing12),
-                                   TactileSpringContainer(
-                                     selectedColor: theme.colorScheme.onSurface,
-                                     onTap: () async {
-                                       PesaHaptics.medium();
-                                       final repo = ref.read(
+                                  TactileSpringContainer(
+                                    selectedColor: theme.colorScheme.onSurface,
+                                    onTap: () async {
+                                      PesaHaptics.medium();
+                                      final repo = ref.read(
                                         budgetRepositoryProvider,
                                       );
                                       final moved = await repo
@@ -1624,7 +1624,10 @@ class _PeriodRow extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(3),
                   child: TweenAnimationBuilder<double>(
-                    tween: Tween<double>(begin: 0, end: pctUsed.clamp(0.0, 1.0)),
+                    tween: Tween<double>(
+                      begin: 0,
+                      end: pctUsed.clamp(0.0, 1.0),
+                    ),
                     duration: const Duration(milliseconds: 800),
                     curve: Curves.easeOutCubic,
                     builder: (context, value, _) => LinearProgressIndicator(

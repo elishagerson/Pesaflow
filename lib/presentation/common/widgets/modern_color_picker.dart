@@ -422,7 +422,7 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
               ? CrossFadeState.showSecond
               : CrossFadeState.showFirst,
           duration: const Duration(milliseconds: 400),
-          sizeCurve: Curves.easeOutBack,
+          sizeCurve: Curves.easeOutCubic,
         ),
       ],
     );

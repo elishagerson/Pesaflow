@@ -108,7 +108,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   TactileSpringContainer(
                     haptic: HapticType.soft,
                     onTap: () {
-                       context.push('/budgets/setup');
+                      context.push('/budgets/setup');
                     },
                     child: Container(
                       padding: const EdgeInsets.all(10),
@@ -136,17 +136,14 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       showSpringSheet(
                         context,
                         isScrollControlled: true,
-                        builder: (context) =>
-                            const SavingsGoalFormSheet(),
+                        builder: (context) => const SavingsGoalFormSheet(),
                       );
                     }
                   },
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: context.appColors.onBgColor.withValues(
-                        alpha: 0.1,
-                      ),
+                      color: context.appColors.onBgColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -385,9 +382,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     ],
                   ),
                   const SizedBox(height: kSpacing12),
-                  ...groups.map(
-                    (g) => _buildGroupCard(context, theme, g, ref),
-                  ),
+                  ...groups.map((g) => _buildGroupCard(context, theme, g, ref)),
                   if (standaloneBudgets.isNotEmpty) ...[
                     const SizedBox(height: kSpacing24),
                     Row(
@@ -533,12 +528,12 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               TactileSpringContainer(
                 haptic: HapticType.soft,
                 onTap: () {
-                   context.push('/budgets/setup');
-                 },
-                 child: Container(
-                   padding: const EdgeInsets.symmetric(
-                     horizontal: kSpacing10,
-                     vertical: kSpacing4,
+                  context.push('/budgets/setup');
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kSpacing10,
+                    vertical: kSpacing4,
                   ),
                   decoration: BoxDecoration(
                     color: onSurface.withValues(alpha: 0.06),
@@ -574,11 +569,11 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     color: onSurface.withValues(alpha: 0.06),
                     shape: BoxShape.circle,
                   ),
-                    child: Icon(
-                      PesaFlowIcons.more,
-                      size: 16,
-                      color: onSurface.withValues(alpha: 0.7),
-                    ),
+                  child: Icon(
+                    PesaFlowIcons.more,
+                    size: 16,
+                    color: onSurface.withValues(alpha: 0.7),
+                  ),
                 ),
               ),
             ],
@@ -962,7 +957,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     TactileSpringContainer(
                       haptic: HapticType.soft,
                       onTap: () {
-                         context.push('/budgets/groups/${g.group.id}/add');
+                        context.push('/budgets/groups/${g.group.id}/add');
                       },
                       child: Container(
                         padding: const EdgeInsets.all(8),
@@ -1408,12 +1403,12 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           TactileSpringContainer(
             haptic: HapticType.soft,
             onTap: () {
-               context.push('/budgets/setup');
-             },
-             child: Container(
-               padding: const EdgeInsets.symmetric(
-                 horizontal: kSpacing12,
-                 vertical: kSpacing8,
+              context.push('/budgets/setup');
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kSpacing12,
+                vertical: kSpacing8,
               ),
               decoration: BoxDecoration(
                 color: theme.colorScheme.primary,
@@ -1447,12 +1442,12 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           TactileSpringContainer(
             haptic: HapticType.soft,
             onTap: () {
-               context.push('/budgets/setup');
-             },
-             child: Container(
-               padding: const EdgeInsets.symmetric(
-                 horizontal: kSpacing24,
-                 vertical: kSpacing14,
+              context.push('/budgets/setup');
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kSpacing24,
+                vertical: kSpacing14,
               ),
               decoration: BoxDecoration(
                 color: theme.colorScheme.primary,
@@ -1488,8 +1483,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           const SizedBox(height: kSpacing12),
           TextButton(
             onPressed: () {
-               PesaHaptics.light();
-               context.push('/budgets/add');
+              PesaHaptics.light();
+              context.push('/budgets/add');
             },
             child: Text(
               'Create Single Envelope Budget',
@@ -1542,11 +1537,11 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
             action: TactileSpringContainer(
               haptic: HapticType.soft,
               onTap: () {
-                 showSpringSheet(
-                   context,
-                   isScrollControlled: true,
-                   builder: (context) => const SavingsGoalFormSheet(),
-                 );
+                showSpringSheet(
+                  context,
+                  isScrollControlled: true,
+                  builder: (context) => const SavingsGoalFormSheet(),
+                );
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(
@@ -1959,17 +1954,22 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                           AppTheme.radiusSmall,
                                         ),
                                         child: TweenAnimationBuilder<double>(
-                                          tween: Tween<double>(begin: 0, end: goalPct),
-                                          duration: const Duration(milliseconds: 800),
-                                          curve: Curves.easeOutCubic,
-                                          builder: (context, value, _) => LinearProgressIndicator(
-                                            value: value,
-                                            backgroundColor: goalColor.withValues(
-                                              alpha: 0.12,
-                                            ),
-                                            color: goalColor,
-                                            minHeight: 6,
+                                          tween: Tween<double>(
+                                            begin: 0,
+                                            end: goalPct,
                                           ),
+                                          duration: const Duration(
+                                            milliseconds: 800,
+                                          ),
+                                          curve: Curves.easeOutCubic,
+                                          builder: (context, value, _) =>
+                                              LinearProgressIndicator(
+                                                value: value,
+                                                backgroundColor: goalColor
+                                                    .withValues(alpha: 0.12),
+                                                color: goalColor,
+                                                minHeight: 6,
+                                              ),
                                         ),
                                       ),
                                       const SizedBox(height: kSpacing4),

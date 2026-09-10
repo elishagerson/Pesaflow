@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 /// Crossfades between a skeleton loader and the actual content.
 ///
@@ -27,7 +28,7 @@ class SkeletonCrossfade extends StatelessWidget {
     }
 
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 280),
+      duration: MotionTokens.durationNormal,
       switchInCurve: Curves.easeOut,
       switchOutCurve: Curves.easeIn,
       transitionBuilder: (child, animation) {

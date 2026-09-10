@@ -114,10 +114,10 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
             SpringSimulation(MotionTokens.springBouncy, 0.0, 1.0, 0.0),
           )
           .then((_) {
-        if (!mounted) return;
-        // Checkmark draws itself after circle lands
-        _checkController.forward();
-      });
+            if (!mounted) return;
+            // Checkmark draws itself after circle lands
+            _checkController.forward();
+          });
 
       // Ring expansion starts slightly after circle
       Future.delayed(const Duration(milliseconds: 150), () {
@@ -127,7 +127,7 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
       });
 
       // Text fades in after checkmark completes
-      Future.delayed(const Duration(milliseconds: 350), () {
+      Future.delayed(MotionTokens.durationNormal, () {
         if (mounted) _textController.forward();
       });
     }
@@ -298,8 +298,9 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
                           Text(
                             widget.goalName,
                             style: theme.textTheme.titleMedium?.copyWith(
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.7),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.7,
+                              ),
                               fontWeight: FontWeight.w500,
                             ),
                             textAlign: TextAlign.center,
@@ -314,10 +315,7 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: kSpacing8),
-                          Text(
-                            '🎉',
-                            style: const TextStyle(fontSize: 24),
-                          ),
+                          Text('🎉', style: const TextStyle(fontSize: 24)),
                         ],
                       ),
                     ),

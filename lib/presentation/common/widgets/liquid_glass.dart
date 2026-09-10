@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 /// Named material thicknesses, mirroring visionOS/iOS glass materials.
 enum GlassMaterial {
@@ -82,7 +83,7 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
     super.initState();
     _entrance = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 350),
+      duration: MotionTokens.durationNormal,
     );
   }
 

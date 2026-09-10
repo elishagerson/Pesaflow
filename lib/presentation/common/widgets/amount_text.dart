@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -111,7 +112,7 @@ class _AmountTextState extends ConsumerState<AmountText> {
 
     return TweenAnimationBuilder<Color?>(
       tween: ColorTween(begin: previousColor, end: targetColor),
-      duration: context.motionDuration(const Duration(milliseconds: 350)),
+      duration: MotionTokens.durationNormal,
       builder: (context, animatedColor, _) {
         final effectiveColor = animatedColor ?? targetColor;
 

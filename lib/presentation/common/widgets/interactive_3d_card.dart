@@ -188,7 +188,7 @@ class _Interactive3DCardState extends State<Interactive3DCard>
                 end: _isPressed ? Offset(_tiltX, _tiltY) : Offset.zero,
               ),
               duration: Duration(milliseconds: _isPressed ? 80 : 500),
-              curve: _isPressed ? Curves.easeOutQuad : Curves.elasticOut,
+              curve: _isPressed ? Curves.easeOutQuad : Curves.easeOutCubic,
               builder: (context, tilt, child) {
                 // Perspective transformation matrix
                 final matrix = Matrix4.identity()

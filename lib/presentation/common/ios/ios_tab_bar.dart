@@ -79,8 +79,9 @@ class _IosTabBarState extends State<IosTabBar>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bottomPadding = MediaQuery.paddingOf(context).bottom;
-    final height =
-        widget.minimized ? IosTabBar.minimizedHeight : IosTabBar.navBarHeight;
+    final height = widget.minimized
+        ? IosTabBar.minimizedHeight
+        : IosTabBar.navBarHeight;
 
     const tabs = [
       _TabConfig(
@@ -144,12 +145,7 @@ class _IosTabBarState extends State<IosTabBar>
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: tabs.map((tab) {
-                    return _buildTab(
-                      context,
-                      tab,
-                      navFgColor,
-                      theme,
-                    );
+                    return _buildTab(context, tab, navFgColor, theme);
                   }).toList(),
                 );
               },
@@ -236,9 +232,7 @@ class _IosTabBarState extends State<IosTabBar>
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                 color: navFgColor.withValues(alpha: bgAlpha),
-                borderRadius: BorderRadius.circular(
-                  AppTheme.radiusPill,
-                ),
+                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
               ),
               alignment: Alignment.center,
               child: SingleChildScrollView(
@@ -253,13 +247,10 @@ class _IosTabBarState extends State<IosTabBar>
                       switchOutCurve: Curves.easeInCubic,
                       transitionBuilder: (child, anim) {
                         return ScaleTransition(
-                          scale: Tween<double>(
-                            begin: 0.82,
-                            end: 1.0,
-                          ).animate(
+                          scale: Tween<double>(begin: 0.82, end: 1.0).animate(
                             CurvedAnimation(
                               parent: anim,
-                              curve: Curves.easeOutBack,
+                              curve: Curves.easeOutCubic,
                             ),
                           ),
                           child: child,
@@ -269,9 +260,7 @@ class _IosTabBarState extends State<IosTabBar>
                         scale: iconScale,
                         child: Icon(
                           isSelected ? tab.activeIcon : tab.icon,
-                          key: ValueKey(
-                            '${tab.routeIndex}_$isSelected',
-                          ),
+                          key: ValueKey('${tab.routeIndex}_$isSelected'),
                           size: iconSize,
                           color: navFgColor,
                         ),
