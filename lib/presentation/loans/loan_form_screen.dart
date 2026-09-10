@@ -445,50 +445,59 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       const SizedBox(height: kSpacing16),
                       StaggeredFadeSlide(
                         index: 1,
-                        child: TextFormField(
-                          controller: _descriptionController,
-                          validator: (v) {
-                            if (v == null || v.trim().isEmpty) {
-                              return 'Enter a description';
-                            }
-                            return null;
-                          },
-                          decoration: context.inputDecoration(
-                            labelText: 'Description',
-                            hintText: 'e.g. M-Pesa Loan, Bank Loan',
-                            prefixIcon: const Icon(
-                              PesaFlowIcons.edit,
-                              size: 18,
+                        child: ShakeWidget(
+                          shaking: _shakeFields,
+                          child: TextFormField(
+                            controller: _descriptionController,
+                            validator: (v) {
+                              if (v == null || v.trim().isEmpty) {
+                                return 'Enter a description';
+                              }
+                              return null;
+                            },
+                            decoration: context.inputDecoration(
+                              labelText: 'Description',
+                              hintText: 'e.g. M-Pesa Loan, Bank Loan',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.edit,
+                                size: 18,
+                              ),
                             ),
+                            textCapitalization: TextCapitalization.sentences,
                           ),
-                          textCapitalization: TextCapitalization.sentences,
                         ),
                       ),
                       const SizedBox(height: kSpacing16),
                       StaggeredFadeSlide(
                         index: 2,
-                        child: TextField(
-                          controller: _senderController,
-                          decoration: context.inputDecoration(
-                            labelText: 'Lender / Source (optional)',
-                            hintText: 'e.g. Vodacom, NMB Bank',
-                            prefixIcon: const Icon(
-                              PesaFlowIcons.person,
-                              size: 18,
+                        child: ShakeWidget(
+                          shaking: _shakeFields,
+                          child: TextField(
+                            controller: _senderController,
+                            decoration: context.inputDecoration(
+                              labelText: 'Lender / Source (optional)',
+                              hintText: 'e.g. Vodacom, NMB Bank',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.person,
+                                size: 18,
+                              ),
                             ),
+                            textCapitalization: TextCapitalization.words,
                           ),
-                          textCapitalization: TextCapitalization.words,
                         ),
                       ),
                       const SizedBox(height: kSpacing16),
                       StaggeredFadeSlide(
                         index: 3,
-                        child: TextField(
-                          controller: _referenceController,
-                          decoration: context.inputDecoration(
-                            labelText: 'Reference (optional)',
-                            hintText: 'e.g. loan reference number',
-                            prefixIcon: const Icon(PesaFlowIcons.tag, size: 18),
+                        child: ShakeWidget(
+                          shaking: _shakeFields,
+                          child: TextField(
+                            controller: _referenceController,
+                            decoration: context.inputDecoration(
+                              labelText: 'Reference (optional)',
+                              hintText: 'e.g. loan reference number',
+                              prefixIcon: const Icon(PesaFlowIcons.tag, size: 18),
+                            ),
                           ),
                         ),
                       ),
@@ -518,25 +527,28 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       const SizedBox(height: kSpacing16),
                       StaggeredFadeSlide(
                         index: 5,
-                        child: TextFormField(
-                          controller: _interestRateController,
-                          keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true,
-                          ),
-                          validator: (v) {
-                            if (v == null || v.trim().isEmpty) return null;
-                            final rate = double.tryParse(v);
-                            if (rate == null || rate < 0) {
-                              return 'Enter a valid rate';
-                            }
-                            return null;
-                          },
-                          decoration: context.inputDecoration(
-                            labelText: 'Interest Rate',
-                            hintText: 'e.g. 18.5',
-                            prefixIcon: const Icon(
-                              PesaFlowIcons.percent,
-                              size: 18,
+                        child: ShakeWidget(
+                          shaking: _shakeFields,
+                          child: TextFormField(
+                            controller: _interestRateController,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                            validator: (v) {
+                              if (v == null || v.trim().isEmpty) return null;
+                              final rate = double.tryParse(v);
+                              if (rate == null || rate < 0) {
+                                return 'Enter a valid rate';
+                              }
+                              return null;
+                            },
+                            decoration: context.inputDecoration(
+                              labelText: 'Interest Rate',
+                              hintText: 'e.g. 18.5',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.percent,
+                                size: 18,
+                              ),
                             ),
                           ),
                         ),
