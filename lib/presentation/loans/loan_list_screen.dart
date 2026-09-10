@@ -15,7 +15,7 @@ import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
-import 'package:pesaflow/presentation/common/widgets/staggeredEntrance.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_entrance.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';

@@ -20,7 +20,7 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/presentation/common/widgets/hero_card_route.dart';
-import 'package:pesaflow/presentation/common/widgets/staggeredEntrance.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_entrance.dart';
 import 'package:pesaflow/presentation/savings_goals/savings_goal_detail_screen.dart';
 
 class SavingsGoalListScreen extends ConsumerWidget {

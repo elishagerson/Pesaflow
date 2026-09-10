@@ -18,7 +18,7 @@ import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
-import 'package:pesaflow/presentation/common/widgets/staggeredEntrance.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_entrance.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
