@@ -648,12 +648,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         }
                                         return null;
                                       },
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                      style: context.ts(14, fontWeight: FontWeight.w500),
                                     ),
                                   ),
                                 ],
@@ -717,15 +712,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       ),
                                       child: Text(
                                         'Year',
-                                        style: theme.textTheme.labelMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: _period == 'yearly'
-                                                  ? theme.colorScheme.primary
-                                                  : theme
-                                                        .colorScheme
-                                                        .onSurfaceVariant,
-                                            ),
+                                        style: context.ts(12, fontWeight: FontWeight.bold, color: _period == 'yearly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
                                       ),
                                     ),
                                   },
@@ -876,22 +863,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                                     ),
                                                 child: Text(
                                                   'All',
-                                                  style: theme
-                                                      .textTheme
-                                                      .labelMedium
-                                                      ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            _rolloverType ==
-                                                                'all'
-                                                            ? theme
-                                                                  .colorScheme
-                                                                  .primary
-                                                            : theme
-                                                                  .colorScheme
-                                                                  .onSurfaceVariant,
-                                                      ),
+                                                  style: context.ts(12, fontWeight: FontWeight.bold, color: _rolloverType == 'all' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
                                                 ),
                                               ),
                                               'capped': Padding(
@@ -902,22 +874,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                                     ),
                                                 child: Text(
                                                   'Capped',
-                                                  style: theme
-                                                      .textTheme
-                                                      .labelMedium
-                                                      ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            _rolloverType ==
-                                                                'capped'
-                                                            ? theme
-                                                                  .colorScheme
-                                                                  .primary
-                                                            : theme
-                                                                  .colorScheme
-                                                                  .onSurfaceVariant,
-                                                      ),
+                                                  style: context.ts(12, fontWeight: FontWeight.bold, color: _rolloverType == 'capped' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
                                                 ),
                                               ),
                                             },
@@ -953,13 +910,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                                           .upcoming,
                                                       keyboardType:
                                                           TextInputType.number,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .titleMedium!
-                                                          .copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
+                                                      style: context.ts(14, fontWeight: FontWeight.w500),
                                                     ),
                                                   ),
                                                 )
