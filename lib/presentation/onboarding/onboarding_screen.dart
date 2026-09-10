@@ -350,10 +350,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   onPressed: _finish,
                   child: Text(
                     'Skip',
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: context.ts(12, color: theme.colorScheme.onSurfaceVariant, fontWeight: FontWeight.w500),
                   ),
                 ),
               ),
@@ -396,19 +393,14 @@ class _WelcomePage extends StatelessWidget {
             const SizedBox(height: kSpacing32),
             Text(
               'Welcome to PesaFlow',
-              style: theme.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: context.ts(22, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: kSpacing16),
             Text(
               'Track your finances offline.\n100% private — data never leaves your device.',
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-                height: 1.5,
-              ),
+              style: context.ts(16, color: theme.colorScheme.onSurfaceVariant, height: 1.5),
             ),
           ],
         ),
@@ -473,18 +465,14 @@ class _SmsPermissionPage extends StatelessWidget {
             const SizedBox(height: kSpacing32),
             Text(
               'SMS Auto-Tracking',
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: context.ts(18, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: kSpacing16),
             Text(
               'PesaFlow can automatically read M-Pesa, Airtel Money, and bank SMS to log your transactions — no typing needed.',
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+              style: context.ts(14, color: theme.colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: kSpacing24),
             Container(
@@ -511,9 +499,7 @@ class _SmsPermissionPage extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'SMS data is processed locally and never sent anywhere.',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
+                      style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
                     ),
                   ),
                 ],
@@ -537,11 +523,7 @@ class _SmsPermissionPage extends StatelessWidget {
                   permissionGranted
                       ? 'SMS Permission Granted'
                       : 'You can also add transactions manually without SMS.',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: permissionGranted
-                        ? context.appColors.incomeColor
-                        : context.appColors.textMedium,
-                  ),
+                  style: context.ts(12, color: permissionGranted ? context.appColors.incomeColor : context.appColors.textMedium),
                 ),
               ],
             ),
@@ -577,10 +559,7 @@ class _AccountsPage extends StatelessWidget {
             index: 0,
             child: Text(
               'Set Up Accounts',
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                letterSpacing: -0.5,
-              ),
+              style: context.ts(18, fontWeight: FontWeight.bold, letterSpacing: -0.5),
             ),
           ),
           const SizedBox(height: kSpacing8),
@@ -588,9 +567,7 @@ class _AccountsPage extends StatelessWidget {
             index: 1,
             child: Text(
               'Select the accounts you use. You can add more later.',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+              style: context.ts(14, color: theme.colorScheme.onSurfaceVariant),
             ),
           ),
           const SizedBox(height: kSpacing24),
@@ -667,15 +644,7 @@ class _AccountsPage extends StatelessWidget {
                           Text(
                             e.key,
                             textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.titleSmall!
-                                .copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: isSelected
-                                      ? (theme.brightness == Brightness.dark
-                                            ? Colors.white
-                                            : theme.colorScheme.primary)
-                                      : context.appColors.textMedium,
-                                ),
+                            style: context.ts(12, fontWeight: FontWeight.bold, color: isSelected ? (theme.brightness == Brightness.dark ? Colors.white : theme.colorScheme.primary) : context.appColors.textMedium),
                           ),
                           const SizedBox(height: kSpacing8),
                           // Mini check bubble
@@ -743,19 +712,14 @@ class _CompletePage extends StatelessWidget {
             const SizedBox(height: kSpacing32),
             Text(
               'You\'re All Set!',
-              style: theme.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: context.ts(22, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: kSpacing16),
             Text(
               'Your offline finance tracker is ready.\nStart recording transactions and take control of your money.',
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-                height: 1.5,
-              ),
+              style: context.ts(16, color: theme.colorScheme.onSurfaceVariant, height: 1.5),
             ),
           ],
         ),

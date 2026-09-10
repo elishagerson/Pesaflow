@@ -288,12 +288,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     const SizedBox(height: kSpacing2),
                                     Text(
                                       'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
-                                      style: theme.textTheme.bodySmall!
-                                          .copyWith(
-                                            color: onSurface.withValues(
-                                              alpha: 0.6,
-                                            ),
-                                          ),
+                                      style: context.ts(12, color: onSurface.withValues(alpha: 0.6)),
                                     ),
                                   ],
                                 ),
@@ -307,9 +302,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                             const SizedBox(height: kSpacing24),
                             Text(
                               'PAYMENT AMOUNT',
-                              style: theme.textTheme.labelSmall!.copyWith(
-                                letterSpacing: 0.5,
-                              ),
+                              style: context.ts(10, letterSpacing: 0.5),
                             ),
                             const SizedBox(height: kSpacing8),
                             _buildAmountField(
@@ -405,9 +398,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                             const SizedBox(height: kSpacing24),
                             Text(
                               'MEMO',
-                              style: theme.textTheme.labelSmall!.copyWith(
-                                letterSpacing: 0.5,
-                              ),
+                              style: context.ts(10, letterSpacing: 0.5),
                             ),
                             const SizedBox(height: kSpacing8),
                             TextField(
@@ -429,9 +420,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                               children: [
                                 Text(
                                   'FROM ACCOUNT',
-                                  style: theme.textTheme.labelSmall!.copyWith(
-                                    letterSpacing: 0.5,
-                                  ),
+                                  style: context.ts(10, letterSpacing: 0.5),
                                 ),
                                 if (selectedAccountId != null)
                                   GestureDetector(
@@ -440,13 +429,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     ),
                                     child: Text(
                                       'Clear',
-                                      style: theme.textTheme.labelMedium!
-                                          .copyWith(
-                                            color: context
-                                                .appColors
-                                                .expenseColor
-                                                .withValues(alpha: 0.8),
-                                          ),
+                                      style: context.ts(12, color: context.appColors.expenseColor.withValues(alpha: 0.8)),
                                     ),
                                   ),
                               ],
@@ -482,13 +465,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         const SizedBox(width: kSpacing10),
                                         Text(
                                           'No accounts available. Create one first.',
-                                          style: theme.textTheme.bodySmall!
-                                              .copyWith(
-                                                color: context
-                                                    .appColors
-                                                    .expenseColor
-                                                    .withValues(alpha: 0.9),
-                                              ),
+                                          style: context.ts(12, color: context.appColors.expenseColor.withValues(alpha: 0.9)),
                                         ),
                                       ],
                                     ),

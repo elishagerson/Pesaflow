@@ -621,10 +621,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               Center(
                                 child: Text(
                                   'No active accounts. Tap Add Account below to start.',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.6),
-                                  ),
+                                  style: context.ts(12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                                 ),
                               ),
                             ],
@@ -898,12 +895,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               (a) => a.id == _selectedAccountId,
                                               orElse: () => Account(id: '', name: 'Account', type: '', balance: 0, icon: 'wallet', sortOrder: 0, isArchived: false, createdAt: DateTime.now()),
                                             ).name}',
-                                            style: theme.textTheme.labelSmall
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color:
-                                                      theme.colorScheme.primary,
-                                                ),
+                                            style: context.ts(10, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                                           ),
                                           backgroundColor: theme
                                               .colorScheme
@@ -1042,12 +1034,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                     ? 'Add your first transaction to get started with tracking your finances.'
                                                     : 'No activity recorded for this specific account.',
                                                 textAlign: TextAlign.center,
-                                                style: theme.textTheme.bodySmall
-                                                    ?.copyWith(
-                                                      color: theme
-                                                          .colorScheme
-                                                          .onSurfaceVariant,
-                                                    ),
+                                                style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
                                               ),
                                               if (isNewUser) ...[
                                                 const SizedBox(
@@ -1379,13 +1366,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                                         Text(
                                                                           item.account?.name ??
                                                                               'Offline',
-                                                                          style: theme.textTheme.labelSmall?.copyWith(
-                                                                            color: theme.colorScheme.onSurface.withValues(
-                                                                              alpha: 0.6,
-                                                                            ),
-                                                                            fontWeight:
-                                                                                FontWeight.w600,
-                                                                          ),
+                                                                          style: context.ts(10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6), fontWeight: FontWeight.w600),
                                                                         ),
                                                                         const SizedBox(
                                                                           width:

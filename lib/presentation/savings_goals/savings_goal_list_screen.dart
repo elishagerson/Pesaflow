@@ -404,7 +404,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                                   children: [
                                     Text(
                                       goal.name,
-                                      style: theme.textTheme.titleSmall,
+                                      style: context.ts(12),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -460,12 +460,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                                   else
                                     Text(
                                       '$daysLeft days remaining',
-                                      style: theme.textTheme.labelSmall
-                                          ?.copyWith(
-                                            color: theme
-                                                .colorScheme
-                                                .onSurfaceVariant,
-                                          ),
+                                      style: context.ts(10, color: theme.colorScheme.onSurfaceVariant),
                                     ),
                                   const SizedBox(height: kSpacing4),
                                   GestureDetector(
@@ -479,11 +474,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                                       ),
                                       child: Text(
                                         'Edit',
-                                        style: theme.textTheme.labelSmall
-                                            ?.copyWith(
-                                              color: theme.colorScheme.primary,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                        style: context.ts(10, color: theme.colorScheme.primary, fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ),
@@ -499,13 +490,11 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                                 CurrencyFormatter.formatCents(
                                   goal.currentAmount,
                                 ),
-                                style: theme.textTheme.titleMedium,
+                                style: context.ts(14),
                               ),
                               Text(
                                 'Target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
+                                style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
                               ),
                             ],
                           ),
@@ -533,9 +522,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                           const SizedBox(height: kSpacing4),
                           Text(
                             '${(goalPct * 100).round()}% completed',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
+                            style: context.ts(10, color: theme.colorScheme.onSurfaceVariant),
                           ),
                         ],
                       ),

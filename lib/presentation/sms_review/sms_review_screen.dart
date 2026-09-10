@@ -140,9 +140,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                       padding: const EdgeInsets.all(kSpacing16),
                       child: Text(
                         title ?? 'Assign Category',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: context.ts(14, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Expanded(
@@ -168,10 +166,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                               ),
                               title: Text(
                                 'Add Custom Category',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: context.ts(14, color: theme.colorScheme.primary, fontWeight: FontWeight.bold),
                               ),
                               onTap: () async {
                                 final newCat = await showAddCategoryDialog(
@@ -203,9 +198,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                             title: Text(cat.name),
                             subtitle: Text(
                               cat.type.toUpperCase(),
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
+                              style: context.ts(10, color: theme.colorScheme.onSurfaceVariant),
                             ),
                             onTap: () => context.pop(cat.id),
                           );
@@ -1197,17 +1190,13 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                         const SizedBox(height: kSpacing16),
                         Text(
                           'Failed to load reviews',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: context.ts(14, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: kSpacing8),
                         Text(
                           '$err',
                           textAlign: TextAlign.center,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+                          style: context.ts(14, color: theme.colorScheme.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -1739,12 +1728,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                             ),
                             child: Text(
                               'APPROVE',
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(
-                                    color: context.appColors.onBgColor,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 1.5,
-                                  ),
+                              style: context.ts(14, color: context.appColors.onBgColor, fontWeight: FontWeight.w700, letterSpacing: 1.5),
                             ),
                           ),
                         ),
@@ -1795,12 +1779,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                             ),
                             child: Text(
                               'REJECT',
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(
-                                    color: context.appColors.onBgColor,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 1.5,
-                                  ),
+                              style: context.ts(14, color: context.appColors.onBgColor, fontWeight: FontWeight.w700, letterSpacing: 1.5),
                             ),
                           ),
                         ),
