@@ -268,9 +268,7 @@ Future<void> _generateAndShare(
   required ExportFormat format,
 }) async {
   try {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Generating export...')));
+    CustomToast.show(context, message: 'Generating export…');
 
     final bool isMonthly = year != null && month != null;
     final DateTime dateStart;

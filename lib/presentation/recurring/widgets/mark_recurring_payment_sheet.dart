@@ -269,16 +269,10 @@ Future<void> showMarkRecurringPaymentSheet({
                                           () => isProcessing = false,
                                         );
                                         if (context.mounted) {
-                                          ScaffoldMessenger.of(
+                                          CustomToast.show(
                                             context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'Failed to mark payment: $e',
-                                              ),
-                                              behavior:
-                                                  SnackBarBehavior.floating,
-                                            ),
+                                            message: 'Failed to mark payment: $e',
+                                            type: ToastType.error,
                                           );
                                         }
                                       }
