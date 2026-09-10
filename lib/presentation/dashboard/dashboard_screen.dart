@@ -627,8 +627,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             const SizedBox(height: kSpacing32),
 
                             // ── Right Now — what needs attention today ──
-                            const RightNowCard(),
-                            const SizedBox(height: kSpacingL),
+                            RightNowCard(),
+                            const SizedBox(height: kSpacing16),
 
                             // ── 3b. Quick Actions ──
                             StaggeredFadeSlide(

@@ -724,6 +724,14 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                 message: 'Payment recorded!',
                                                 type: ToastType.success,
                                               );
+                                              // Show celebration if loan is now fully paid
+                                              if (remainingCents - paymentAmount() <= 0) {
+                                                MilestoneCelebration.show(
+                                                  sheetContext,
+                                                  goalName: loan.description ?? 'Loan',
+                                                  amount: loan.amount / 100.0,
+                                                );
+                                              }
                                               if (sheetContext.mounted) {
                                                 Navigator.of(
                                                   sheetContext,

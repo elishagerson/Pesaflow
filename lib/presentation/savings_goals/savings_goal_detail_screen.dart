@@ -795,7 +795,7 @@ class _SavingsGoalDetailScreenState
               MilestoneCelebration.show(
                 context,
                 goalName: goal.name,
-                amount: CurrencyFormatter.formatCents(goal.targetAmount),
+                amount: goal.targetAmount / 100.0,
               );
             }
           });
