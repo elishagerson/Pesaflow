@@ -311,6 +311,7 @@ Future<void> showMarkRecurringPaymentSheet({
 }
 
 Widget _buildSummaryRow({
+  required BuildContext context,
   required ThemeData theme,
   required String label,
   required String value,
@@ -323,13 +324,11 @@ Widget _buildSummaryRow({
         width: 120,
         child: Text(
           label,
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-          ),
+          style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
         ),
       ),
       Expanded(
-        child: Text(value, style: valueStyle ?? theme.textTheme.bodyMedium),
+        child: Text(value, style: valueStyle ?? context.ts(15)),
       ),
     ],
   );
