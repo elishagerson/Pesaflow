@@ -960,27 +960,12 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                           Expanded(
                                             child: Text(
                                               'Notify when spending reaches',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onSurface
-                                                        .withValues(alpha: 0.7),
-                                                  ),
+                                              style: context.ts(12, fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
                                             ),
                                           ),
                                           AnimatedDefaultTextStyle(
-                                            duration: const Duration(
-                                              milliseconds: 200,
-                                            ),
-                                            style: theme.textTheme.titleMedium!
-                                                .copyWith(
-                                                  fontWeight: FontWeight.w700,
-                                                  color: thresholdColor,
-                                                ),
+                                            duration: const Duration(milliseconds: 200),
+                                            style: context.ts(14, fontWeight: FontWeight.w700, color: thresholdColor),
                                             child: Text(
                                               '${(_threshold * 100).round()}%',
                                             ),
@@ -1083,14 +1068,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         isEditing
                                             ? 'Update Budget'
                                             : 'Create Budget',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color:
-                                                  context.appColors.onBgColor,
-                                            ),
+                                        style: context.ts(14, fontWeight: FontWeight.bold, color: context.appColors.onBgColor),
                                       ),
                               ),
                             ),

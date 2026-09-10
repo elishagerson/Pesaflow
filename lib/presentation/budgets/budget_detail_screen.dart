@@ -816,10 +816,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                       children: [
                                         Text(
                                           'Daily Spend',
-                                          style: theme.textTheme.titleSmall
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                          style: context.ts(12, fontWeight: FontWeight.w600),
                                         ),
                                         const Spacer(),
                                         _ChartLegend(
@@ -1007,9 +1004,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                             children: [
                               Text(
                                 'Period History',
-                                style: theme.textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: context.ts(12, fontWeight: FontWeight.w600),
                               ),
                               const Spacer(),
                               Text(
@@ -1151,12 +1146,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
               const SizedBox(width: kSpacing4),
               Text(
                 '${diff.abs().round()}% ${diff > 0 ? 'higher' : 'lower'} than last period',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: diff > 0
-                      ? theme.extension<AppColorsTheme>()!.warningColor
-                      : theme.colorScheme.primary,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: context.ts(11, fontWeight: FontWeight.w600, color: diff > 0 ? theme.extension<AppColorsTheme>()!.warningColor : theme.colorScheme.primary),
               ),
             ],
           ),
@@ -1192,19 +1182,13 @@ class _StatCard extends StatelessWidget {
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.labelSmall!.copyWith(
-              color: context.appColors.textMedium,
-            ),
+            style: context.ts(10, color: context.appColors.textMedium),
           ),
           const SizedBox(height: kSpacing4),
           AmountText(
             amountInCents: amount.abs(),
             animate: true,
-            style: Theme.of(context).textTheme.titleSmall!.copyWith(
-              fontWeight: FontWeight.w700,
-              color: color,
-              letterSpacing: -0.3,
-            ),
+            style: context.ts(12, fontWeight: FontWeight.w700, color: color, letterSpacing: -0.3),
           ),
           if (subtitle != null) ...[
             const SizedBox(height: kSpacing2),
@@ -1245,9 +1229,7 @@ class _TimelineProgressBar extends StatelessWidget {
             children: [
               Text(
                 'Timeline',
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: context.ts(12, fontWeight: FontWeight.w600),
               ),
               const Spacer(),
               Text(

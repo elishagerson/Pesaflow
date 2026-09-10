@@ -213,9 +213,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
           ),
           child: Text(
             'Set Your First Goal',
-            style: theme.textTheme.labelLarge?.copyWith(
-              color: theme.colorScheme.onPrimary,
-            ),
+            style: context.ts(14, color: theme.colorScheme.onPrimary),
           ),
         ),
       ),
@@ -253,10 +251,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
               const SizedBox(width: kSpacing12),
               Text(
                 'TOTAL SAVED',
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: onSurface.withValues(alpha: 0.6),
-                  letterSpacing: 0.8,
-                ),
+                style: context.ts(10, color: onSurface.withValues(alpha: 0.6), letterSpacing: 0.8),
               ),
             ],
           ),
@@ -268,9 +263,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
           const SizedBox(height: kSpacing4),
           Text(
             'Combined target: ${CurrencyFormatter.formatCents(totalTarget)}',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
+            style: context.ts(11, color: theme.colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: kSpacing12),
           TweenAnimationBuilder<double>(
@@ -294,9 +287,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
           const SizedBox(height: kSpacing6),
           Text(
             '${(overallPct * 100).round()}% of combined target achieved',
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
+            style: context.ts(10, color: theme.colorScheme.onSurfaceVariant),
           ),
         ],
       ),
