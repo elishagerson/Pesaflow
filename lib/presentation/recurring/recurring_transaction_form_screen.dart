@@ -20,6 +20,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/shake_widget.dart';
 
 class RecurringTransactionFormScreen extends ConsumerStatefulWidget {
   final String? recurringId;
@@ -48,6 +49,7 @@ class _RecurringTransactionFormScreenState
 
   bool _isLoading = false;
   bool _isEditing = false;
+  bool _shakeFields = false;
 
   bool get _isDirty {
     if (_isLoading) return false;
@@ -118,7 +120,13 @@ class _RecurringTransactionFormScreenState
   }
 
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      setState(() => _shakeFields = true);
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) setState(() => _shakeFields = false);
+      });
+      return;
+    }
     if (_selectedAccountId == null) {
       CustomToast.show(
         context,
@@ -488,28 +496,31 @@ class _RecurringTransactionFormScreenState
                       const SizedBox(height: kSpacing16),
                       StaggeredFadeSlide(
                         index: 2,
-                        child: TextFormField(
-                          controller: _amountController,
-                          keyboardType: TextInputType.number,
-                          decoration: context.inputDecoration(
-                            labelText: 'Amount (Tsh)',
-                            hintText: 'e.g. 50000',
-                            prefixIcon: const Icon(
-                              PesaFlowIcons.money,
-                              size: 18,
+                        child: ShakeWidget(
+                          shaking: _shakeFields,
+                          child: TextFormField(
+                            controller: _amountController,
+                            keyboardType: TextInputType.number,
+                            decoration: context.inputDecoration(
+                              labelText: 'Amount (Tsh)',
+                              hintText: 'e.g. 50000',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.money,
+                                size: 18,
+                              ),
                             ),
+                            validator: (v) {
+                              if (v == null || v.trim().isEmpty) {
+                                return 'Enter amount';
+                              }
+                              final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
+                              final parsed = int.tryParse(cleaned);
+                              if (parsed == null || parsed <= 0) {
+                                return 'Enter a valid amount';
+                              }
+                              return null;
+                            },
                           ),
-                          validator: (v) {
-                            if (v == null || v.trim().isEmpty) {
-                              return 'Enter amount';
-                            }
-                            final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
-                            final parsed = int.tryParse(cleaned);
-                            if (parsed == null || parsed <= 0) {
-                              return 'Enter a valid amount';
-                            }
-                            return null;
-                          },
                         ),
                       ),
                       const SizedBox(height: kSpacing16),
@@ -552,33 +563,39 @@ class _RecurringTransactionFormScreenState
                       const SizedBox(height: kSpacing16),
                       StaggeredFadeSlide(
                         index: 4,
-                        child: TextField(
-                          controller: _descriptionController,
-                          decoration: context.inputDecoration(
-                            labelText: 'Description (optional)',
-                            hintText: 'e.g. Monthly rent',
-                            prefixIcon: const Icon(
-                              PesaFlowIcons.edit,
-                              size: 18,
+                        child: ShakeWidget(
+                          shaking: _shakeFields,
+                          child: TextField(
+                            controller: _descriptionController,
+                            decoration: context.inputDecoration(
+                              labelText: 'Description (optional)',
+                              hintText: 'e.g. Monthly rent',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.edit,
+                                size: 18,
+                              ),
                             ),
+                            textCapitalization: TextCapitalization.sentences,
                           ),
-                          textCapitalization: TextCapitalization.sentences,
                         ),
                       ),
                       if (_type == 'expense') ...[
                         const SizedBox(height: kSpacing16),
                         StaggeredFadeSlide(
                           index: 4,
-                          child: TextField(
-                            controller: _keywordsController,
-                            decoration: context.inputDecoration(
-                              labelText:
-                                  'SMS Auto-Matching Keywords (optional)',
-                              hintText:
-                                  'e.g. netflix, spotify (comma separated)',
-                              prefixIcon: const Icon(
-                                PesaFlowIcons.key,
-                                size: 18,
+                          child: ShakeWidget(
+                            shaking: _shakeFields,
+                            child: TextField(
+                              controller: _keywordsController,
+                              decoration: context.inputDecoration(
+                                labelText:
+                                    'SMS Auto-Matching Keywords (optional)',
+                                hintText:
+                                    'e.g. netflix, spotify (comma separated)',
+                                prefixIcon: const Icon(
+                                  PesaFlowIcons.key,
+                                  size: 18,
+                                ),
                               ),
                             ),
                           ),
@@ -629,27 +646,30 @@ class _RecurringTransactionFormScreenState
                         child: Row(
                           children: [
                             Expanded(
-                              child: TextFormField(
-                                controller: _intervalController,
-                                keyboardType: TextInputType.number,
-                                decoration: context.inputDecoration(
-                                  labelText: 'Every',
-                                  hintText: '1',
-                                  prefixIcon: const Icon(
-                                    PesaFlowIcons.tag,
-                                    size: 18,
+                              child: ShakeWidget(
+                                shaking: _shakeFields,
+                                child: TextFormField(
+                                  controller: _intervalController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: context.inputDecoration(
+                                    labelText: 'Every',
+                                    hintText: '1',
+                                    prefixIcon: const Icon(
+                                      PesaFlowIcons.tag,
+                                      size: 18,
+                                    ),
                                   ),
+                                  validator: (v) {
+                                    if (v == null || v.trim().isEmpty) {
+                                      return 'Required';
+                                    }
+                                    final parsed = int.tryParse(v);
+                                    if (parsed == null || parsed < 1) {
+                                      return 'Min 1';
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                validator: (v) {
-                                  if (v == null || v.trim().isEmpty) {
-                                    return 'Required';
-                                  }
-                                  final parsed = int.tryParse(v);
-                                  if (parsed == null || parsed < 1) {
-                                    return 'Min 1';
-                                  }
-                                  return null;
-                                },
                               ),
                             ),
                             const SizedBox(width: kSpacing12),

@@ -27,6 +27,7 @@ import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
+import 'package:pesaflow/presentation/common/widgets/shake_widget.dart';
 
 class TransactionFormScreen extends ConsumerStatefulWidget {
   final String? transactionId;
@@ -70,6 +71,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   bool _isEditMode = false;
   bool _isSaving = false;
   bool _isDirty = false;
+  bool _shakeFields = false;
   bool _suppressDirtyTracking = false;
   Transaction? _existingTransaction;
 
@@ -193,7 +195,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   Future<void> _saveTransaction() async {
     if (_isSaving) return;
 
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      setState(() => _shakeFields = true);
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) setState(() => _shakeFields = false);
+      });
+      return;
+    }
 
     final cents = CurrencyFormatter.parseToCents(_amountController.text);
     if (_selectedAccountId == null) {
@@ -984,47 +992,50 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         padding: const EdgeInsets.symmetric(
                           horizontal: kSpacing24,
                         ),
-                        child: FormField<String>(
-                          validator: (_) {
-                            final cents = CurrencyFormatter.parseToCents(
-                              _amountController.text,
-                            );
-                            if (cents <= 0) return 'Enter a valid amount';
-                            return null;
-                          },
-                          builder: (state) {
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    amt,
-                                    style: context.ts(
-                                      96,
-                                      fontWeight: FontWeight.w900,
-                                      color: amtColor,
-                                      letterSpacing: -2,
-                                    ),
-                                  ),
-                                ),
-                                if (state.hasError)
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      top: kSpacing8,
-                                    ),
+                        child: ShakeWidget(
+                          shaking: _shakeFields,
+                          child: FormField<String>(
+                            validator: (_) {
+                              final cents = CurrencyFormatter.parseToCents(
+                                _amountController.text,
+                              );
+                              if (cents <= 0) return 'Enter a valid amount';
+                              return null;
+                            },
+                            builder: (state) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
                                     child: Text(
-                                      state.errorText!,
+                                      amt,
                                       style: context.ts(
-                                        14,
-                                        color: theme.colorScheme.error,
-                                        fontWeight: FontWeight.w500,
+                                        96,
+                                        fontWeight: FontWeight.w900,
+                                        color: amtColor,
+                                        letterSpacing: -2,
                                       ),
                                     ),
                                   ),
-                              ],
-                            );
-                          },
+                                  if (state.hasError)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: kSpacing8,
+                                      ),
+                                      child: Text(
+                                        state.errorText!,
+                                        style: context.ts(
+                                          14,
+                                          color: theme.colorScheme.error,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
                         ),
                       ),
 
