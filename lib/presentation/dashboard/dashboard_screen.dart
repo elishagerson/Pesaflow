@@ -31,6 +31,7 @@ import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/right_now_card.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -624,6 +625,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               ),
                             ],
                             const SizedBox(height: kSpacing32),
+
+                            // ── Right Now — what needs attention today ──
+                            const RightNowCard(),
+                            const SizedBox(height: kSpacingL),
 
                             // ── 3b. Quick Actions ──
                             StaggeredFadeSlide(

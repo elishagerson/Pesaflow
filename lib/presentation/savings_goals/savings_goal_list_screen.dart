@@ -428,7 +428,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  if (goal.isCompleted)
+                                  if (goal.isCompleted || goalPct >= 1.0)
                                     Container(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: kSpacing8,
@@ -441,13 +441,24 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                                           AppTheme.radiusInput,
                                         ),
                                       ),
-                                      child: Text(
-                                        'COMPLETED',
-                                        style: context.ts(
-                                          9,
-                                          color: theme.colorScheme.primary,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.celebration_rounded,
+                                            size: 12,
+                                            color: theme.colorScheme.primary,
+                                          ),
+                                          const SizedBox(width: kSpacing4),
+                                          Text(
+                                            'COMPLETED',
+                                            style: context.ts(
+                                              9,
+                                              color: theme.colorScheme.primary,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     )
                                   else

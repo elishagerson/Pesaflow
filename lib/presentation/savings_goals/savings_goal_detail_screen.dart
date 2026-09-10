@@ -28,6 +28,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
+import 'package:pesaflow/presentation/common/widgets/milestone_celebration.dart';
 
 class SavingsGoalDetailScreen extends ConsumerStatefulWidget {
   final String goalId;
@@ -45,6 +46,7 @@ class _SavingsGoalDetailScreenState
   String? _selectedAccountId;
   bool _deductFromWallet = false;
   final _scrollController = ScrollController();
+  bool _hasShownMilestone = false;
 
   @override
   void initState() {
@@ -784,6 +786,20 @@ class _SavingsGoalDetailScreenState
             ? (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0)
             : 0.0;
         final percentInt = (pct * 100).round();
+
+        // Trigger milestone celebration when goal reaches 100%
+        if (pct >= 1.0 && !_hasShownMilestone && mounted) {
+          _hasShownMilestone = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              MilestoneCelebration.show(
+                context,
+                goalName: goal.name,
+                amount: CurrencyFormatter.formatCents(goal.targetAmount),
+              );
+            }
+          });
+        }
 
         final dailyTarget = remainingDays > 0
             ? (goal.targetAmount - goal.currentAmount) ~/ (remainingDays * 100)
