@@ -265,16 +265,18 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                             Container(
                               padding: const EdgeInsets.all(kSpacing12),
                               decoration: BoxDecoration(
-                                color: const Color(
-                                  0xFF609F8A,
-                                ).withValues(alpha: 0.05),
+                                color: context
+                                    .appColors
+                                    .incomeColor
+                                    .withValues(alpha: 0.05),
                                 borderRadius: BorderRadius.circular(
                                   AppTheme.radiusInput,
                                 ),
                                 border: Border.all(
-                                  color: const Color(
-                                    0xFF609F8A,
-                                  ).withValues(alpha: 0.15),
+                                  color: context
+                                      .appColors
+                                      .incomeColor
+                                      .withValues(alpha: 0.15),
                                 ),
                               ),
                               child: Row(
@@ -282,15 +284,16 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   Icon(
                                     PesaFlowIcons.info,
                                     size: 16,
-                                    color: const Color(
-                                      0xFF609F8A,
-                                    ).withValues(alpha: 0.8),
+                                    color: context
+                                        .appColors
+                                        .incomeColor
+                                        .withValues(alpha: 0.8),
                                   ),
                                   const SizedBox(width: kSpacing8),
                                   Expanded(
                                     child: Text(
                                       'This records the payment without deducting from any wallet account. Use this for cash or external payments.',
-                                      style: context.ts(11, color: const Color(0xFF609F8A).withValues(alpha: 0.8), height: 1.3),
+                                      style: context.ts(11, color: context.appColors.incomeColor.withValues(alpha: 0.8), height: 1.3),
                                     ),
                                   ),
                                 ],
