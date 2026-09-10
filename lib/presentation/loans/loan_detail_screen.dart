@@ -132,6 +132,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                 ),
                 Expanded(
                   child: ListView(
+                    controller: _scrollController,
                     padding: const EdgeInsets.all(kSpacing16),
                     children: [
                       StaggeredFadeSlide(

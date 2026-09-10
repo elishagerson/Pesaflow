@@ -21,6 +21,7 @@ import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/presentation/common/widgets/hero_card_route.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_entrance.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/presentation/savings_goals/savings_goal_detail_screen.dart';
 
 class SavingsGoalListScreen extends ConsumerStatefulWidget {
@@ -169,7 +170,10 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
         ),
       ),
       floatingActionButton: PremiumExtendedFab(
-        onPressed: () => context.push('/savings-goals/add'),
+        onPressed: () {
+          PesaHaptics.medium();
+          context.push('/savings-goals/add');
+        },
         label: 'New Goal',
       ),
     );
@@ -307,11 +311,14 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
     final daysLeft = diff < 0 ? 0 : diff;
 
     return TactileSpringContainer(
-      onTap: () => pushHeroCard(
-        context,
-        SavingsGoalDetailScreen(goalId: goal.id),
-        'goal_${goal.id}',
-      ),
+      onTap: () {
+        PesaHaptics.light();
+        pushHeroCard(
+          context,
+          SavingsGoalDetailScreen(goalId: goal.id),
+          'goal_${goal.id}',
+        );
+      },
       selectedColor: theme.colorScheme.onSurface,
       child: Hero(
         tag: 'goal_${goal.id}',
