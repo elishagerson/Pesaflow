@@ -1338,6 +1338,7 @@ class _ActionPill extends StatelessWidget {
   Widget build(BuildContext context) {
     return TactileSpringContainer(
       onTap: onTap,
+      selectedColor: Theme.of(context).colorScheme.onSurface,
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: kSpacing10,

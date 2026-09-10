@@ -10,6 +10,7 @@ import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
@@ -539,6 +540,7 @@ class _RecurringTransactionFormScreenState
                           ],
                           selected: {_type},
                           onSelectionChanged: (v) {
+                            PesaHaptics.light();
                             setState(() {
                               _type = v.first;
                               _selectedCategoryId = null;

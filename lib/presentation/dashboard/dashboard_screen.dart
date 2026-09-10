@@ -253,6 +253,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 // "Personal" Pill
                                 TactileSpringContainer(
                                   onTap: () {},
+                                  selectedColor: theme.colorScheme.onSurface,
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 14,
@@ -302,6 +303,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             paletteVisibilityProvider.notifier,
                                           )
                                           .toggle(),
+                                      selectedColor: theme.colorScheme.onSurface,
                                       child: Container(
                                         width: 44,
                                         height: 44,
@@ -330,6 +332,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     const SizedBox(width: kSpacing8),
                                     TactileSpringContainer(
                                       onTap: () => context.push('/sms-review'),
+                                      selectedColor: theme.colorScheme.onSurface,
                                       child: Stack(
                                         clipBehavior: Clip.none,
                                         children: [
@@ -477,6 +480,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             }
                                           });
                                         },
+                                        selectedColor: theme.colorScheme.onSurface,
                                         child: Semantics(
                                           label:
                                               '${account.name}, ${_formatCompact(account.balance)}${isSelected ? ', selected filter' : ''}',
@@ -705,6 +709,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         0,
                                       ),
                                       child: TactileSpringContainer(
+                                        selectedColor: theme.colorScheme.onSurface,
                                         onTap: () => context.push('/budgets'),
                                         child: GlassCard(
                                           padding: const EdgeInsets.symmetric(
@@ -851,6 +856,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     ),
                                   ),
                                   TactileSpringContainer(
+                                    selectedColor: theme.colorScheme.onSurface,
                                     onTap: () => context.push('/transactions'),
                                     child: Text(
                                       'See All',
