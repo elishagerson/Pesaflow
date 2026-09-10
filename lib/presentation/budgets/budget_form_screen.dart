@@ -286,10 +286,12 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                 child: TactileSpringContainer(
                   haptic: HapticType.soft,
                   onTap: () {
+                    PesaHaptics.light();
                     setState(() {
                       _selectedCategoryId = cat.id;
                     });
                   },
+                  selectedColor: theme.colorScheme.onSurface,
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     width: 76,
@@ -1093,7 +1095,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               horizontal: kSpacing16,
                             ),
                             child: TactileSpringContainer(
-                              onTap: _save,
+                              onTap: () {
+                                PesaHaptics.medium();
+                                _save();
+                              },
+                              selectedColor: theme.colorScheme.onSurface,
                               child: Container(
                                 width: double.infinity,
                                 height: 50,
@@ -1152,7 +1158,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               horizontal: kSpacing16,
                             ),
                             child: TactileSpringContainer(
-                              onTap: _deleteBudget,
+                              onTap: () {
+                                PesaHaptics.heavy();
+                                _deleteBudget();
+                              },
+                              selectedColor: theme.colorScheme.onSurface,
                               child: Container(
                                 width: double.infinity,
                                 height: 48,

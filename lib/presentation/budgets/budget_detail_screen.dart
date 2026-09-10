@@ -20,6 +20,7 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -169,6 +170,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                             ),
                             const SizedBox(width: kSpacing8),
                             TactileSpringContainer(
+                              selectedColor: theme.colorScheme.onSurface,
                               onTap: () async {
                                 final confirm = await ModernDialog.show<bool>(
                                   context: context,
