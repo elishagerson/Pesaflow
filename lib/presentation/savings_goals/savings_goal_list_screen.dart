@@ -326,216 +326,225 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
       child: Hero(
         tag: 'goal_${goal.id}',
         child: Column(
-        children: [
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 12, bottom: 12),
-                  child: Container(
-                    width: 4,
-                    decoration: BoxDecoration(
-                      color: mutedGoalColor,
-                      borderRadius: BorderRadius.circular(4),
+          children: [
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 8,
+                      top: 12,
+                      bottom: 12,
+                    ),
+                    child: Container(
+                      width: 4,
+                      decoration: BoxDecoration(
+                        color: mutedGoalColor,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 12,
-                      right: kSpacing16,
-                      top: kSpacing20,
-                      bottom: kSpacing20,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Semantics(
-                              label:
-                                  'Savings goal progress: ${(goalPct * 100).round()}% completed.',
-                              excludeSemantics: true,
-                              child: SizedBox(
-                                height: 48,
-                                width: 48,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    PieChart(
-                                      PieChartData(
-                                        startDegreeOffset: -90,
-                                        sectionsSpace: 0,
-                                        centerSpaceRadius: 16,
-                                        sections: [
-                                          PieChartSectionData(
-                                            value: goalPct * 100,
-                                            color: mutedGoalColor,
-                                            radius: 4,
-                                            showTitle: false,
-                                          ),
-                                          PieChartSectionData(
-                                            value: (1.0 - goalPct) * 100,
-                                            color: mutedGoalColor.withValues(
-                                              alpha: 0.12,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 12,
+                        right: kSpacing16,
+                        top: kSpacing20,
+                        bottom: kSpacing20,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Semantics(
+                                label:
+                                    'Savings goal progress: ${(goalPct * 100).round()}% completed.',
+                                excludeSemantics: true,
+                                child: SizedBox(
+                                  height: 48,
+                                  width: 48,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      PieChart(
+                                        PieChartData(
+                                          startDegreeOffset: -90,
+                                          sectionsSpace: 0,
+                                          centerSpaceRadius: 16,
+                                          sections: [
+                                            PieChartSectionData(
+                                              value: goalPct * 100,
+                                              color: mutedGoalColor,
+                                              radius: 4,
+                                              showTitle: false,
                                             ),
-                                            radius: 4,
-                                            showTitle: false,
-                                          ),
-                                        ],
+                                            PieChartSectionData(
+                                              value: (1.0 - goalPct) * 100,
+                                              color: mutedGoalColor.withValues(
+                                                alpha: 0.12,
+                                              ),
+                                              radius: 4,
+                                              showTitle: false,
+                                            ),
+                                          ],
+                                        ),
                                       ),
+                                      Icon(
+                                        getGoalIcon(goal.icon),
+                                        color: goalColor,
+                                        size: 16,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: kSpacing14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      goal.name,
+                                      style: theme.textTheme.titleSmall,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    Icon(
-                                      getGoalIcon(goal.icon),
-                                      color: goalColor,
-                                      size: 16,
+                                    const SizedBox(height: kSpacing2),
+                                    Text(
+                                      'by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
+                                      style: context.appTypography.labelMicro
+                                          .copyWith(
+                                            color: theme
+                                                .colorScheme
+                                                .onSurfaceVariant,
+                                          ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: kSpacing14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text(
-                                    goal.name,
-                                    style: theme.textTheme.titleSmall,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: kSpacing2),
-                                  Text(
-                                    'by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
-                                    style: context.appTypography.labelMicro
-                                        .copyWith(
-                                          color: theme
-                                              .colorScheme
-                                              .onSurfaceVariant,
+                                  if (goal.isCompleted)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing8,
+                                        vertical: kSpacing4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.primary
+                                            .withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusInput,
                                         ),
+                                      ),
+                                      child: Text(
+                                        'COMPLETED',
+                                        style: context.ts(
+                                          9,
+                                          color: theme.colorScheme.primary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    Text(
+                                      '$daysLeft days remaining',
+                                      style: theme.textTheme.labelSmall
+                                          ?.copyWith(
+                                            color: theme
+                                                .colorScheme
+                                                .onSurfaceVariant,
+                                          ),
+                                    ),
+                                  const SizedBox(height: kSpacing4),
+                                  GestureDetector(
+                                    onTap: () => context.push(
+                                      '/savings-goals/${goal.id}/edit',
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing8,
+                                        vertical: kSpacing4,
+                                      ),
+                                      child: Text(
+                                        'Edit',
+                                        style: theme.textTheme.labelSmall
+                                            ?.copyWith(
+                                              color: theme.colorScheme.primary,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                if (goal.isCompleted)
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: kSpacing8,
-                                      vertical: kSpacing4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: theme.colorScheme.primary
-                                          .withValues(alpha: 0.12),
-                                      borderRadius: BorderRadius.circular(
-                                        AppTheme.radiusInput,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'COMPLETED',
-                                      style: context.ts(
-                                        9,
-                                        color: theme.colorScheme.primary,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  )
-                                else
-                                  Text(
-                                    '$daysLeft days remaining',
-                                    style: theme.textTheme.labelSmall?.copyWith(
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                const SizedBox(height: kSpacing4),
-                                GestureDetector(
-                                  onTap: () => context.push(
-                                    '/savings-goals/${goal.id}/edit',
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: kSpacing8,
-                                      vertical: kSpacing4,
-                                    ),
-                                    child: Text(
-                                      'Edit',
-                                      style: theme.textTheme.labelSmall
-                                          ?.copyWith(
-                                            color: theme.colorScheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: kSpacing14),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              CurrencyFormatter.formatCents(goal.currentAmount),
-                              style: theme.textTheme.titleMedium,
-                            ),
-                            Text(
-                              'Target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: kSpacing8),
-                        TweenAnimationBuilder<double>(
-                          duration: const Duration(milliseconds: 800),
-                          curve: Curves.easeOutCubic,
-                          tween: Tween<double>(begin: 0, end: goalPct),
-                          builder: (context, value, child) {
-                            return ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusSmall,
-                              ),
-                              child: LinearProgressIndicator(
-                                value: value,
-                                backgroundColor: goalColor.withValues(
-                                  alpha: 0.12,
-                                ),
-                                color: goalColor,
-                                minHeight: 6,
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: kSpacing4),
-                        Text(
-                          '${(goalPct * 100).round()}% completed',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
+                            ],
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: kSpacing14),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                CurrencyFormatter.formatCents(
+                                  goal.currentAmount,
+                                ),
+                                style: theme.textTheme.titleMedium,
+                              ),
+                              Text(
+                                'Target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: kSpacing8),
+                          TweenAnimationBuilder<double>(
+                            duration: const Duration(milliseconds: 800),
+                            curve: Curves.easeOutCubic,
+                            tween: Tween<double>(begin: 0, end: goalPct),
+                            builder: (context, value, child) {
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusSmall,
+                                ),
+                                child: LinearProgressIndicator(
+                                  value: value,
+                                  backgroundColor: goalColor.withValues(
+                                    alpha: 0.12,
+                                  ),
+                                  color: goalColor,
+                                  minHeight: 6,
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: kSpacing4),
+                          Text(
+                            '${(goalPct * 100).round()}% completed',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          if (index < totalCount - 1)
-            Divider(
-              height: 1,
-              thickness: 0.5,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-              indent: 4 + 16,
-            ),
-        ],
-      ),
+            if (index < totalCount - 1)
+              Divider(
+                height: 1,
+                thickness: 0.5,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                indent: 4 + 16,
+              ),
+          ],
+        ),
       ),
     );
   }

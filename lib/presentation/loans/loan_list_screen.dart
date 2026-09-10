@@ -61,7 +61,10 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
 
     return Scaffold(
       floatingActionButton: PremiumExtendedFab(
-        onPressed: () => context.push('/loans/add'),
+        onPressed: () {
+          PesaHaptics.medium();
+          context.push('/loans/add');
+        },
         label: 'Add Loan',
       ),
       body: SafeArea(
@@ -87,10 +90,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // ── Floating Top Bar ──
-                const FloatingTopBar(
-                  title: 'Loans',
-                  padding: EdgeInsets.zero,
-                ),
+                const FloatingTopBar(title: 'Loans', padding: EdgeInsets.zero),
                 const SizedBox(height: 16),
                 ...StaggeredEntrance(
                   children: [
@@ -442,7 +442,10 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
     return Hero(
       tag: 'loan-${loan.id}',
       child: TactileSpringContainer(
-        onTap: () => context.push('/loans/${loan.id}'),
+        onTap: () {
+          PesaHaptics.light();
+          context.push('/loans/${loan.id}');
+        },
         selectedColor: theme.colorScheme.onSurface,
         child: Column(
           children: [
@@ -590,7 +593,10 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
     return Hero(
       tag: 'loan-${loan.id}',
       child: TactileSpringContainer(
-        onTap: () => context.push('/loans/${loan.id}'),
+        onTap: () {
+          PesaHaptics.light();
+          context.push('/loans/${loan.id}');
+        },
         selectedColor: theme.colorScheme.onSurface,
         child: Column(
           children: [

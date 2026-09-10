@@ -69,8 +69,7 @@ class BudgetDetailScreen extends ConsumerStatefulWidget {
   const BudgetDetailScreen({required this.budgetId, super.key});
 
   @override
-  ConsumerState<BudgetDetailScreen> createState() =>
-      _BudgetDetailScreenState();
+  ConsumerState<BudgetDetailScreen> createState() => _BudgetDetailScreenState();
 }
 
 class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
@@ -141,292 +140,296 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                 Hero(
                   tag: 'budget_${widget.budgetId}',
                   child: Container(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FloatingTopBar(
-                        padding: EdgeInsets.zero,
-                        actions: [
-                          TactileSpringContainer(
-                            onTap: () =>
-                                context.push('/budgets/${widget.budgetId}/edit'),
-                            child: Container(
-                              padding: const EdgeInsets.all(kSpacing10),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.08,
-                                ),
-                                shape: BoxShape.circle,
+                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FloatingTopBar(
+                          padding: EdgeInsets.zero,
+                          actions: [
+                            TactileSpringContainer(
+                              onTap: () => context.push(
+                                '/budgets/${widget.budgetId}/edit',
                               ),
-                              child: Icon(
-                                PesaFlowIcons.edit,
-                                size: 18,
-                                color: theme.colorScheme.onSurface,
+                              child: Container(
+                                padding: const EdgeInsets.all(kSpacing10),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.08,
+                                  ),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  PesaFlowIcons.edit,
+                                  size: 18,
+                                  color: theme.colorScheme.onSurface,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: kSpacing8),
-                          TactileSpringContainer(
-                            onTap: () async {
-                              final confirm = await ModernDialog.show<bool>(
-                                context: context,
-                                title: const Text('Delete Budget?'),
-                                titleIcon: PesaFlowIcons.delete,
-                                iconColor: context.appColors.expenseColor,
-                                content: const Text(
-                                  'This will permanently remove this budget and all its history.',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.of(
-                                      context,
-                                      rootNavigator: true,
-                                    ).pop(false),
-                                    child: const Text('Cancel'),
+                            const SizedBox(width: kSpacing8),
+                            TactileSpringContainer(
+                              onTap: () async {
+                                final confirm = await ModernDialog.show<bool>(
+                                  context: context,
+                                  title: const Text('Delete Budget?'),
+                                  titleIcon: PesaFlowIcons.delete,
+                                  iconColor: context.appColors.expenseColor,
+                                  content: const Text(
+                                    'This will permanently remove this budget and all its history.',
                                   ),
-                                  TextButton(
-                                    onPressed: () => Navigator.of(
-                                      context,
-                                      rootNavigator: true,
-                                    ).pop(true),
-                                    child: Text(
-                                      'Delete',
-                                      style: TextStyle(
-                                        color: context.appColors.expenseColor,
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop(true),
+                                      child: Text(
+                                        'Delete',
+                                        style: TextStyle(
+                                          color: context.appColors.expenseColor,
+                                        ),
                                       ),
                                     ),
+                                  ],
+                                );
+                                if (confirm == true) {
+                                  if (!context.mounted) return;
+                                  final budget = bp.budget;
+                                  final savedBudgetName = budget.name;
+                                  final budgetRepo = ref.read(
+                                    budgetRepositoryProvider,
+                                  );
+
+                                  // Pop immediately to caller (prevents "Budget Not Found" empty state flicker)
+                                  context.pop();
+
+                                  // Delete immediately
+                                  await budgetRepo.deleteBudget(
+                                    widget.budgetId,
+                                  );
+
+                                  // Invalidate providers
+                                  ref.invalidate(budgetGroupsProvider);
+                                  ref.invalidate(standaloneBudgetsProvider);
+                                  ref.invalidate(activeBudgetsStreamProvider);
+                                  ref.invalidate(budgetProgressProvider);
+
+                                  if (context.mounted) {
+                                    CustomToast.show(
+                                      context,
+                                      message: '"$savedBudgetName" deleted',
+                                      type: ToastType.success,
+                                      duration: const Duration(seconds: 5),
+                                      actionLabel: 'Undo',
+                                      onAction: () async {
+                                        await budgetRepo.createBudget(
+                                          name: budget.name,
+                                          categoryId: budget.categoryId,
+                                          period: budget.period,
+                                          amount: budget.amount,
+                                          rollover: budget.rollover,
+                                          rolloverType: budget.rolloverType,
+                                          rolloverCap: budget.rolloverCap,
+                                          startDate: budget.startDate,
+                                          notificationThreshold:
+                                              budget.notificationThreshold,
+                                          groupId: budget.groupId,
+                                        );
+                                        ref.invalidate(budgetGroupsProvider);
+                                        ref.invalidate(
+                                          standaloneBudgetsProvider,
+                                        );
+                                        ref.invalidate(
+                                          activeBudgetsStreamProvider,
+                                        );
+                                        ref.invalidate(budgetProgressProvider);
+                                        if (context.mounted) {
+                                          CustomToast.show(
+                                            context,
+                                            message:
+                                                '"$savedBudgetName" restored',
+                                            type: ToastType.info,
+                                          );
+                                        }
+                                      },
+                                    );
+                                  }
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(kSpacing10),
+                                decoration: BoxDecoration(
+                                  color: context.appColors.expenseColor
+                                      .withValues(alpha: 0.12),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  PesaFlowIcons.delete,
+                                  size: 18,
+                                  color: context.appColors.expenseColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: kSpacing12),
+                        if (bp.budget.groupId != null) ...[
+                          GestureDetector(
+                            onTap: () => context.push(
+                              '/budgets/groups/${bp.budget.groupId}',
+                            ),
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: kSpacing8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: kSpacing10,
+                                vertical: kSpacing4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: context.appColors.onBgColor.withValues(
+                                  alpha: 0.12,
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusPill,
+                                ),
+                                border: Border.all(
+                                  color: context.appColors.onBgColor.withValues(
+                                    alpha: 0.15,
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    PesaFlowIcons.back,
+                                    size: 12,
+                                    color: context.appColors.onBgColor
+                                        .withValues(alpha: 0.7),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Consumer(
+                                    builder: (context, ref, _) {
+                                      final groups =
+                                          ref
+                                              .watch(budgetGroupsProvider)
+                                              .asData
+                                              ?.value ??
+                                          [];
+                                      final group = groups
+                                          .where(
+                                            (g) =>
+                                                g.group.id == bp.budget.groupId,
+                                          )
+                                          .firstOrNull;
+                                      final groupName =
+                                          group?.group.name ?? 'Budget Group';
+                                      return Text(
+                                        groupName,
+                                        style: context.ts(
+                                          12,
+                                          fontWeight: FontWeight.w600,
+                                          color: context.appColors.onBgColor,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ],
-                              );
-                              if (confirm == true) {
-                                if (!context.mounted) return;
-                                final budget = bp.budget;
-                                final savedBudgetName = budget.name;
-                                final budgetRepo = ref.read(
-                                  budgetRepositoryProvider,
-                                );
-
-                                // Pop immediately to caller (prevents "Budget Not Found" empty state flicker)
-                                context.pop();
-
-                                // Delete immediately
-                                await budgetRepo.deleteBudget(widget.budgetId);
-
-                                // Invalidate providers
-                                ref.invalidate(budgetGroupsProvider);
-                                ref.invalidate(standaloneBudgetsProvider);
-                                ref.invalidate(activeBudgetsStreamProvider);
-                                ref.invalidate(budgetProgressProvider);
-
-                                if (context.mounted) {
-                                  CustomToast.show(
-                                    context,
-                                    message: '"$savedBudgetName" deleted',
-                                    type: ToastType.success,
-                                    duration: const Duration(seconds: 5),
-                                    actionLabel: 'Undo',
-                                    onAction: () async {
-                                      await budgetRepo.createBudget(
-                                        name: budget.name,
-                                        categoryId: budget.categoryId,
-                                        period: budget.period,
-                                        amount: budget.amount,
-                                        rollover: budget.rollover,
-                                        rolloverType: budget.rolloverType,
-                                        rolloverCap: budget.rolloverCap,
-                                        startDate: budget.startDate,
-                                        notificationThreshold:
-                                            budget.notificationThreshold,
-                                        groupId: budget.groupId,
-                                      );
-                                      ref.invalidate(budgetGroupsProvider);
-                                      ref.invalidate(standaloneBudgetsProvider);
-                                      ref.invalidate(
-                                        activeBudgetsStreamProvider,
-                                      );
-                                      ref.invalidate(budgetProgressProvider);
-                                      if (context.mounted) {
-                                        CustomToast.show(
-                                          context,
-                                          message:
-                                              '"$savedBudgetName" restored',
-                                          type: ToastType.info,
-                                        );
-                                      }
-                                    },
-                                  );
-                                }
-                              }
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(kSpacing10),
+                              ),
+                            ),
+                          ),
+                        ],
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                bp.budget.name,
+                                style: context.ts(
+                                  28,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: -0.8,
+                                  color: context.appColors.onBgColor,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const SizedBox(width: kSpacing10),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: kSpacing10,
+                                vertical: kSpacing4,
+                              ),
                               decoration: BoxDecoration(
-                                color: context.appColors.expenseColor
-                                    .withValues(alpha: 0.12),
-                                shape: BoxShape.circle,
+                                color:
+                                    (status.isOverBudget
+                                            ? theme.colorScheme.error
+                                            : catColor)
+                                        .withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusPill,
+                                ),
                               ),
-                              child: Icon(
-                                PesaFlowIcons.delete,
-                                size: 18,
-                                color: context.appColors.expenseColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: kSpacing12),
-                      if (bp.budget.groupId != null) ...[
-                        GestureDetector(
-                          onTap: () => context.push(
-                            '/budgets/groups/${bp.budget.groupId}',
-                          ),
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: kSpacing8),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kSpacing10,
-                              vertical: kSpacing4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: context.appColors.onBgColor.withValues(
-                                alpha: 0.12,
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusPill,
-                              ),
-                              border: Border.all(
-                                color: context.appColors.onBgColor.withValues(
-                                  alpha: 0.15,
+                              child: Text(
+                                status.isOverBudget
+                                    ? 'Over budget'
+                                    : '${(status.percentage * 100).round()}%',
+                                style: context.ts(
+                                  12,
+                                  fontWeight: FontWeight.w600,
+                                  color: status.isOverBudget
+                                      ? theme.colorScheme.error
+                                      : catColor,
                                 ),
                               ),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  PesaFlowIcons.back,
-                                  size: 12,
-                                  color: context.appColors.onBgColor.withValues(
-                                    alpha: 0.7,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Consumer(
-                                  builder: (context, ref, _) {
-                                    final groups =
-                                        ref
-                                            .watch(budgetGroupsProvider)
-                                            .asData
-                                            ?.value ??
-                                        [];
-                                    final group = groups
-                                        .where(
-                                          (g) =>
-                                              g.group.id == bp.budget.groupId,
-                                        )
-                                        .firstOrNull;
-                                    final groupName =
-                                        group?.group.name ?? 'Budget Group';
-                                    return Text(
-                                      groupName,
-                                      style: context.ts(
-                                        12,
-                                        fontWeight: FontWeight.w600,
-                                        color: context.appColors.onBgColor,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
+                          ],
                         ),
-                      ],
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              bp.budget.name,
-                              style: context.ts(
-                                28,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: -0.8,
-                                color: context.appColors.onBgColor,
+                        const SizedBox(height: kSpacing6),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: kSpacing8,
+                                vertical: kSpacing2,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const SizedBox(width: kSpacing10),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kSpacing10,
-                              vertical: kSpacing4,
-                            ),
-                            decoration: BoxDecoration(
-                              color:
-                                  (status.isOverBudget
-                                          ? theme.colorScheme.error
-                                          : catColor)
-                                      .withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusPill,
+                              decoration: BoxDecoration(
+                                color: catColor.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusSmall,
+                                ),
+                              ),
+                              child: Text(
+                                bp.category.name,
+                                style: context.ts(
+                                  11,
+                                  fontWeight: FontWeight.w600,
+                                  color: catColor,
+                                ),
                               ),
                             ),
-                            child: Text(
-                              status.isOverBudget
-                                  ? 'Over budget'
-                                  : '${(status.percentage * 100).round()}%',
-                              style: context.ts(
-                                12,
-                                fontWeight: FontWeight.w600,
-                                color: status.isOverBudget
-                                    ? theme.colorScheme.error
-                                    : catColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: kSpacing6),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kSpacing8,
-                              vertical: kSpacing2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: catColor.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusSmall,
-                              ),
-                            ),
-                            child: Text(
-                              bp.category.name,
+                            const SizedBox(width: kSpacing8),
+                            Text(
+                              bp.budget.period.toUpperCase(),
                               style: context.ts(
                                 11,
-                                fontWeight: FontWeight.w600,
-                                color: catColor,
+                                fontWeight: FontWeight.w500,
+                                color: context.appColors.onBgColor.withValues(
+                                  alpha: 0.4,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: kSpacing8),
-                          Text(
-                            bp.budget.period.toUpperCase(),
-                            style: context.ts(
-                              11,
-                              fontWeight: FontWeight.w500,
-                              color: context.appColors.onBgColor.withValues(
-                                alpha: 0.4,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                 ),
                 Expanded(
                   child: SingleChildScrollView(
@@ -631,7 +634,9 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                             type: ToastType.success,
                                           );
                                           ref.invalidate(
-                                            budgetDetailProvider(widget.budgetId),
+                                            budgetDetailProvider(
+                                              widget.budgetId,
+                                            ),
                                           );
                                           ref.invalidate(
                                             savingsGoalsStreamProvider,
@@ -1041,8 +1046,9 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                           error: (e, _) => ErrorState(
                             title: 'Failed to Load Periods',
                             message: e.toString(),
-                            onRetry: () =>
-                                ref.invalidate(budgetPeriodsProvider(widget.budgetId)),
+                            onRetry: () => ref.invalidate(
+                              budgetPeriodsProvider(widget.budgetId),
+                            ),
                           ),
                         ),
                       ],

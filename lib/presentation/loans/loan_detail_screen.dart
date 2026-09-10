@@ -62,7 +62,9 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loansAsync = ref.watch(loansStreamProvider);
-    final transactionsAsync = ref.watch(loanTransactionsStreamProvider(widget.loanId));
+    final transactionsAsync = ref.watch(
+      loanTransactionsStreamProvider(widget.loanId),
+    );
 
     return loansAsync.when(
       data: (loans) {
