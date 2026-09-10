@@ -20,11 +20,38 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
-class LoanListScreen extends ConsumerWidget {
+class LoanListScreen extends ConsumerStatefulWidget {
   const LoanListScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LoanListScreen> createState() => _LoanListScreenState();
+}
+
+class _LoanListScreenState extends ConsumerState<LoanListScreen> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listen(scrollToTopProvider, (_, _) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final activeLoansAsync = ref.watch(activeLoansStreamProvider);
     final paidLoansAsync = ref.watch(paidLoansStreamProvider);
@@ -47,6 +74,7 @@ class LoanListScreen extends ConsumerWidget {
             ref.refresh(paidLoansStreamProvider.future),
           ]),
           child: SingleChildScrollView(
+            controller: _scrollController,
             key: const PageStorageKey('loan_list'),
             padding: const EdgeInsets.fromLTRB(
               kSpacing16,

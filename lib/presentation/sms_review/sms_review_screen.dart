@@ -34,6 +34,21 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
   final Set<String> _selectedIds = {};
   bool _selectAll = false;
   bool _showSwipeHint = true;
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listen(scrollToTopProvider, (_, _) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
 
   String _formatProvider(String? provider) {
     if (provider == null) return 'Unknown';
@@ -428,6 +443,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           Expanded(
                             child: ListView.builder(
                               key: const PageStorageKey('sms_review'),
+                              controller: _scrollController,
                               physics: const BouncingScrollPhysics(),
                               padding: EdgeInsets.fromLTRB(
                                 kSpacing16,

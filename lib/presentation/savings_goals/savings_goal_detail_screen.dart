@@ -43,6 +43,21 @@ class _SavingsGoalDetailScreenState
   final _noteController = TextEditingController();
   String? _selectedAccountId;
   bool _deductFromWallet = false;
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listen(scrollToTopProvider, (_, _) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
 
   int _calculateDaysRemaining(DateTime targetDate) {
     final diff = targetDate.difference(DateTime.now()).inDays;
@@ -725,6 +740,7 @@ class _SavingsGoalDetailScreenState
   void dispose() {
     _amountController.dispose();
     _noteController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -886,6 +902,7 @@ class _SavingsGoalDetailScreenState
                 // ── Scrollable body ──
                 Expanded(
                   child: SingleChildScrollView(
+                    controller: _scrollController,
                     physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.fromLTRB(
                       kSpacing16,

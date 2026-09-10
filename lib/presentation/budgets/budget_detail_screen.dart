@@ -64,15 +64,43 @@ final dailySpendProvider =
       );
     });
 
-class BudgetDetailScreen extends ConsumerWidget {
+class BudgetDetailScreen extends ConsumerStatefulWidget {
   final String budgetId;
   const BudgetDetailScreen({required this.budgetId, super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final detailAsync = ref.watch(budgetDetailProvider(budgetId));
-    final periodsAsync = ref.watch(budgetPeriodsProvider(budgetId));
-    final dailyAsync = ref.watch(dailySpendProvider(budgetId));
+  ConsumerState<BudgetDetailScreen> createState() =>
+      _BudgetDetailScreenState();
+}
+
+class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listen(scrollToTopProvider, (_, _) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final detailAsync = ref.watch(budgetDetailProvider(widget.budgetId));
+    final periodsAsync = ref.watch(budgetPeriodsProvider(widget.budgetId));
+    final dailyAsync = ref.watch(dailySpendProvider(widget.budgetId));
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -402,6 +430,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                 ),
                 Expanded(
                   child: SingleChildScrollView(
+                    controller: _scrollController,
                     physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.fromLTRB(
                       kSpacing16,

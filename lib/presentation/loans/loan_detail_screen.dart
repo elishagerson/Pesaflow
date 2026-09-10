@@ -26,16 +26,43 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 
-class LoanDetailScreen extends ConsumerWidget {
+class LoanDetailScreen extends ConsumerStatefulWidget {
   final String loanId;
 
   const LoanDetailScreen({required this.loanId, super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LoanDetailScreen> createState() => _LoanDetailScreenState();
+}
+
+class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listen(scrollToTopProvider, (_, _) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loansAsync = ref.watch(loansStreamProvider);
-    final transactionsAsync = ref.watch(loanTransactionsStreamProvider(loanId));
+    final transactionsAsync = ref.watch(loanTransactionsStreamProvider(widget.loanId));
 
     return loansAsync.when(
       data: (loans) {

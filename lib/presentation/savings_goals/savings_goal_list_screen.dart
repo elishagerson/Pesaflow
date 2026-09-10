@@ -23,11 +23,39 @@ import 'package:pesaflow/presentation/common/widgets/hero_card_route.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_entrance.dart';
 import 'package:pesaflow/presentation/savings_goals/savings_goal_detail_screen.dart';
 
-class SavingsGoalListScreen extends ConsumerWidget {
+class SavingsGoalListScreen extends ConsumerStatefulWidget {
   const SavingsGoalListScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SavingsGoalListScreen> createState() =>
+      _SavingsGoalListScreenState();
+}
+
+class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listen(scrollToTopProvider, (_, _) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
     final totalSaved = ref.watch(savingsGoalsTotalSavedProvider);
@@ -80,6 +108,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                         ref.invalidate(savingsGoalsTotalSavedProvider);
                       },
                       child: SingleChildScrollView(
+                        controller: _scrollController,
                         key: const PageStorageKey('savings_goal_list'),
                         padding: const EdgeInsets.all(kSpacing16),
                         child: Column(
