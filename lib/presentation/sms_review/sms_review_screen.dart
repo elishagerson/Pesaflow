@@ -310,6 +310,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           }
                         });
                       },
+                      selectedColor: theme.colorScheme.onSurface,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: kSpacing10,
@@ -1063,6 +1064,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                       _selectAll = false;
                                     });
                                   },
+                                  selectedColor: theme.colorScheme.onSurface,
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: kSpacing14,
@@ -1093,6 +1095,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 Expanded(
                                   child: TactileSpringContainer(
                                     onTap: _showBatchCategoryPicker,
+                                    selectedColor: theme.colorScheme.onSurface,
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: kSpacing10,
@@ -1121,6 +1124,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 // Approve
                                 Expanded(
                                   child: TactileSpringContainer(
+                                    selectedColor: theme.colorScheme.onSurface,
                                     onTap: () async {
                                       for (final id in _selectedIds) {
                                         await ref

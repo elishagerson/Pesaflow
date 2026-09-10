@@ -48,6 +48,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                     final item = itemAsync.value;
                     if (item != null) _duplicateTransaction(context, item);
                   },
+                  selectedColor: theme.colorScheme.onSurface,
                   child: Container(
                     padding: const EdgeInsets.all(kSpacing10),
                     decoration: BoxDecoration(
@@ -65,6 +66,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 TactileSpringContainer(
                   onTap: () =>
                       context.push('/transactions/edit/$transactionId'),
+                  selectedColor: theme.colorScheme.onSurface,
                   child: Container(
                     padding: const EdgeInsets.all(kSpacing10),
                     decoration: BoxDecoration(
@@ -77,6 +79,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 const SizedBox(width: kSpacing8),
                 TactileSpringContainer(
                   onTap: () => _confirmDelete(context, ref),
+                  selectedColor: theme.colorScheme.onSurface,
                   child: Container(
                     padding: const EdgeInsets.all(kSpacing10),
                     decoration: BoxDecoration(

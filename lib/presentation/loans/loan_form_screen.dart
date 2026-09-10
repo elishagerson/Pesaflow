@@ -151,6 +151,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   padding: const EdgeInsets.only(bottom: kSpacing6),
                   child: TactileSpringContainer(
                     onTap: () => context.pop(cat),
+                    selectedColor: theme.colorScheme.onSurface,
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.symmetric(
@@ -614,6 +615,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                         index: 8,
                         child: TactileSpringContainer(
                           onTap: _isSaving ? null : _submit,
+                          selectedColor: theme.colorScheme.onSurface,
                           child: Container(
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(

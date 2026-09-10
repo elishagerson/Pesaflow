@@ -801,6 +801,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }) {
     return TactileSpringContainer(
       onTap: onTap,
+      selectedColor: theme.colorScheme.onSurface,
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: kSpacing14,
@@ -1033,6 +1034,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       TactileSpringContainer(
                         onTap: () =>
                             _showCategorySheet(context, theme, categoriesAsync),
+                        selectedColor: theme.colorScheme.onSurface,
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: kSpacing20,

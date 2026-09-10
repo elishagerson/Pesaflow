@@ -5,6 +5,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 
 class SummaryNavCardRow extends StatelessWidget {
   final List<dynamic> budgets;
@@ -107,7 +108,10 @@ class _SummaryNavCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: kSpacing12),
       child: TactileSpringContainer(
-        onTap: onTap,
+        onTap: () {
+          PesaHaptics.light();
+          onTap();
+        },
         child: Container(
           width: 130,
           height: 96,

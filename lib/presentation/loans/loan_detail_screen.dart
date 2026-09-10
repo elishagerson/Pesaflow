@@ -859,7 +859,10 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => showPaymentSheet(context, ref, loan),
+                onPressed: () {
+                  PesaHaptics.medium();
+                  showPaymentSheet(context, ref, loan);
+                },
                 icon: const Icon(PesaFlowIcons.payment, size: 18),
                 label: const Text('Make a Payment'),
                 style: ElevatedButton.styleFrom(

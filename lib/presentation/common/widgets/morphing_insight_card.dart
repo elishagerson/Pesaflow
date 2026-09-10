@@ -6,6 +6,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
 class MorphingInsightCard extends StatefulWidget {
@@ -122,6 +123,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
 
     return TactileSpringContainer(
       onTap: () {
+        PesaHaptics.light();
         if (widget.onTap != null) {
           widget.onTap!();
         } else {

@@ -402,6 +402,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                             height: kSpacing48,
                             child: TactileSpringContainer(
                               onTap: _isLoading ? null : _save,
+                              selectedColor: theme.colorScheme.onSurface,
                               child: Container(
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
