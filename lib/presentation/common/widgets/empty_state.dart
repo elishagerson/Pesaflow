@@ -26,8 +26,7 @@ class EmptyState extends StatefulWidget {
   State<EmptyState> createState() => _EmptyStateState();
 }
 
-class _EmptyStateState extends State<EmptyState>
-    with TickerProviderStateMixin {
+class _EmptyStateState extends State<EmptyState> with TickerProviderStateMixin {
   // Entrance: spring scale from 0.8 → 1.0
   late AnimationController _entranceController;
   late Animation<double> _entranceScale;
@@ -48,10 +47,7 @@ class _EmptyStateState extends State<EmptyState>
     );
 
     _entranceScale = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _entranceController,
-        curve: Curves.easeOutBack,
-      ),
+      CurvedAnimation(parent: _entranceController, curve: Curves.easeOutBack),
     );
 
     // Breathing: subtle scale oscillation, 3s full cycle
@@ -61,10 +57,7 @@ class _EmptyStateState extends State<EmptyState>
     );
 
     _breathScale = Tween<double>(begin: 1.0, end: 1.02).animate(
-      CurvedAnimation(
-        parent: _breathController,
-        curve: Curves.easeInOut,
-      ),
+      CurvedAnimation(parent: _breathController, curve: Curves.easeInOut),
     );
   }
 
@@ -102,7 +95,8 @@ class _EmptyStateState extends State<EmptyState>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final illustration = widget.illustration ??
+    final illustration =
+        widget.illustration ??
         Semantics(
           excludeSemantics: true,
           child: Icon(
@@ -115,14 +109,14 @@ class _EmptyStateState extends State<EmptyState>
     final animatedIllustration = context.isReducedMotion
         ? illustration
         : AnimatedBuilder(
-            animation: Listenable.merge([_entranceController, _breathController]),
+            animation: Listenable.merge([
+              _entranceController,
+              _breathController,
+            ]),
             builder: (context, child) {
               // Combine entrance scale and breath scale
               final combinedScale = _entranceScale.value * _breathScale.value;
-              return Transform.scale(
-                scale: combinedScale,
-                child: child,
-              );
+              return Transform.scale(scale: combinedScale, child: child);
             },
             child: illustration,
           );
@@ -200,10 +194,7 @@ class _AnimatedEntranceWrapper extends StatelessWidget {
       animation: entranceController,
       builder: (context, child) {
         final opacity = entranceController.value.clamp(0.0, 1.0);
-        return Opacity(
-          opacity: opacity,
-          child: child,
-        );
+        return Opacity(opacity: opacity, child: child);
       },
       child: child,
     );
@@ -216,10 +207,7 @@ class _DelayedFadeIn extends StatefulWidget {
   final Duration delay;
   final Widget child;
 
-  const _DelayedFadeIn({
-    required this.delay,
-    required this.child,
-  });
+  const _DelayedFadeIn({required this.delay, required this.child});
 
   @override
   State<_DelayedFadeIn> createState() => _DelayedFadeInState();
@@ -238,10 +226,7 @@ class _DelayedFadeInState extends State<_DelayedFadeIn>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _opacity = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    );
+    _opacity = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
   }
 
   @override
@@ -267,10 +252,7 @@ class _DelayedFadeInState extends State<_DelayedFadeIn>
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _opacity,
-      child: widget.child,
-    );
+    return FadeTransition(opacity: _opacity, child: widget.child);
   }
 }
 

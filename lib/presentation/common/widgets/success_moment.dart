@@ -245,9 +245,7 @@ class _SuccessMomentOverlayState extends State<_SuccessMomentOverlay>
                           animation: _messageController,
                           builder: (context, child) {
                             return Opacity(
-                              opacity: reduced
-                                  ? 1.0
-                                  : _messageController.value,
+                              opacity: reduced ? 1.0 : _messageController.value,
                               child: Transform.translate(
                                 offset: Offset(
                                   0,

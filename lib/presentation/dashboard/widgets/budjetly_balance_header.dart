@@ -419,9 +419,6 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                                     final chars = _formatBalanceDigits(
                                       widget.balance,
                                     );
-                                    final digits = _balanceDigits(
-                                      widget.balance,
-                                    );
                                     int digitIdx = 0;
                                     final baseStyle = context.ts(
                                       40,
@@ -474,9 +471,6 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                                                   idx < _digitAnimations.length
                                                       ? _digitAnimations[idx]
                                                       : null;
-                                              final targetDigit = int.parse(
-                                                char,
-                                              );
                                               final isAnimating =
                                                   animCtrl?.isAnimating ??
                                                   false;
