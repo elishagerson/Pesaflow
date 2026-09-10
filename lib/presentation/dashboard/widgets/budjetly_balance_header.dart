@@ -172,7 +172,11 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
   /// Digit characters from the balance, skipping currency symbol and separators.
   List<int> _balanceDigits(int balance) {
     final text = CurrencyFormatter.formatCents(balance.abs());
-    return text.split('').where((c) => RegExp(r'^\d$').hasMatch(c)).map(int.parse).toList();
+    return text
+        .split('')
+        .where((c) => RegExp(r'^\d$').hasMatch(c))
+        .map(int.parse)
+        .toList();
   }
 
   /// Formatted balance split into characters for per-character rendering.
@@ -180,8 +184,6 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
     final text = CurrencyFormatter.formatCents(balance.abs());
     return text.split('');
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +247,11 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
           return Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Color.lerp(cardColor, highlightTint, highlightValue > 0 ? 1.0 : 0.0),
+              color: Color.lerp(
+                cardColor,
+                highlightTint,
+                highlightValue > 0 ? 1.0 : 0.0,
+              ),
               borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
               boxShadow: [
                 BoxShadow(
@@ -401,132 +407,124 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                               ),
                             )
                           : context.isReducedMotion
-                              ? Text(
-                                  CurrencyFormatter.formatCents(widget.balance),
-                                  style: context.ts(
-                                    40,
-                                    fontWeight: FontWeight.w900,
-                                    color: theme.colorScheme.onSurface,
-                                    letterSpacing: -1.0,
-                                  ),
-                                )
-                              : AnimatedBuilder(
-                                  animation: Listenable.merge([
-                                    ..._digitControllers,
-                                    _highlightAnimation,
-                                  ]),
-                                  builder: (context, _) {
-                                    final chars = _formatBalanceDigits(
-                                      widget.balance,
-                                    );
-                                    int digitIdx = 0;
-                                    final baseStyle = context.ts(
-                                      40,
-                                      fontWeight: FontWeight.w900,
-                                      color: theme.colorScheme.onSurface,
-                                      letterSpacing: -1.0,
-                                    );
+                          ? Text(
+                              CurrencyFormatter.formatCents(widget.balance),
+                              style: context.ts(
+                                40,
+                                fontWeight: FontWeight.w900,
+                                color: theme.colorScheme.onSurface,
+                                letterSpacing: -1.0,
+                              ),
+                            )
+                          : AnimatedBuilder(
+                              animation: Listenable.merge([
+                                ..._digitControllers,
+                                _highlightAnimation,
+                              ]),
+                              builder: (context, _) {
+                                final chars = _formatBalanceDigits(
+                                  widget.balance,
+                                );
+                                int digitIdx = 0;
+                                final baseStyle = context.ts(
+                                  40,
+                                  fontWeight: FontWeight.w900,
+                                  color: theme.colorScheme.onSurface,
+                                  letterSpacing: -1.0,
+                                );
 
-                                    // Balance-change highlight flash color
-                                    Color textColor =
-                                        theme.colorScheme.onSurface;
-                                    if (_highlightAnimation.value > 0) {
-                                      final isIncome =
-                                          widget.balance >= _previousBalance;
-                                      final flashColor = isIncome
-                                          ? context.appColors.incomeColor
-                                          : context.appColors.expenseColor;
-                                      textColor = Color.lerp(
-                                        theme.colorScheme.onSurface,
-                                        flashColor,
-                                        _highlightAnimation.value,
-                                      )!;
-                                    }
+                                // Balance-change highlight flash color
+                                Color textColor = theme.colorScheme.onSurface;
+                                if (_highlightAnimation.value > 0) {
+                                  final isIncome =
+                                      widget.balance >= _previousBalance;
+                                  final flashColor = isIncome
+                                      ? context.appColors.incomeColor
+                                      : context.appColors.expenseColor;
+                                  textColor = Color.lerp(
+                                    theme.colorScheme.onSurface,
+                                    flashColor,
+                                    _highlightAnimation.value,
+                                  )!;
+                                }
 
-                                    return Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        for (final char in chars)
-                                          Builder(
-                                            builder: (context) {
-                                              final isDigit = RegExp(
-                                                r'^\d$',
-                                              ).hasMatch(char);
-                                              final idx = isDigit
-                                                  ? digitIdx++
-                                                  : -1;
-                                              if (!isDigit) {
-                                                return Text(
-                                                  char,
-                                                  style: baseStyle.copyWith(
-                                                    color: textColor,
-                                                  ),
-                                                );
-                                              }
-                                              final animCtrl =
-                                                  idx < _digitControllers.length
-                                                      ? _digitControllers[idx]
-                                                      : null;
-                                              final animVal =
-                                                  idx < _digitAnimations.length
-                                                      ? _digitAnimations[idx]
-                                                      : null;
-                                              final isAnimating =
-                                                  animCtrl?.isAnimating ??
-                                                  false;
-                                              final isComplete =
-                                                  animCtrl?.isCompleted ??
-                                                  false;
-                                              if (!isAnimating && isComplete) {
-                                                return Text(
-                                                  char,
-                                                  style: baseStyle.copyWith(
-                                                    color: textColor,
-                                                  ),
-                                                );
-                                              }
-                                              return AnimatedBuilder(
-                                                animation: animVal!,
-                                                builder: (context, _) {
-                                                  final spinDigit =
-                                                      (animVal.value * 9)
-                                                          .round();
-                                                  return SizedBox(
-                                                    width: 28,
-                                                    child: ClipRect(
-                                                      child: SlideTransition(
-                                                        position: Tween<Offset>(
-                                                          begin: Offset(
-                                                            0,
-                                                            (spinDigit == 0 &&
-                                                                    isAnimating)
-                                                                ? -1
-                                                                : 0,
-                                                          ),
-                                                          end: Offset.zero,
-                                                        ).animate(animVal),
-                                                        child: Text(
-                                                          '$spinDigit',
-                                                          style: baseStyle
-                                                              .copyWith(
-                                                            color: textColor,
-                                                            fontFeatures: const [
-                                                              FontFeature
-                                                                  .tabularFigures(),
-                                                            ],
-                                                          ),
-                                                        ),
+                                return Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    for (final char in chars)
+                                      Builder(
+                                        builder: (context) {
+                                          final isDigit = RegExp(
+                                            r'^\d$',
+                                          ).hasMatch(char);
+                                          final idx = isDigit ? digitIdx++ : -1;
+                                          if (!isDigit) {
+                                            return Text(
+                                              char,
+                                              style: baseStyle.copyWith(
+                                                color: textColor,
+                                              ),
+                                            );
+                                          }
+                                          final animCtrl =
+                                              idx < _digitControllers.length
+                                              ? _digitControllers[idx]
+                                              : null;
+                                          final animVal =
+                                              idx < _digitAnimations.length
+                                              ? _digitAnimations[idx]
+                                              : null;
+                                          final isAnimating =
+                                              animCtrl?.isAnimating ?? false;
+                                          final isComplete =
+                                              animCtrl?.isCompleted ?? false;
+                                          if (!isAnimating && isComplete) {
+                                            return Text(
+                                              char,
+                                              style: baseStyle.copyWith(
+                                                color: textColor,
+                                              ),
+                                            );
+                                          }
+                                          return AnimatedBuilder(
+                                            animation: animVal!,
+                                            builder: (context, _) {
+                                              final spinDigit =
+                                                  (animVal.value * 9).round();
+                                              return SizedBox(
+                                                width: 28,
+                                                child: ClipRect(
+                                                  child: SlideTransition(
+                                                    position: Tween<Offset>(
+                                                      begin: Offset(
+                                                        0,
+                                                        (spinDigit == 0 &&
+                                                                isAnimating)
+                                                            ? -1
+                                                            : 0,
+                                                      ),
+                                                      end: Offset.zero,
+                                                    ).animate(animVal),
+                                                    child: Text(
+                                                      '$spinDigit',
+                                                      style: baseStyle.copyWith(
+                                                        color: textColor,
+                                                        fontFeatures: const [
+                                                          FontFeature.tabularFigures(),
+                                                        ],
                                                       ),
                                                     ),
-                                                  );
-                                                },
+                                                  ),
+                                                ),
                                               );
                                             },
-                                          ),
-                                      ],
-                                    );
-                                  },
-                                ),
+                                          );
+                                        },
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
                     ),
                   ),
                 ],
