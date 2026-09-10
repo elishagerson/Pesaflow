@@ -623,10 +623,11 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                     ],
                                   ),
                                   const SizedBox(height: kSpacing12),
-                                  TactileSpringContainer(
-                                    selectedColor: theme.colorScheme.onSurface,
-                                    onTap: () async {
-                                      final repo = ref.read(
+                                   TactileSpringContainer(
+                                     selectedColor: theme.colorScheme.onSurface,
+                                     onTap: () async {
+                                       PesaHaptics.medium();
+                                       final repo = ref.read(
                                         budgetRepositoryProvider,
                                       );
                                       final moved = await repo

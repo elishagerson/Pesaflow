@@ -15,6 +15,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -806,6 +807,7 @@ class _SavingsGoalDetailScreenState
                           TactileSpringContainer(
                             onTap: () =>
                                 context.push('/savings-goals/${goal.id}/edit'),
+                            selectedColor: theme.colorScheme.onSurface,
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
@@ -824,6 +826,7 @@ class _SavingsGoalDetailScreenState
                           const SizedBox(width: kSpacing8),
                           TactileSpringContainer(
                             onTap: () => _deleteGoal(goal.id),
+                            selectedColor: theme.colorScheme.onSurface,
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
