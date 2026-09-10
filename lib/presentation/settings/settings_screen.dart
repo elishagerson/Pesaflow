@@ -101,6 +101,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       onTap: () {
                         showAddAccountDialog(context, ref);
                       },
+                      selectedColor: theme.colorScheme.onSurface,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 14,
@@ -195,6 +196,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               TactileSpringContainer(
                                 onTap: () =>
                                     _showEditAccountDialog(context, ref, acc),
+                                selectedColor: theme.colorScheme.onSurface,
                                 child: Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
@@ -214,6 +216,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               TactileSpringContainer(
                                 onTap: () =>
                                     _confirmDeleteAccount(context, ref, acc),
+                                selectedColor: theme.colorScheme.onSurface,
                                 child: Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
@@ -675,6 +678,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 existing: cat,
                               );
                             },
+                            selectedColor: theme.colorScheme.onSurface,
                             child: Icon(
                               PesaFlowIcons.edit,
                               size: 20,
@@ -684,6 +688,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           const SizedBox(width: kSpacing12),
                           if (!cat.isSystem)
                             TactileSpringContainer(
+                              selectedColor: theme.colorScheme.onSurface,
                               onTap: () async {
                                 final categoryData = cat;
                                 UndoDelete.show(
@@ -1002,6 +1007,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: kSpacing8),
       child: TactileSpringContainer(
+        selectedColor: theme.colorScheme.onSurface,
         onTap: () {
           ref.read(themeModeProvider.notifier).setThemeMode(mode);
           Navigator.pop(ctx);
@@ -1346,6 +1352,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   header: 'Data',
                   rows: [
                     TactileSpringContainer(
+                      selectedColor: theme.colorScheme.onSurface,
                       onTap: () => _showAccountsManager(context, ref),
                       child: IosListRow(
                         leading: Icon(
@@ -1361,6 +1368,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                     ),
                     TactileSpringContainer(
+                      selectedColor: theme.colorScheme.onSurface,
                       onTap: () => _showCategoriesManager(context, ref),
                       child: IosListRow(
                         leading: Icon(
@@ -1374,6 +1382,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                     ),
                     TactileSpringContainer(
+                      selectedColor: theme.colorScheme.onSurface,
                       onTap: () => context.push('/recurring'),
                       child: IosListRow(
                         leading: Icon(
@@ -1422,6 +1431,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                     ),
                     TactileSpringContainer(
+                      selectedColor: theme.colorScheme.onSurface,
                       onTap: () => showExportDialog(context, ref),
                       child: IosListRow(
                         leading: Icon(
@@ -1435,6 +1445,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                     ),
                     TactileSpringContainer(
+                      selectedColor: theme.colorScheme.onSurface,
                       onTap: () => _handleExportCsv(context, ref),
                       child: IosListRow(
                         leading: Icon(
@@ -1450,6 +1461,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                     ),
                     TactileSpringContainer(
+                      selectedColor: theme.colorScheme.onSurface,
                       onTap: () => _handleImportCsv(context, ref),
                       child: IosListRow(
                         leading: Icon(
@@ -1465,6 +1477,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                     ),
                     TactileSpringContainer(
+                      selectedColor: theme.colorScheme.onSurface,
                       onTap: () => _handleBackupDb(context, ref),
                       child: IosListRow(
                         leading: const Icon(
@@ -1480,6 +1493,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                     ),
                     TactileSpringContainer(
+                      selectedColor: theme.colorScheme.onSurface,
                       onTap: () => _handleRestoreDb(context, ref),
                       child: IosListRow(
                         leading: const Icon(
@@ -1503,6 +1517,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   header: 'Debug',
                   rows: [
                     TactileSpringContainer(
+                      selectedColor: theme.colorScheme.onSurface,
                       onTap: () => context.push('/debug/sms-parser'),
                       child: IosListRow(
                         leading: Icon(

@@ -17,6 +17,7 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -576,11 +577,14 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       );
                                     },
                                     child: TactileSpringContainer(
-                                      onTap: () => pushHeroCard(
-                                        context,
-                                        TransactionDetailScreen(transactionId: trans.id),
-                                        'transaction_${trans.id}',
-                                      ),
+                                      onTap: () {
+                                        PesaHaptics.light();
+                                        pushHeroCard(
+                                          context,
+                                          TransactionDetailScreen(transactionId: trans.id),
+                                          'transaction_${trans.id}',
+                                        );
+                                      },
                                       selectedColor: theme.colorScheme.onSurface,
                                       child: Hero(
                                         tag: 'transaction_${trans.id}',
@@ -1183,7 +1187,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: kSpacing80),
-        child: PremiumFab(onPressed: () => context.push('/transactions/add')),
+        child: PremiumFab(onPressed: () {
+          PesaHaptics.medium();
+          context.push('/transactions/add');
+        }),
       ),
     );
   }

@@ -221,6 +221,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                   Expanded(
                     flex: 2,
                     child: TactileSpringContainer(
+                      selectedColor: onSurface,
                       onTap: _currentStep < _totalSteps - 1
                           ? () {
                               if (_currentStep == 0 && _incomeCents <= 0) {
