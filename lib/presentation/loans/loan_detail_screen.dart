@@ -23,6 +23,7 @@ import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 
@@ -96,7 +97,10 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                   title: 'Loan Details',
                   actions: [
                     TactileSpringContainer(
-                      onTap: () => context.push('/loans/${loan.id}/edit'),
+                      onTap: () {
+                        PesaHaptics.light();
+                        context.push('/loans/${loan.id}/edit');
+                      },
                       child: Container(
                         padding: const EdgeInsets.all(kSpacing10),
                         decoration: BoxDecoration(
@@ -114,7 +118,10 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                     ),
                     const SizedBox(width: kSpacing8),
                     TactileSpringContainer(
-                      onTap: () => _confirmDelete(context, ref, loan),
+                      onTap: () {
+                        PesaHaptics.heavy();
+                        _confirmDelete(context, ref, loan);
+                      },
                       child: Container(
                         padding: const EdgeInsets.all(kSpacing10),
                         decoration: BoxDecoration(

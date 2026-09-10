@@ -1029,8 +1029,10 @@ class _SavingsGoalDetailScreenState
                             Expanded(
                               child: TactileSpringContainer(
                                 onTap: () {
+                                  PesaHaptics.medium();
                                   _showAddMoneySheet(context, goal, true);
                                 },
+                                selectedColor: theme.colorScheme.onSurface,
                                 child: Container(
                                   height: kSpacing48,
                                   decoration: BoxDecoration(
@@ -1067,8 +1069,10 @@ class _SavingsGoalDetailScreenState
                             Expanded(
                               child: TactileSpringContainer(
                                 onTap: () {
+                                  PesaHaptics.medium();
                                   _showAddMoneySheet(context, goal, false);
                                 },
+                                selectedColor: theme.colorScheme.onSurface,
                                 child: Container(
                                   height: kSpacing48,
                                   decoration: BoxDecoration(
