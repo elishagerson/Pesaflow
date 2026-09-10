@@ -1175,9 +1175,11 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
           ],
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: kSpacing80),
-        child: PremiumFab(
+        child: PremiumExtendedFab(
+          label: 'New Transaction',
           onPressed: () {
             PesaHaptics.medium();
             context.push('/transactions/add');

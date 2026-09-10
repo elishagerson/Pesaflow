@@ -272,11 +272,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
           ),
           child: Text(
             'SELECT CATEGORY',
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
-            ),
+            style: context.ts(10, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface.withValues(alpha: 0.5), letterSpacing: 0.5),
           ),
         ),
         SizedBox(
@@ -691,15 +687,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       ),
                                       child: Text(
                                         'Week',
-                                        style: theme.textTheme.labelMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: _period == 'weekly'
-                                                  ? theme.colorScheme.primary
-                                                  : theme
-                                                        .colorScheme
-                                                        .onSurfaceVariant,
-                                            ),
+                                        style: context.ts(12, fontWeight: FontWeight.bold, color: _period == 'weekly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
                                       ),
                                     ),
                                     'biweekly': Padding(
@@ -709,15 +697,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       ),
                                       child: Text(
                                         '2 Wk',
-                                        style: theme.textTheme.labelMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: _period == 'biweekly'
-                                                  ? theme.colorScheme.primary
-                                                  : theme
-                                                        .colorScheme
-                                                        .onSurfaceVariant,
-                                            ),
+                                        style: context.ts(12, fontWeight: FontWeight.bold, color: _period == 'biweekly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
                                       ),
                                     ),
                                     'monthly': Padding(
@@ -727,15 +707,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       ),
                                       child: Text(
                                         'Month',
-                                        style: theme.textTheme.labelMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: _period == 'monthly'
-                                                  ? theme.colorScheme.primary
-                                                  : theme
-                                                        .colorScheme
-                                                        .onSurfaceVariant,
-                                            ),
+                                        style: context.ts(12, fontWeight: FontWeight.bold, color: _period == 'monthly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
                                       ),
                                     ),
                                     'yearly': Padding(

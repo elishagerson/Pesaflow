@@ -18,6 +18,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/presentation/common/widgets/hero_card_route.dart';
@@ -162,8 +163,11 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                     );
                   },
                   loading: () => const SizedBox.shrink(),
-                  error: (err, _) =>
-                      Center(child: Text('Error loading savings goals: $err')),
+                  error: (err, _) => ErrorState(
+                    title: 'Could not load savings goals',
+                    message: '$err',
+                    onRetry: () => ref.invalidate(savingsGoalsStreamProvider),
+                  ),
                 ),
               ),
             ),

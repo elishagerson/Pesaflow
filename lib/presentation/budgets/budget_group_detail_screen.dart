@@ -14,6 +14,7 @@ import 'package:pesaflow/data/repositories/budget_group_repository.dart';
 import 'package:pesaflow/domain/models/enums.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -380,7 +381,11 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
               ),
             ],
           ),
-          error: (e, _) => Center(child: Text('Error: $e')),
+          error: (e, _) => ErrorState(
+            title: 'Could not load data',
+            message: '$e',
+            onRetry: () => ref.invalidate(budgetGroupDetailProvider(groupId)),
+          ),
         ),
       ),
     );

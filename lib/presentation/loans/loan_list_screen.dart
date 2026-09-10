@@ -61,12 +61,16 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
     final recentLoanCountAsync = ref.watch(recentLoanActivityProvider);
 
     return Scaffold(
-      floatingActionButton: PremiumExtendedFab(
-        onPressed: () {
-          PesaHaptics.medium();
-          context.push('/loans/add');
-        },
-        label: 'Add Loan',
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: kSpacing80),
+        child: PremiumExtendedFab(
+          label: 'New Loan',
+          onPressed: () {
+            PesaHaptics.medium();
+            context.push('/loans/add');
+          },
+        ),
       ),
       body: SafeArea(
         top: true,

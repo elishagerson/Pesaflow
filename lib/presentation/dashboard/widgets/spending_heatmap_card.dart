@@ -6,6 +6,7 @@ import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
@@ -358,7 +359,11 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
           );
         },
         loading: () => const SizedBox.shrink(),
-        error: (e, _) => Text('Error loading heatmap: $e'),
+        error: (e, _) => ErrorState(
+          title: 'Could not load heatmap',
+          message: '$e',
+          onRetry: () => ref.invalidate(spendingHeatmapProvider),
+        ),
       ),
     );
   }

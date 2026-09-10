@@ -16,6 +16,7 @@ import 'package:pesaflow/domain/budget/budget_engine.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_entrance.dart';
@@ -1471,10 +1472,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   const SizedBox(width: kSpacing8),
                   Text(
                     'Set Up Budget Plan',
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      color: theme.colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: context.ts(12, fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimary),
                   ),
                 ],
               ),
@@ -1570,10 +1568,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     const SizedBox(width: kSpacing8),
                     Text(
                       'Set First Savings Goal',
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: theme.colorScheme.onPrimary,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: context.ts(12, fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimary),
                     ),
                   ],
                 ),
@@ -1622,11 +1617,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     children: [
                       Text(
                         'Savings Overview',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: onSurface.withValues(alpha: 0.45),
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.3,
-                        ),
+                        style: context.ts(10, fontWeight: FontWeight.w700, letterSpacing: 0.3, color: onSurface.withValues(alpha: 0.45),),
                       ),
                       const SizedBox(height: kSpacing12),
                       Row(
@@ -1637,18 +1628,13 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                             children: [
                               Text(
                                 'Total Saved',
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
+                                style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
                               ),
                               const SizedBox(height: kSpacing2),
                               AmountText(
                                 amountInCents: totalSaved,
                                 animate: true,
-                                style: theme.textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: -0.5,
-                                ),
+                                style: context.ts(22, fontWeight: FontWeight.bold, letterSpacing: -0.5),
                               ),
                             ],
                           ),
@@ -1657,18 +1643,13 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                             children: [
                               Text(
                                 'Combined Target',
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
+                                style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
                               ),
                               const SizedBox(height: kSpacing2),
                               AmountText(
                                 amountInCents: totalTarget,
                                 animate: true,
-                                style: theme.textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: -0.5,
-                                ),
+                                style: context.ts(22, fontWeight: FontWeight.bold, letterSpacing: -0.5),
                               ),
                             ],
                           ),
@@ -1689,9 +1670,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       const SizedBox(height: kSpacing6),
                       Text(
                         '${(overallPct * 100).round()}% overall progress',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: onSurface.withValues(alpha: 0.45),
-                        ),
+                        style: context.ts(11, color: onSurface.withValues(alpha: 0.45)),
                       ),
                     ],
                   ),
@@ -1700,9 +1679,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
 
                 Text(
                   'Active Goals',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: context.ts(14, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: kSpacing12),
 
@@ -1841,8 +1818,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                                 ),
                                                 Text(
                                                   'by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
-                                                  style:
-                                                      theme.textTheme.bodySmall,
+                                                  style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
                                                 ),
                                               ],
                                             ),
@@ -1871,28 +1847,13 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                                   ),
                                                   child: Text(
                                                     'COMPLETED',
-                                                    style: theme
-                                                        .textTheme
-                                                        .labelSmall
-                                                        ?.copyWith(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: AppTheme
-                                                              .transferColorDark,
-                                                        ),
+                                                    style: context.ts(10, fontWeight: FontWeight.bold, color: AppTheme.transferColorDark),
                                                   ),
                                                 )
                                               else
                                                 Text(
                                                   '$daysLeft days remaining',
-                                                  style: theme
-                                                      .textTheme
-                                                      .bodySmall
-                                                      ?.copyWith(
-                                                        color: theme
-                                                            .colorScheme
-                                                            .onSurfaceVariant,
-                                                      ),
+                                                  style: context.ts(11, color: theme.colorScheme.onSurfaceVariant),
                                                 ),
                                               const SizedBox(height: kSpacing4),
                                               GestureDetector(
@@ -1908,16 +1869,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                                 },
                                                 child: Text(
                                                   'Edit',
-                                                  style: theme
-                                                      .textTheme
-                                                      .bodySmall
-                                                      ?.copyWith(
-                                                        color: theme
-                                                            .colorScheme
-                                                            .primary,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                                  style: context.ts(12, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                                                 ),
                                               ),
                                             ],
@@ -1932,19 +1884,11 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                           AmountText(
                                             amountInCents: goal.currentAmount,
                                             animate: true,
-                                            style: theme.textTheme.titleSmall
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                            style: context.ts(12, fontWeight: FontWeight.bold),
                                           ),
                                           Text(
                                             'Target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                                            style: theme.textTheme.bodyMedium
-                                                ?.copyWith(
-                                                  color: theme
-                                                      .colorScheme
-                                                      .onSurfaceVariant,
-                                                ),
+                                            style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
                                           ),
                                         ],
                                       ),
@@ -1975,12 +1919,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                       const SizedBox(height: kSpacing4),
                                       Text(
                                         '${(goalPct * 100).round()}% completed',
-                                        style: theme.textTheme.bodySmall
-                                            ?.copyWith(
-                                              color: theme
-                                                  .colorScheme
-                                                  .onSurfaceVariant,
-                                            ),
+                                        style: context.ts(11, color: theme.colorScheme.onSurfaceVariant),
                                       ),
                                     ],
                                   ),
@@ -2012,8 +1951,11 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           ],
         ),
       ),
-      error: (err, _) =>
-          Center(child: Text('Error loading savings goals: $err')),
+      error: (err, _) => ErrorState(
+        title: 'Could not load budget data',
+        message: '$err',
+        onRetry: () => ref.invalidate(budgetGroupsProvider),
+      ),
     );
   }
 }

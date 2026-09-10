@@ -9,7 +9,6 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
-import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
@@ -22,6 +21,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/recurring/widgets/mark_recurring_payment_sheet.dart';
 
 /// Filter options for the recurring flows list.
@@ -72,6 +72,17 @@ class _RecurringTransactionListScreenState
     }
 
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: kSpacing80),
+        child: PremiumExtendedFab(
+          label: 'New Recurring',
+          onPressed: () {
+            PesaHaptics.medium();
+            context.push('/recurring/add');
+          },
+        ),
+      ),
       body: SafeArea(
         top: true,
         bottom: false,
@@ -80,39 +91,14 @@ class _RecurringTransactionListScreenState
             // ── OLED Header ──
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Recurring Flows',
-                    style: context.ts(
-                      34,
-                      fontWeight: FontWeight.w800,
-                      color: context.appColors.onBgColor,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                  TactileSpringContainer(
-                    haptic: HapticType.soft,
-                    onTap: () {
-                      context.push('/recurring/add');
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: context.appColors.onBgColor.withValues(
-                          alpha: 0.1,
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        PesaFlowIcons.add,
-                        color: context.appColors.onBgColor,
-                        size: 22,
-                      ),
-                    ),
-                  ),
-                ],
+              child: Text(
+                'Recurring Flows',
+                style: context.ts(
+                  34,
+                  fontWeight: FontWeight.w800,
+                  color: context.appColors.onBgColor,
+                  letterSpacing: -0.5,
+                ),
               ),
             ),
             // ── Content ──
@@ -684,12 +670,7 @@ class _RecurringTransactionListScreenState
                   ),
                   child: Text(
                     '$count',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: isActive
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                    ),
+                    style: context.ts(10, fontWeight: FontWeight.w800, color: isActive ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.4)),
                   ),
                 ),
               ],
@@ -1046,10 +1027,7 @@ class _RecurringTransactionListScreenState
               const SizedBox(width: kSpacing2),
               Text(
                 'Auto',
-                style: theme.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.primary,
-                ),
+                style: context.ts(10, fontWeight: FontWeight.w700, color: theme.colorScheme.primary),
               ),
             ],
           ),
@@ -1078,10 +1056,7 @@ class _RecurringTransactionListScreenState
         ),
         child: Text(
           label,
-          style: theme.textTheme.labelSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: color,
-          ),
+          style: context.ts(10, fontWeight: FontWeight.w700, color: color),
         ),
       ),
     );

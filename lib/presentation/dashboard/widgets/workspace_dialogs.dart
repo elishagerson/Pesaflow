@@ -17,6 +17,7 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:go_router/go_router.dart';
 
 void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
@@ -195,7 +196,11 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                       ],
                     ),
                   ),
-                  error: (err, _) => Text('Error loading workspaces: $err'),
+                  error: (err, _) => ErrorState(
+                    title: 'Could not load workspaces',
+                    message: '$err',
+                    onRetry: () => ref.invalidate(allTrackersStreamProvider),
+                  ),
                 ),
                 const SizedBox(height: kSpacing20),
               ],
