@@ -181,17 +181,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
     return text.split('');
   }
 
-  TextStyle _digitStyle(String char, int animIdx, TextStyle base) {
-    if (!RegExp(r'^\d$').hasMatch(char)) return base;
-    if (animIdx >= _digitControllers.length) return base;
-    final isAnimating = _digitControllers[animIdx].isAnimating;
-    final isComplete = _digitControllers[animIdx].isCompleted;
-    if (!isAnimating && isComplete) return base;
-    return base.copyWith(
-      color: Colors.transparent,
-      fontFeatures: const [FontFeature.tabularFigures()],
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
