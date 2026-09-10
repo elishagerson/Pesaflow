@@ -193,6 +193,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                     Expanded(
                       child: TactileSpringContainer(
                         onTap: () => _goToStep(_currentStep - 1),
+                        selectedColor: onSurface,
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             vertical: kSpacing14,
@@ -454,6 +455,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                   onTap: () {
                     setState(() => _selectedRule = rule);
                   },
+                  selectedColor: theme.colorScheme.onSurface,
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 250),
                     padding: const EdgeInsets.all(kSpacing16),

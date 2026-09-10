@@ -149,9 +149,12 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                           padding: EdgeInsets.zero,
                           actions: [
                             TactileSpringContainer(
-                              onTap: () => context.push(
-                                '/budgets/${widget.budgetId}/edit',
-                              ),
+                              onTap: () {
+                                PesaHaptics.light();
+                                context.push(
+                                  '/budgets/${widget.budgetId}/edit',
+                                );
+                              },
                               selectedColor: theme.colorScheme.onSurface,
                               child: Container(
                                 padding: const EdgeInsets.all(kSpacing10),
@@ -172,6 +175,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                             TactileSpringContainer(
                               selectedColor: theme.colorScheme.onSurface,
                               onTap: () async {
+                                PesaHaptics.heavy();
                                 final confirm = await ModernDialog.show<bool>(
                                   context: context,
                                   title: const Text('Delete Budget?'),

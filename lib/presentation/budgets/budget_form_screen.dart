@@ -1437,6 +1437,7 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                 onTap: () {
                   widget.controller.clear();
                 },
+                selectedColor: theme.colorScheme.onSurface,
                 child: Padding(
                   padding: const EdgeInsets.all(kSpacing6),
                   child: Icon(
