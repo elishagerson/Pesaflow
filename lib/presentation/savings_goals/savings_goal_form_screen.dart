@@ -89,7 +89,13 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   }
 
   Future<void> _save() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      setState(() => _shakeFields = true);
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) setState(() => _shakeFields = false);
+      });
+      return;
+    }
 
     final targetVal = CurrencyFormatter.parseToCents(_amountController.text);
 
@@ -232,22 +238,25 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                             borderRadius: AppTheme.radiusCard,
                             child: Column(
                               children: [
-                                TextFormField(
-                                  controller: _nameController,
-                                  textCapitalization: TextCapitalization.words,
-                                  style: theme.textTheme.titleMedium!.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  validator: (v) {
-                                    if (v == null || v.trim().isEmpty) {
-                                      return 'Enter a goal name';
-                                    }
-                                    return null;
-                                  },
-                                  decoration: inputDeco(
-                                    label: 'Goal Title',
-                                    hint: 'e.g. Vacation to Zanzibar',
-                                    icon: PesaFlowIcons.title,
+                                ShakeWidget(
+                                  shaking: _shakeFields,
+                                  child: TextFormField(
+                                    controller: _nameController,
+                                    textCapitalization: TextCapitalization.words,
+                                    style: theme.textTheme.titleMedium!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    validator: (v) {
+                                      if (v == null || v.trim().isEmpty) {
+                                        return 'Enter a goal name';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: inputDeco(
+                                      label: 'Goal Title',
+                                      hint: 'e.g. Vacation to Zanzibar',
+                                      icon: PesaFlowIcons.title,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: kSpacing12),
