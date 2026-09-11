@@ -11,7 +11,6 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
-import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -282,7 +281,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(AppTheme.radiusSheet),
+          top: Radius.circular(AppTheme.radiusDialog),
         ),
       ),
       padding: EdgeInsets.only(
@@ -341,7 +340,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                   ),
                 ),
                 TactileSpringContainer(
-                  haptic: HapticType.light,
+                  haptic: HapticType.soft,
                   onTap: () => context.pop(),
                   child: Container(
                     width: 32,
@@ -493,13 +492,13 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               decoration: BoxDecoration(
                                 color: themeCol.withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(
-                                  AppTheme.radiusSm,
+                                  AppTheme.radiusSmall,
                                 ),
                               ),
                               child: Row(
                                 children: [
                                   Icon(
-                                    PesaFlowIcons.trendingUp,
+                                    PesaFlowIcons.income,
                                     size: 12,
                                     color: themeCol,
                                   ),
@@ -529,7 +528,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       Row(
                         children: [
                           Icon(
-                            PesaFlowIcons.sparkles,
+                            PesaFlowIcons.bolt,
                             size: 13,
                             color: theme.colorScheme.onSurface.withValues(
                               alpha: 0.45,
