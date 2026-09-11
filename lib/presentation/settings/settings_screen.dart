@@ -841,7 +841,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       context: context,
       title: const Text('Restore Database?'),
       titleIcon: PesaFlowIcons.warning,
-      iconColor: Colors.orange,
+      iconColor: context.appColors.warningColor,
       content: const Text(
         'This will replace all current data with the backup file you select. '
         'This action cannot be undone.\n\n'
