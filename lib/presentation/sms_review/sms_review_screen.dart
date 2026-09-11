@@ -15,6 +15,7 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
@@ -96,7 +97,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
     }
   }
 
-  Future<String?> _showCategorySheet({String? title}) async {
+  Future<String?> _showCategorySheet({
+    String? title,
+    String? currentCategoryId,
+  }) async {
     return showSpringSheet<String>(
       context,
       isScrollControlled: true,
@@ -136,25 +140,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                         itemCount: categories.length + 1,
                         itemBuilder: (context, index) {
                           if (index == categories.length) {
-                            return ListTile(
-                              leading: Container(
-                                padding: const EdgeInsets.all(kSpacing8),
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withValues(
-                                    alpha: 0.15,
-                                  ),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  PesaFlowIcons.add,
-                                  color: theme.colorScheme.primary,
-                                  size: 20,
-                                ),
-                              ),
-                              title: Text(
-                                'Add Custom Category',
-                                style: context.ts(14, color: theme.colorScheme.primary, fontWeight: FontWeight.bold),
-                              ),
+                            return TactileSpringContainer(
+                              haptic: HapticType.soft,
                               onTap: () async {
                                 final newCat = await showAddCategoryDialog(
                                   context,
@@ -164,30 +151,80 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                   context.pop(newCat.id);
                                 }
                               },
+                              child: ListTile(
+                                leading: Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.primary
+                                        .withValues(alpha: 0.15),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusSmall,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    PesaFlowIcons.add,
+                                    color: theme.colorScheme.primary,
+                                    size: 18,
+                                  ),
+                                ),
+                                title: Text(
+                                  'Add Custom Category',
+                                  style: context.ts(
+                                    14,
+                                    color: theme.colorScheme.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
                             );
                           }
                           final cat = categories[index];
-                          return ListTile(
-                            leading: Container(
-                              padding: const EdgeInsets.all(kSpacing8),
-                              decoration: BoxDecoration(
-                                color: hexToColor(
-                                  cat.color,
-                                ).withValues(alpha: 0.15),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                getCategoryIcon(cat.icon),
-                                color: hexToColor(cat.color),
-                                size: 20,
-                              ),
-                            ),
-                            title: Text(cat.name),
-                            subtitle: Text(
-                              cat.type.toUpperCase(),
-                              style: context.ts(10, color: theme.colorScheme.onSurfaceVariant),
-                            ),
+                          final isCurrent = cat.id == currentCategoryId;
+                          return TactileSpringContainer(
+                            haptic: HapticType.selection,
                             onTap: () => context.pop(cat.id),
+                            child: ListTile(
+                              leading: Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  color: hexToColor(cat.color)
+                                      .withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusSmall,
+                                  ),
+                                ),
+                                child: Icon(
+                                  getCategoryIcon(cat.icon),
+                                  color: hexToColor(cat.color),
+                                  size: 18,
+                                ),
+                              ),
+                              title: Text(
+                                cat.name,
+                                style: context.ts(
+                                  14,
+                                  fontWeight: isCurrent
+                                      ? FontWeight.w600
+                                      : FontWeight.w500,
+                                ),
+                              ),
+                              subtitle: Text(
+                                cat.type.toUpperCase(),
+                                style: context.ts(
+                                  10,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              trailing: isCurrent
+                                  ? Icon(
+                                      PesaFlowIcons.check,
+                                      color: theme.colorScheme.primary,
+                                      size: 18,
+                                    )
+                                  : null,
+                            ),
                           );
                         },
                       ),
@@ -203,7 +240,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
   }
 
   void _showCategoryPicker(TransactionWithCategoryAndAccount item) async {
-    final selectedCategoryId = await _showCategorySheet();
+    final selectedCategoryId = await _showCategorySheet(
+      currentCategoryId: item.category.id,
+    );
     if (selectedCategoryId != null && mounted) {
       await ref
           .read(transactionRepositoryProvider)
@@ -287,35 +326,56 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TactileSpringContainer(
+                      haptic: HapticType.selection,
                       onTap: () {
                         setState(() {
-                          _selectAll = !_selectAll;
                           final items = reviewAsync.asData?.value ?? [];
-                          if (_selectAll) {
+                          final isAllSelected = items.isNotEmpty &&
+                              _selectedIds.length == items.length;
+                          if (isAllSelected || _selectAll) {
+                            _selectedIds.clear();
+                            _selectAll = false;
+                          } else {
                             _selectedIds.addAll(
                               items.map((e) => e.transaction.id),
                             );
-                          } else {
-                            _selectedIds.clear();
+                            _selectAll = true;
                           }
                         });
                       },
                       selectedColor: theme.colorScheme.onSurface,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing10,
+                          horizontal: kSpacing12,
                           vertical: kSpacing6,
                         ),
                         decoration: BoxDecoration(
                           color: _selectAll
                               ? theme.colorScheme.primary.withValues(
-                                  alpha: 0.12,
+                                  alpha: 0.15,
                                 )
-                              : theme.colorScheme.surfaceContainerHighest
-                                    .withValues(alpha: 0.3),
+                              : theme.colorScheme.surfaceContainerHigh,
                           borderRadius: BorderRadius.circular(
-                            AppTheme.radiusSmall,
+                            AppTheme.radiusPill,
                           ),
+                          border: Border.all(
+                            color: _selectAll
+                                ? theme.colorScheme.primary.withValues(
+                                    alpha: 0.40,
+                                  )
+                                : theme.colorScheme.outlineVariant.withValues(
+                                    alpha: 0.35,
+                                  ),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(
+                                alpha: context.isDark ? 0.2 : 0.04,
+                              ),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -323,21 +383,21 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                             Icon(
                               _selectAll
                                   ? PesaFlowIcons.deselect
-                                  : PesaFlowIcons.check,
-                              size: 16,
+                                  : PesaFlowIcons.selectAll,
+                              size: 15,
                               color: _selectAll
                                   ? theme.colorScheme.primary
-                                  : theme.colorScheme.onSurfaceVariant,
+                                  : theme.colorScheme.onSurface,
                             ),
-                            const SizedBox(width: kSpacing4),
+                            const SizedBox(width: kSpacing6),
                             Text(
-                              _selectAll ? 'Deselect' : 'All',
+                              _selectAll ? 'Deselect' : 'Select All',
                               style: context.ts(
                                 12,
                                 fontWeight: FontWeight.w600,
                                 color: _selectAll
                                     ? theme.colorScheme.primary
-                                    : theme.colorScheme.onSurfaceVariant,
+                                    : theme.colorScheme.onSurface,
                               ),
                             ),
                           ],
@@ -392,7 +452,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 ),
                                 const Spacer(),
                                 if (_showSwipeHint && !isSelecting)
-                                  GestureDetector(
+                                  TactileSpringContainer(
+                                    haptic: HapticType.soft,
                                     onTap: () =>
                                         setState(() => _showSwipeHint = false),
                                     child: Container(
@@ -406,7 +467,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             .surfaceContainerHighest
                                             .withValues(alpha: 0.4),
                                         borderRadius: BorderRadius.circular(
-                                          kSpacing6,
+                                          AppTheme.radiusSmall,
+                                        ),
+                                        border: Border.all(
+                                          color: theme.colorScheme.outlineVariant
+                                              .withValues(alpha: 0.18),
                                         ),
                                       ),
                                       child: Row(
@@ -421,13 +486,21 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                           ),
                                           const SizedBox(width: kSpacing4),
                                           Text(
-                                            'Swipe cards to approve/reject',
+                                            'Swipe to approve/reject',
                                             style: context.ts(
                                               10,
                                               color: theme
                                                   .colorScheme
                                                   .onSurfaceVariant,
                                             ),
+                                          ),
+                                          const SizedBox(width: kSpacing4),
+                                          Icon(
+                                            PesaFlowIcons.close,
+                                            size: 10,
+                                            color: theme.colorScheme
+                                                .onSurfaceVariant
+                                                .withValues(alpha: 0.6),
                                           ),
                                         ],
                                       ),
@@ -513,6 +586,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                     },
                                     child: GestureDetector(
                                       onTap: () {
+                                        PesaHaptics.selection();
                                         setState(() {
                                           if (isSelected) {
                                             _selectedIds.remove(trans.id);
@@ -523,10 +597,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                         });
                                       },
                                       child: AnimatedContainer(
-                                        duration: const Duration(
-                                          milliseconds: 200,
-                                        ),
-                                        curve: Curves.easeOut,
+                                        duration: MotionTokens.durationFast,
+                                        curve: Curves.easeOutCubic,
                                         margin: const EdgeInsets.only(
                                           bottom: kSpacing12,
                                         ),
@@ -534,18 +606,32 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                           color: isSelected
                                               ? theme.colorScheme.primary
                                                     .withValues(alpha: 0.06)
-                                              : theme.colorScheme.surface,
+                                              : theme.colorScheme
+                                                    .surfaceContainerHigh,
                                           borderRadius: BorderRadius.circular(
                                             AppTheme.radiusCard,
                                           ),
                                           border: Border.all(
                                             color: isSelected
                                                 ? theme.colorScheme.primary
-                                                      .withValues(alpha: 0.3)
-                                                : theme.colorScheme.onSurface
-                                                      .withValues(alpha: 0.06),
+                                                      .withValues(alpha: 0.38)
+                                                : theme.colorScheme
+                                                      .outlineVariant
+                                                      .withValues(
+                                                        alpha: 0.28,
+                                                      ),
                                             width: isSelected ? 1.5 : 1.0,
                                           ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: context
+                                                  .appColors
+                                                  .shadowMedium
+                                                  .withValues(alpha: 0.04),
+                                              blurRadius: 10,
+                                              offset: const Offset(0, 3),
+                                            ),
+                                          ],
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(
@@ -562,11 +648,13 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                 children: [
                                                   // Selection checkbox
                                                   AnimatedContainer(
-                                                    duration: const Duration(
-                                                      milliseconds: 200,
-                                                    ),
-                                                    width: 20,
-                                                    height: 20,
+                                                    duration:
+                                                        MotionTokens
+                                                            .durationFast,
+                                                    curve:
+                                                        Curves.easeOutCubic,
+                                                    width: 22,
+                                                    height: 22,
                                                     margin:
                                                         const EdgeInsets.only(
                                                           top: 2,
@@ -578,7 +666,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                           ? theme
                                                                 .colorScheme
                                                                 .primary
-                                                          : Colors.transparent,
+                                                          : Colors
+                                                                .transparent,
                                                       border: Border.all(
                                                         color: isSelected
                                                             ? theme
@@ -586,43 +675,47 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                                   .primary
                                                             : theme
                                                                   .colorScheme
-                                                                  .onSurface
-                                                                  .withValues(
-                                                                    alpha: 0.2,
-                                                                  ),
+                                                                  .outlineVariant,
                                                         width: 1.5,
                                                       ),
                                                     ),
                                                     child: isSelected
                                                         ? Icon(
-                                                            PesaFlowIcons.check,
-                                                            size: 12,
+                                                            PesaFlowIcons
+                                                                .check,
+                                                            size: 13,
                                                             color: theme
                                                                 .colorScheme
                                                                 .onPrimary,
                                                           )
                                                         : null,
                                                   ),
-                                                  // Category icon
+                                                  // Category icon (38x38 squircle)
                                                   Container(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                          kSpacing8,
-                                                        ),
+                                                    width: 38,
+                                                    height: 38,
                                                     decoration: BoxDecoration(
                                                       color: hexToColor(
                                                         item.category.color,
-                                                      ).withValues(alpha: 0.12),
-                                                      shape: BoxShape.circle,
+                                                      ).withValues(
+                                                        alpha: 0.14,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            AppTheme
+                                                                .radiusSmall,
+                                                          ),
                                                     ),
-                                                    child: Icon(
-                                                      getCategoryIcon(
-                                                        item.category.icon,
+                                                    child: Center(
+                                                      child: Icon(
+                                                        getCategoryIcon(
+                                                          item.category.icon,
+                                                        ),
+                                                        color: hexToColor(
+                                                          item.category.color,
+                                                        ),
+                                                        size: 18,
                                                       ),
-                                                      color: hexToColor(
-                                                        item.category.color,
-                                                      ),
-                                                      size: 18,
                                                     ),
                                                   ),
                                                   const SizedBox(
@@ -879,8 +972,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                       if (item.account !=
                                                           null) ...[
                                                         Icon(
-                                                          Icons
-                                                              .account_balance_wallet_rounded,
+                                                          PesaFlowIcons.wallet,
                                                           size: 12,
                                                           color: theme
                                                               .colorScheme
@@ -924,19 +1016,21 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                               Row(
                                                 children: [
                                                   _ActionPill(
-                                                    icon:
-                                                        PesaFlowIcons.category,
+                                                    icon: PesaFlowIcons
+                                                        .category,
                                                     label: 'Category',
                                                     color: theme
                                                         .colorScheme
                                                         .onSurfaceVariant,
+                                                    haptic:
+                                                        HapticType.selection,
                                                     onTap: () =>
                                                         _showCategoryPicker(
                                                           item,
                                                         ),
                                                   ),
                                                   const SizedBox(
-                                                    width: kSpacing6,
+                                                    width: kSpacing8,
                                                   ),
                                                   _ActionPill(
                                                     icon: PesaFlowIcons.check,
@@ -944,6 +1038,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                     color: context
                                                         .appColors
                                                         .incomeColor,
+                                                    haptic: HapticType.success,
                                                     onTap: () async {
                                                       await ref
                                                           .read(
@@ -964,7 +1059,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                           message:
                                                               'Transaction approved',
                                                           type:
-                                                              ToastType.success,
+                                                              ToastType
+                                                                  .success,
                                                         );
                                                       }
                                                     },
@@ -976,6 +1072,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                     color: context
                                                         .appColors
                                                         .expenseColor,
+                                                    haptic: HapticType.error,
                                                     onTap: () async {
                                                       final txData = item;
                                                       UndoDelete.show(
@@ -1024,30 +1121,34 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                       // Floating batch action bar
                       if (isSelecting)
                         Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
+                          left: kSpacing16,
+                          right: kSpacing16,
+                          bottom: MediaQuery.paddingOf(context).bottom + kSpacing12,
                           child: Container(
-                            padding: EdgeInsets.fromLTRB(
-                              kSpacing16,
-                              kSpacing12,
-                              kSpacing16,
-                              MediaQuery.paddingOf(context).bottom + kSpacing12,
-                            ),
+                            padding: const EdgeInsets.all(kSpacing8),
                             decoration: BoxDecoration(
-                              color: theme.scaffoldBackgroundColor,
-                              border: Border(
-                                top: BorderSide(
-                                  color: theme.colorScheme.onSurface.withValues(
-                                    alpha: 0.08,
-                                  ),
-                                ),
+                              color: theme.colorScheme.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusDialog,
                               ),
+                              border: Border.all(
+                                color: theme.colorScheme.outlineVariant
+                                    .withValues(alpha: 0.28),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: context.appColors.shadowMedium
+                                      .withValues(alpha: 0.16),
+                                  blurRadius: 18,
+                                  offset: const Offset(0, 6),
+                                ),
+                              ],
                             ),
                             child: Row(
                               children: [
                                 // Cancel
                                 TactileSpringContainer(
+                                  haptic: HapticType.soft,
                                   onTap: () {
                                     setState(() {
                                       _selectedIds.clear();
@@ -1057,63 +1158,101 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                   selectedColor: theme.colorScheme.onSurface,
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: kSpacing14,
+                                      horizontal: kSpacing12,
                                       vertical: kSpacing10,
                                     ),
                                     decoration: BoxDecoration(
                                       color: theme
                                           .colorScheme
-                                          .surfaceContainerHighest
-                                          .withValues(alpha: 0.4),
+                                          .surfaceContainerHigh,
                                       borderRadius: BorderRadius.circular(
-                                        AppTheme.radiusInput,
+                                        AppTheme.radiusSmall,
+                                      ),
+                                      border: Border.all(
+                                        color: theme.colorScheme.outlineVariant
+                                            .withValues(alpha: 0.2),
                                       ),
                                     ),
-                                    child: Text(
-                                      'Cancel',
-                                      style: context.ts(
-                                        13,
-                                        fontWeight: FontWeight.w500,
-                                        color:
-                                            theme.colorScheme.onSurfaceVariant,
-                                      ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          PesaFlowIcons.close,
+                                          size: 14,
+                                          color: theme
+                                              .colorScheme
+                                              .onSurfaceVariant,
+                                        ),
+                                        const SizedBox(width: kSpacing4),
+                                        Text(
+                                          'Cancel',
+                                          style: context.ts(
+                                            12,
+                                            fontWeight: FontWeight.w600,
+                                            color: theme
+                                                .colorScheme
+                                                .onSurfaceVariant,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: kSpacing10),
+                                const SizedBox(width: kSpacing8),
                                 // Categorize
                                 Expanded(
                                   child: TactileSpringContainer(
+                                    haptic: HapticType.selection,
                                     onTap: _showBatchCategoryPicker,
                                     selectedColor: theme.colorScheme.onSurface,
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: kSpacing10,
+                                        horizontal: kSpacing8,
                                       ),
                                       decoration: BoxDecoration(
                                         color: theme.colorScheme.primary
-                                            .withValues(alpha: 0.1),
+                                            .withValues(alpha: 0.12),
                                         borderRadius: BorderRadius.circular(
-                                          AppTheme.radiusInput,
+                                          AppTheme.radiusSmall,
+                                        ),
+                                        border: Border.all(
+                                          color: theme.colorScheme.primary
+                                              .withValues(alpha: 0.25),
                                         ),
                                       ),
-                                      child: Center(
-                                        child: Text(
-                                          'Categorize (${_selectedIds.length})',
-                                          style: context.ts(
-                                            13,
-                                            fontWeight: FontWeight.w600,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            PesaFlowIcons.category,
+                                            size: 14,
                                             color: theme.colorScheme.primary,
                                           ),
-                                        ),
+                                          const SizedBox(width: kSpacing6),
+                                          Flexible(
+                                            child: Text(
+                                              'Category (${_selectedIds.length})',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: context.ts(
+                                                12,
+                                                fontWeight: FontWeight.w600,
+                                                color:
+                                                    theme.colorScheme.primary,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: kSpacing10),
+                                const SizedBox(width: kSpacing8),
                                 // Approve
                                 Expanded(
                                   child: TactileSpringContainer(
+                                    haptic: HapticType.success,
                                     selectedColor: theme.colorScheme.onSurface,
                                     onTap: () async {
                                       for (final id in _selectedIds) {
@@ -1142,22 +1281,45 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: kSpacing10,
+                                        horizontal: kSpacing8,
                                       ),
                                       decoration: BoxDecoration(
                                         color: context.appColors.incomeColor,
                                         borderRadius: BorderRadius.circular(
-                                          AppTheme.radiusInput,
+                                          AppTheme.radiusSmall,
                                         ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: context.appColors.incomeColor
+                                                .withValues(alpha: 0.25),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
                                       ),
-                                      child: Center(
-                                        child: Text(
-                                          'Approve All',
-                                          style: context.ts(
-                                            13,
-                                            fontWeight: FontWeight.w600,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            PesaFlowIcons.check,
+                                            size: 14,
                                             color: context.appColors.onBgColor,
                                           ),
-                                        ),
+                                          const SizedBox(width: kSpacing6),
+                                          Flexible(
+                                            child: Text(
+                                              'Approve (${_selectedIds.length})',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: context.ts(
+                                                12,
+                                                fontWeight: FontWeight.w700,
+                                                color:
+                                                    context.appColors.onBgColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -1313,36 +1475,47 @@ class _ActionPill extends StatelessWidget {
   final String label;
   final Color color;
   final VoidCallback onTap;
+  final HapticType haptic;
 
   const _ActionPill({
     required this.icon,
     required this.label,
     required this.color,
     required this.onTap,
+    this.haptic = HapticType.selection,
   });
 
   @override
   Widget build(BuildContext context) {
     return TactileSpringContainer(
+      haptic: haptic,
       onTap: onTap,
       selectedColor: Theme.of(context).colorScheme.onSurface,
       child: Container(
         padding: const EdgeInsets.symmetric(
-          horizontal: kSpacing10,
-          vertical: kSpacing6,
+          horizontal: kSpacing12,
+          vertical: kSpacing8,
         ),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
+          color: color.withValues(alpha: 0.10),
           borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+          border: Border.all(
+            color: color.withValues(alpha: 0.22),
+            width: 1.0,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 12, color: color),
-            const SizedBox(width: kSpacing4),
+            Icon(icon, size: 14, color: color),
+            const SizedBox(width: kSpacing6),
             Text(
               label,
-              style: context.ts(11, fontWeight: FontWeight.w600, color: color),
+              style: context.ts(
+                12,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
             ),
           ],
         ),
@@ -1722,9 +1895,25 @@ class _SwipeableCardState extends State<SwipeableCard>
                                 ),
                               ],
                             ),
-                            child: Text(
-                              'APPROVE',
-                              style: context.ts(14, color: context.appColors.onBgColor, fontWeight: FontWeight.w700, letterSpacing: 1.5),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  PesaFlowIcons.check,
+                                  size: 16,
+                                  color: context.appColors.onBgColor,
+                                ),
+                                const SizedBox(width: kSpacing8),
+                                Text(
+                                  'APPROVE',
+                                  style: context.ts(
+                                    14,
+                                    color: context.appColors.onBgColor,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -1773,9 +1962,25 @@ class _SwipeableCardState extends State<SwipeableCard>
                                 ),
                               ],
                             ),
-                            child: Text(
-                              'REJECT',
-                              style: context.ts(14, color: context.appColors.onBgColor, fontWeight: FontWeight.w700, letterSpacing: 1.5),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  PesaFlowIcons.close,
+                                  size: 16,
+                                  color: context.appColors.onBgColor,
+                                ),
+                                const SizedBox(width: kSpacing8),
+                                Text(
+                                  'REJECT',
+                                  style: context.ts(
+                                    14,
+                                    color: context.appColors.onBgColor,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),

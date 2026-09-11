@@ -100,8 +100,8 @@ class PesaFlowIcons {
   static const IconData message = Icons.message_rounded;
   static const IconData description = Icons.description_rounded;
   static const IconData clearAll = Icons.clear_all_rounded;
-  static const IconData selectAll = Icons.select_all;
-  static const IconData deselect = Icons.deselect;
+  static const IconData selectAll = Icons.done_all_rounded;
+  static const IconData deselect = Icons.remove_done_rounded;
 
   // Goal / Lifestyle
   static const IconData home = Icons.home_rounded;
