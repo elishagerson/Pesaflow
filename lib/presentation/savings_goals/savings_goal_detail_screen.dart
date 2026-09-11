@@ -16,6 +16,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -369,6 +370,77 @@ class _SavingsGoalDetailScreenState
                                               ),
                                             ),
                                           ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: kSpacing8),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: [
+                                        _buildSheetPresetPill(
+                                          label: '+10K',
+                                          onTap: () {
+                                            final cur = CurrencyFormatter.parseToCents(_amountController.text);
+                                            _amountController.text = ((cur + 1000000) ~/ 100).toString();
+                                            setModalState(() {});
+                                          },
+                                          theme: theme,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        _buildSheetPresetPill(
+                                          label: '+50K',
+                                          onTap: () {
+                                            final cur = CurrencyFormatter.parseToCents(_amountController.text);
+                                            _amountController.text = ((cur + 5000000) ~/ 100).toString();
+                                            setModalState(() {});
+                                          },
+                                          theme: theme,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        _buildSheetPresetPill(
+                                          label: '+100K',
+                                          onTap: () {
+                                            final cur = CurrencyFormatter.parseToCents(_amountController.text);
+                                            _amountController.text = ((cur + 10000000) ~/ 100).toString();
+                                            setModalState(() {});
+                                          },
+                                          theme: theme,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        _buildSheetPresetPill(
+                                          label: '+500K',
+                                          onTap: () {
+                                            final cur = CurrencyFormatter.parseToCents(_amountController.text);
+                                            _amountController.text = ((cur + 50000000) ~/ 100).toString();
+                                            setModalState(() {});
+                                          },
+                                          theme: theme,
+                                        ),
+                                        if (isDeposit && goal.targetAmount > goal.currentAmount) ...[
+                                          const SizedBox(width: 6),
+                                          _buildSheetPresetPill(
+                                            label: 'Remaining Target',
+                                            accentColor: accentColor,
+                                            onTap: () {
+                                              final remaining = goal.targetAmount - goal.currentAmount;
+                                              _amountController.text = (remaining ~/ 100).toString();
+                                              setModalState(() {});
+                                            },
+                                            theme: theme,
+                                          ),
+                                        ] else if (!isDeposit && goal.currentAmount > 0) ...[
+                                          const SizedBox(width: 6),
+                                          _buildSheetPresetPill(
+                                            label: 'Full Balance',
+                                            accentColor: accentColor,
+                                            onTap: () {
+                                              _amountController.text = (goal.currentAmount ~/ 100).toString();
+                                              setModalState(() {});
+                                            },
+                                            theme: theme,
+                                          ),
+                                        ],
                                       ],
                                     ),
                                   ),
@@ -1441,6 +1513,42 @@ class _GoalStatCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  Widget _buildSheetPresetPill({
+    required String label,
+    required VoidCallback onTap,
+    required ThemeData theme,
+    Color? accentColor,
+  }) {
+    final isCustomColor = accentColor != null;
+    return TactileSpringContainer(
+      haptic: HapticType.selection,
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: isCustomColor
+              ? accentColor.withValues(alpha: 0.12)
+              : theme.colorScheme.surfaceContainerHigh,
+          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+          border: Border.all(
+            color: isCustomColor
+                ? accentColor.withValues(alpha: 0.5)
+                : theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+            width: isCustomColor ? 1.4 : 1,
+          ),
+        ),
+        child: Text(
+          label,
+          style: context.ts(
+            11,
+            fontWeight: FontWeight.w600,
+            color: isCustomColor
+                ? accentColor
+                : theme.colorScheme.onSurface.withValues(alpha: 0.75),
+          ),
         ),
       ),
     );
