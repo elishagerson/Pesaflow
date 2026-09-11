@@ -4,34 +4,25 @@ import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
-import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
-import 'package:pesaflow/data/database/app_database.dart';
-import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/presentation/state/insight_provider.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
-import 'package:pesaflow/presentation/common/widgets/morphing_insight_card.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_widgets.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/category_budget_card.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/services/home_widgets_renderer.dart';
 import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
-import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
-import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/right_now_card.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -43,7 +34,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   String? _selectedAccountId;
-  final Set<String> _pendingDeleteIds = {};
   Timer? _homeWidgetCaptureTimer;
   final ScrollController _scrollController = ScrollController();
 
@@ -78,6 +68,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       return '${(value / 1000).toStringAsFixed(0)}k';
     }
     return value.toStringAsFixed(0);
+  }
+
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good morning';
+    } else if (hour < 17) {
+      return 'Good afternoon';
+    } else {
+      return 'Good evening';
+    }
   }
 
   /// Debounces AppWidget captures so launcher widgets only refresh after data
@@ -156,7 +157,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         overallPct = (totalSpent / totalAllocated).clamp(0.0, 1.0);
       }
     } else {
-      // Dynamic fallback if no budgets are set: compute spent vs income from actual transactions!
       final totals = totalsAsync.value;
       if (totals != null) {
         final income = totals['income'] ?? 0;
@@ -166,9 +166,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         if (income > 0) {
           overallPct = (expense / income).clamp(0.0, 1.0);
         } else if (expense > 0) {
-          overallPct = 1.0; // Has expenses but no income logged -> 100% spent
+          overallPct = 1.0;
         } else {
-          overallPct = 0.0; // Fresh app startup, no transactions -> 0% spent
+          overallPct = 0.0;
         }
       } else {
         overallPct = 0.0;
@@ -181,15 +181,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
 
     final accounts = accountsAsync.value ?? [];
-
     final recsAsync = ref.watch(recurringTransactionsStreamProvider);
     final dueAsync = ref.watch(dueRecurringTransactionsProvider);
-
     final heatmapAsync = ref.watch(spendingHeatmapProvider);
     final templatesAsync = ref.watch(transactionTemplatesStreamProvider);
 
-    // Debounce AppWidget captures so launcher widgets refresh once data
-    // settles instead of re-capturing on every dashboard rebuild.
+    // Debounce AppWidget captures
     _scheduleHomeWidgetCaptures();
 
     return Stack(
@@ -205,7 +202,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       notification.scrollDelta?.abs() ?? 0.0;
                   final double rawSpeed =
                       1.0 + (velocity / 12.0).clamp(0.0, 4.0);
-                  // Quantize to 0.5 increments to avoid per-frame provider writes
                   final double quantized = (rawSpeed * 2).roundToDouble() / 2;
                   final current = ref.read(scrollSpeedProvider);
                   if (current != quantized) {
@@ -234,1265 +230,650 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   controller: _scrollController,
                   physics: const BouncingScrollPhysics(),
                   padding: EdgeInsets.only(
-                    top: kSpacing4,
+                    top: kSpacing8,
                     bottom: IosTabBar.navBarHeight + kSpacing32,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing16,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ── 1. Top Bar: Greeting & Quick Tools ──
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            // ── 1. Floating Top Bar ──
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // "Personal" Pill
+                                Text(
+                                  _getGreeting(),
+                                  style: context.ts(
+                                    12,
+                                    fontWeight: FontWeight.w500,
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  cardholderName.isNotEmpty &&
+                                          cardholderName != 'TOTAL NET WORTH'
+                                      ? cardholderName
+                                      : 'PesaFlow',
+                                  style: context.ts(
+                                    20,
+                                    fontWeight: FontWeight.w800,
+                                    color: theme.colorScheme.onSurface,
+                                    letterSpacing: -0.4,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
                                 TactileSpringContainer(
-                                  onTap: () {},
+                                  onTap: () => ref
+                                      .read(paletteVisibilityProvider.notifier)
+                                      .toggle(),
                                   selectedColor: theme.colorScheme.onSurface,
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 14,
-                                      vertical: 8,
-                                    ),
+                                    width: 42,
+                                    height: 42,
                                     decoration: BoxDecoration(
-                                      color: theme
-                                          .colorScheme
-                                          .surfaceContainerHighest
-                                          .withValues(alpha: 0.5),
-                                      borderRadius: BorderRadius.circular(
-                                        AppTheme.radiusPill,
-                                      ),
+                                      color: theme.colorScheme.surfaceContainerHigh,
+                                      shape: BoxShape.circle,
                                       border: Border.all(
                                         color: theme.colorScheme.outlineVariant
-                                            .withValues(alpha: 0.4),
+                                            .withValues(alpha: 0.35),
                                         width: 1,
                                       ),
                                     ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          PesaFlowIcons.person,
-                                          size: 15,
-                                          color: theme.colorScheme.primary,
-                                        ),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          'Personal',
-                                          style: context.ts(
-                                            13,
-                                            color: theme.colorScheme.onSurface,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      PesaFlowIcons.search,
+                                      color: theme.colorScheme.onSurface,
+                                      size: 18,
                                     ),
                                   ),
                                 ),
-                                // Actions
-                                Row(
-                                  children: [
-                                    TactileSpringContainer(
-                                      onTap: () => ref
-                                          .read(
-                                            paletteVisibilityProvider.notifier,
-                                          )
-                                          .toggle(),
-                                      selectedColor:
-                                          theme.colorScheme.onSurface,
-                                      child: Container(
-                                        width: 44,
-                                        height: 44,
+                                const SizedBox(width: kSpacing8),
+                                TactileSpringContainer(
+                                  onTap: () => context.push('/sms-review'),
+                                  selectedColor: theme.colorScheme.onSurface,
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Container(
+                                        width: 42,
+                                        height: 42,
                                         decoration: BoxDecoration(
                                           color: theme
                                               .colorScheme
-                                              .surfaceContainerHighest
-                                              .withValues(alpha: 0.5),
+                                              .surfaceContainerHigh,
                                           shape: BoxShape.circle,
                                           border: Border.all(
                                             color: theme
                                                 .colorScheme
                                                 .outlineVariant
-                                                .withValues(alpha: 0.4),
+                                                .withValues(alpha: 0.35),
                                             width: 1,
                                           ),
                                         ),
                                         alignment: Alignment.center,
                                         child: Icon(
-                                          PesaFlowIcons.search,
-                                          color: theme.colorScheme.onSurface,
+                                          PesaFlowIcons.sms,
                                           size: 18,
+                                          color: theme.colorScheme.onSurface,
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: kSpacing8),
-                                    TactileSpringContainer(
-                                      onTap: () => context.push('/sms-review'),
-                                      selectedColor:
-                                          theme.colorScheme.onSurface,
-                                      child: Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          Container(
-                                            width: 44,
-                                            height: 44,
-                                            decoration: BoxDecoration(
-                                              color: theme
-                                                  .colorScheme
-                                                  .surfaceContainerHighest
-                                                  .withValues(alpha: 0.5),
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: theme
-                                                    .colorScheme
-                                                    .outlineVariant
-                                                    .withValues(alpha: 0.4),
-                                                width: 1,
-                                              ),
-                                            ),
-                                            alignment: Alignment.center,
-                                            child: Icon(
-                                              PesaFlowIcons.sms,
-                                              size: 18,
-                                              color:
-                                                  theme.colorScheme.onSurface,
-                                            ),
-                                          ),
-                                          if (pendingReviewCount > 0)
-                                            Positioned(
-                                              right: -2,
-                                              top: -2,
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: kSpacing6,
-                                                      vertical: kSpacing2,
-                                                    ),
-                                                decoration: BoxDecoration(
-                                                  color: context
-                                                      .appColors
-                                                      .expenseColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        AppTheme.radiusPill,
-                                                      ),
-                                                  border: Border.all(
-                                                    color: theme
-                                                        .colorScheme
-                                                        .surface,
-                                                    width: 1.5,
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  '$pendingReviewCount',
-                                                  style: context.ts(
-                                                    9,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onPrimary,
-                                                    fontWeight: FontWeight.w700,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: kSpacing24),
-                            // Large "Overview" Title
-                            Text(
-                              'Overview',
-                              style: context.ts(
-                                34,
-                                fontWeight: FontWeight.w800,
-                                color: theme.colorScheme.onSurface,
-                                letterSpacing: -0.5,
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing20),
-
-                            // ── 2. Balance Header ──
-                            Consumer(
-                              builder: (context, ref, _) {
-                                final accountsAsync = ref.watch(
-                                  accountsStreamProvider,
-                                );
-                                final accounts = accountsAsync.value ?? [];
-                                final netWorth = ref.watch(netWorthProvider);
-                                final displayBalance =
-                                    _selectedAccountId != null
-                                    ? (accounts
-                                          .firstWhere(
-                                            (a) => a.id == _selectedAccountId,
-                                            orElse: () => accounts.first,
-                                          )
-                                          .balance)
-                                    : netWorth;
-
-                                return StaggeredFadeSlide(
-                                  index: 0,
-                                  child: BudjetlyBalanceHeader(
-                                    balance: displayBalance,
-                                    label: cardholderName,
-                                    income: totalsAsync.value?['income'] ?? 0,
-                                    expense: totalsAsync.value?['expense'] ?? 0,
-                                  ),
-                                );
-                              },
-                            ),
-
-                            // ── 2b. Account Pills (Below Card) ──
-                            if (accounts.isNotEmpty) ...[
-                              const SizedBox(height: kSpacing16),
-                              SizedBox(
-                                height: 36,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  physics: const BouncingScrollPhysics(),
-                                  itemCount: accounts.length,
-                                  itemBuilder: (context, index) {
-                                    final account = accounts[index];
-                                    final isSelected =
-                                        _selectedAccountId == account.id;
-
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                        right: kSpacing8,
-                                        left: index == 0 ? kSpacing2 : 0.0,
-                                      ),
-                                      child: TactileSpringContainer(
-                                        onTap: () {
-                                          setState(() {
-                                            if (_selectedAccountId ==
-                                                account.id) {
-                                              _selectedAccountId =
-                                                  null; // Clear filter
-                                            } else {
-                                              _selectedAccountId =
-                                                  account.id; // Apply filter
-                                            }
-                                          });
-                                        },
-                                        selectedColor:
-                                            theme.colorScheme.onSurface,
-                                        child: Semantics(
-                                          label:
-                                              '${account.name}, ${_formatCompact(account.balance)}${isSelected ? ', selected filter' : ''}',
-                                          button: true,
-                                          selected: isSelected,
+                                      if (pendingReviewCount > 0)
+                                        Positioned(
+                                          right: -2,
+                                          top: -2,
                                           child: Container(
                                             padding: const EdgeInsets.symmetric(
-                                              horizontal: kSpacing14,
-                                              vertical: kSpacing6,
+                                              horizontal: kSpacing6,
+                                              vertical: kSpacing2,
                                             ),
                                             decoration: BoxDecoration(
-                                              color: isSelected
-                                                  ? theme.colorScheme.primary
-                                                        .withValues(alpha: 0.16)
-                                                  : theme
-                                                        .colorScheme
-                                                        .surfaceContainerHigh,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                    AppTheme.radiusPill,
-                                                  ),
+                                              color: context.appColors.expenseColor,
+                                              borderRadius: BorderRadius.circular(
+                                                AppTheme.radiusPill,
+                                              ),
                                               border: Border.all(
-                                                color: isSelected
-                                                    ? theme.colorScheme.primary
-                                                    : theme
-                                                          .colorScheme
-                                                          .outlineVariant
-                                                          .withValues(
-                                                            alpha: 0.35,
-                                                          ),
-                                                width: isSelected ? 1.2 : 0.8,
+                                                color: theme.colorScheme.surface,
+                                                width: 1.5,
                                               ),
                                             ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Icon(
-                                                  getAccountIcon(account.icon),
-                                                  size: 14,
-                                                  color: isSelected
-                                                      ? theme
-                                                            .colorScheme
-                                                            .primary
-                                                      : theme
-                                                            .colorScheme
-                                                            .onSurface,
-                                                ),
-                                                const SizedBox(
-                                                  width: kSpacing6,
-                                                ),
-                                                Text(
-                                                  account.name,
-                                                  style: theme
-                                                      .textTheme
-                                                      .bodySmall
-                                                      ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: isSelected
-                                                            ? theme
-                                                                  .colorScheme
-                                                                  .primary
-                                                            : theme
-                                                                  .colorScheme
-                                                                  .onSurface,
-                                                      ),
-                                                ),
-                                                const SizedBox(
-                                                  width: kSpacing8,
-                                                ),
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 6,
-                                                        vertical: 1.5,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color: isSelected
-                                                        ? theme
-                                                              .colorScheme
-                                                              .primary
-                                                              .withValues(
-                                                                alpha: 0.12,
-                                                              )
-                                                        : theme
-                                                              .colorScheme
-                                                              .onSurface
-                                                              .withValues(
-                                                                alpha: 0.06,
-                                                              ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          6,
-                                                        ),
-                                                  ),
-                                                  child: Text(
-                                                    _formatCompact(
-                                                      account.balance,
-                                                    ),
-                                                    style: AppTheme.getMonospaceStyle(
-                                                      theme
-                                                          .textTheme
-                                                          .labelSmall!
-                                                          .copyWith(
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: isSelected
-                                                                ? theme
-                                                                      .colorScheme
-                                                                      .primary
-                                                                : theme
-                                                                      .colorScheme
-                                                                      .onSurface
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.8,
-                                                                      ),
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                            child: Text(
+                                              '$pendingReviewCount',
+                                              style: context.ts(
+                                                9,
+                                                color: theme.colorScheme.onPrimary,
+                                                fontWeight: FontWeight.w700,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ] else ...[
-                              const SizedBox(height: kSpacing16),
-                              Center(
-                                child: Text(
-                                  'No active accounts. Tap Add Account below to start.',
-                                  style: context.ts(12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
-                                ),
-                              ),
-                            ],
-                            const SizedBox(height: kSpacing32),
-
-                            // ── Right Now — what needs attention today ──
-                            RightNowCard(),
-                            const SizedBox(height: kSpacing16),
-
-                            // ── 3b. Quick Actions ──
-                            StaggeredFadeSlide(
-                              index: 2,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: kSpacing20,
-                                ),
-                                child: Row(
-                                  children: [
-                                    _QuickActionButton(
-                                      icon: PesaFlowIcons.expense,
-                                      label: 'Expense',
-                                      color: context.appColors.expenseColor,
-                                      onTap: () => context.push(
-                                        '/transactions/add?type=Expense',
-                                      ),
-                                    ),
-                                    const SizedBox(width: kSpacing10),
-                                    _QuickActionButton(
-                                      icon: PesaFlowIcons.income,
-                                      label: 'Income',
-                                      color: context.appColors.incomeColor,
-                                      onTap: () => context.push(
-                                        '/transactions/add?type=Income',
-                                      ),
-                                    ),
-                                    const SizedBox(width: kSpacing10),
-                                    _QuickActionButton(
-                                      icon: PesaFlowIcons.transfer,
-                                      label: 'Transfer',
-                                      color: context.appColors.transferColor,
-                                      onTap: () => context.push(
-                                        '/transactions/add?type=Transfer',
-                                      ),
-                                    ),
-                                    const SizedBox(width: kSpacing10),
-                                    _QuickActionButton(
-                                      icon: PesaFlowIcons.savings,
-                                      label: 'Goal',
-                                      color: context.appColors.transferColor
-                                          .withValues(alpha: 0.85),
-                                      onTap: () =>
-                                          context.push('/savings-goals/add'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing28),
-
-                            // ── Budget Progress Row ──
-                            if (budgets.isNotEmpty) ...[
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: kSpacing20,
-                                ),
-                                child: Text(
-                                  'Budget Progress',
-                                  style: context.ts(
-                                    14,
-                                    fontWeight: FontWeight.w600,
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.6),
-                                  ),
-                                ),
-                              ),
-                              Builder(
-                                builder: (context) {
-                                  final sorted = List.from(budgets)
-                                    ..sort(
-                                      (a, b) =>
-                                          b.percentage.compareTo(a.percentage),
-                                    );
-                                  final tightest = sorted.first;
-                                  if (tightest.percentage > 0.0) {
-                                    return Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                        kSpacing20,
-                                        kSpacing12,
-                                        kSpacing20,
-                                        0,
-                                      ),
-                                      child: TactileSpringContainer(
-                                        selectedColor:
-                                            theme.colorScheme.onSurface,
-                                        onTap: () => context.push('/budgets'),
-                                        child: GlassCard(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: kSpacing14,
-                                            vertical: kSpacing12,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                padding: const EdgeInsets.all(
-                                                  kSpacing8,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: tightest.remaining < 0
-                                                      ? theme.colorScheme.error
-                                                            .withValues(
-                                                              alpha: 0.1,
-                                                            )
-                                                      : context
-                                                            .appColors
-                                                            .warningColor
-                                                            .withValues(
-                                                              alpha: 0.1,
-                                                            ),
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Icon(
-                                                  tightest.remaining < 0
-                                                      ? PesaFlowIcons.expense
-                                                      : PesaFlowIcons.info,
-                                                  size: 16,
-                                                  color: tightest.remaining < 0
-                                                      ? theme.colorScheme.error
-                                                      : context
-                                                            .appColors
-                                                            .warningColor,
-                                                ),
-                                              ),
-                                              const SizedBox(width: kSpacing12),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      tightest.budget.name,
-                                                      style: context.ts(
-                                                        13,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color:
-                                                            tightest.remaining <
-                                                                0
-                                                            ? theme
-                                                                  .colorScheme
-                                                                  .error
-                                                            : theme
-                                                                  .colorScheme
-                                                                  .onSurface,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: kSpacing2,
-                                                    ),
-                                                    Text(
-                                                      tightest.remaining < 0
-                                                          ? 'Over budget by ${_formatCompact(tightest.remaining.abs())}'
-                                                          : '${_formatCompact(tightest.remaining)} left to spend',
-                                                      style: context.ts(
-                                                        11,
-                                                        color: theme
-                                                            .colorScheme
-                                                            .onSurface
-                                                            .withValues(
-                                                              alpha: 0.5,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Icon(
-                                                PesaFlowIcons.chevronRight,
-                                                size: 14,
-                                                color: theme
-                                                    .colorScheme
-                                                    .onSurface
-                                                    .withValues(alpha: 0.3),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                  return const SizedBox.shrink();
-                                },
-                              ),
-                              const SizedBox(height: kSpacing12),
-                              SizedBox(
-                                height:
-                                    120, // Enough for the CategoryBudgetCard
-                                child: ListView.builder(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: kSpacing20,
-                                  ),
-                                  scrollDirection: Axis.horizontal,
-                                  physics: const BouncingScrollPhysics(),
-                                  itemCount: budgets.length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                        right: kSpacing12,
-                                      ),
-                                      child: CategoryBudgetCard(
-                                        budgetProgress: budgets[index],
-                                        onTap: () {
-                                          context.push('/budgets');
-                                        },
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: kSpacing20),
-                            ],
-
-                            // ── 3. Recent Activity ──
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: kSpacing20,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Recent Transactions',
-                                    style: context.ts(
-                                      14,
-                                      fontWeight: FontWeight.w600,
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.6),
-                                    ),
-                                  ),
-                                  TactileSpringContainer(
-                                    selectedColor: theme.colorScheme.onSurface,
-                                    onTap: () => context.push('/transactions'),
-                                    child: Text(
-                                      'See All',
-                                      style: context.ts(
-                                        12,
-                                        fontWeight: FontWeight.w600,
-                                        color: theme.colorScheme.primary,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Clear account filter chip row if _selectedAccountId is active
-                                if (_selectedAccountId != null) ...[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      top: kSpacing4,
-                                      bottom: kSpacing12,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        InputChip(
-                                          label: Text(
-                                            'Filtered by: ${accounts.firstWhere(
-                                              (a) => a.id == _selectedAccountId,
-                                              orElse: () => Account(id: '', name: 'Account', type: '', balance: 0, icon: 'wallet', sortOrder: 0, isArchived: false, createdAt: DateTime.now()),
-                                            ).name}',
-                                            style: context.ts(10, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
-                                          ),
-                                          backgroundColor: theme
-                                              .colorScheme
-                                              .primary
-                                              .withValues(alpha: 0.08),
-                                          side: BorderSide(
-                                            color: theme.colorScheme.primary
-                                                .withValues(alpha: 0.2),
-                                            width: 0.8,
-                                          ),
-                                          deleteIcon: Icon(
-                                            PesaFlowIcons.cancel,
-                                            size: 16,
-                                            color: theme.colorScheme.primary,
-                                          ),
-                                          onDeleted: () {
-                                            setState(() {
-                                              _selectedAccountId = null;
-                                            });
-                                          },
-                                          onPressed: () {
-                                            setState(() {
-                                              _selectedAccountId = null;
-                                            });
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ] else ...[
-                                  const SizedBox(height: kSpacing4),
-                                ],
-
-                                SkeletonCrossfade(
-                                  isLoading:
-                                      recentTransAsync is AsyncLoading &&
-                                      !recentTransAsync.hasValue,
-                                  skeleton: const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: kSpacing16,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        SkeletonCard(height: 80),
-                                        SizedBox(height: kSpacing8),
-                                        SkeletonCard(height: 80),
-                                      ],
-                                    ),
-                                  ),
-                                  child: recentTransAsync.when(
-                                    data: (transactions) {
-                                      // Client-side dynamic filtering of recent transactions by account
-                                      final filteredTransactions =
-                                          (_selectedAccountId == null
-                                                  ? transactions
-                                                  : transactions
-                                                        .where(
-                                                          (t) =>
-                                                              t
-                                                                  .transaction
-                                                                  .accountId ==
-                                                              _selectedAccountId,
-                                                        )
-                                                        .toList())
-                                              .where(
-                                                (t) => !_pendingDeleteIds
-                                                    .contains(t.transaction.id),
-                                              )
-                                              .toList();
-
-                                      if (filteredTransactions.isEmpty) {
-                                        final isNewUser =
-                                            _selectedAccountId == null;
-                                        return Container(
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: kSpacing40,
-                                            horizontal: kSpacing24,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: theme.colorScheme.surface,
-                                            borderRadius: BorderRadius.circular(
-                                              AppTheme.radiusCard,
-                                            ),
-                                            border: Border.all(
-                                              color: onSurface.withValues(
-                                                alpha: 0.08,
-                                              ),
-                                              width: 0.5,
-                                            ),
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                isNewUser
-                                                    ? PesaFlowIcons.add
-                                                    : PesaFlowIcons
-                                                          .transactions,
-                                                size: isNewUser ? 64 : 40,
-                                                color: isNewUser
-                                                    ? theme.colorScheme.primary
-                                                    : theme
-                                                          .colorScheme
-                                                          .onSurfaceVariant
-                                                          .withValues(
-                                                            alpha: 0.4,
-                                                          ),
-                                              ),
-                                              const SizedBox(
-                                                height: kSpacing12,
-                                              ),
-                                              Text(
-                                                isNewUser
-                                                    ? 'Welcome to PesaFlow!'
-                                                    : 'No transactions found.',
-                                                style: theme
-                                                    .textTheme
-                                                    .titleSmall
-                                                    ?.copyWith(
-                                                      color: isNewUser
-                                                          ? theme
-                                                                .colorScheme
-                                                                .onSurface
-                                                          : theme
-                                                                .colorScheme
-                                                                .onSurfaceVariant,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                              ),
-                                              const SizedBox(height: kSpacing4),
-                                              Text(
-                                                isNewUser
-                                                    ? 'Add your first transaction to get started with tracking your finances.'
-                                                    : 'No activity recorded for this specific account.',
-                                                textAlign: TextAlign.center,
-                                                style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
-                                              ),
-                                              if (isNewUser) ...[
-                                                const SizedBox(
-                                                  height: kSpacing20,
-                                                ),
-                                                TactileSpringContainer(
-                                                  selectedColor: theme
-                                                      .colorScheme
-                                                      .onSurface,
-                                                  onTap: () => context.push(
-                                                    '/transactions/add',
-                                                  ),
-                                                  child: Container(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(
-                                                          horizontal:
-                                                              kSpacing24,
-                                                          vertical: kSpacing12,
-                                                        ),
-                                                    decoration: BoxDecoration(
-                                                      color: theme
-                                                          .colorScheme
-                                                          .primary,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            100,
-                                                          ),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: theme
-                                                              .colorScheme
-                                                              .primary
-                                                              .withValues(
-                                                                alpha: 0.3,
-                                                              ),
-                                                          blurRadius: 8,
-                                                          offset: const Offset(
-                                                            0,
-                                                            3,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Icon(
-                                                          PesaFlowIcons.add,
-                                                          color: theme
-                                                              .colorScheme
-                                                              .onPrimary,
-                                                          size: 18,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: kSpacing6,
-                                                        ),
-                                                        Text(
-                                                          'Add Transaction',
-                                                          style: theme
-                                                              .textTheme
-                                                              .titleSmall
-                                                              ?.copyWith(
-                                                                color: theme
-                                                                    .colorScheme
-                                                                    .onPrimary,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        );
-                                      }
-
-                                      return GlassListContainer(
-                                        child: ListView.builder(
-                                          shrinkWrap: true,
-                                          padding: EdgeInsets.zero,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemCount:
-                                              filteredTransactions.length,
-                                          itemBuilder: (context, index) {
-                                            final item =
-                                                filteredTransactions[index];
-                                            final trans = item.transaction;
-
-                                            AmountType amtType =
-                                                AmountType.neutral;
-                                            if (trans.type.toLowerCase() ==
-                                                'income') {
-                                              amtType = AmountType.income;
-                                            } else if (trans.type
-                                                        .toLowerCase() ==
-                                                    'expense' ||
-                                                trans.type.toLowerCase() ==
-                                                    'airtime' ||
-                                                trans.type.toLowerCase() ==
-                                                    'fee') {
-                                              amtType = AmountType.expense;
-                                            }
-
-                                            return StaggeredFadeSlide(
-                                              index: index,
-                                              child: Dismissible(
-                                                key: Key(trans.id),
-                                                direction:
-                                                    DismissDirection.endToStart,
-                                                confirmDismiss: (_) async {
-                                                  return await ModernDialog.show<
-                                                        bool
-                                                      >(
-                                                        context: context,
-                                                        title: const Text(
-                                                          'Delete Transaction',
-                                                        ),
-                                                        titleIcon: PesaFlowIcons
-                                                            .warning,
-                                                        iconColor: theme
-                                                            .colorScheme
-                                                            .error,
-                                                        content: Text(
-                                                          'Delete "${trans.description.length > 30 ? '${trans.description.substring(0, 30)}…' : trans.description}" (${CurrencyFormatter.formatCents(trans.amount)})?',
-                                                        ),
-                                                        actions: [
-                                                          TextButton(
-                                                            onPressed: () =>
-                                                                Navigator.of(
-                                                                  context,
-                                                                  rootNavigator:
-                                                                      true,
-                                                                ).pop(false),
-                                                            child: const Text(
-                                                              'Cancel',
-                                                            ),
-                                                          ),
-                                                          ElevatedButton(
-                                                            style: ElevatedButton.styleFrom(
-                                                              backgroundColor:
-                                                                  theme
-                                                                      .colorScheme
-                                                                      .error,
-                                                            ),
-                                                            onPressed: () =>
-                                                                Navigator.of(
-                                                                  context,
-                                                                  rootNavigator:
-                                                                      true,
-                                                                ).pop(true),
-                                                            child: const Text(
-                                                              'Delete',
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ) ??
-                                                      false;
-                                                },
-                                                background: Container(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                        right: kSpacing20,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                        theme.colorScheme.error,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          AppTheme.radiusCard,
-                                                        ),
-                                                  ),
-                                                  child: Icon(
-                                                    PesaFlowIcons.delete,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onError,
-                                                  ),
-                                                ),
-                                                onDismissed: (_) async {
-                                                  final tx = trans;
-                                                  setState(() {
-                                                    _pendingDeleteIds.add(
-                                                      tx.id,
-                                                    );
-                                                  });
-                                                  UndoDelete.show(
-                                                    context: context,
-                                                    entityName: 'Transaction',
-                                                    onUndo: () async {
-                                                      setState(() {
-                                                        _pendingDeleteIds
-                                                            .remove(tx.id);
-                                                      });
-                                                      await ref
-                                                          .read(
-                                                            transactionRepositoryProvider,
-                                                          )
-                                                          .createTransaction(
-                                                            tx,
-                                                          );
-                                                    },
-                                                    onDelete: () async {
-                                                      setState(() {
-                                                        _pendingDeleteIds
-                                                            .remove(tx.id);
-                                                      });
-                                                      await ref
-                                                          .read(
-                                                            transactionRepositoryProvider,
-                                                          )
-                                                          .deleteTransaction(
-                                                            tx.id,
-                                                          );
-                                                    },
-                                                  );
-                                                },
-                                                child: TactileSpringContainer(
-                                                  selectedColor: theme
-                                                      .colorScheme
-                                                      .onSurface,
-                                                  onTap: () => context.push(
-                                                    '/transactions/${trans.id}',
-                                                  ),
-                                                  child: Semantics(
-                                                    label:
-                                                        '${trans.description.isNotEmpty ? trans.description : item.category.name}, ${CurrencyFormatter.formatCents(trans.amount)} ${trans.type}',
-                                                    button: true,
-                                                    child: Column(
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets.symmetric(
-                                                                horizontal:
-                                                                    kSpacing20,
-                                                                vertical:
-                                                                    kSpacing12,
-                                                              ),
-                                                          child: Row(
-                                                            children: [
-                                                              Builder(
-                                                                builder: (context) {
-                                                                  final catColor =
-                                                                      hexToColor(
-                                                                        item
-                                                                            .category
-                                                                            .color,
-                                                                      );
-                                                                  return Container(
-                                                                    width: 44,
-                                                                    height: 44,
-                                                                    decoration: BoxDecoration(
-                                                                      color: catColor.withValues(
-                                                                        alpha:
-                                                                            0.12,
-                                                                      ),
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                            12,
-                                                                          ),
-                                                                      border: Border.all(
-                                                                        color: catColor.withValues(
-                                                                          alpha:
-                                                                              0.20,
-                                                                        ),
-                                                                        width:
-                                                                            1,
-                                                                      ),
-                                                                    ),
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    child: Icon(
-                                                                      getCategoryIcon(
-                                                                        item
-                                                                            .category
-                                                                            .icon,
-                                                                      ),
-                                                                      color:
-                                                                          catColor,
-                                                                      size: 22,
-                                                                    ),
-                                                                  );
-                                                                },
-                                                              ),
-                                                              const SizedBox(
-                                                                width:
-                                                                    kSpacing14,
-                                                              ),
-                                                              // Content
-                                                              Expanded(
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Text(
-                                                                      trans.description.isNotEmpty
-                                                                          ? trans.description
-                                                                          : item.category.name,
-                                                                      style: theme
-                                                                          .textTheme
-                                                                          .titleMedium
-                                                                          ?.copyWith(
-                                                                            fontWeight:
-                                                                                FontWeight.w800,
-                                                                            color:
-                                                                                onSurface,
-                                                                          ),
-                                                                      maxLines:
-                                                                          1,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          kSpacing4,
-                                                                    ),
-                                                                    Row(
-                                                                      children: [
-                                                                        Text(
-                                                                          item.account?.name ??
-                                                                              'Offline',
-                                                                          style: context.ts(10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6), fontWeight: FontWeight.w600),
-                                                                        ),
-                                                                        const SizedBox(
-                                                                          width:
-                                                                              kSpacing8,
-                                                                        ),
-                                                                        Text(
-                                                                          DateFormat(
-                                                                            'MMM d, yyyy',
-                                                                          ).format(
-                                                                            trans.createdAt,
-                                                                          ),
-                                                                          style: theme
-                                                                              .textTheme
-                                                                              .labelSmall
-                                                                              ?.copyWith(
-                                                                                color: theme.colorScheme.onSurfaceVariant,
-                                                                              ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              const SizedBox(
-                                                                width:
-                                                                    kSpacing12,
-                                                              ),
-                                                              // Amount
-                                                              AmountText(
-                                                                amountInCents:
-                                                                    trans
-                                                                        .amount,
-                                                                type: amtType,
-                                                                animate: true,
-                                                                showDecimals:
-                                                                    true,
-                                                                style: context.ts(
-                                                                  16,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  color:
-                                                                      amtType ==
-                                                                          AmountType
-                                                                              .income
-                                                                      ? AppTheme
-                                                                            .transferColorDark
-                                                                      : (amtType ==
-                                                                                AmountType.expense
-                                                                            ? const Color(
-                                                                                0xFFFF453A,
-                                                                              )
-                                                                            : theme.colorScheme.onSurfaceVariant),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        if (index <
-                                                            filteredTransactions
-                                                                    .length -
-                                                                1)
-                                                          Divider(
-                                                            height: 1,
-                                                            thickness: 0.5,
-                                                            color: onSurface
-                                                                .withValues(
-                                                                  alpha: 0.05,
-                                                                ),
-                                                            indent:
-                                                                20 + 46 + 14,
-                                                          ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    loading: () => const SizedBox.shrink(),
-                                    error: (err, _) => Center(
-                                      child: Text(
-                                        'Error loading activity: $err',
-                                      ),
-                                    ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
                           ],
                         ),
-                      ),
-                      const SizedBox(height: kSpacing20),
-                      SummaryNavCardRow(
-                        budgets: budgets,
-                        overallPct: overallPct,
-                        savingsGoals: savingsGoalsAsync.value ?? [],
-                        activeRecurringCount: recsAsync.maybeWhen(
-                          data: (recs) => recs
-                              .where(
-                                (r) =>
-                                    r.type == 'expense' && r.status == 'active',
-                              )
-                              .length,
-                          orElse: () => 0,
+                        const SizedBox(height: kSpacing18),
+
+                        // ── 2. Hero Balance & Cash Flow Card ──
+                        Consumer(
+                          builder: (context, ref, _) {
+                            final accounts = accountsAsync.value ?? [];
+                            final netWorth = ref.watch(netWorthProvider);
+                            final displayBalance = _selectedAccountId != null
+                                ? (accounts
+                                      .firstWhere(
+                                        (a) => a.id == _selectedAccountId,
+                                        orElse: () => accounts.first,
+                                      )
+                                      .balance)
+                                : netWorth;
+                            final activeAccountName = _selectedAccountId != null
+                                ? accounts
+                                      .firstWhere(
+                                        (a) => a.id == _selectedAccountId,
+                                        orElse: () => accounts.first,
+                                      )
+                                      .name
+                                : cardholderName;
+
+                            return StaggeredFadeSlide(
+                              index: 0,
+                              child: BudjetlyBalanceHeader(
+                                balance: displayBalance,
+                                label: activeAccountName,
+                                income: totalsAsync.value?['income'] ?? 0,
+                                expense: totalsAsync.value?['expense'] ?? 0,
+                              ),
+                            );
+                          },
                         ),
-                        dueCount: dueAsync.maybeWhen(
-                          data: (due) =>
-                              due.where((d) => d.type == 'expense').length,
-                          orElse: () => 0,
+                        const SizedBox(height: kSpacing14),
+
+                        // ── 2b. Account Filter Selector ──
+                        if (accounts.isNotEmpty) ...[
+                          SizedBox(
+                            height: 34,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: accounts.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index == 0) {
+                                  final isSelected = _selectedAccountId == null;
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: kSpacing8),
+                                    child: TactileSpringContainer(
+                                      onTap: () {
+                                        setState(() {
+                                          _selectedAccountId = null;
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: kSpacing12,
+                                          vertical: kSpacing6,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: isSelected
+                                              ? theme.colorScheme.primary
+                                                    .withValues(alpha: 0.16)
+                                              : theme.colorScheme.surfaceContainerHigh,
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.radiusPill,
+                                          ),
+                                          border: Border.all(
+                                            color: isSelected
+                                                ? theme.colorScheme.primary
+                                                : theme.colorScheme.outlineVariant
+                                                      .withValues(alpha: 0.35),
+                                            width: isSelected ? 1.2 : 0.8,
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'All Accounts',
+                                            style: context.ts(
+                                              11,
+                                              fontWeight: FontWeight.w700,
+                                              color: isSelected
+                                                  ? theme.colorScheme.primary
+                                                  : theme.colorScheme.onSurface,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                final account = accounts[index - 1];
+                                final isSelected =
+                                    _selectedAccountId == account.id;
+
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: kSpacing8),
+                                  child: TactileSpringContainer(
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedAccountId =
+                                            isSelected ? null : account.id;
+                                      });
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing10,
+                                        vertical: kSpacing6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? theme.colorScheme.primary
+                                                  .withValues(alpha: 0.16)
+                                            : theme.colorScheme.surfaceContainerHigh,
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusPill,
+                                        ),
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? theme.colorScheme.primary
+                                              : theme.colorScheme.outlineVariant
+                                                    .withValues(alpha: 0.35),
+                                          width: isSelected ? 1.2 : 0.8,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            getAccountIcon(account.icon),
+                                            size: 13,
+                                            color: isSelected
+                                                ? theme.colorScheme.primary
+                                                : theme.colorScheme.onSurface,
+                                          ),
+                                          const SizedBox(width: kSpacing6),
+                                          Text(
+                                            account.name,
+                                            style: context.ts(
+                                              11,
+                                              fontWeight: FontWeight.w600,
+                                              color: isSelected
+                                                  ? theme.colorScheme.primary
+                                                  : theme.colorScheme.onSurface,
+                                            ),
+                                          ),
+                                          const SizedBox(width: kSpacing6),
+                                          Text(
+                                            _formatCompact(account.balance),
+                                            style: context.ts(
+                                              10,
+                                              fontWeight: FontWeight.w700,
+                                              color: isSelected
+                                                  ? theme.colorScheme.primary
+                                                  : theme.colorScheme.onSurfaceVariant,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: kSpacing16),
+                        ] else ...[
+                          const SizedBox(height: kSpacing8),
+                        ],
+
+                        // ── 3. Quick Action Row ──
+                        Row(
+                          children: [
+                            _QuickActionButton(
+                              icon: PesaFlowIcons.expense,
+                              label: 'Expense',
+                              color: context.appColors.expenseColor,
+                              onTap: () => context.push(
+                                '/transactions/add?type=Expense',
+                              ),
+                            ),
+                            const SizedBox(width: kSpacing10),
+                            _QuickActionButton(
+                              icon: PesaFlowIcons.income,
+                              label: 'Income',
+                              color: context.appColors.incomeColor,
+                              onTap: () => context.push(
+                                '/transactions/add?type=Income',
+                              ),
+                            ),
+                            const SizedBox(width: kSpacing10),
+                            _QuickActionButton(
+                              icon: PesaFlowIcons.transfer,
+                              label: 'Transfer',
+                              color: context.appColors.transferColor,
+                              onTap: () => context.push(
+                                '/transactions/add?type=Transfer',
+                              ),
+                            ),
+                          ],
                         ),
-                        pendingReviewCount: pendingReviewCount,
-                        trackerColor: trackerColor,
-                      ),
-                      const SizedBox(height: kSpacing24),
-                    ],
+                        const SizedBox(height: kSpacing20),
+
+                        // ── 4. Actionable Alerts (Only if items exist) ──
+                        const RightNowCard(),
+                        const SizedBox(height: kSpacing16),
+
+                        // ── 5. Financial Overview 2x2 Hub Grid ──
+                        FinancialHubGrid(
+                          budgets: budgets,
+                          overallPct: overallPct,
+                          savingsGoals: savingsGoalsAsync.value ?? [],
+                          activeRecurringCount: recsAsync.maybeWhen(
+                            data: (recs) => recs
+                                .where(
+                                  (r) =>
+                                      r.type == 'expense' &&
+                                      r.status == 'active',
+                                )
+                                .length,
+                            orElse: () => 0,
+                          ),
+                          dueCount: dueAsync.maybeWhen(
+                            data: (due) =>
+                                due.where((d) => d.type == 'expense').length,
+                            orElse: () => 0,
+                          ),
+                          pendingReviewCount: pendingReviewCount,
+                          trackerColor: trackerColor,
+                        ),
+                        const SizedBox(height: kSpacing24),
+
+                        // ── 6. Recent Activity Preview ──
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Recent Activity',
+                              style: context.ts(
+                                15,
+                                fontWeight: FontWeight.w700,
+                                color: onSurface,
+                              ),
+                            ),
+                            TactileSpringContainer(
+                              onTap: () => context.push('/transactions'),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'See All',
+                                    style: context.ts(
+                                      12,
+                                      fontWeight: FontWeight.w700,
+                                      color: theme.colorScheme.primary,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Icon(
+                                    PesaFlowIcons.chevronRight,
+                                    size: 14,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: kSpacing12),
+
+                        SkeletonCrossfade(
+                          isLoading: recentTransAsync is AsyncLoading &&
+                              !recentTransAsync.hasValue,
+                          skeleton: const Column(
+                            children: [
+                              SkeletonCard(height: 64),
+                              SizedBox(height: kSpacing8),
+                              SkeletonCard(height: 64),
+                            ],
+                          ),
+                          child: recentTransAsync.when(
+                            data: (transactions) {
+                              final filtered = (_selectedAccountId == null
+                                      ? transactions
+                                      : transactions.where(
+                                          (t) =>
+                                              t.transaction.accountId ==
+                                              _selectedAccountId,
+                                        ))
+                                  .take(5)
+                                  .toList();
+
+                              if (filtered.isEmpty) {
+                                return Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: kSpacing28,
+                                    horizontal: kSpacing16,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.surfaceContainerHigh,
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusCard,
+                                    ),
+                                    border: Border.all(
+                                      color: theme.colorScheme.outlineVariant
+                                          .withValues(alpha: 0.25),
+                                      width: 0.8,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        PesaFlowIcons.transactions,
+                                        size: 32,
+                                        color: theme
+                                            .colorScheme
+                                            .onSurfaceVariant
+                                            .withValues(alpha: 0.4),
+                                      ),
+                                      const SizedBox(height: kSpacing8),
+                                      Text(
+                                        _selectedAccountId != null
+                                            ? 'No transactions for this account'
+                                            : 'No recent activity yet',
+                                        style: context.ts(
+                                          13,
+                                          fontWeight: FontWeight.w600,
+                                          color: theme
+                                              .colorScheme
+                                              .onSurfaceVariant,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+
+                              return GlassListContainer(
+                                child: ListView.separated(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: filtered.length,
+                                  separatorBuilder: (_, _) => Divider(
+                                    height: 1,
+                                    thickness: 0.5,
+                                    color: onSurface.withValues(alpha: 0.06),
+                                    indent: 58,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    final item = filtered[index];
+                                    final trans = item.transaction;
+
+                                    AmountType amtType = AmountType.neutral;
+                                    final typeLower = trans.type.toLowerCase();
+                                    if (typeLower == 'income') {
+                                      amtType = AmountType.income;
+                                    } else if (typeLower == 'expense' ||
+                                        typeLower == 'airtime' ||
+                                        typeLower == 'fee') {
+                                      amtType = AmountType.expense;
+                                    }
+
+                                    final catColor =
+                                        hexToColor(item.category.color);
+
+                                    return TactileSpringContainer(
+                                      onTap: () => context.push(
+                                        '/transactions/${trans.id}',
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: kSpacing16,
+                                          vertical: kSpacing12,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 38,
+                                              height: 38,
+                                              decoration: BoxDecoration(
+                                                color: catColor.withValues(
+                                                  alpha: 0.12,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: Icon(
+                                                getCategoryIcon(
+                                                  item.category.icon,
+                                                ),
+                                                color: catColor,
+                                                size: 18,
+                                              ),
+                                            ),
+                                            const SizedBox(width: kSpacing12),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    trans.description.isNotEmpty
+                                                        ? trans.description
+                                                        : item.category.name,
+                                                    style: context.ts(
+                                                      13,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: onSurface,
+                                                    ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  const SizedBox(height: 2),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        item.account?.name ??
+                                                            'Offline',
+                                                        style: context.ts(
+                                                          10,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onSurfaceVariant,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 6),
+                                                      Text(
+                                                        '•',
+                                                        style: context.ts(
+                                                          10,
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onSurfaceVariant,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 6),
+                                                      Text(
+                                                        DateFormat(
+                                                          'MMM d',
+                                                        ).format(
+                                                          trans.createdAt,
+                                                        ),
+                                                        style: context.ts(
+                                                          10,
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onSurfaceVariant,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(width: kSpacing8),
+                                            AmountText(
+                                              amountInCents: trans.amount,
+                                              type: amtType,
+                                              animate: false,
+                                              showDecimals: true,
+                                              style: context.ts(
+                                                14,
+                                                fontWeight: FontWeight.w700,
+                                                color: amtType ==
+                                                        AmountType.income
+                                                    ? context
+                                                        .appColors
+                                                        .incomeColor
+                                                    : (amtType ==
+                                                            AmountType.expense
+                                                        ? context
+                                                            .appColors
+                                                            .expenseColor
+                                                        : theme
+                                                            .colorScheme
+                                                            .onSurfaceVariant),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            loading: () => const SizedBox.shrink(),
+                            error: (err, _) => Center(
+                              child: Text('Error loading activity: $err'),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing20),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ),
-        // Offscreen Home Widgets Renderer
+        // Offscreen Home Widgets Renderer for launcher widget captures
         Positioned(
           left: -9999,
           top: -9999,
@@ -1534,67 +915,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 }
 
-class _InsightsCarousel extends ConsumerStatefulWidget {
-  const _InsightsCarousel();
-
-  @override
-  ConsumerState<_InsightsCarousel> createState() => _InsightsCarouselState();
-}
-
-class _InsightsCarouselState extends ConsumerState<_InsightsCarousel> {
-  final Set<int> _expandedIndices = {};
-
-  @override
-  Widget build(BuildContext context) {
-    final insightsAsync = ref.watch(dynamicInsightsProvider);
-
-    return insightsAsync.when(
-      data: (insights) {
-        if (insights.isEmpty) {
-          return const SizedBox.shrink();
-        }
-        // Animated height between 114 (all collapsed) and 176 (any expanded)
-        final double height = _expandedIndices.isNotEmpty ? 176.0 : 114.0;
-
-        return AnimatedContainer(
-          duration: MotionTokens.durationNormal,
-          curve: Curves.easeInOut,
-          height: height,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(vertical: kSpacing8),
-            clipBehavior: Clip.none,
-            itemCount: insights.length,
-            separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
-            itemBuilder: (_, i) {
-              final isExpanded = _expandedIndices.contains(i);
-              return Align(
-                alignment: Alignment.topCenter,
-                child: MorphingInsightCard(
-                  data: insights[i],
-                  index: i,
-                  expanded: isExpanded,
-                  onTap: () {
-                    setState(() {
-                      if (isExpanded) {
-                        _expandedIndices.remove(i);
-                      } else {
-                        _expandedIndices.add(i);
-                      }
-                    });
-                  },
-                ),
-              );
-            },
-          ),
-        );
-      },
-      loading: () => const SizedBox.shrink(),
-      error: (e, stack) => const SizedBox.shrink(),
-    );
-  }
-}
-
 class _QuickActionButton extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -1613,58 +933,54 @@ class _QuickActionButton extends StatelessWidget {
     final theme = Theme.of(context);
     return Expanded(
       child: TactileSpringContainer(
-        selectedColor: theme.colorScheme.onSurface,
         onTap: onTap,
-        child: Semantics(
-          label: label,
-          button: true,
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: kSpacing12,
-              horizontal: kSpacing4,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: kSpacing12,
+            horizontal: kSpacing8,
+          ),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHigh,
+            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+            border: Border.all(
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
+              width: 1,
             ),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerLow,
-              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-              border: Border.all(
-                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
-                width: 1,
+            boxShadow: [
+              BoxShadow(
+                color: context.appColors.shadowSubtle,
+                blurRadius: 6,
+                offset: const Offset(0, 2),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: context.appColors.shadowSubtle,
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-                  ),
-                  alignment: Alignment.center,
-                  child: Icon(icon, color: color, size: 20),
-                ),
-                const SizedBox(height: kSpacing8),
-                Text(
+                alignment: Alignment.center,
+                child: Icon(icon, color: color, size: 16),
+              ),
+              const SizedBox(width: kSpacing8),
+              Flexible(
+                child: Text(
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: context.ts(
                     12,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

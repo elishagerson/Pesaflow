@@ -7,6 +7,262 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 
+/// A 2x2 executive financial hub grid replacing scattered carousels.
+class FinancialHubGrid extends StatelessWidget {
+  final List<dynamic> budgets;
+  final double overallPct;
+  final List<dynamic> savingsGoals;
+  final int activeRecurringCount;
+  final int dueCount;
+  final int pendingReviewCount;
+  final Color trackerColor;
+
+  const FinancialHubGrid({
+    super.key,
+    required this.budgets,
+    required this.overallPct,
+    required this.savingsGoals,
+    required this.activeRecurringCount,
+    required this.dueCount,
+    required this.pendingReviewCount,
+    required this.trackerColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    final budgetMetric = budgets.isNotEmpty
+        ? '${(overallPct * 100).toStringAsFixed(0)}% spent'
+        : 'Not set';
+    final budgetSub = budgets.isNotEmpty
+        ? '${budgets.length} active'
+        : 'Set monthly budget';
+
+    final savingsMetric = savingsGoals.isNotEmpty
+        ? '${savingsGoals.length} goal${savingsGoals.length == 1 ? '' : 's'}'
+        : '0 goals';
+    final savingsSub = savingsGoals.isNotEmpty
+        ? 'Vault & Targets'
+        : 'Start saving';
+
+    final recurringMetric = dueCount > 0
+        ? '$dueCount due today'
+        : '$activeRecurringCount active';
+    final recurringSub = dueCount > 0
+        ? 'Payment pending'
+        : 'Subscriptions';
+    final recurringColor = dueCount > 0
+        ? theme.colorScheme.error
+        : context.appColors.transferColor;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kSpacing4),
+          child: Text(
+            'FINANCIAL OVERVIEW',
+            style: context.ts(
+              11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.8,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+        const SizedBox(height: kSpacing12),
+        Row(
+          children: [
+            Expanded(
+              child: _HubCard(
+                icon: PesaFlowIcons.budgets,
+                title: 'Budgets',
+                metric: budgetMetric,
+                subtitle: budgetSub,
+                color: trackerColor,
+                progress: budgets.isNotEmpty ? overallPct : null,
+                onTap: () => context.go('/budgets'),
+              ),
+            ),
+            const SizedBox(width: kSpacing12),
+            Expanded(
+              child: _HubCard(
+                icon: PesaFlowIcons.target,
+                title: 'Savings',
+                metric: savingsMetric,
+                subtitle: savingsSub,
+                color: context.appColors.incomeColor,
+                onTap: () => context.go('/savings-goals'),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: kSpacing12),
+        Row(
+          children: [
+            Expanded(
+              child: _HubCard(
+                icon: PesaFlowIcons.calendar,
+                title: 'Recurring',
+                metric: recurringMetric,
+                subtitle: recurringSub,
+                color: recurringColor,
+                badgeCount: dueCount > 0 ? dueCount : null,
+                onTap: () => context.go('/recurring'),
+              ),
+            ),
+            const SizedBox(width: kSpacing12),
+            Expanded(
+              child: _HubCard(
+                icon: PesaFlowIcons.creditScore,
+                title: 'Loans & Debt',
+                metric: 'Liabilities',
+                subtitle: 'Track payables',
+                color: context.appColors.transferColor,
+                onTap: () => context.go('/loans'),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _HubCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String metric;
+  final String subtitle;
+  final Color color;
+  final double? progress;
+  final int? badgeCount;
+  final VoidCallback onTap;
+
+  const _HubCard({
+    required this.icon,
+    required this.title,
+    required this.metric,
+    required this.subtitle,
+    required this.color,
+    this.progress,
+    this.badgeCount,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return TactileSpringContainer(
+      onTap: () {
+        PesaHaptics.light();
+        onTap();
+      },
+      child: Container(
+        padding: const EdgeInsets.all(kSpacing14),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHigh,
+          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+          border: Border.all(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: context.appColors.shadowSubtle,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(icon, size: 16, color: color),
+                ),
+                if (badgeCount != null && badgeCount! > 0)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.error,
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                    ),
+                    child: Text(
+                      '$badgeCount',
+                      style: context.ts(
+                        10,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onError,
+                      ),
+                    ),
+                  )
+                else
+                  Icon(
+                    PesaFlowIcons.chevronRight,
+                    size: 14,
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                  ),
+              ],
+            ),
+            const SizedBox(height: kSpacing12),
+            Text(
+              metric,
+              style: context.ts(
+                14,
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.onSurface,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: kSpacing2),
+            Text(
+              subtitle,
+              style: context.ts(
+                11,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            if (progress != null) ...[
+              const SizedBox(height: kSpacing8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                child: LinearProgressIndicator(
+                  value: progress!.clamp(0.0, 1.0),
+                  minHeight: 4,
+                  backgroundColor: color.withValues(alpha: 0.12),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    progress! > 1.0 ? theme.colorScheme.error : color,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Kept for backward compatibility.
 class SummaryNavCardRow extends StatelessWidget {
   final List<dynamic> budgets;
   final double overallPct;
@@ -29,160 +285,14 @@ class SummaryNavCardRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
-        child: Row(
-          children: [
-            _SummaryNavCard(
-              icon: PesaFlowIcons.budgets,
-              metric: budgets.isNotEmpty
-                  ? '${budgets.length} budgets'
-                  : 'No budgets',
-              label: '${(overallPct * 100).toStringAsFixed(0)}% spent',
-              color: trackerColor,
-              onTap: () => context.go('/budgets'),
-            ),
-            if (savingsGoals.isNotEmpty)
-              _SummaryNavCard(
-                icon: PesaFlowIcons.target,
-                metric:
-                    '${savingsGoals.length} goal${savingsGoals.length == 1 ? '' : 's'}',
-                label: 'Emergency vault',
-                color: context.appColors.incomeColor,
-                onTap: () => context.go('/savings-goals'),
-              ),
-            _SummaryNavCard(
-              icon: PesaFlowIcons.calendar,
-              metric: dueCount > 0
-                  ? '$dueCount due'
-                  : '$activeRecurringCount active',
-              label: 'Recurring',
-              color: context.appColors.transferColor,
-              onTap: () => context.go('/recurring'),
-            ),
-            _SummaryNavCard(
-              icon: PesaFlowIcons.creditScore,
-              metric: 'Loans',
-              label: 'Debt overview',
-              color: context.appColors.transferColor,
-              onTap: () => context.go('/loans'),
-            ),
-            if (pendingReviewCount > 0)
-              _SummaryNavCard(
-                icon: PesaFlowIcons.message,
-                metric: '$pendingReviewCount pending',
-                label: 'SMS review',
-                color: theme.colorScheme.primary,
-                onTap: () => context.go('/sms-review'),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SummaryNavCard extends StatelessWidget {
-  final IconData icon;
-  final String metric;
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _SummaryNavCard({
-    required this.icon,
-    required this.metric,
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(right: kSpacing12),
-      child: TactileSpringContainer(
-        onTap: () {
-          PesaHaptics.light();
-          onTap();
-        },
-        child: Container(
-          width: 130,
-          height: 96,
-          padding: const EdgeInsets.all(kSpacing12),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                color.withValues(alpha: 0.10),
-                theme.colorScheme.surfaceContainerHigh,
-              ],
-            ),
-            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-            border: Border.all(
-              color: color.withValues(alpha: 0.18),
-              width: 0.6,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: context.appColors.shadowSubtle,
-                blurRadius: 6,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(kSpacing6),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.14),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, size: 16, color: color),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    metric,
-                    style: context.ts(
-                      12,
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: kSpacing2),
-                  Text(
-                    label,
-                    style: context.ts(
-                      10,
-                      color: theme.colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.8,
-                      ),
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+    return FinancialHubGrid(
+      budgets: budgets,
+      overallPct: overallPct,
+      savingsGoals: savingsGoals,
+      activeRecurringCount: activeRecurringCount,
+      dueCount: dueCount,
+      pendingReviewCount: pendingReviewCount,
+      trackerColor: trackerColor,
     );
   }
 }

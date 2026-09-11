@@ -98,11 +98,11 @@ class RightNowCard extends ConsumerWidget {
               ),
               const SizedBox(width: kSpacing10),
               Text(
-                'RIGHT NOW',
+                'NEEDS ATTENTION',
                 style: context.ts(
-                  12,
+                  11,
                   fontWeight: FontWeight.w700,
-                  letterSpacing: 0.5,
+                  letterSpacing: 0.8,
                   color: onSurface.withValues(alpha: 0.55),
                 ),
               ),
