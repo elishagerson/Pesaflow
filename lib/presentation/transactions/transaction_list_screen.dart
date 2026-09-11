@@ -36,6 +36,7 @@ import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/transactions/transaction_detail_screen.dart';
 import 'package:pesaflow/presentation/transactions/widgets/transaction_filter_sheet.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
 class TransactionListScreen extends ConsumerStatefulWidget {
   const TransactionListScreen({super.key});
@@ -84,6 +85,146 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
         curve: Curves.easeOutCubic,
       );
     }
+  }
+
+  void _showTransactionActions(
+    BuildContext context,
+    TransactionWithCategory item,
+  ) {
+    final trans = item.transaction;
+    final theme = Theme.of(context);
+    showSpringSheet(
+      context,
+      builder: (sheetCtx) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing20,
+            vertical: kSpacing16,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                trans.description.isNotEmpty
+                    ? trans.description
+                    : item.category.name,
+                style: context.ts(17, fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: kSpacing4),
+              Text(
+                '${CurrencyFormatter.formatCents(trans.amount)} • ${item.category.name}',
+                style: context.ts(
+                  13,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: kSpacing16),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    PesaFlowIcons.info,
+                    color: theme.colorScheme.primary,
+                    size: 18,
+                  ),
+                ),
+                title: Text(
+                  'View Details',
+                  style: context.ts(15, fontWeight: FontWeight.w600),
+                ),
+                onTap: () {
+                  Navigator.of(sheetCtx).pop();
+                  context.push('/transactions/${trans.id}');
+                },
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.secondary.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    PesaFlowIcons.edit,
+                    color: theme.colorScheme.secondary,
+                    size: 18,
+                  ),
+                ),
+                title: Text(
+                  'Edit',
+                  style: context.ts(15, fontWeight: FontWeight.w600),
+                ),
+                onTap: () {
+                  Navigator.of(sheetCtx).pop();
+                  context.push('/transactions/${trans.id}');
+                },
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.error.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    PesaFlowIcons.delete,
+                    color: theme.colorScheme.error,
+                    size: 18,
+                  ),
+                ),
+                title: Text(
+                  'Delete',
+                  style: context.ts(
+                    15,
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(sheetCtx).pop();
+                  setState(() {
+                    _pendingDeleteIds.add(trans.id);
+                  });
+                  UndoDelete.show(
+                    context: context,
+                    entityName: 'Transaction',
+                    onUndo: () async {
+                      setState(() {
+                        _pendingDeleteIds.remove(trans.id);
+                      });
+                      await ref
+                          .read(transactionRepositoryProvider)
+                          .createTransaction(trans);
+                    },
+                    onDelete: () async {
+                      setState(() {
+                        _pendingDeleteIds.remove(trans.id);
+                      });
+                      await ref
+                          .read(transactionRepositoryProvider)
+                          .deleteTransaction(trans.id);
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   String _formatHeaderDate(DateTime date) {
@@ -739,77 +880,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     ).format(trans.createdAt);
                                     final isNewRow = newIds.contains(trans.id);
 
-                                    final Widget row = CupertinoContextMenu(
-                                      actions: [
-                                        CupertinoContextMenuAction(
-                                          onPressed: () {
-                                            Navigator.of(
-                                              context,
-                                              rootNavigator: true,
-                                            ).pop();
-                                            context.push(
-                                              '/transactions/${trans.id}',
-                                            );
-                                          },
-                                          child: const Text('View Details'),
-                                        ),
-                                        CupertinoContextMenuAction(
-                                          onPressed: () {
-                                            Navigator.of(
-                                              context,
-                                              rootNavigator: true,
-                                            ).pop();
-                                            context.push(
-                                              '/transactions/${trans.id}',
-                                            );
-                                          },
-                                          child: const Text('Edit'),
-                                        ),
-                                        CupertinoContextMenuAction(
-                                          isDestructiveAction: true,
-                                          onPressed: () async {
-                                            Navigator.of(
-                                              context,
-                                              rootNavigator: true,
-                                            ).pop();
-                                            setState(() {
-                                              _pendingDeleteIds.add(trans.id);
-                                            });
-                                            UndoDelete.show(
-                                              context: context,
-                                              entityName: 'Transaction',
-                                              onUndo: () async {
-                                                setState(() {
-                                                  _pendingDeleteIds.remove(
-                                                    trans.id,
-                                                  );
-                                                });
-                                                await ref
-                                                    .read(
-                                                      transactionRepositoryProvider,
-                                                    )
-                                                    .createTransaction(trans);
-                                              },
-                                              onDelete: () async {
-                                                setState(() {
-                                                  _pendingDeleteIds.remove(
-                                                    trans.id,
-                                                  );
-                                                });
-                                                await ref
-                                                    .read(
-                                                      transactionRepositoryProvider,
-                                                    )
-                                                    .deleteTransaction(trans.id);
-                                              },
-                                            );
-                                          },
-                                          child: const Text('Delete'),
-                                        ),
-                                      ],
-                                      child: Dismissible(
-                                        key: Key(trans.id),
-                                        direction: DismissDirection.endToStart,
+                                    final Widget row = Dismissible(
+                                      key: Key(trans.id),
+                                      direction: DismissDirection.endToStart,
                                         background: Container(
                                           alignment: Alignment.centerRight,
                                           padding: const EdgeInsets.only(
@@ -894,7 +967,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                         },
                                         child: TactileSpringContainer(
                                           onTap: () {
-                                            PesaHaptics.light();
                                             pushHeroCard(
                                               context,
                                               TransactionDetailScreen(
@@ -903,6 +975,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                               'transaction_${trans.id}',
                                             );
                                           },
+                                          onLongPress: () => _showTransactionActions(context, item),
                                           selectedColor:
                                               theme.colorScheme.onSurface,
                                           child: Hero(
@@ -1152,9 +1225,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                    if (isNewRow) {
+                                      );
+                                      if (isNewRow) {
                                       return _NewRowHighlight(child: row);
                                     }
                                     return row;
