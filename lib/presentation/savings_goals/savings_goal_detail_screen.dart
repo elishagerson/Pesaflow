@@ -1466,6 +1466,44 @@ class _SavingsGoalDetailScreenState
       ),
     );
   }
+
+  Widget _buildSheetPresetPill({
+    required String label,
+    required VoidCallback onTap,
+    required ThemeData theme,
+    Color? accentColor,
+  }) {
+    final isCustomColor = accentColor != null;
+    return TactileSpringContainer(
+      haptic: HapticType.selection,
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: isCustomColor
+              ? accentColor.withValues(alpha: 0.12)
+              : theme.colorScheme.surfaceContainerHigh,
+          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+          border: Border.all(
+            color: isCustomColor
+                ? accentColor.withValues(alpha: 0.5)
+                : theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+            width: isCustomColor ? 1.4 : 1,
+          ),
+        ),
+        child: Text(
+          label,
+          style: context.ts(
+            11,
+            fontWeight: FontWeight.w600,
+            color: isCustomColor
+                ? accentColor
+                : theme.colorScheme.onSurface.withValues(alpha: 0.75),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _GoalStatCard extends StatelessWidget {
@@ -1513,42 +1551,6 @@ class _GoalStatCard extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  Widget _buildSheetPresetPill({
-    required String label,
-    required VoidCallback onTap,
-    required ThemeData theme,
-    Color? accentColor,
-  }) {
-    final isCustomColor = accentColor != null;
-    return TactileSpringContainer(
-      haptic: HapticType.selection,
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          color: isCustomColor
-              ? accentColor.withValues(alpha: 0.12)
-              : theme.colorScheme.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-          border: Border.all(
-            color: isCustomColor
-                ? accentColor.withValues(alpha: 0.5)
-                : theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
-            width: isCustomColor ? 1.4 : 1,
-          ),
-        ),
-        child: Text(
-          label,
-          style: context.ts(
-            11,
-            fontWeight: FontWeight.w600,
-            color: isCustomColor
-                ? accentColor
-                : theme.colorScheme.onSurface.withValues(alpha: 0.75),
-          ),
         ),
       ),
     );
