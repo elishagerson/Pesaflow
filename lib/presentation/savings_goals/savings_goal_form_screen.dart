@@ -17,6 +17,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/shake_widget.dart';
 
@@ -194,7 +195,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
     final text = _amountController.text.trim();
     if (text.isEmpty) return 'TSh 0';
     final cents = CurrencyFormatter.parseToCents(text);
-    return 'TSh ${CurrencyFormatter.format(cents)}';
+    return CurrencyFormatter.formatCents(cents);
   }
 
   String get _smartPaceInsight {
@@ -208,11 +209,11 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
     if (days < 30) {
       final weeks = (days / 7).clamp(1.0, 4.0);
       final perWeek = (cents / weeks).round();
-      return 'Save ~TSh ${CurrencyFormatter.format(perWeek)} / week';
+      return 'Save ~${CurrencyFormatter.formatCents(perWeek)} / week';
     } else {
       final months = (days / 30.4).clamp(1.0, 120.0);
       final perMonth = (cents / months).round();
-      return 'Save ~TSh ${CurrencyFormatter.format(perMonth)} / month';
+      return 'Save ~${CurrencyFormatter.formatCents(perMonth)} / month';
     }
   }
 
@@ -1117,8 +1118,5 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
         ),
       ),
     );
-  }
-}
-
   }
 }
