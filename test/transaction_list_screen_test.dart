@@ -54,6 +54,8 @@ void main() {
 
   List<dynamic> baseOverrides({
     List<TransactionWithCategoryAndAccount> transactions = const [],
+    List<Insight> insights = const [],
+    Map<String, int> monthlyTotals = const {},
   }) {
     return [
       filteredTransactionsStreamProvider.overrideWith(
@@ -71,8 +73,8 @@ void main() {
       currencyShowDecimalsProvider.overrideWith(
         (ref) => Stream.value(false),
       ),
-      insightsProvider.overrideWith((ref) => Future.value([])),
-      monthlyTotalsProvider.overrideWith((ref) => Future.value({})),
+      insightsProvider.overrideWith((ref) => Future.value(insights)),
+      monthlyTotalsProvider.overrideWith((ref) => Future.value(monthlyTotals)),
     ];
   }
 
@@ -99,7 +101,7 @@ void main() {
         ),
       );
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pump(const Duration(milliseconds: 800));
 
       expect(find.text('Transactions'), findsWidgets);
       expect(find.text('All'), findsOneWidget);
@@ -178,26 +180,22 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(
           createTestWidget(
-            overrides: [
-              ...baseOverrides(transactions: [testItem]),
-              insightsProvider.overrideWith(
-                (ref) => Future.value([
-                  const Insight(
-                    type: InsightType.netCashflow,
-                    severity: InsightSeverity.warning,
-                    title: 'High Dining Expenses',
-                    message: 'Dining exceeded usual budget by 15%.',
-                    icon: 'trending_down',
-                  ),
-                ]),
-              ),
-              monthlyTotalsProvider.overrideWith(
-                (ref) => Future.value({
-                  'income': 5000000,
-                  'expense': 1500000,
-                }),
-              ),
-            ],
+            overrides: baseOverrides(
+              transactions: [testItem],
+              insights: [
+                const Insight(
+                  type: InsightType.netCashflow,
+                  severity: InsightSeverity.warning,
+                  title: 'High Dining Expenses',
+                  message: 'Dining exceeded usual budget by 15%.',
+                  icon: 'trending_down',
+                ),
+              ],
+              monthlyTotals: {
+                'income': 5000000,
+                'expense': 1500000,
+              },
+            ),
           ),
         );
         await tester.pump();
