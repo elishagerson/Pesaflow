@@ -37,7 +37,10 @@ class ModernDialog extends StatelessWidget {
       barrierColor: Colors.black.withValues(alpha: 0.6),
       transitionDuration: reduced
           ? MotionTokens.durationFast
-          : MotionTokens.durationNormal,
+          : const Duration(milliseconds: 260),
+      reverseTransitionDuration: reduced
+          ? MotionTokens.durationFast
+          : const Duration(milliseconds: 200),
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, child) {
         final dialog = ModernDialog(
@@ -53,7 +56,7 @@ class ModernDialog extends StatelessWidget {
         final isReverse = anim1.status == AnimationStatus.reverse;
         final curve = isReverse ? Curves.easeInCubic : Curves.easeOutCubic;
         final scaleValue = Tween<double>(
-          begin: isReverse ? 0.92 : 0.88,
+          begin: isReverse ? 0.95 : 0.92,
           end: 1.0,
         ).animate(CurvedAnimation(parent: anim1, curve: curve));
         return ScaleTransition(
@@ -80,16 +83,19 @@ class ModernDialog extends StatelessWidget {
       barrierColor: Colors.black.withValues(alpha: 0.6),
       transitionDuration: reduced
           ? MotionTokens.durationFast
-          : MotionTokens.durationNormal,
+          : const Duration(milliseconds: 260),
+      reverseTransitionDuration: reduced
+          ? MotionTokens.durationFast
+          : const Duration(milliseconds: 200),
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
-      transitionBuilder: (context, anim1, anim2, childWidget) {
+      transitionBuilder: (context, anim1, anim2, _) {
         if (reduced) {
           return FadeTransition(opacity: anim1, child: child);
         }
         final isReverse = anim1.status == AnimationStatus.reverse;
         final curve = isReverse ? Curves.easeInCubic : Curves.easeOutCubic;
         final scaleValue = Tween<double>(
-          begin: isReverse ? 0.92 : 0.88,
+          begin: isReverse ? 0.95 : 0.92,
           end: 1.0,
         ).animate(CurvedAnimation(parent: anim1, curve: curve));
         return ScaleTransition(

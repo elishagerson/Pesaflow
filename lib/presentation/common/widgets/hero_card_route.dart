@@ -13,16 +13,28 @@ class HeroCardRoute<T> extends PageRouteBuilder<T> {
 
   HeroCardRoute({required this.page, required this.heroTag, super.settings})
     : super(
+        transitionDuration: const Duration(milliseconds: 320),
+        reverseTransitionDuration: const Duration(milliseconds: 220),
         pageBuilder: (context, animation, secondaryAnimation) => page,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final isReverse = animation.status == AnimationStatus.reverse;
+          final curve = isReverse ? Curves.easeInCubic : Curves.easeOutCubic;
+          final curvedAnim = CurvedAnimation(parent: animation, curve: curve);
+
           return FadeTransition(
-            opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
-            child: child,
+            opacity: curvedAnim,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, 0.03),
+                end: Offset.zero,
+              ).animate(curvedAnim),
+              child: child,
+            ),
           );
         },
         opaque: false,
         barrierDismissible: true,
-        barrierColor: Colors.black45,
+        barrierColor: Colors.black.withValues(alpha: 0.45),
       );
 }
 

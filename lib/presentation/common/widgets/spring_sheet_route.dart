@@ -52,10 +52,10 @@ class SpringSheetRoute<T> extends PopupRoute<T> {
   String? get barrierLabel => 'Dismiss';
 
   @override
-  Duration get transitionDuration => MotionTokens.durationSlow; // 400ms entrance
+  Duration get transitionDuration => const Duration(milliseconds: 320);
 
   @override
-  Duration get reverseTransitionDuration => MotionTokens.durationExit; // 200ms exit
+  Duration get reverseTransitionDuration => const Duration(milliseconds: 220);
 
   @override
   Widget buildPage(
@@ -107,13 +107,12 @@ class _SpringSheetAnimatedTransition extends StatelessWidget {
             ? Curves.easeInCubic.transform(animation.value)
             : Curves.easeOutCubic.transform(animation.value);
 
-        // Slide up smoothly from bottom on enter, slide down on exit
-        final translateY = (1.0 - t).clamp(0.0, 1.0) * 120.0;
-        final scale = 0.95 + (0.05 * t);
-        final opacity = isReverse ? t.clamp(0.0, 1.0) : (0.3 + 0.7 * t).clamp(0.0, 1.0);
+        // Slide up smoothly from completely off-screen at bottom, slide down on exit
+        final scale = 0.98 + (0.02 * t);
+        final opacity = isReverse ? t.clamp(0.0, 1.0) : (t * 2.5).clamp(0.0, 1.0);
 
-        return Transform.translate(
-          offset: Offset(0, translateY),
+        return FractionalTranslation(
+          translation: Offset(0, (1.0 - t).clamp(0.0, 1.0)),
           child: Transform.scale(
             scale: scale,
             alignment: Alignment.bottomCenter,

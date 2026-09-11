@@ -150,33 +150,16 @@ class CommandPalette extends ConsumerStatefulWidget {
   ConsumerState<CommandPalette> createState() => _CommandPaletteState();
 }
 
-class _CommandPaletteState extends ConsumerState<CommandPalette>
-    with SingleTickerProviderStateMixin {
+class _CommandPaletteState extends ConsumerState<CommandPalette> {
   final _searchController = TextEditingController();
   final _focusNode = FocusNode();
-  late AnimationController _animController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
   int _selectedIndex = 0;
   List<_PaletteAction> _cachedDataResults = [];
   Timer? _debounceTimer;
-  bool _animInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 150),
-    );
-    _fadeAnimation = CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeOut,
-    );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, -0.05),
-      end: Offset.zero,
-    ).animate(_fadeAnimation);
     _focusNode.onKeyEvent = (node, event) {
       if (event is KeyDownEvent) {
         final query = ref.read(paletteQueryProvider);
@@ -207,24 +190,10 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_animInitialized) {
-      _animInitialized = true;
-      if (context.isReducedMotion) {
-        _animController.value = 1.0;
-      } else {
-        _animController.forward();
-      }
-    }
-  }
-
-  @override
   void dispose() {
     _debounceTimer?.cancel();
     _searchController.dispose();
     _focusNode.dispose();
-    _animController.dispose();
     super.dispose();
   }
 
@@ -277,13 +246,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
       groupedResults.putIfAbsent(action.category, () => []).add(action);
     }
 
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: Material(
-          type: MaterialType.transparency,
-          child: GestureDetector(
+    return Material(
+      type: MaterialType.transparency,
+      child: GestureDetector(
             onTap: _dismiss,
             child: Container(
               color: Colors.black.withValues(alpha: 0.35),

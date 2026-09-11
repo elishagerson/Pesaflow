@@ -607,14 +607,30 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                           ),
                         ),
                       ),
-                    if (ref.watch(paletteVisibilityProvider))
-                      Overlay(
-                        initialEntries: [
-                          OverlayEntry(
-                            builder: (context) => const CommandPalette(),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 220),
+                      reverseDuration: const Duration(milliseconds: 180),
+                      switchInCurve: Curves.easeOutCubic,
+                      switchOutCurve: Curves.easeInCubic,
+                      transitionBuilder: (child, animation) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: ScaleTransition(
+                            scale: Tween<double>(begin: 0.96, end: 1.0).animate(
+                              animation,
+                            ),
+                            child: child,
                           ),
-                        ],
-                      ),
+                        );
+                      },
+                      child: ref.watch(paletteVisibilityProvider)
+                          ? const CommandPalette(
+                              key: ValueKey('command_palette'),
+                            )
+                          : const SizedBox.shrink(
+                              key: ValueKey('empty_palette'),
+                            ),
+                    ),
                     if (_showOnboarding)
                       OnboardingOverlay(onComplete: _onOnboardingComplete),
                   ],

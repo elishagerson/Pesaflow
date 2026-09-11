@@ -23,9 +23,15 @@ class SwipeBackRoute<T> extends PageRouteBuilder<T> {
     : super(
         opaque: false,
         barrierDismissible: false,
+        transitionDuration: const Duration(milliseconds: 320),
+        reverseTransitionDuration: const Duration(milliseconds: 220),
         pageBuilder: (_, _, _) => page,
-        transitionsBuilder: (_, animation, _, child) {
-          return _SwipeBackTransition(animation: animation, child: child);
+        transitionsBuilder: (_, animation, secondaryAnimation, child) {
+          return _SwipeBackTransition(
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            child: child,
+          );
         },
       );
 }
@@ -41,9 +47,15 @@ Page<dynamic> swipeBackPage(Widget page) {
   return CustomTransitionPage(
     key: ValueKey(page.runtimeType),
     opaque: false,
+    transitionDuration: const Duration(milliseconds: 320),
+    reverseTransitionDuration: const Duration(milliseconds: 220),
     child: page,
-    transitionsBuilder: (_, animation, _, child) {
-      return _SwipeBackTransition(animation: animation, child: child);
+    transitionsBuilder: (_, animation, secondaryAnimation, child) {
+      return _SwipeBackTransition(
+        animation: animation,
+        secondaryAnimation: secondaryAnimation,
+        child: child,
+      );
     },
   );
 }
@@ -51,9 +63,14 @@ Page<dynamic> swipeBackPage(Widget page) {
 /// Stateful wrapper that handles the drag gesture and spring physics.
 class _SwipeBackTransition extends StatefulWidget {
   final Animation<double> animation;
+  final Animation<double>? secondaryAnimation;
   final Widget child;
 
-  const _SwipeBackTransition({required this.animation, required this.child});
+  const _SwipeBackTransition({
+    required this.animation,
+    this.secondaryAnimation,
+    required this.child,
+  });
 
   @override
   State<_SwipeBackTransition> createState() => _SwipeBackTransitionState();
@@ -175,18 +192,36 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
 
   @override
   Widget build(BuildContext context) {
+    final listenables = <Listenable>[widget.animation, _animController];
+    if (widget.secondaryAnimation != null) {
+      listenables.add(widget.secondaryAnimation!);
+    }
+
     return AnimatedBuilder(
-      animation: Listenable.merge([widget.animation, _animController]),
+      animation: Listenable.merge(listenables),
       builder: (_, _) {
-        final pushValue = widget.animation.value;
+        final isReverse = widget.animation.status == AnimationStatus.reverse;
+        final curve = isReverse ? Curves.easeInCubic : Curves.easeOutCubic;
+        final pushValue = curve.transform(widget.animation.value.clamp(0.0, 1.0));
+
         // When stationary on screen: pushValue == 1.0, _dragProgress == 0.0 -> visibleFraction == 1.0.
         // During swipe-back drag or dismiss: visibleFraction tracks (1.0 - _dragProgress).
-        // During normal Navigator.pop: pushValue reverses 1.0 -> 0.0 smoothly.
+        // During normal Navigator.pop: pushValue reverses 1.0 -> 0.0 smoothly with curve.
         final visibleFraction = (pushValue * (1.0 - _dragProgress)).clamp(0.0, 1.0);
 
         final screenWidth = MediaQuery.sizeOf(context).width;
         // iOS-native: 0 offset = fully visible, screenWidth = fully off-screen right
         final slideOffset = screenWidth * (1.0 - visibleFraction);
+
+        // Secondary parallax shift: if another route is pushed on top of this one,
+        // this route subtly shifts left by 25% of the screen width and dims by 15%.
+        final secondaryValue = widget.secondaryAnimation != null
+            ? Curves.easeOutCubic.transform(
+                widget.secondaryAnimation!.value.clamp(0.0, 1.0),
+              )
+            : 0.0;
+        final secondaryOffset = -screenWidth * 0.25 * secondaryValue;
+        final secondaryDarken = 0.15 * secondaryValue;
 
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
@@ -230,13 +265,28 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
                     ),
                   ),
                 ),
-              // The actual page content sliding in/out
+              // The actual page content sliding in/out with secondary parallax shift
               Transform.translate(
-                offset: Offset(slideOffset, 0),
+                offset: Offset(slideOffset + secondaryOffset, 0),
                 child: SizedBox(
                   width: screenWidth,
                   height: MediaQuery.sizeOf(context).height,
-                  child: widget.child,
+                  child: Stack(
+                    children: [
+                      widget.child,
+                      // Subtle secondary dimming overlay when covered by another page
+                      if (secondaryDarken > 0)
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            child: ColoredBox(
+                              color: Colors.black.withValues(
+                                alpha: secondaryDarken,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ],
