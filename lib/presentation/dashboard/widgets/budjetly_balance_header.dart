@@ -64,10 +64,10 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
       );
     });
 
-    // Shimmer sweep — subtle ambient cycle
+    // Shimmer sweep — single forward sweep on change
     _shimmerController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 4),
+      duration: const Duration(milliseconds: 1200),
     );
     _shimmerAnimation = Tween<double>(begin: -0.5, end: 1.5).animate(
       CurvedAnimation(parent: _shimmerController, curve: Curves.easeInOut),

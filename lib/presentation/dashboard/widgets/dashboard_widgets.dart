@@ -183,15 +183,29 @@ class _HubCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  alignment: Alignment.center,
-                  child: Icon(icon, size: 16, color: color),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      alignment: Alignment.center,
+                      child: Icon(icon, size: 14, color: color),
+                    ),
+                    const SizedBox(width: kSpacing8),
+                    Text(
+                      title,
+                      style: context.ts(
+                        12,
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
                 if (badgeCount != null && badgeCount! > 0)
                   Container(
