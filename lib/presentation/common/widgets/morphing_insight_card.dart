@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
-import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';
@@ -40,11 +38,11 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
     _expanded = widget.expanded ?? false;
     _expandController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 320),
     );
     _expandAnimation = CurvedAnimation(
       parent: _expandController,
-      curve: Curves.easeOutBack,
+      curve: Curves.easeOutCubic,
       reverseCurve: Curves.easeInCubic,
     );
     if (_expanded) {
@@ -79,13 +77,11 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
       _expandController.value = expand ? 1.0 : 0.0;
       return;
     }
-    final sim = SpringSimulation(
-      MotionTokens.springSnappy,
-      _expandController.value,
-      expand ? 1.0 : 0.0,
-      0.0,
-    );
-    _expandController.animateWith(sim);
+    if (expand) {
+      _expandController.forward();
+    } else {
+      _expandController.reverse();
+    }
   }
 
   @override
@@ -246,7 +242,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                         ),
                         const SizedBox(height: kSpacing8),
                         AnimatedSize(
-                          duration: const Duration(milliseconds: 400),
+                          duration: const Duration(milliseconds: 320),
                           curve: Curves.easeOutCubic,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

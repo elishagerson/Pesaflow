@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/hero_card_route.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/swipe_back_route.dart';
@@ -272,6 +273,121 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Confirm Action'), findsNothing);
+    });
+  });
+
+  group('HeroCardRoute Entrance & Exit Tests', () {
+    testWidgets('pushes HeroCardRoute with slide and fade transition and dismisses cleanly',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                return ElevatedButton(
+                  onPressed: () {
+                    pushHeroCard(
+                      context,
+                      const Scaffold(
+                        body: Center(child: Text('Hero Destination Content')),
+                      ),
+                      'hero_tag_1',
+                    );
+                  },
+                  child: const Text('Open Hero'),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open Hero'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 150));
+      expect(find.text('Hero Destination Content'), findsOneWidget);
+
+      await tester.pumpAndSettle();
+      expect(find.text('Hero Destination Content'), findsOneWidget);
+
+      // Pop route
+      final nav = tester.state<NavigatorState>(find.byType(Navigator));
+      nav.pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Hero Destination Content'), findsNothing);
+    });
+  });
+
+  group('SwipeBackRoute Secondary Parallax Tests', () {
+    testWidgets('secondaryAnimation causes underlying screen to shift and dim',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                return ElevatedButton(
+                  onPressed: () {
+                    pushSwipeBack(
+                      context,
+                      Scaffold(
+                        body: Center(
+                          child: Builder(
+                            builder: (innerContext) {
+                              return ElevatedButton(
+                                onPressed: () {
+                                  pushSwipeBack(
+                                    innerContext,
+                                    const Scaffold(
+                                      body: Center(
+                                        child: Text('Tertiary Screen'),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: const Text('Push Tertiary'),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Push Secondary'),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Push Secondary'));
+      await tester.pumpAndSettle();
+      expect(find.text('Push Tertiary'), findsOneWidget);
+
+      // Push tertiary screen: secondary screen now becomes the underlying screen
+      await tester.tap(find.text('Push Tertiary'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 150));
+
+      // Both tertiary and underlying secondary are in the tree
+      expect(find.text('Tertiary Screen'), findsOneWidget);
+      expect(find.text('Push Tertiary'), findsOneWidget);
+
+      await tester.pumpAndSettle();
+      expect(find.text('Tertiary Screen'), findsOneWidget);
+
+      // Pop tertiary
+      final nav = tester.state<NavigatorState>(find.byType(Navigator));
+      nav.pop();
+      await tester.pump();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Tertiary Screen'), findsNothing);
+      expect(find.text('Push Tertiary'), findsOneWidget);
     });
   });
 }

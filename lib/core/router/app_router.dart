@@ -48,18 +48,15 @@ Page<dynamic> _nativeIosPage(Widget page) {
 Page<dynamic> _tabTransitionPage(Widget child) {
   return CustomTransitionPage(
     child: child,
+    transitionDuration: const Duration(milliseconds: 200),
+    reverseTransitionDuration: const Duration(milliseconds: 180),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return FadeTransition(
-        opacity: Tween<double>(
-          begin: 0.0,
-          end: 1.0,
-        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
-        child: ScaleTransition(
-          scale: Tween<double>(begin: 0.96, end: 1.0).animate(
-            CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
-          ),
-          child: child,
+        opacity: CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
         ),
+        child: child,
       );
     },
   );

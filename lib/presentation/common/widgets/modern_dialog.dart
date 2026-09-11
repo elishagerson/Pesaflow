@@ -38,9 +38,6 @@ class ModernDialog extends StatelessWidget {
       transitionDuration: reduced
           ? MotionTokens.durationFast
           : const Duration(milliseconds: 260),
-      reverseTransitionDuration: reduced
-          ? MotionTokens.durationFast
-          : const Duration(milliseconds: 200),
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, child) {
         final dialog = ModernDialog(
@@ -84,9 +81,6 @@ class ModernDialog extends StatelessWidget {
       transitionDuration: reduced
           ? MotionTokens.durationFast
           : const Duration(milliseconds: 260),
-      reverseTransitionDuration: reduced
-          ? MotionTokens.durationFast
-          : const Duration(milliseconds: 200),
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, _) {
         if (reduced) {

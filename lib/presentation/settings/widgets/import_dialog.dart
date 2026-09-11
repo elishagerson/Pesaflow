@@ -8,6 +8,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:go_router/go_router.dart';
 
 class CsvImportResult {
@@ -27,8 +28,8 @@ Future<CsvImportResult?> showImportCsvDialog(
   required List<Account> accounts,
   required List<Category> categories,
 }) {
-  return showModalBottomSheet<CsvImportResult>(
-    context: context,
+  return showSpringSheet<CsvImportResult>(
+    context,
     isScrollControlled: true,
     useSafeArea: true,
     builder: (_) => _ImportCsvSheet(accounts: accounts, categories: categories),
@@ -71,22 +72,9 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
       constraints: BoxConstraints(
         maxHeight: MediaQuery.sizeOf(context).height * 0.85,
       ),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            margin: const EdgeInsets.only(top: kSpacing12),
-            width: 36,
-            height: 4,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.all(kSpacing20),
             child: Row(
