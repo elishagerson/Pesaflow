@@ -1320,7 +1320,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
           itemCount: chips.length,
-          separatorBuilder: (_, __) => const SizedBox(width: kSpacing6),
+          separatorBuilder: (_, _) => const SizedBox(width: kSpacing6),
           itemBuilder: (_, index) => chips[index],
         ),
       ),
