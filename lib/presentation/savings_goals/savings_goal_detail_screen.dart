@@ -257,8 +257,7 @@ class _SavingsGoalDetailScreenState
                                         child: Icon(
                                           isDeposit
                                               ? PesaFlowIcons.savings
-                                              : Icons
-                                                    .account_balance_wallet_rounded,
+                                              : PesaFlowIcons.wallet,
                                           color: accentColor,
                                           size: 22,
                                         ),

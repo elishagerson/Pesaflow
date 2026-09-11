@@ -1080,6 +1080,102 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
+  Widget _buildSquircleIcon({
+    required BuildContext context,
+    required IconData icon,
+    required Color color,
+    double size = 18,
+  }) {
+    return Container(
+      width: 36,
+      height: 36,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Center(
+        child: Icon(
+          icon,
+          color: color,
+          size: size,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMetricTile({
+    required BuildContext context,
+    required ThemeData theme,
+    required IconData icon,
+    required Color color,
+    required String label,
+    required String value,
+    VoidCallback? onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap != null
+            ? () {
+                PesaHaptics.selection();
+                onTap();
+              }
+            : null,
+        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: kSpacing12,
+            horizontal: kSpacing8,
+          ),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: 0.35,
+            ),
+            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+            border: Border.all(
+              color: theme.colorScheme.outlineVariant.withValues(
+                alpha: 0.20,
+              ),
+            ),
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(child: Icon(icon, color: color, size: 15)),
+              ),
+              const SizedBox(height: kSpacing6),
+              Text(
+                value,
+                style: context.ts(
+                  16,
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: kSpacing2),
+              Text(
+                label,
+                style: context.ts(
+                  11,
+                  color: context.appColors.textMedium,
+                  fontWeight: FontWeight.w500,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen(scrollToTopProvider, (_, _) => _scrollToTop());
@@ -1088,6 +1184,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final categories = ref.watch(categoriesFutureProvider).value ?? [];
     final totalTransactionsCount =
         ref.watch(totalTransactionsCountProvider).value ?? 0;
+    final trackers = ref.watch(allTrackersStreamProvider).value ?? [];
+    final activeId = ref.watch(activeTrackerIdProvider);
+    final activeTracker = trackers.where((t) => t.id == activeId).firstOrNull ??
+        (trackers.isNotEmpty ? trackers.first : null);
 
     return Scaffold(
       body: SafeArea(
@@ -1101,146 +1201,354 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Floating Top Bar ──
+              // ── Top Header ──
               IosLargeTitleHeader(
-                title: 'Account',
+                title: 'Settings',
                 scrollController: _scrollController,
               ),
 
-              // Organization
+              const SizedBox(height: kSpacing8),
+
+              // ── Executive Database Snapshot Card ──
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                child: Container(
+                  padding: const EdgeInsets.all(kSpacing16),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                    border: Border.all(
+                      color: theme.colorScheme.outlineVariant.withValues(
+                        alpha: 0.28,
+                      ),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(
+                          alpha: context.isDark ? 0.22 : 0.04,
+                        ),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      // Active Workspace Row with tap to switch
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            PesaHaptics.light();
+                            showWorkspaceSelectorSheet(context, ref);
+                          },
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusSmall,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: kSpacing2,
+                            ),
+                            child: Row(
+                              children: [
+                                _buildSquircleIcon(
+                                  context: context,
+                                  icon: PesaFlowIcons.home,
+                                  color: theme.colorScheme.primary,
+                                  size: 19,
+                                ),
+                                const SizedBox(width: kSpacing12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        activeTracker?.name ??
+                                            'Personal Workspace',
+                                        style: context.ts(
+                                          16,
+                                          fontWeight: FontWeight.w700,
+                                          color: theme.colorScheme.onSurface,
+                                        ),
+                                      ),
+                                      const SizedBox(height: kSpacing2),
+                                      Text(
+                                        'Active Offline Workspace',
+                                        style: context.ts(
+                                          12,
+                                          color: context.appColors.textMedium,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: kSpacing10,
+                                    vertical: kSpacing4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: context.appColors.incomeColor
+                                        .withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusPill,
+                                    ),
+                                    border: Border.all(
+                                      color: context.appColors.incomeColor
+                                          .withValues(alpha: 0.30),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        width: 6,
+                                        height: 6,
+                                        decoration: BoxDecoration(
+                                          color: context.appColors.incomeColor,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                      const SizedBox(width: kSpacing4),
+                                      Text(
+                                        'Offline',
+                                        style: context.ts(
+                                          11,
+                                          fontWeight: FontWeight.w600,
+                                          color: context.appColors.incomeColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing12),
+                      Divider(
+                        height: 1,
+                        thickness: 0.5,
+                        color: theme.colorScheme.outlineVariant.withValues(
+                          alpha: 0.20,
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing12),
+                      // 3-Metric Summary Strip
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildMetricTile(
+                              context: context,
+                              theme: theme,
+                              icon: PesaFlowIcons.wallet,
+                              color: theme.colorScheme.primary,
+                              label: 'Accounts',
+                              value: '${accounts.length}',
+                              onTap: () => _showAccountsManager(context, ref),
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing8),
+                          Expanded(
+                            child: _buildMetricTile(
+                              context: context,
+                              theme: theme,
+                              icon: PesaFlowIcons.category,
+                              color: context.appColors.transferColor,
+                              label: 'Categories',
+                              value: '${categories.length}',
+                              onTap: () => _showCategoriesManager(context, ref),
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing8),
+                          Expanded(
+                            child: _buildMetricTile(
+                              context: context,
+                              theme: theme,
+                              icon: PesaFlowIcons.transactions,
+                              color: context.appColors.incomeColor,
+                              label: 'Transactions',
+                              value: '$totalTransactionsCount',
+                              onTap: () => context.push('/transactions'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: kSpacing8),
+
+              // ── Section 1: Organization & Accounts ──
               StaggeredFadeSlide(
                 index: 0,
                 child: IosListSection(
-                  header: 'Organization',
+                  header: 'ORGANIZATION & STRUCTURE',
                   rows: [
                     IosListRow(
-                      leading: Icon(
-                        PesaFlowIcons.wallet,
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.home,
                         color: theme.colorScheme.primary,
-                        size: 24,
-                      ),
-                      title: const Text('Manage Accounts'),
-                      subtitle: const Text('Add, edit, or delete accounts'),
-                      trailing: Icon(
-                        PesaFlowIcons.chevronRight,
-                        size: 18,
-                        color: context.appColors.textMedium,
-                      ),
-                      onTap: () => _showAccountsManager(context, ref),
-                    ),
-                    IosListRow(
-                      leading: Icon(
-                        PesaFlowIcons.home,
-                        color: theme.colorScheme.primary,
-                        size: 24,
                       ),
                       title: const Text('Manage Workspaces'),
-                      subtitle: const Text('Switch or create workspaces'),
-                      trailing: Icon(
-                        PesaFlowIcons.chevronRight,
-                        size: 18,
-                        color: context.appColors.textMedium,
-                      ),
+                      subtitle: const Text('Switch or create offline workspaces'),
                       onTap: () {
                         PesaHaptics.light();
                         showWorkspaceSelectorSheet(context, ref);
                       },
                     ),
+                    IosListRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.wallet,
+                        color: theme.colorScheme.primary,
+                      ),
+                      title: const Text('Accounts Manager'),
+                      subtitle: Text(
+                        '${accounts.length} active wallets (Bank, M-Pesa, Cash)',
+                      ),
+                      onTap: () => _showAccountsManager(context, ref),
+                    ),
+                    IosListRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.category,
+                        color: context.appColors.transferColor,
+                      ),
+                      title: const Text('Categories Manager'),
+                      subtitle: Text(
+                        '${categories.length} income & expense categories',
+                      ),
+                      onTap: () => _showCategoriesManager(context, ref),
+                    ),
+                    IosListRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.subscriptions,
+                        color: context.appColors.incomeColor,
+                      ),
+                      title: const Text('Recurring & Bills'),
+                      subtitle: const Text(
+                        'Manage scheduled commitments & subscriptions',
+                      ),
+                      onTap: () => context.push('/recurring'),
+                    ),
                   ],
                 ),
               ),
 
-              // Privacy section
+              // ── Section 2: Automation & Intelligence ──
               StaggeredFadeSlide(
                 index: 1,
                 child: IosListSection(
-                  rows: [
-                    IosListRow(
-                      leading: Container(
-                        padding: const EdgeInsets.all(kSpacing8),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withValues(
-                            alpha: 0.12,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusSmall,
-                          ),
-                        ),
-                        child: Icon(
-                          PesaFlowIcons.security,
-                          color: theme.colorScheme.primary,
-                          size: 22,
-                        ),
-                      ),
-                      title: const Text('Offline Privacy'),
-                      subtitle: const Text(
-                        'All data stored locally. Zero cloud transfers.',
-                      ),
-                      indent: 48,
-                    ),
-                  ],
-                ),
-              ),
-
-              // Security
-              StaggeredFadeSlide(
-                index: 2,
-                child: IosListSection(
-                  header: 'Security',
+                  header: 'AUTOMATION & BUDGETING',
                   rows: [
                     IosToggleRow(
-                      leading: Icon(
-                        PesaFlowIcons.biometric,
-                        color: theme.colorScheme.primary,
-                        size: 24,
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.budgets,
+                        color: context.appColors.incomeColor,
                       ),
-                      title: const Text('Biometric App Lock'),
+                      title: const Text('Auto-Budget on Income'),
                       subtitle: const Text(
-                        'Require biometrics to open PesaFlow',
+                        'Automatically allocate 50/30/20 budgets on deposits',
                       ),
-                      value: ref.watch(appLockEnabledProvider).value ?? false,
-                      onChanged: (val) {
+                      value:
+                          ref.watch(autoBudgetEnabledProvider).value ?? false,
+                      onChanged: (val) async {
                         PesaHaptics.light();
-                        ref
+                        await ref
                             .read(settingsRepositoryProvider)
-                            .setSetting('app_lock_enabled', val.toString());
+                            .setSetting('auto_budget_enabled', val.toString());
+                        if (val) {
+                          if (!context.mounted) return;
+                          CustomToast.show(
+                            context,
+                            message: 'Auto-budget enabled — 50/30/20 split',
+                            type: ToastType.success,
+                          );
+                        }
                       },
                     ),
                     IosToggleRow(
-                      leading: Icon(
-                        PesaFlowIcons.unlock,
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.sms,
                         color: theme.colorScheme.primary,
-                        size: 24,
                       ),
-                      title: const Text('Lock Screen Balance'),
+                      title: const Text('SMS Auto-Deduplication'),
                       subtitle: const Text(
-                        'Show current balance in notification shade',
+                        'Automatically deduplicate incoming telco messages',
                       ),
                       value:
-                          ref.watch(lockScreenBalanceEnabledProvider).value ??
+                          ref.watch(smsAutoDeduplicationProvider).value ??
                           false,
                       onChanged: (val) {
                         PesaHaptics.light();
                         ref
                             .read(settingsRepositoryProvider)
-                            .setSetting('lock_screen_balance', val.toString());
+                            .setSetting(
+                              'sms_auto_deduplication',
+                              val.toString(),
+                            );
                       },
                     ),
                   ],
                 ),
               ),
 
-              // Preferences
+              // ── Section 3: Preferences & Security ──
               StaggeredFadeSlide(
-                index: 3,
+                index: 2,
                 child: IosListSection(
-                  header: 'Preferences',
+                  header: 'PREFERENCES & SECURITY',
                   rows: [
-                    IosToggleRow(
-                      leading: Icon(
-                        PesaFlowIcons.pin,
+                    IosListRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.themeMode,
                         color: theme.colorScheme.primary,
-                        size: 24,
+                      ),
+                      title: const Text('App Theme'),
+                      subtitle: Text(switch (ref.watch(themeModeProvider)) {
+                        ThemeMode.light => 'Light appearance',
+                        ThemeMode.dark => 'Dark appearance',
+                        _ => 'System default',
+                      }),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            switch (ref.watch(themeModeProvider)) {
+                              ThemeMode.light => 'Light',
+                              ThemeMode.dark => 'Dark',
+                              _ => 'System',
+                            },
+                            style: context.ts(
+                              13,
+                              color: context.appColors.textMedium,
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing4),
+                          Icon(
+                            PesaFlowIcons.chevronRight,
+                            size: 18,
+                            color: context.appColors.textMedium,
+                          ),
+                        ],
+                      ),
+                      onTap: () => _showThemePicker(context, ref),
+                    ),
+                    IosToggleRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.pin,
+                        color: context.appColors.transferColor,
                       ),
                       title: const Text('Show Decimals'),
                       subtitle: const Text(
@@ -1260,307 +1568,171 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       },
                     ),
                     IosToggleRow(
-                      leading: Icon(
-                        PesaFlowIcons.sms,
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.biometric,
                         color: theme.colorScheme.primary,
-                        size: 24,
                       ),
-                      title: const Text('SMS Auto-Deduplication'),
+                      title: const Text('Biometric App Lock'),
                       subtitle: const Text(
-                        'Automatically deduplicate incoming telco messages',
+                        'Require biometrics to open PesaFlow',
                       ),
                       value:
-                          ref.watch(smsAutoDeduplicationProvider).value ??
+                          ref.watch(appLockEnabledProvider).value ?? false,
+                      onChanged: (val) {
+                        PesaHaptics.light();
+                        ref
+                            .read(settingsRepositoryProvider)
+                            .setSetting('app_lock_enabled', val.toString());
+                      },
+                    ),
+                    IosToggleRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.unlock,
+                        color: theme.colorScheme.primary,
+                      ),
+                      title: const Text('Lock Screen Balance'),
+                      subtitle: const Text(
+                        'Show current balance in notification shade',
+                      ),
+                      value:
+                          ref.watch(lockScreenBalanceEnabledProvider).value ??
                           false,
                       onChanged: (val) {
                         PesaHaptics.light();
                         ref
                             .read(settingsRepositoryProvider)
-                            .setSetting(
-                              'sms_auto_deduplication',
-                              val.toString(),
-                            );
+                            .setSetting('lock_screen_balance', val.toString());
                       },
                     ),
                     IosListRow(
-                      leading: Icon(
-                        PesaFlowIcons.themeMode,
-                        color: theme.colorScheme.primary,
-                        size: 24,
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.security,
+                        color: context.appColors.incomeColor,
                       ),
-                      title: const Text('App Theme'),
-                      subtitle: Text(switch (ref.watch(themeModeProvider)) {
-                        ThemeMode.light => 'Light',
-                        ThemeMode.dark => 'Dark',
-                        _ => 'System default',
-                      }),
-                      trailing: Icon(
-                        PesaFlowIcons.chevronRight,
-                        size: 18,
-                        color: context.appColors.textMedium,
+                      title: const Text('Offline Privacy Guarantee'),
+                      subtitle: const Text(
+                        '100% on-device storage. Zero cloud transfers.',
                       ),
-                      onTap: () => _showThemePicker(context, ref),
+                      trailing: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing8,
+                          vertical: kSpacing2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: context.appColors.incomeColor.withValues(
+                            alpha: 0.12,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
+                        ),
+                        child: Text(
+                          'Local',
+                          style: context.ts(
+                            11,
+                            fontWeight: FontWeight.w600,
+                            color: context.appColors.incomeColor,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
 
-              // Auto-Budget
+              // ── Section 4: Data & Backup ──
               StaggeredFadeSlide(
                 index: 3,
                 child: IosListSection(
-                  header: 'Auto-Budget',
+                  header: 'DATA & STORAGE',
                   rows: [
-                    IosToggleRow(
-                      leading: Icon(
-                        PesaFlowIcons.budgets,
+                    IosListRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.file,
                         color: theme.colorScheme.primary,
-                        size: 24,
                       ),
-                      title: const Text('Auto-Budget on Income'),
+                      title: const Text('Export Monthly Statement'),
+                      subtitle: const Text('Download formatted PDF or CSV'),
+                      onTap: () => showExportDialog(context, ref),
+                    ),
+                    IosListRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.download,
+                        color: context.appColors.transferColor,
+                      ),
+                      title: const Text('Export to CSV'),
                       subtitle: const Text(
-                        'Automatically create 50/30/20 budgets when income is logged',
+                        'Download transactions as CSV file',
                       ),
-                      value:
-                          ref.watch(autoBudgetEnabledProvider).value ?? false,
-                      onChanged: (val) async {
-                        PesaHaptics.light();
-                        await ref
-                            .read(settingsRepositoryProvider)
-                            .setSetting('auto_budget_enabled', val.toString());
-                        if (val) {
-                          if (!context.mounted) return;
-                          CustomToast.show(
-                            context,
-                            message: 'Auto-budget enabled — 50/30/20 split',
-                            type: ToastType.success,
-                          );
-                        }
-                      },
+                      onTap: () => _handleExportCsv(context, ref),
+                    ),
+                    IosListRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.upload,
+                        color: context.appColors.transferColor,
+                      ),
+                      title: const Text('Import CSV'),
+                      subtitle: const Text(
+                        'Import transactions from CSV file',
+                      ),
+                      onTap: () => _handleImportCsv(context, ref),
+                    ),
+                    IosListRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.backup,
+                        color: theme.colorScheme.primary,
+                      ),
+                      title: const Text('Backup Database'),
+                      subtitle: const Text(
+                        'Save an offline backup of your data',
+                      ),
+                      onTap: () => _handleBackupDb(context, ref),
+                    ),
+                    IosListRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.restore,
+                        color: context.appColors.warningColor,
+                      ),
+                      title: const Text('Restore Database'),
+                      subtitle: const Text(
+                        'Restore from a previous backup file',
+                      ),
+                      onTap: () => _handleRestoreDb(context, ref),
                     ),
                   ],
                 ),
               ),
 
-              // Data
+              // ── Section 5: Developer Diagnostics ──
               StaggeredFadeSlide(
                 index: 4,
                 child: IosListSection(
-                  header: 'Data',
+                  header: 'DEVELOPER & DIAGNOSTICS',
                   rows: [
-                    TactileSpringContainer(
-                      selectedColor: theme.colorScheme.onSurface,
-                      onTap: () => _showAccountsManager(context, ref),
-                      child: IosListRow(
-                        leading: Icon(
-                          PesaFlowIcons.wallet,
-                          color: theme.colorScheme.primary,
-                          size: 24,
-                        ),
-                        title: const Text('Accounts Manager'),
-                        subtitle: const Text(
-                          'Manage bank, mobile money & cash wallets',
-                        ),
-                        onTap: () => _showAccountsManager(context, ref),
+                    IosListRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.info,
+                        color: context.appColors.warningColor,
                       ),
-                    ),
-                    TactileSpringContainer(
-                      selectedColor: theme.colorScheme.onSurface,
-                      onTap: () => _showCategoriesManager(context, ref),
-                      child: IosListRow(
-                        leading: Icon(
-                          PesaFlowIcons.category,
-                          color: theme.colorScheme.primary,
-                          size: 24,
-                        ),
-                        title: const Text('Categories Manager'),
-                        subtitle: const Text('Add custom financial categories'),
-                        onTap: () => _showCategoriesManager(context, ref),
+                      title: const Text('SMS Parser Debug'),
+                      subtitle: const Text(
+                        'Test SMS parsing pipeline step-by-step',
                       ),
-                    ),
-                    TactileSpringContainer(
-                      selectedColor: theme.colorScheme.onSurface,
-                      onTap: () => context.push('/recurring'),
-                      child: IosListRow(
-                        leading: Icon(
-                          PesaFlowIcons.subscriptions,
-                          color: theme.colorScheme.primary,
-                          size: 24,
-                        ),
-                        title: const Text('Recurring & Bills'),
-                        subtitle: const Text(
-                          'Manage your recurring payments and bills',
-                        ),
-                        onTap: () => context.push('/recurring'),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: IosMetricCard(
-                              icon: PesaFlowIcons.loans,
-                              label: 'Accounts',
-                              value: '${accounts.length}',
-                            ),
-                          ),
-                          const SizedBox(width: kSpacing8),
-                          Expanded(
-                            child: IosMetricCard(
-                              icon: PesaFlowIcons.category,
-                              label: 'Categories',
-                              value: '${categories.length}',
-                            ),
-                          ),
-                          const SizedBox(width: kSpacing8),
-                          Expanded(
-                            child: IosMetricCard(
-                              icon: PesaFlowIcons.transactions,
-                              label: 'Transactions',
-                              value: '$totalTransactionsCount',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    TactileSpringContainer(
-                      selectedColor: theme.colorScheme.onSurface,
-                      onTap: () => showExportDialog(context, ref),
-                      child: IosListRow(
-                        leading: Icon(
-                          PesaFlowIcons.file,
-                          color: theme.colorScheme.primary,
-                          size: 24,
-                        ),
-                        title: const Text('Export Monthly Statement'),
-                        subtitle: const Text('Download as PDF or CSV'),
-                        onTap: () => showExportDialog(context, ref),
-                      ),
-                    ),
-                    TactileSpringContainer(
-                      selectedColor: theme.colorScheme.onSurface,
-                      onTap: () => _handleExportCsv(context, ref),
-                      child: IosListRow(
-                        leading: Icon(
-                          PesaFlowIcons.download,
-                          color: theme.colorScheme.primary,
-                          size: 24,
-                        ),
-                        title: const Text('Export to CSV'),
-                        subtitle: const Text(
-                          'Download transactions as CSV file',
-                        ),
-                        onTap: () => _handleExportCsv(context, ref),
-                      ),
-                    ),
-                    TactileSpringContainer(
-                      selectedColor: theme.colorScheme.onSurface,
-                      onTap: () => _handleImportCsv(context, ref),
-                      child: IosListRow(
-                        leading: Icon(
-                          PesaFlowIcons.upload,
-                          color: theme.colorScheme.primary,
-                          size: 24,
-                        ),
-                        title: const Text('Import CSV'),
-                        subtitle: const Text(
-                          'Import transactions from CSV file',
-                        ),
-                        onTap: () => _handleImportCsv(context, ref),
-                      ),
-                    ),
-                    TactileSpringContainer(
-                      selectedColor: theme.colorScheme.onSurface,
-                      onTap: () => _handleBackupDb(context, ref),
-                      child: IosListRow(
-                        leading: const Icon(
-                          PesaFlowIcons.backup,
-                          color: Colors.blue,
-                          size: 24,
-                        ),
-                        title: const Text('Backup Database'),
-                        subtitle: const Text(
-                          'Save an offline backup of your data',
-                        ),
-                        onTap: () => _handleBackupDb(context, ref),
-                      ),
-                    ),
-                    TactileSpringContainer(
-                      selectedColor: theme.colorScheme.onSurface,
-                      onTap: () => _handleRestoreDb(context, ref),
-                      child: IosListRow(
-                        leading: const Icon(
-                          PesaFlowIcons.restore,
-                          color: Colors.orange,
-                          size: 24,
-                        ),
-                        title: const Text('Restore Database'),
-                        subtitle: const Text('Restore from a previous backup'),
-                        onTap: () => _handleRestoreDb(context, ref),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Debug (dev only)
-              StaggeredFadeSlide(
-                index: 5,
-                child: IosListSection(
-                  header: 'Debug',
-                  rows: [
-                    TactileSpringContainer(
-                      selectedColor: theme.colorScheme.onSurface,
                       onTap: () => context.push('/debug/sms-parser'),
-                      child: IosListRow(
-                        leading: Icon(
-                          PesaFlowIcons.info,
-                          color: Colors.orange,
-                          size: 24,
-                        ),
-                        title: const Text('SMS Parser Debug'),
-                        subtitle: const Text(
-                          'Test SMS parsing pipeline step-by-step',
-                        ),
-                        onTap: () => context.push('/debug/sms-parser'),
-                      ),
                     ),
                   ],
                 ),
               ),
 
-              // Footer
-              const SizedBox(height: kSpacing40),
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      'PesaFlow v1.0.0',
-                      style: context.ts(
-                        12,
-                        fontWeight: FontWeight.bold,
-                        color: theme.brightness == Brightness.dark
-                            ? context.appColors.textMedium
-                            : context.appColors.textMedium,
-                      ),
-                    ),
-                    const SizedBox(height: kSpacing2),
-                    Text(
-                      'Built Offline for privacy in Tanzania',
-                      style: context.ts(
-                        11,
-                        color: theme.brightness == Brightness.dark
-                            ? context.appColors.textLow
-                            : context.appColors.textLow,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               const SizedBox(height: kSpacing24),
             ],
           ),
