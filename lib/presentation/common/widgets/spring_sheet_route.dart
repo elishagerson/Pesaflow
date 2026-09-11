@@ -228,20 +228,20 @@ class _SpringSheetHostState extends State<_SpringSheetHost>
 
     return PopScope(
       canPop: true,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onVerticalDragStart: _onDragStart,
-        onVerticalDragUpdate: _onDragUpdate,
-        onVerticalDragEnd: _onDragEnd,
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final maxH = widget.isScrollControlled
-                  ? MediaQuery.sizeOf(context).height * 0.92
-                  : MediaQuery.sizeOf(context).height * 0.55;
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final maxH = widget.isScrollControlled
+                ? MediaQuery.sizeOf(context).height * 0.92
+                : MediaQuery.sizeOf(context).height * 0.55;
 
-              return Transform.translate(
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onVerticalDragStart: _onDragStart,
+              onVerticalDragUpdate: _onDragUpdate,
+              onVerticalDragEnd: _onDragEnd,
+              child: Transform.translate(
                 offset: Offset(0, _dragOffset),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
@@ -280,9 +280,9 @@ class _SpringSheetHostState extends State<_SpringSheetHost>
                     ),
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
