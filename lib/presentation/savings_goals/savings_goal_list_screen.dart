@@ -38,8 +38,13 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
   final _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ref.listen(scrollToTopProvider, (_, _) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
@@ -49,16 +54,6 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
         );
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
     final totalSaved = ref.watch(savingsGoalsTotalSavedProvider);

@@ -78,8 +78,13 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
   final _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ref.listen(scrollToTopProvider, (_, _) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
@@ -89,16 +94,6 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
         );
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     final detailAsync = ref.watch(budgetDetailProvider(widget.budgetId));
     final periodsAsync = ref.watch(budgetPeriodsProvider(widget.budgetId));
     final dailyAsync = ref.watch(dailySpendProvider(widget.budgetId));

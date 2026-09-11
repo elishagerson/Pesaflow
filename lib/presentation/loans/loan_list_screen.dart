@@ -33,8 +33,13 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
   final _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ref.listen(scrollToTopProvider, (_, _) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
@@ -44,16 +49,6 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
         );
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final activeLoansAsync = ref.watch(activeLoansStreamProvider);
     final paidLoansAsync = ref.watch(paidLoansStreamProvider);

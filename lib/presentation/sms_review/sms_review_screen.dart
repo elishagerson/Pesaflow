@@ -37,19 +37,6 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
   bool _showSwipeHint = true;
   final _scrollController = ScrollController();
 
-  @override
-  void initState() {
-    super.initState();
-    ref.listen(scrollToTopProvider, (_, _) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          0,
-          duration: MotionTokens.durationNormal,
-          curve: Curves.easeOut,
-        );
-      }
-    });
-  }
 
   String _formatProvider(String? provider) {
     if (provider == null) return 'Unknown';
@@ -256,6 +243,15 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(scrollToTopProvider, (_, _) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: MotionTokens.durationNormal,
+          curve: Curves.easeOut,
+        );
+      }
+    });
     final theme = Theme.of(context);
 
     ref.listen<AsyncValue<List<TransactionWithCategoryAndAccount>>>(

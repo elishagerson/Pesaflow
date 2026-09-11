@@ -49,19 +49,6 @@ class _SavingsGoalDetailScreenState
   final _scrollController = ScrollController();
   bool _hasShownMilestone = false;
 
-  @override
-  void initState() {
-    super.initState();
-    ref.listen(scrollToTopProvider, (_, _) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          0,
-          duration: MotionTokens.durationSlow,
-          curve: Curves.easeOut,
-        );
-      }
-    });
-  }
 
   int _calculateDaysRemaining(DateTime targetDate) {
     final diff = targetDate.difference(DateTime.now()).inDays;
@@ -740,6 +727,15 @@ class _SavingsGoalDetailScreenState
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(scrollToTopProvider, (_, _) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: MotionTokens.durationSlow,
+          curve: Curves.easeOut,
+        );
+      }
+    });
     final theme = Theme.of(context);
     final goalsAsync = ref.watch(savingsGoalsStreamProvider);
 
