@@ -546,7 +546,6 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                               ),
                             ),
                         ],
-                      ),
                     ),
                   ),
                 ),
@@ -554,7 +553,6 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
