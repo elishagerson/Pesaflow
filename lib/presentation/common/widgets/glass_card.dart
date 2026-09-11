@@ -52,7 +52,7 @@ class _GlassCardState extends State<GlassCard>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: MotionTokens.durationNormal,
+      duration: MotionTokens.durationFast,
     );
   }
 

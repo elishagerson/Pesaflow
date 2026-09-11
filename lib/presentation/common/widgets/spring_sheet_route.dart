@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 /// A bottom sheet route with physics-based spring animation and drag-to-dismiss.
 ///
 /// Features:
-/// - Spring-driven scale + slide entrance (not linear)
-/// - Drag-to-dismiss with velocity-based decision
-/// - Handle bar indicator with animated opacity
+/// - Native [PopupRoute] with smooth 320ms spring entrance and crisp 200ms cubic exit
+/// - Automatic exit transition on programmatic pop, barrier tap, and back button
+/// - Drag-to-dismiss with velocity-based fling decision
 /// - Reduced motion support
 ///
 /// Call [showSpringSheet] instead of `showModalBottomSheet`.
@@ -19,14 +18,9 @@ Future<T?> showSpringSheet<T>(
   bool useSafeArea = true,
   bool isScrollControlled = false,
 }) {
-  return showGeneralDialog<T>(
-    context: context,
-    barrierDismissible: true,
-    barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-    barrierColor: Colors.transparent,
-    transitionDuration: Duration.zero,
-    pageBuilder: (ctx, anim, secAnim) => _SpringSheetContent(
-      builder: builder(ctx),
+  return Navigator.of(context, rootNavigator: true).push<T>(
+    SpringSheetRoute<T>(
+      builder: builder,
       backgroundColor: backgroundColor,
       useSafeArea: useSafeArea,
       isScrollControlled: isScrollControlled,
@@ -34,13 +28,114 @@ Future<T?> showSpringSheet<T>(
   );
 }
 
-class _SpringSheetContent extends StatefulWidget {
+class SpringSheetRoute<T> extends PopupRoute<T> {
+  final WidgetBuilder builder;
+  final Color? backgroundColor;
+  final bool useSafeArea;
+  final bool isScrollControlled;
+
+  SpringSheetRoute({
+    required this.builder,
+    this.backgroundColor,
+    this.useSafeArea = true,
+    this.isScrollControlled = false,
+    super.settings,
+  });
+
+  @override
+  Color? get barrierColor => Colors.black.withValues(alpha: 0.45);
+
+  @override
+  bool get barrierDismissible => true;
+
+  @override
+  String? get barrierLabel => 'Dismiss';
+
+  @override
+  Duration get transitionDuration => MotionTokens.durationSlow; // 400ms entrance
+
+  @override
+  Duration get reverseTransitionDuration => MotionTokens.durationExit; // 200ms exit
+
+  @override
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
+    return _SpringSheetHost(
+      builder: builder(context),
+      backgroundColor: backgroundColor,
+      useSafeArea: useSafeArea,
+      isScrollControlled: isScrollControlled,
+    );
+  }
+
+  @override
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    if (context.isReducedMotion) {
+      return FadeTransition(opacity: animation, child: child);
+    }
+    return _SpringSheetAnimatedTransition(
+      animation: animation,
+      child: child,
+    );
+  }
+}
+
+class _SpringSheetAnimatedTransition extends StatelessWidget {
+  final Animation<double> animation;
+  final Widget child;
+
+  const _SpringSheetAnimatedTransition({
+    required this.animation,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        final isReverse = animation.status == AnimationStatus.reverse;
+        final t = isReverse
+            ? Curves.easeInCubic.transform(animation.value)
+            : Curves.easeOutCubic.transform(animation.value);
+
+        // Slide up smoothly from bottom on enter, slide down on exit
+        final translateY = (1.0 - t).clamp(0.0, 1.0) * 120.0;
+        final scale = 0.95 + (0.05 * t);
+        final opacity = isReverse ? t.clamp(0.0, 1.0) : (0.3 + 0.7 * t).clamp(0.0, 1.0);
+
+        return Transform.translate(
+          offset: Offset(0, translateY),
+          child: Transform.scale(
+            scale: scale,
+            alignment: Alignment.bottomCenter,
+            child: Opacity(
+              opacity: opacity,
+              child: child,
+            ),
+          ),
+        );
+      },
+      child: child,
+    );
+  }
+}
+
+class _SpringSheetHost extends StatefulWidget {
   final Widget builder;
   final Color? backgroundColor;
   final bool useSafeArea;
   final bool isScrollControlled;
 
-  const _SpringSheetContent({
+  const _SpringSheetHost({
     required this.builder,
     this.backgroundColor,
     this.useSafeArea = true,
@@ -48,52 +143,34 @@ class _SpringSheetContent extends StatefulWidget {
   });
 
   @override
-  State<_SpringSheetContent> createState() => _SpringSheetContentState();
+  State<_SpringSheetHost> createState() => _SpringSheetHostState();
 }
 
-class _SpringSheetContentState extends State<_SpringSheetContent>
-    with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  bool _initialized = false;
+class _SpringSheetHostState extends State<_SpringSheetHost>
+    with SingleTickerProviderStateMixin {
   bool _isDragging = false;
   double _dragOffset = 0.0;
   double _sheetHeight = 0.0;
+  late final AnimationController _snapController;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
+    _snapController = AnimationController(
       vsync: this,
-      duration: MotionTokens.durationSheet,
+      duration: MotionTokens.durationNormal,
     );
-    _animation = _controller.drive(Tween<double>(begin: 0, end: 1));
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_initialized) {
-      _initialized = true;
-      if (context.isReducedMotion) {
-        _controller.value = 1.0;
-      } else {
-        final spring = SpringSimulation(MotionTokens.springGentle, 0, 1, 0);
-        _controller.animateWith(spring);
-      }
-    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _snapController.dispose();
     super.dispose();
   }
 
   void _onDragStart(DragStartDetails details) {
     _isDragging = true;
-    _dragOffset = 0.0;
+    _snapController.stop();
   }
 
   void _onDragUpdate(DragUpdateDetails details) {
@@ -109,74 +186,36 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
     final velocity = details.velocity.pixelsPerSecond.dy;
     final fraction = _sheetHeight > 0 ? _dragOffset / _sheetHeight : 0.0;
 
-    // Velocity-based direction detection (takes priority over position)
+    // Fast upward flick -> snap back to open
     if (velocity < MotionTokens.sheetSnapUpVelocity) {
-      _snapTo(0.0);
-      return;
-    }
-    if (velocity > MotionTokens.sheetDismissVelocity) {
-      _dismiss();
+      _snapBack();
       return;
     }
 
-    // Position-based snap zones (slow drag / low velocity)
-    if (fraction > MotionTokens.sheetDismissFraction) {
-      _dismiss();
-    } else if (fraction > MotionTokens.sheetHalfOpenFractionLower) {
-      final peekOffset =
-          _sheetHeight * (1.0 - MotionTokens.sheetHalfOpenVisibleFraction);
-      _snapTo(peekOffset);
-    } else {
-      _snapTo(0.0);
-    }
-  }
-
-  void _snapTo(double targetOffset) {
-    if (context.isReducedMotion) {
-      setState(() => _dragOffset = targetOffset);
-      return;
-    }
-    final startOffset = _dragOffset;
-    final delta = targetOffset - startOffset;
-    late final AnimationController snapController;
-    snapController =
-        AnimationController(
-          vsync: this,
-          duration: const Duration(milliseconds: 400),
-        )..addListener(() {
-          setState(() {
-            _dragOffset = startOffset + delta * snapController.value;
-          });
-        });
-    snapController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        snapController.dispose();
-      }
-    });
-
-    final simulation = SpringSimulation(
-      MotionTokens.springSnappy,
-      0.0,
-      1.0,
-      0.0,
-    );
-    snapController.animateWith(simulation);
-  }
-
-  void _dismiss() {
-    if (context.isReducedMotion) {
+    // Fast downward fling -> dismiss
+    if (velocity > MotionTokens.sheetDismissVelocity ||
+        fraction > MotionTokens.sheetDismissFraction) {
       Navigator.of(context).pop();
       return;
     }
-    _controller
-        .animateTo(
-          0.0,
-          duration: MotionTokens.durationExit,
-          curve: Curves.easeInCubic,
-        )
-        .then((_) {
-          if (mounted) Navigator.of(context).pop();
-        });
+
+    _snapBack();
+  }
+
+  void _snapBack() {
+    if (context.isReducedMotion) {
+      setState(() => _dragOffset = 0.0);
+      return;
+    }
+    final startOffset = _dragOffset;
+    _snapController.reset();
+    late final Animation<double> anim;
+    anim = Tween<double>(begin: startOffset, end: 0.0).animate(
+      CurvedAnimation(parent: _snapController, curve: Curves.easeOutCubic),
+    )..addListener(() {
+        setState(() => _dragOffset = anim.value);
+      });
+    _snapController.forward();
   }
 
   @override
@@ -186,100 +225,66 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
     final bottomInset = widget.useSafeArea
         ? MediaQuery.viewInsetsOf(context).bottom
         : 0.0;
-    final dragFraction = _sheetHeight > 0
-        ? (_dragOffset / _sheetHeight).clamp(0.0, 1.0)
-        : 0.0;
 
-    return Stack(
-      children: [
-        // Animated scrim — fades as user drags down
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => _dismiss(),
-          child: AnimatedBuilder(
-            animation: _animation,
-            builder: (_, _) {
-              final baseAlpha = 0.45 * _animation.value;
-              final scrimAlpha = (baseAlpha * (1.0 - dragFraction)).clamp(
-                0.0,
-                1.0,
-              );
-              return Container(
-                color: Colors.black.withValues(alpha: scrimAlpha),
+    return PopScope(
+      canPop: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onVerticalDragStart: _onDragStart,
+        onVerticalDragUpdate: _onDragUpdate,
+        onVerticalDragEnd: _onDragEnd,
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final maxH = widget.isScrollControlled
+                  ? MediaQuery.sizeOf(context).height * 0.92
+                  : MediaQuery.sizeOf(context).height * 0.55;
+
+              return Transform.translate(
+                offset: Offset(0, _dragOffset),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                  child: Material(
+                    color: bgColor,
+                    elevation: 16,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
+                    ),
+                    child: Container(
+                      width: double.infinity,
+                      constraints: BoxConstraints(maxHeight: maxH),
+                      child: _MeasureSize(
+                        onSizeChanged: (size) {
+                          _sheetHeight = size.height;
+                        },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Tactile handle bar
+                            _HandleBar(dragOffset: _dragOffset),
+                            // Sheet content
+                            Flexible(
+                              child: Padding(
+                                padding: EdgeInsets.only(bottom: bottomInset),
+                                child: widget.builder,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               );
             },
           ),
         ),
-        // Sheet content
-        AnimatedBuilder(
-          animation: _animation,
-          builder: (_, child) {
-            final t = _animation.value;
-            final scale = 1.0 - (0.08 * (1 - t));
-            final translateY = (1 - t) * 60 + _dragOffset;
-            final opacity = (0.5 + (0.5 * t)).clamp(0.0, 1.0);
-
-            return Transform.translate(
-              offset: Offset(0, translateY),
-              child: FadeTransition(
-                opacity: AlwaysStoppedAnimation(opacity),
-                child: Transform.scale(scale: scale, child: child),
-              ),
-            );
-          },
-          child: GestureDetector(
-            onVerticalDragStart: _onDragStart,
-            onVerticalDragUpdate: _onDragUpdate,
-            onVerticalDragEnd: _onDragEnd,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final maxH = widget.isScrollControlled
-                      ? MediaQuery.sizeOf(context).height * 0.9
-                      : MediaQuery.sizeOf(context).height * 0.5;
-                  return ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                    child: Material(
-                      color: bgColor,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        constraints: BoxConstraints(maxHeight: maxH),
-                        child: _MeasureSize(
-                          onSizeChanged: (size) {
-                            _sheetHeight = size.height;
-                          },
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Handle bar
-                              _HandleBar(dragOffset: _dragOffset),
-                              // Sheet content
-                              Flexible(
-                                child: Padding(
-                                  padding: EdgeInsets.only(bottom: bottomInset),
-                                  child: widget.builder,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

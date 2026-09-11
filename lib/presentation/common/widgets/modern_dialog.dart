@@ -37,7 +37,7 @@ class ModernDialog extends StatelessWidget {
       barrierColor: Colors.black.withValues(alpha: 0.6),
       transitionDuration: reduced
           ? MotionTokens.durationFast
-          : MotionTokens.durationSlow,
+          : MotionTokens.durationNormal,
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, child) {
         final dialog = ModernDialog(
@@ -50,14 +50,18 @@ class ModernDialog extends StatelessWidget {
         if (reduced) {
           return FadeTransition(opacity: anim1, child: dialog);
         }
-        // Spring-based scale — snappy without the cheap bounce of easeOutBack
+        final isReverse = anim1.status == AnimationStatus.reverse;
+        final curve = isReverse ? Curves.easeInCubic : Curves.easeOutCubic;
         final scaleValue = Tween<double>(
-          begin: 0.85,
+          begin: isReverse ? 0.92 : 0.88,
           end: 1.0,
-        ).animate(CurvedAnimation(parent: anim1, curve: Curves.easeOutCubic));
+        ).animate(CurvedAnimation(parent: anim1, curve: curve));
         return ScaleTransition(
           scale: scaleValue,
-          child: FadeTransition(opacity: anim1, child: dialog),
+          child: FadeTransition(
+            opacity: CurvedAnimation(parent: anim1, curve: curve),
+            child: dialog,
+          ),
         );
       },
     );
@@ -76,19 +80,24 @@ class ModernDialog extends StatelessWidget {
       barrierColor: Colors.black.withValues(alpha: 0.6),
       transitionDuration: reduced
           ? MotionTokens.durationFast
-          : MotionTokens.durationSlow,
+          : MotionTokens.durationNormal,
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, childWidget) {
         if (reduced) {
           return FadeTransition(opacity: anim1, child: child);
         }
+        final isReverse = anim1.status == AnimationStatus.reverse;
+        final curve = isReverse ? Curves.easeInCubic : Curves.easeOutCubic;
         final scaleValue = Tween<double>(
-          begin: 0.85,
+          begin: isReverse ? 0.92 : 0.88,
           end: 1.0,
-        ).animate(CurvedAnimation(parent: anim1, curve: Curves.easeOutCubic));
+        ).animate(CurvedAnimation(parent: anim1, curve: curve));
         return ScaleTransition(
           scale: scaleValue,
-          child: FadeTransition(opacity: anim1, child: child),
+          child: FadeTransition(
+            opacity: CurvedAnimation(parent: anim1, curve: curve),
+            child: child,
+          ),
         );
       },
     );

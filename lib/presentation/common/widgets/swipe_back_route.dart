@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
@@ -64,36 +63,30 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
     with SingleTickerProviderStateMixin {
   late final AnimationController _animController;
 
-  /// 0 = fully covering previous route, 1 = fully dismissed.
+  /// 0 = fully on-screen, 1 = fully dismissed off-screen to the right.
   double _dragProgress = 0.0;
   bool _isDragging = false;
 
-  static const double _edgeWidth = 30.0;
+  static const double _edgeWidth = 36.0;
   static const double _dismissFraction = 0.35;
-  static const double _dismissVelocity = 800.0;
-  static const double _maxScrimAlpha = 0.3;
+  static const double _dismissVelocity = 700.0;
+  static const double _maxScrimAlpha = 0.35;
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, value: 0, upperBound: 1);
-
-    // Drive from 0→1 as the route pushes forward; we read the raw value
-    // during the transitionsBuilder but the real interactivity comes from
-    // _dragProgress which drives the layout directly.
-    widget.animation.addListener(_onAnimationTick);
-  }
-
-  void _onAnimationTick() {
-    // When the forward push animation completes, snap progress to 0 (fully shown).
-    if (widget.animation.isCompleted && !_isDragging && _dragProgress != 0.0) {
-      // Only snap if this was the initial push settling, not a dismiss.
-    }
+    _animController = AnimationController.unbounded(vsync: this, value: 0.0)
+      ..addListener(() {
+        if (!_isDragging && mounted) {
+          setState(() {
+            _dragProgress = _animController.value.clamp(0.0, 1.0);
+          });
+        }
+      });
   }
 
   @override
   void dispose() {
-    widget.animation.removeListener(_onAnimationTick);
     _animController.dispose();
     super.dispose();
   }
@@ -102,9 +95,10 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
 
   void _onDragStart(DragStartDetails details) {
     final dx = details.localPosition.dx;
-    if (dx > _edgeWidth) return; // not from left edge
+    if (dx > _edgeWidth) return; // only activate from left edge
     _isDragging = true;
     _dragProgress = 0.0;
+    _animController.value = 0.0;
   }
 
   void _onDragUpdate(DragUpdateDetails details) {
@@ -117,6 +111,7 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
         0.0,
         1.0,
       );
+      _animController.value = _dragProgress;
     });
   }
 
@@ -137,12 +132,6 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
 
   // ── iOS-native Animations ─────────────────────────────────────────────
 
-  /// iOS standard navigation transition duration (350ms).
-  static const Duration _kDuration = MotionTokens.durationNormal;
-
-  /// iOS default curve for back gesture spring-back (ease-out).
-  static final Curve _kBackCurve = Curves.easeOut;
-
   void _animateDismiss({double velocity = 0}) {
     if (context.isReducedMotion) {
       Navigator.of(context).pop();
@@ -150,14 +139,13 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
     }
 
     final startProgress = _dragProgress;
-    final startVelocity = velocity < 0 ? -velocity / 1000 : 1.0;
+    final initialVelocity = velocity > 0 ? (velocity / 1000).clamp(0.5, 3.0) : 1.0;
 
-    // Use spring physics with iOS-like feel for dismiss
     final simulation = SpringSimulation(
       MotionTokens.springSnappy,
       startProgress,
       1.0,
-      -startVelocity,
+      initialVelocity,
     );
 
     _animController
@@ -170,17 +158,17 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
   void _animateSpringBack() {
     if (context.isReducedMotion) {
       setState(() => _dragProgress = 0.0);
+      _animController.value = 0.0;
       return;
     }
 
-    final startProgress = _dragProgress;
-
-    // Use iOS ease-out curve for spring-back (smooth deceleration)
-    _animController
-      ..value = startProgress
-      ..animateTo(0.0, duration: _kDuration, curve: _kBackCurve).then((_) {
-        if (mounted) setState(() => _dragProgress = 0.0);
-      });
+    final simulation = SpringSimulation(
+      MotionTokens.springSnappy,
+      _dragProgress,
+      0.0,
+      0.0,
+    );
+    _animController.animateWith(simulation);
   }
 
   // ── Build ──────────────────────────────────────────────────────────────
@@ -191,52 +179,58 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
       animation: Listenable.merge([widget.animation, _animController]),
       builder: (_, _) {
         final pushValue = widget.animation.value;
-        final progress = math.max(pushValue, _dragProgress);
+        // When stationary on screen: pushValue == 1.0, _dragProgress == 0.0 -> visibleFraction == 1.0.
+        // During swipe-back drag or dismiss: visibleFraction tracks (1.0 - _dragProgress).
+        // During normal Navigator.pop: pushValue reverses 1.0 -> 0.0 smoothly.
+        final visibleFraction = (pushValue * (1.0 - _dragProgress)).clamp(0.0, 1.0);
 
         final screenWidth = MediaQuery.sizeOf(context).width;
-        // iOS-native: slide from RIGHT (positive offset = off-screen right)
-        final slideOffset = screenWidth * (1.0 - progress);
+        // iOS-native: 0 offset = fully visible, screenWidth = fully off-screen right
+        final slideOffset = screenWidth * (1.0 - visibleFraction);
 
         return GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onHorizontalDragStart: _onDragStart,
           onHorizontalDragUpdate: _onDragUpdate,
           onHorizontalDragEnd: _onDragEnd,
           child: Stack(
             children: [
-              // Dark scrim behind the sliding content
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(
-                        alpha: (1.0 - progress) * _maxScrimAlpha,
+              // Dark scrim behind sliding content, deepest during drag
+              if (visibleFraction < 1.0)
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(
+                          alpha: visibleFraction * _maxScrimAlpha,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              // Cupertino-style shadow on the trailing edge for depth
-              Positioned(
-                top: 0,
-                bottom: 0,
-                left: slideOffset - 12,
-                width: 12,
-                child: IgnorePointer(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [
-                          Colors.black.withValues(alpha: 0.06 * progress),
-                          Colors.transparent,
-                        ],
+              // Cupertino-style shadow on the leading edge for tactile depth
+              if (slideOffset > 0)
+                Positioned(
+                  top: 0,
+                  bottom: 0,
+                  left: slideOffset - 16,
+                  width: 16,
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.12 * visibleFraction),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              // The actual page content, sliding in from right (iOS native)
+              // The actual page content sliding in/out
               Transform.translate(
                 offset: Offset(slideOffset, 0),
                 child: SizedBox(

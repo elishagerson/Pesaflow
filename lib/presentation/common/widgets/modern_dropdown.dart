@@ -202,16 +202,6 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Grab Handle
-              Container(
-                width: 36,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: onSurface.withValues(alpha: 0.18),
-                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                ),
-              ),
-              const SizedBox(height: kSpacing16),
               // Title
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

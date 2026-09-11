@@ -488,8 +488,15 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
             data: MediaQuery.of(
               context,
             ).copyWith(textScaler: MediaQuery.textScalerOf(context)),
-            child: GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
+            child: Listener(
+              onPointerDown: (_) {
+                final currentFocus = FocusScope.of(context);
+                if (!currentFocus.hasPrimaryFocus &&
+                    currentFocus.focusedChild != null) {
+                  currentFocus.unfocus();
+                }
+              },
+              behavior: HitTestBehavior.translucent,
               child: ScrollConfiguration(
                 behavior: CupertinoScrollBehavior(),
                 child: Stack(
