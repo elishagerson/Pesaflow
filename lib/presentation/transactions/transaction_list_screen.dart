@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -89,7 +88,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
 
   void _showTransactionActions(
     BuildContext context,
-    TransactionWithCategory item,
+    TransactionWithCategoryAndAccount item,
   ) {
     final trans = item.transaction;
     final theme = Theme.of(context);

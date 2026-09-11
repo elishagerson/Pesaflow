@@ -5,7 +5,6 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
-import 'package:pesaflow/core/utils/haptics.dart';
 
 /// A 2x2 executive financial hub grid replacing scattered carousels.
 class FinancialHubGrid extends StatelessWidget {
@@ -156,10 +155,7 @@ class _HubCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return TactileSpringContainer(
-      onTap: () {
-        PesaHaptics.light();
-        onTap();
-      },
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(kSpacing14),
         decoration: BoxDecoration(

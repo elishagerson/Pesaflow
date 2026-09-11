@@ -509,9 +509,10 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
       _controller.value = 0.0;
       return;
     }
+    final startVal = _controller.value < 0.35 ? 0.35 : _controller.value;
     final simulation = SpringSimulation(
       MotionTokens.springSnappy,
-      _controller.value,
+      startVal,
       0.0,
       0.0,
     );
