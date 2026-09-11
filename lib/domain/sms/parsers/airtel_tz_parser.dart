@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 import '../../models/sms_parsed.dart';
+import '../sms_classifier.dart';
 import 'amount_helper.dart';
 import 'sms_parser_interface.dart';
 
@@ -69,6 +70,7 @@ class AirtelTzParser implements SmsParser {
   @override
   SmsParsed? parse(String rawSmsBody, DateTime timestamp) {
     final text = rawSmsBody.trim();
+    if (SmsClassifier.hasPromotionalLink(text)) return null;
 
     try {
       // 1. Swahili Received Money (Income)

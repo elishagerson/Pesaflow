@@ -8,7 +8,6 @@ import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -23,6 +22,7 @@ import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/presentation/common/widgets/hero_card_route.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_entrance.dart';
+import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/presentation/savings_goals/savings_goal_detail_screen.dart';
 
@@ -228,66 +228,179 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
     double overallPct,
   ) {
     final onSurface = theme.colorScheme.onSurface;
-    return GlassCard(
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: context.appColors.shadowMedium,
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       padding: const EdgeInsets.all(kSpacing20),
-      borderRadius: AppTheme.radiusCard,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                padding: const EdgeInsets.all(kSpacing10),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  PesaFlowIcons.income,
-                  color: theme.colorScheme.primary,
-                  size: 20,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(kSpacing6),
+                    decoration: BoxDecoration(
+                      color: context.appColors.incomeColor.withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      PesaFlowIcons.savings,
+                      size: 16,
+                      color: context.appColors.incomeColor,
+                    ),
+                  ),
+                  const SizedBox(width: kSpacing8),
+                  Text(
+                    'SAVINGS VAULT',
+                    style: context.ts(
+                      11,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.8,
+                      color: onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: kSpacing12),
-              Text(
-                'TOTAL SAVED',
-                style: context.ts(10, color: onSurface.withValues(alpha: 0.6), letterSpacing: 0.8),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kSpacing8,
+                  vertical: kSpacing4,
+                ),
+                decoration: BoxDecoration(
+                  color: context.appColors.incomeColor.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                  border: Border.all(
+                    color: context.appColors.incomeColor.withValues(alpha: 0.20),
+                    width: 0.8,
+                  ),
+                ),
+                child: Text(
+                  '${(overallPct * 100).round()}% FUNDED',
+                  style: context.ts(
+                    10,
+                    fontWeight: FontWeight.w800,
+                    color: context.appColors.incomeColor,
+                    letterSpacing: 0.4,
+                  ),
+                ),
               ),
             ],
           ),
           const SizedBox(height: kSpacing16),
-          Text(
-            CurrencyFormatter.formatCents(totalSaved),
-            style: context.ts(28, color: onSurface),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'TOTAL SAVED',
+                    style: context.ts(
+                      11,
+                      fontWeight: FontWeight.w700,
+                      color: onSurface.withValues(alpha: 0.5),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const SizedBox(height: kSpacing4),
+                  AmountText(
+                    amountInCents: totalSaved,
+                    animate: true,
+                    style: context.ts(
+                      26,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.5,
+                      color: onSurface,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'COMBINED TARGET',
+                    style: context.ts(
+                      11,
+                      fontWeight: FontWeight.w700,
+                      color: onSurface.withValues(alpha: 0.5),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const SizedBox(height: kSpacing4),
+                  AmountText(
+                    amountInCents: totalTarget,
+                    animate: true,
+                    style: context.ts(
+                      18,
+                      fontWeight: FontWeight.w700,
+                      color: onSurface.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          const SizedBox(height: kSpacing4),
-          Text(
-            'Combined target: ${CurrencyFormatter.formatCents(totalTarget)}',
-            style: context.ts(11, color: theme.colorScheme.onSurfaceVariant),
-          ),
-          const SizedBox(height: kSpacing12),
+          const SizedBox(height: kSpacing16),
           TweenAnimationBuilder<double>(
             duration: const Duration(milliseconds: 1000),
             curve: Curves.easeOutCubic,
             tween: Tween<double>(begin: 0, end: overallPct),
             builder: (context, value, child) {
               return ClipRRect(
-                borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                 child: LinearProgressIndicator(
                   value: value,
-                  backgroundColor: theme.colorScheme.primary.withValues(
-                    alpha: 0.12,
-                  ),
-                  color: theme.colorScheme.primary,
+                  backgroundColor: onSurface.withValues(alpha: 0.06),
+                  color: context.appColors.incomeColor,
                   minHeight: 8,
                 ),
               );
             },
           ),
           const SizedBox(height: kSpacing6),
-          Text(
-            '${(overallPct * 100).round()}% of combined target achieved',
-            style: context.ts(10, color: theme.colorScheme.onSurfaceVariant),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${(overallPct * 100).round()}% of overall goal achieved',
+                style: context.ts(
+                  11,
+                  fontWeight: FontWeight.w500,
+                  color: onSurface.withValues(alpha: 0.5),
+                ),
+              ),
+              Text(
+                totalTarget > totalSaved
+                    ? '${CurrencyFormatter.formatCents(totalTarget - totalSaved)} to go'
+                    : 'Target reached!',
+                style: context.ts(
+                  11,
+                  fontWeight: FontWeight.w600,
+                  color: context.appColors.incomeColor,
+                ),
+              ),
+            ],
           ),
         ],
       ),

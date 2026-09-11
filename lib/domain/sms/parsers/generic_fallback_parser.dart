@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 import '../../models/sms_parsed.dart';
+import '../sms_classifier.dart';
 import 'amount_helper.dart';
 import 'sms_parser_interface.dart';
 
@@ -12,6 +13,7 @@ class GenericFallbackParser implements SmsParser {
   SmsParsed? parse(String rawSmsBody, DateTime timestamp) {
     final text = rawSmsBody.trim();
     if (text.isEmpty) return null;
+    if (SmsClassifier.hasPromotionalLink(text)) return null;
 
     try {
       // NOTE: The SmsClassifier is NOT called here. The SmsProcessor already

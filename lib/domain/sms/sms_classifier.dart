@@ -58,10 +58,10 @@ class SmsClassifier {
     //  PROMO / NON-TRANSACTION SIGNALS (negative)
     // ════════════════════════════════════════════
 
-    // Signal: Contains URLs (moderate promo indicator — legitimate carrier SMS can include links)
+    // Signal: Contains URLs (promotional links — messages with promo links must not be parsed)
     if (_hasUrl(lower)) {
-      score -= 1.5;
-      reasons.add('Contains URL (www/http) → mild promo signal');
+      score -= 20.0;
+      reasons.add('Contains promotional link/URL (www/http) → rejected as promo');
     }
 
     // Signal: Contains dial / USSD codes
@@ -200,11 +200,23 @@ class SmsClassifier {
 
   // ── Signal detectors ──
 
+  static final _urlRegex = RegExp(
+    r'(?:https?://|www\.)\S+|\b(?:[a-zA-Z0-9-]+\.)+(?:app|ly|link|page|top|site)\b|\b(?:[a-zA-Z0-9-]+\.)+(?:com|org|net|co\.tz|tz)/[^\s]*',
+    caseSensitive: false,
+  );
+
   static bool _hasUrl(String lower) {
     return lower.contains('www.') ||
         lower.contains('http://') ||
         lower.contains('https://') ||
-        RegExp(r'\.[a-z]{2,4}/').hasMatch(lower); // e.g., ".co.tz/"
+        RegExp(r'\.[a-z]{2,4}/').hasMatch(lower) ||
+        _urlRegex.hasMatch(lower);
+  }
+
+  /// Returns true if [rawBody] contains promotional links or URLs.
+  static bool hasPromotionalLink(String rawBody) {
+    final lower = rawBody.toLowerCase().trim();
+    return _hasUrl(lower);
   }
 
   static bool _hasDialCode(String lower) {
@@ -225,6 +237,7 @@ class SmsClassifier {
       'free trial': 2.0,
       'promotion': 2.0,
       'campaign': 2.0,
+      'pakua': 2.0, // "download"
 
       // Medium promo indicators (1.5 each)
       'offer': 1.5,
@@ -234,6 +247,12 @@ class SmsClassifier {
       'jiandikishe': 1.5, // "register"
       'data bundle': 1.5,
       'pakiti': 1.5, // "bundle/package"
+      'bando': 1.5, // "bundle"
+      'mabando': 1.5, // "bundles"
+      'zawadi': 1.5, // "gift/reward"
+      'punguzo': 1.5, // "discount"
+      'jiunge': 1.5, // "join"
+
       // Mild promo indicators (1.0 each)
       'upgrade': 1.0,
       'hamia': 1.0, // "switch to"

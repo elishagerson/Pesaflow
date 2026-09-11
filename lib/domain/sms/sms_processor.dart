@@ -110,6 +110,15 @@ class SmsProcessor {
       return false;
     }
 
+    // Promotional links guard: messages with promotional links/URLs must not be parsed
+    if (SmsClassifier.hasPromotionalLink(body)) {
+      developer.log(
+        'SMS ignored: Contains promotional link / URL from $sender',
+        name: 'SmsProcessor',
+      );
+      return false;
+    }
+
     final key = _ContentKey(provider, body);
 
     // In-memory dedup — skip if we already buffered identical content
@@ -189,6 +198,14 @@ class SmsProcessor {
   }) async {
     String? loanId;
     try {
+      if (SmsClassifier.hasPromotionalLink(body)) {
+        developer.log(
+          'SMS ignored: Contains promotional link / URL for $provider',
+          name: 'SmsProcessor',
+        );
+        return;
+      }
+
       // 2. Select the parser via provider registry
       final parser = ProviderRegistry.parserFor(provider);
 

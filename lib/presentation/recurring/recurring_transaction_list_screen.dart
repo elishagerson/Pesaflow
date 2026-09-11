@@ -14,7 +14,6 @@ import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -409,6 +408,8 @@ class _RecurringTransactionListScreenState
     );
     final paused = allRecurring.where((r) => r.status == 'paused');
 
+    final onSurface = theme.colorScheme.onSurface;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         kSpacing16,
@@ -416,24 +417,138 @@ class _RecurringTransactionListScreenState
         kSpacing16,
         kSpacing8,
       ),
-      child: GlassCard(
-        borderRadius: AppTheme.radiusCard,
-        elevation: CardElevation.medium,
-        accentColor: theme.colorScheme.primary,
-        padding: const EdgeInsets.all(kSpacing18),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHigh,
+          borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+          border: Border.all(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: context.appColors.shadowMedium,
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(kSpacing20),
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(kSpacing6),
+                      decoration: BoxDecoration(
+                        color: onSurface.withValues(alpha: 0.08),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        PesaFlowIcons.subscriptions,
+                        size: 15,
+                        color: onSurface.withValues(alpha: 0.8),
+                      ),
+                    ),
+                    const SizedBox(width: kSpacing8),
+                    Text(
+                      'MONTHLY COMMITMENTS',
+                      style: context.ts(
+                        11,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.8,
+                        color: onSurface.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ],
+                ),
+                if (dueIds.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: kSpacing8,
+                      vertical: kSpacing4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: context.appColors.transferColor.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                      border: Border.all(
+                        color: context.appColors.transferColor.withValues(alpha: 0.25),
+                        width: 0.8,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          PesaFlowIcons.calendar,
+                          size: 11,
+                          color: context.appColors.transferColor,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${dueIds.length} DUE NOW',
+                          style: context.ts(
+                            10,
+                            fontWeight: FontWeight.w800,
+                            color: context.appColors.transferColor,
+                            letterSpacing: 0.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: kSpacing8,
+                      vertical: kSpacing4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: context.appColors.incomeColor.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                      border: Border.all(
+                        color: context.appColors.incomeColor.withValues(alpha: 0.20),
+                        width: 0.8,
+                      ),
+                    ),
+                    child: Text(
+                      '${activeExpenses.length + activeIncome.length} ACTIVE',
+                      style: context.ts(
+                        10,
+                        fontWeight: FontWeight.w800,
+                        color: context.appColors.incomeColor,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: kSpacing16),
             // Monthly cost headline
             if (totals.monthly > 0) ...[
-              Text(
-                'COMMITTED MONTHLY',
-                style: context.ts(11, fontWeight: FontWeight.w800, letterSpacing: 1.5, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
-              ),
-              const SizedBox(height: kSpacing6),
               AmountText(
                 amountInCents: totals.monthly,
-                type: AmountType.expense,
-                style: context.ts(24, fontWeight: FontWeight.w900, color: theme.colorScheme.primary),
+                animate: true,
+                style: context.ts(
+                  28,
+                  fontWeight: FontWeight.w900,
+                  color: onSurface,
+                  letterSpacing: -0.5,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                'Calculated fixed obligations per month',
+                style: context.ts(
+                  11,
+                  color: onSurface.withValues(alpha: 0.5),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               const SizedBox(height: kSpacing12),
               // Cycle chips
@@ -450,7 +565,7 @@ class _RecurringTransactionListScreenState
               const SizedBox(height: kSpacing14),
               Divider(
                 height: 0.5,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                color: onSurface.withValues(alpha: 0.08),
               ),
               const SizedBox(height: kSpacing14),
             ],
@@ -475,7 +590,7 @@ class _RecurringTransactionListScreenState
                     theme,
                     '${paused.length}',
                     'Paused',
-                    context.appColors.transferColor,
+                    onSurface.withValues(alpha: 0.6),
                   ),
                 if (dueIds.isNotEmpty)
                   _statPill(

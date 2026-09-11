@@ -5,7 +5,9 @@ import 'package:pesaflow/domain/sms/parsers/mixx_parser.dart';
 import 'package:pesaflow/domain/sms/parsers/halopesa_parser.dart';
 import 'package:pesaflow/domain/sms/parsers/bank_base.dart';
 import 'package:pesaflow/domain/sms/parsers/selcom_pesa_parser.dart';
+import 'package:pesaflow/domain/sms/parsers/generic_fallback_parser.dart';
 import 'package:pesaflow/domain/sms/provider_matcher.dart';
+import 'package:pesaflow/domain/sms/sms_classifier.dart';
 import 'package:pesaflow/domain/sms/parsers/sms_parser_interface.dart';
 import 'fixtures/sms_corpus.dart';
 
@@ -994,6 +996,26 @@ void main() {
       expect(CrdbBankParser().parse(promo, now), isNull);
       expect(NbcBankParser().parse(promo, now), isNull);
       expect(SelcomPesaParser().parse(promo, now), isNull);
+    });
+
+    test('all parsers and classifier reject messages with promotional links', () {
+      const promoWithLink =
+          '0911RMX93 Imethibitishwa. Umepokea TZS 2,500.00 kutoka kwa ELISHA NDUNDULU - Selcom (0763559341) tarehe 2026-09-11 08:33:42. Umechoshwa na Makato Makubwa? Pakua Selcom Pesa na uokoe fedha zako kwa kujiunga na Mabando ya Miamala, kuanzia TZS 1000 tu, kwa miamala 7 BURE kwa siku! Pakua sasa https://get.selcompesa.app Kwa msaada 0800714888';
+
+      expect(SmsClassifier.hasPromotionalLink(promoWithLink), isTrue);
+      final classification = SmsClassifier.classify(promoWithLink);
+      expect(classification.isPromo, isTrue);
+      expect(classification.isTransaction, isFalse);
+
+      expect(SelcomPesaParser().parse(promoWithLink, now), isNull);
+      expect(MpesaTzParser().parse(promoWithLink, now), isNull);
+      expect(AirtelTzParser().parse(promoWithLink, now), isNull);
+      expect(MixxParser().parse(promoWithLink, now), isNull);
+      expect(HalopesaParser().parse(promoWithLink, now), isNull);
+      expect(NmbBankParser().parse(promoWithLink, now), isNull);
+      expect(CrdbBankParser().parse(promoWithLink, now), isNull);
+      expect(NbcBankParser().parse(promoWithLink, now), isNull);
+      expect(const GenericFallbackParser(provider: 'SelcomPesa_TZ').parse(promoWithLink, now), isNull);
     });
 
     test('M-Pesa parser handles large amounts correctly', () {

@@ -321,126 +321,289 @@ class _OverviewTab extends ConsumerWidget {
               final incomeColorVal = context.appColors.incomeColor;
               final expenseColorVal = context.appColors.expenseColor;
 
+              final isDeficit = net < 0;
+              final onSurface = theme.colorScheme.onSurface;
+
               return StaggeredFadeSlide(
                 index: 0,
-                child: GlassCard(
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+                    border: Border.all(
+                      color: isDeficit
+                          ? context.appColors.expenseColor.withValues(alpha: 0.35)
+                          : theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: context.appColors.shadowMedium,
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
                   padding: const EdgeInsets.all(kSpacing20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'THIS MONTH',
-                        style: context.ts(
-                          11,
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
-                          ),
-                          letterSpacing: 1.2,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: kSpacing16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Income',
-                                  style: context.ts(
-                                    12,
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.6),
-                                  ),
-                                ),
-                                AmountText(
-                                  amountInCents: income,
-                                  animate: true,
-                                  style: context.ts(
-                                    20,
-                                    color: incomeColorVal,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: -0.3,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  'Expense',
-                                  style: context.ts(
-                                    12,
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.6),
-                                  ),
-                                ),
-                                AmountText(
-                                  amountInCents: expense,
-                                  animate: true,
-                                  style: context.ts(
-                                    20,
-                                    color: expenseColorVal,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: -0.3,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: kSpacing12),
-                      Divider(
-                        height: 0.5,
-                        thickness: 0.5,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.06,
-                        ),
-                      ),
-                      const SizedBox(height: kSpacing8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            net >= 0 ? 'Net Savings' : 'Net Deficit',
-                            style: context.ts(
-                              13,
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.7,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(kSpacing6),
+                                decoration: BoxDecoration(
+                                  color: onSurface.withValues(alpha: 0.08),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  PesaFlowIcons.analytics,
+                                  size: 15,
+                                  color: onSurface.withValues(alpha: 0.8),
+                                ),
                               ),
-                              fontWeight: FontWeight.w500,
-                            ),
+                              const SizedBox(width: kSpacing8),
+                              Text(
+                                'CASH FLOW PERFORMANCE',
+                                style: context.ts(
+                                  11,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.8,
+                                  color: onSurface.withValues(alpha: 0.6),
+                                ),
+                              ),
+                            ],
                           ),
+                          if (isDeficit)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: kSpacing8,
+                                vertical: kSpacing4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                border: Border.all(
+                                  color: context.appColors.expenseColor.withValues(alpha: 0.25),
+                                  width: 0.8,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    PesaFlowIcons.error,
+                                    size: 11,
+                                    color: context.appColors.expenseColor,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'DEFICIT',
+                                    style: context.ts(
+                                      10,
+                                      fontWeight: FontWeight.w800,
+                                      color: context.appColors.expenseColor,
+                                      letterSpacing: 0.4,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          else
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: kSpacing8,
+                                vertical: kSpacing4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: context.appColors.incomeColor.withValues(alpha: 0.10),
+                                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                border: Border.all(
+                                  color: context.appColors.incomeColor.withValues(alpha: 0.20),
+                                  width: 0.8,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    PesaFlowIcons.check,
+                                    size: 11,
+                                    color: context.appColors.incomeColor,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'SURPLUS',
+                                    style: context.ts(
+                                      10,
+                                      fontWeight: FontWeight.w800,
+                                      color: context.appColors.incomeColor,
+                                      letterSpacing: 0.4,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: kSpacing18),
+                      Text(
+                        'NET CASH FLOW',
+                        style: context.ts(
+                          11,
+                          fontWeight: FontWeight.w700,
+                          color: onSurface.withValues(alpha: 0.5),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing4),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          if (isDeficit)
+                            Text(
+                              '-',
+                              style: context.ts(
+                                28,
+                                fontWeight: FontWeight.w900,
+                                color: context.appColors.expenseColor,
+                              ),
+                            ),
                           AmountText(
                             amountInCents: net.abs(),
                             animate: true,
-                            type: net >= 0
-                                ? AmountType.income
-                                : AmountType.expense,
                             style: context.ts(
-                              16,
-                              fontWeight: FontWeight.w700,
-                              color: net >= 0
-                                  ? incomeColorVal
-                                  : expenseColorVal,
-                              letterSpacing: -0.2,
+                              28,
+                              fontWeight: FontWeight.w900,
+                              color: isDeficit
+                                  ? context.appColors.expenseColor
+                                  : onSurface,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          const Spacer(),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing10,
+                              vertical: kSpacing4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: onSurface.withValues(alpha: 0.05),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                            ),
+                            child: Text(
+                              'Savings Rate: $savingsRate%',
+                              style: context.ts(
+                                11,
+                                fontWeight: FontWeight.w700,
+                                color: isDeficit
+                                    ? context.appColors.expenseColor
+                                    : context.appColors.incomeColor,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: kSpacing4),
-                      Text(
-                        'Savings rate: $savingsRate%',
-                        style: context.ts(
-                          11,
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
+                      const SizedBox(height: kSpacing16),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing14,
+                          vertical: kSpacing10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: onSurface.withValues(alpha: 0.04),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                          border: Border.all(
+                            color: onSurface.withValues(alpha: 0.06),
                           ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        PesaFlowIcons.income,
+                                        size: 13,
+                                        color: incomeColorVal,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        'Total Inflow',
+                                        style: context.ts(
+                                          11,
+                                          fontWeight: FontWeight.w600,
+                                          color: onSurface.withValues(alpha: 0.6),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 2),
+                                  AmountText(
+                                    amountInCents: income,
+                                    animate: true,
+                                    style: context.ts(
+                                      16,
+                                      fontWeight: FontWeight.w700,
+                                      color: incomeColorVal,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              height: 32,
+                              width: 1,
+                              color: onSurface.withValues(alpha: 0.08),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: kSpacing14),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          PesaFlowIcons.expense,
+                                          size: 13,
+                                          color: expenseColorVal,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          'Total Outflow',
+                                          style: context.ts(
+                                            11,
+                                            fontWeight: FontWeight.w600,
+                                            color: onSurface.withValues(alpha: 0.6),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 2),
+                                    AmountText(
+                                      amountInCents: expense,
+                                      animate: true,
+                                      style: context.ts(
+                                        16,
+                                        fontWeight: FontWeight.w700,
+                                        color: expenseColorVal,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

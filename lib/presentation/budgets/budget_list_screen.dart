@@ -488,9 +488,26 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
       }
     }
 
-    return GlassCard(
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+        border: Border.all(
+          color: isOverBudget
+              ? context.appColors.expenseColor.withValues(alpha: 0.35)
+              : theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: context.appColors.shadowMedium,
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       padding: const EdgeInsets.all(kSpacing20),
-      borderRadius: AppTheme.radiusCard,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -498,12 +515,16 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: kSpacing8,
+                  horizontal: kSpacing10,
                   vertical: kSpacing4,
                 ),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                  color: onSurface.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                  border: Border.all(
+                    color: onSurface.withValues(alpha: 0.12),
+                    width: 0.8,
+                  ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -511,7 +532,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     Icon(
                       PesaFlowIcons.settings,
                       size: 13,
-                      color: theme.colorScheme.primary,
+                      color: onSurface.withValues(alpha: 0.8),
                     ),
                     const SizedBox(width: kSpacing4),
                     Text(
@@ -519,12 +540,83 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       style: context.ts(
                         11,
                         fontWeight: FontWeight.w700,
-                        color: theme.colorScheme.primary,
+                        color: onSurface.withValues(alpha: 0.9),
                       ),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(width: kSpacing8),
+              if (isOverBudget)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kSpacing8,
+                    vertical: kSpacing4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                    border: Border.all(
+                      color: context.appColors.expenseColor.withValues(alpha: 0.25),
+                      width: 0.8,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        PesaFlowIcons.error,
+                        size: 11,
+                        color: context.appColors.expenseColor,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'OVER BUDGET',
+                        style: context.ts(
+                          10,
+                          fontWeight: FontWeight.w800,
+                          color: context.appColors.expenseColor,
+                          letterSpacing: 0.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kSpacing8,
+                    vertical: kSpacing4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.appColors.incomeColor.withValues(alpha: 0.10),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                    border: Border.all(
+                      color: context.appColors.incomeColor.withValues(alpha: 0.20),
+                      width: 0.8,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        PesaFlowIcons.check,
+                        size: 11,
+                        color: context.appColors.incomeColor,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'ON TRACK',
+                        style: context.ts(
+                          10,
+                          fontWeight: FontWeight.w800,
+                          color: context.appColors.incomeColor,
+                          letterSpacing: 0.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               const Spacer(),
               TactileSpringContainer(
                 haptic: HapticType.soft,
@@ -579,47 +671,63 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               ),
             ],
           ),
-          const SizedBox(height: kSpacing16),
+          const SizedBox(height: kSpacing18),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Total Spent this Month',
-                    style: context.ts(
-                      12,
-                      fontWeight: FontWeight.w600,
-                      color: onSurface.withValues(alpha: 0.5),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'TOTAL SPENT THIS MONTH',
+                      style: context.ts(
+                        11,
+                        fontWeight: FontWeight.w700,
+                        color: onSurface.withValues(alpha: 0.5),
+                        letterSpacing: 0.5,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: kSpacing4),
-                  AmountText(
-                    amountInCents: totalSpent,
-                    animate: true,
-                    style: context.ts(
-                      28,
-                      fontWeight: FontWeight.w900,
-                      color: isOverBudget
-                          ? context.appColors.expenseColor
-                          : onSurface,
-                      letterSpacing: -0.5,
+                    const SizedBox(height: kSpacing4),
+                    AmountText(
+                      amountInCents: totalSpent,
+                      animate: true,
+                      style: context.ts(
+                        28,
+                        fontWeight: FontWeight.w900,
+                        color: isOverBudget
+                            ? context.appColors.expenseColor
+                            : onSurface,
+                        letterSpacing: -0.5,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 2),
+                    Text(
+                      isOverBudget
+                          ? '+${CurrencyFormatter.formatCents(totalSpent - totalAllocated)} over plan'
+                          : '${CurrencyFormatter.formatCents(totalAllocated - totalSpent)} remaining',
+                      style: context.ts(
+                        12,
+                        fontWeight: FontWeight.w600,
+                        color: isOverBudget
+                            ? context.appColors.expenseColor
+                            : context.appColors.incomeColor,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const Spacer(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'Total Allocated',
+                    'TOTAL ALLOCATED',
                     style: context.ts(
-                      12,
-                      fontWeight: FontWeight.w600,
+                      11,
+                      fontWeight: FontWeight.w700,
                       color: onSurface.withValues(alpha: 0.5),
+                      letterSpacing: 0.5,
                     ),
                   ),
                   const SizedBox(height: kSpacing4),
@@ -632,6 +740,17 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       color: onSurface.withValues(alpha: 0.8),
                     ),
                   ),
+                  if (monthlyIncome > 0) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      'Income: ${CurrencyFormatter.formatCents(monthlyIncome)}',
+                      style: context.ts(
+                        11,
+                        fontWeight: FontWeight.w500,
+                        color: onSurface.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ],
@@ -721,15 +840,16 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   color: onSurface.withValues(alpha: 0.5),
                 ),
               ),
-              if (monthlyIncome > 0)
-                Text(
-                  'Income: ${CurrencyFormatter.formatCents(monthlyIncome)}',
-                  style: context.ts(
-                    11,
-                    fontWeight: FontWeight.w600,
-                    color: onSurface.withValues(alpha: 0.5),
-                  ),
+              Text(
+                isOverBudget ? 'Budget exceeded' : 'Within budget',
+                style: context.ts(
+                  11,
+                  fontWeight: FontWeight.w600,
+                  color: isOverBudget
+                      ? context.appColors.expenseColor
+                      : context.appColors.incomeColor,
                 ),
+              ),
             ],
           ),
         ],
@@ -1609,32 +1729,110 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Overall Savings Summary Box
-                GlassCard(
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+                    border: Border.all(
+                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: context.appColors.shadowMedium,
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
                   padding: const EdgeInsets.all(kSpacing20),
-                  borderRadius: 20,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Savings Overview',
-                        style: context.ts(10, fontWeight: FontWeight.w700, letterSpacing: 0.3, color: onSurface.withValues(alpha: 0.45),),
-                      ),
-                      const SizedBox(height: kSpacing12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(kSpacing6),
+                                decoration: BoxDecoration(
+                                  color: context.appColors.incomeColor.withValues(alpha: 0.12),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  PesaFlowIcons.savings,
+                                  size: 16,
+                                  color: context.appColors.incomeColor,
+                                ),
+                              ),
+                              const SizedBox(width: kSpacing8),
+                              Text(
+                                'SAVINGS VAULT',
+                                style: context.ts(
+                                  11,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.8,
+                                  color: onSurface.withValues(alpha: 0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing8,
+                              vertical: kSpacing4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: context.appColors.incomeColor.withValues(alpha: 0.10),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                              border: Border.all(
+                                color: context.appColors.incomeColor.withValues(alpha: 0.20),
+                                width: 0.8,
+                              ),
+                            ),
+                            child: Text(
+                              '${(overallPct * 100).round()}% FUNDED',
+                              style: context.ts(
+                                10,
+                                fontWeight: FontWeight.w800,
+                                color: context.appColors.incomeColor,
+                                letterSpacing: 0.4,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Total Saved',
-                                style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
+                                'TOTAL SAVED',
+                                style: context.ts(
+                                  11,
+                                  fontWeight: FontWeight.w700,
+                                  color: onSurface.withValues(alpha: 0.5),
+                                  letterSpacing: 0.5,
+                                ),
                               ),
-                              const SizedBox(height: kSpacing2),
+                              const SizedBox(height: kSpacing4),
                               AmountText(
                                 amountInCents: totalSaved,
                                 animate: true,
-                                style: context.ts(22, fontWeight: FontWeight.bold, letterSpacing: -0.5),
+                                style: context.ts(
+                                  26,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.5,
+                                  color: onSurface,
+                                ),
                               ),
                             ],
                           ),
@@ -1642,35 +1840,68 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                'Combined Target',
-                                style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
+                                'COMBINED TARGET',
+                                style: context.ts(
+                                  11,
+                                  fontWeight: FontWeight.w700,
+                                  color: onSurface.withValues(alpha: 0.5),
+                                  letterSpacing: 0.5,
+                                ),
                               ),
-                              const SizedBox(height: kSpacing2),
+                              const SizedBox(height: kSpacing4),
                               AmountText(
                                 amountInCents: totalTarget,
                                 animate: true,
-                                style: context.ts(22, fontWeight: FontWeight.bold, letterSpacing: -0.5),
+                                style: context.ts(
+                                  18,
+                                  fontWeight: FontWeight.w700,
+                                  color: onSurface.withValues(alpha: 0.8),
+                                ),
                               ),
                             ],
                           ),
                         ],
                       ),
                       const SizedBox(height: kSpacing16),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusSmall,
-                        ),
-                        child: LinearProgressIndicator(
-                          value: overallPct,
-                          backgroundColor: onSurface.withValues(alpha: 0.07),
-                          color: AppTheme.incomeColorDark,
-                          minHeight: 8,
-                        ),
+                      TweenAnimationBuilder<double>(
+                        duration: const Duration(milliseconds: 1000),
+                        curve: Curves.easeOutCubic,
+                        tween: Tween<double>(begin: 0, end: overallPct),
+                        builder: (context, value, child) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                            child: LinearProgressIndicator(
+                              value: value,
+                              backgroundColor: onSurface.withValues(alpha: 0.06),
+                              color: context.appColors.incomeColor,
+                              minHeight: 8,
+                            ),
+                          );
+                        },
                       ),
                       const SizedBox(height: kSpacing6),
-                      Text(
-                        '${(overallPct * 100).round()}% overall progress',
-                        style: context.ts(11, color: onSurface.withValues(alpha: 0.45)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${(overallPct * 100).round()}% of overall goal achieved',
+                            style: context.ts(
+                              11,
+                              fontWeight: FontWeight.w500,
+                              color: onSurface.withValues(alpha: 0.5),
+                            ),
+                          ),
+                          Text(
+                            totalTarget > totalSaved
+                                ? '${CurrencyFormatter.formatCents(totalTarget - totalSaved)} to go'
+                                : 'Target reached!',
+                            style: context.ts(
+                              11,
+                              fontWeight: FontWeight.w600,
+                              color: context.appColors.incomeColor,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

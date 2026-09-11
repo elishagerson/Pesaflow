@@ -1181,4 +1181,12 @@ final List<SmsCorpusEntry> smsCorpus = [
     timestamp: DateTime(2026, 5, 15, 14, 30),
     expect: SmsExpectation(expectsNull: true),
   ),
+  SmsCorpusEntry(
+    label: 'promo_selcom_app_link',
+    sender: 'SELCOM',
+    body:
+        '0911RMX93 Imethibitishwa. Umepokea TZS 2,500.00 kutoka kwa ELISHA NDUNDULU - Selcom (0763559341) tarehe 2026-09-11 08:33:42. Umechoshwa na Makato Makubwa? Pakua Selcom Pesa na uokoe fedha zako kwa kujiunga na Mabando ya Miamala, kuanzia TZS 1000 tu, kwa miamala 7 BURE kwa siku! Pakua sasa https://get.selcompesa.app Kwa msaada 0800714888',
+    timestamp: DateTime(2026, 9, 11, 8, 33, 42),
+    expect: SmsExpectation(expectsNull: true),
+  ),
 ];

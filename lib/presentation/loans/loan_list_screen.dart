@@ -13,7 +13,6 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_entrance.dart';
@@ -21,6 +20,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 
 class LoanListScreen extends ConsumerStatefulWidget {
   const LoanListScreen({super.key});
@@ -272,32 +272,26 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
   Widget _buildLoanBurdenWarning(BuildContext context, int count) {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
-    return GlassCard(
-      elevation: CardElevation.none,
-      padding: const EdgeInsets.all(kSpacing14),
-      accentColor: context.appColors.transferColor,
+    return Container(
       margin: const EdgeInsets.only(bottom: kSpacing12),
-      backgroundGradient: LinearGradient(
-        colors: [
-          context.appColors.transferColor.withValues(alpha: 0.12),
-          context.appColors.transferColor.withValues(alpha: 0.03),
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
+      padding: const EdgeInsets.symmetric(
+        horizontal: kSpacing16,
+        vertical: kSpacing12,
+      ),
+      decoration: BoxDecoration(
+        color: context.appColors.warningColor.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+        border: Border.all(
+          color: context.appColors.warningColor.withValues(alpha: 0.25),
+          width: 1,
+        ),
       ),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(kSpacing8),
-            decoration: BoxDecoration(
-              color: context.appColors.transferColor.withValues(alpha: 0.15),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              PesaFlowIcons.speed,
-              color: context.appColors.transferColor,
-              size: 20,
-            ),
+          Icon(
+            PesaFlowIcons.warning,
+            color: context.appColors.warningColor,
+            size: 18,
           ),
           const SizedBox(width: kSpacing12),
           Expanded(
@@ -305,19 +299,19 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'High Loan Activity',
+                  'High Loan Frequency',
                   style: context.ts(
-                    13,
-                    fontWeight: FontWeight.w800,
+                    12,
+                    fontWeight: FontWeight.w700,
                     color: onSurface,
                   ),
                 ),
-                const SizedBox(height: kSpacing2),
+                const SizedBox(height: 2),
                 Text(
                   '$count active loans taken in the last 3 months. Consider slowing down.',
                   style: context.ts(
                     11,
-                    color: onSurface.withValues(alpha: 0.6),
+                    color: onSurface.withValues(alpha: 0.65),
                   ),
                 ),
               ],
@@ -337,61 +331,91 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
     final onSurface = theme.colorScheme.onSurface;
     final netWorth = ref.watch(netWorthProvider);
     final debtRatio = netWorth > 0 ? total / netWorth : 999.0;
-    final severityColor = debtRatio > 1.0
-        ? context.appColors.expenseColor
-        : debtRatio > 0.5
-        ? context.appColors.warningColor
-        : context.appColors.transferColor;
+    final isCritical = debtRatio > 1.0;
 
-    return GlassCard(
-      elevation: CardElevation.none,
-      padding: const EdgeInsets.all(kSpacing16),
-      accentColor: severityColor,
-      margin: const EdgeInsets.only(bottom: kSpacing12),
-      backgroundGradient: LinearGradient(
-        colors: [
-          severityColor.withValues(alpha: 0.15),
-          severityColor.withValues(alpha: 0.03),
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: kSpacing16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+        border: Border.all(
+          color: isCritical
+              ? context.appColors.expenseColor.withValues(alpha: 0.35)
+              : theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: context.appColors.shadowMedium,
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
         ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
       ),
+      padding: const EdgeInsets.all(kSpacing20),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                padding: const EdgeInsets.all(kSpacing10),
-                decoration: BoxDecoration(
-                  color: severityColor.withValues(alpha: 0.15),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  PesaFlowIcons.warning,
-                  color: severityColor,
-                  size: 22,
-                ),
-              ),
-              const SizedBox(width: kSpacing14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Outstanding',
-                      style: context.ts(
-                        12,
-                        fontWeight: FontWeight.w600,
-                        color: onSurface.withValues(alpha: 0.6),
-                      ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(kSpacing6),
+                    decoration: BoxDecoration(
+                      color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
                     ),
-                    const SizedBox(height: kSpacing2),
+                    child: Icon(
+                      PesaFlowIcons.loans,
+                      size: 15,
+                      color: context.appColors.expenseColor,
+                    ),
+                  ),
+                  const SizedBox(width: kSpacing8),
+                  Text(
+                    'TOTAL OUTSTANDING LIABILITIES',
+                    style: context.ts(
+                      11,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.8,
+                      color: onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kSpacing8,
+                  vertical: kSpacing4,
+                ),
+                decoration: BoxDecoration(
+                  color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                  border: Border.all(
+                    color: context.appColors.expenseColor.withValues(alpha: 0.25),
+                    width: 0.8,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      PesaFlowIcons.error,
+                      size: 11,
+                      color: context.appColors.expenseColor,
+                    ),
+                    const SizedBox(width: 4),
                     Text(
-                      CurrencyFormatter.formatCents(total),
+                      'ACTIVE DEBT',
                       style: context.ts(
-                        22,
+                        10,
                         fontWeight: FontWeight.w800,
-                        color: onSurface,
+                        color: context.appColors.expenseColor,
+                        letterSpacing: 0.4,
                       ),
                     ),
                   ],
@@ -399,21 +423,40 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
               ),
             ],
           ),
-          const SizedBox(height: kSpacing10),
+          const SizedBox(height: kSpacing16),
+          AmountText(
+            amountInCents: total,
+            animate: true,
+            style: context.ts(
+              28,
+              fontWeight: FontWeight.w900,
+              color: onSurface,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            debtRatio <= 1.0
+                ? '${(debtRatio * 100).round()}% of estimated liquid assets'
+                : 'Exceeds current liquid balance',
+            style: context.ts(
+              11,
+              fontWeight: FontWeight.w500,
+              color: onSurface.withValues(alpha: 0.5),
+            ),
+          ),
+          const SizedBox(height: kSpacing14),
           ClipRRect(
-            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-            child: SizedBox(
-              height: 6,
-              child: FractionallySizedBox(
-                alignment: Alignment.centerLeft,
-                widthFactor: debtRatio.clamp(0.0, 1.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: severityColor,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-                  ),
-                ),
-              ),
+            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+            child: LinearProgressIndicator(
+              value: debtRatio.clamp(0.0, 1.0),
+              backgroundColor: onSurface.withValues(alpha: 0.06),
+              color: isCritical
+                  ? context.appColors.expenseColor
+                  : (debtRatio > 0.5
+                      ? context.appColors.warningColor
+                      : context.appColors.transferColor),
+              minHeight: 6,
             ),
           ),
         ],

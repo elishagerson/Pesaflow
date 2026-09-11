@@ -61,6 +61,26 @@ void main() {
       expect(find.text('••••••'), findsOneWidget);
       expect(find.text('••••'), findsNWidgets(2)); // for Income and Spent
     });
+
+    testWidgets('reflects negative balance reality with minus sign and deficit status', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          child: const BudjetlyBalanceHeader(
+            balance: -4500000, // - TSh 45,000.00
+            label: 'Credit Card',
+            income: 10000000,
+            expense: 14500000,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('CREDIT CARD'), findsOneWidget);
+      expect(find.text('DEFICIT'), findsOneWidget);
+      expect(find.text('-'), findsOneWidget);
+    });
   });
 
   group('FinancialHubGrid', () {

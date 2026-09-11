@@ -16,13 +16,16 @@ class GlassListContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final appColors = context.appColors;
 
-    return DecoratedBox(
+    return Container(
       decoration: BoxDecoration(
         color: appColors.surfaceContainer,
         borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
         border: Border.all(color: appColors.scaffoldLine, width: 0.5),
       ),
-      child: child,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+        child: child,
+      ),
     );
   }
 }
