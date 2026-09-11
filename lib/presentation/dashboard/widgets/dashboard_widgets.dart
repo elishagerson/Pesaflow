@@ -38,11 +38,25 @@ class FinancialHubGrid extends StatelessWidget {
         ? '${budgets.length} active'
         : 'Set monthly budget';
 
+    int totalSaved = 0;
+    int totalTarget = 0;
+    for (final g in savingsGoals) {
+      try {
+        totalSaved += (g.currentAmount as int);
+        totalTarget += (g.targetAmount as int);
+      } catch (_) {}
+    }
+    final savingsOverallPct = totalTarget > 0
+        ? (totalSaved / totalTarget).clamp(0.0, 1.0)
+        : null;
+
     final savingsMetric = savingsGoals.isNotEmpty
-        ? '${savingsGoals.length} goal${savingsGoals.length == 1 ? '' : 's'}'
+        ? (savingsOverallPct != null
+            ? '${(savingsOverallPct * 100).round()}% funded'
+            : '${savingsGoals.length} goal${savingsGoals.length == 1 ? '' : 's'}')
         : '0 goals';
     final savingsSub = savingsGoals.isNotEmpty
-        ? 'Vault & Targets'
+        ? '${savingsGoals.length} active goal${savingsGoals.length == 1 ? '' : 's'}'
         : 'Start saving';
 
     final recurringMetric = dueCount > 0
@@ -92,6 +106,7 @@ class FinancialHubGrid extends StatelessWidget {
                 metric: savingsMetric,
                 subtitle: savingsSub,
                 color: context.appColors.incomeColor,
+                progress: savingsOverallPct,
                 onTap: () => context.go('/savings-goals'),
               ),
             ),
