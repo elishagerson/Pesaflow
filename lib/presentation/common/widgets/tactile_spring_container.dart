@@ -12,10 +12,11 @@ import 'package:pesaflow/presentation/common/widgets/motion/motion_aware.dart';
 class TactileSpringContainer extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final double scaleFactor;
 
   /// Optional haptic type to fire on tap-up (not tap-down).
-  /// PocketCal pattern: haptic confirms the action, not the intent.
+  /// Defaults to [HapticType.selection] when [onTap] is provided.
   final HapticType? haptic;
 
   /// Optional semantic label for accessibility (VoiceOver / TalkBack).
@@ -36,6 +37,7 @@ class TactileSpringContainer extends StatefulWidget {
     super.key,
     required this.child,
     this.onTap,
+    this.onLongPress,
     this.scaleFactor = MotionTokens.scalePress,
     this.haptic,
     this.semanticLabel,
@@ -76,18 +78,21 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
   }
 
   void _pressDown() {
-    if (widget.onTap == null) return;
+    if (widget.onTap == null && widget.onLongPress == null) return;
     setState(() => _isPressed = true);
     tweenAnimate(_controller, 1.0, duration: MotionTokens.durationFast);
   }
 
   void _springBack() {
-    if (widget.onTap == null) return;
+    if (widget.onTap == null && widget.onLongPress == null) return;
     setState(() => _isPressed = false);
+    // Ensure quick taps (< 50ms) show a perceptible tactile bounce
+    final startVal = _controller.value < 0.3 ? 0.3 : _controller.value;
+    _controller.value = startVal;
     springAnimate(
       _controller,
       MotionTokens.springSnappy,
-      _controller.value,
+      startVal,
       0.0,
     );
   }
@@ -95,15 +100,24 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
   @override
   Widget build(BuildContext context) {
     final hasButton = widget.semanticButton ?? (widget.onTap != null);
+    final effectiveHaptic = widget.haptic ?? HapticType.selection;
+
     final core = GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTapDown: (_) => _pressDown(),
       onTapUp: (_) {
-        if (widget.haptic != null) triggerHaptic(widget.haptic!);
+        triggerHaptic(effectiveHaptic);
         _springBack();
         widget.onTap?.call();
       },
       onTapCancel: () => _springBack(),
+      onLongPress: widget.onLongPress != null
+          ? () {
+              triggerHaptic(HapticType.impact);
+              _springBack();
+              widget.onLongPress!();
+            }
+          : null,
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {

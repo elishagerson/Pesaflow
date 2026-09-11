@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/haptics.dart';
 
 enum CardElevation { none, low, medium, high }
 
@@ -207,18 +208,21 @@ class _GlassCardState extends State<GlassCard>
         label: 'Card',
         button: true,
         child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onTapDown: reducedMotion
               ? null
               : (_) {
+                  _controller.forward();
                   if (!_hasShimmered) {
-                    _controller.forward().then((_) {
-                      _hasShimmered = true;
-                    });
+                    _hasShimmered = true;
                   }
                 },
           onTapUp: reducedMotion ? null : (_) => _controller.reverse(),
           onTapCancel: reducedMotion ? null : () => _controller.reverse(),
-          onTap: widget.onTap,
+          onTap: () {
+            PesaHaptics.selection();
+            widget.onTap?.call();
+          },
           child: reducedMotion
               ? _buildBody(isDark, 0.0)
               : AnimatedBuilder(
