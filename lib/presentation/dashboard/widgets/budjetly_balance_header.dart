@@ -124,9 +124,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
 
   void _startShimmer() {
     if (context.isReducedMotion) return;
-    if (!_shimmerController.isAnimating) {
-      _shimmerController.repeat(reverse: true);
-    }
+    _shimmerController.forward(from: 0.0);
   }
 
   List<int> _balanceDigits(int balance) {
@@ -151,6 +149,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
       _initDigitAnimations();
       if (!_isInitialBuild && !context.isReducedMotion) {
         _highlightController.forward(from: 0.0);
+        _startShimmer();
       }
     }
   }
