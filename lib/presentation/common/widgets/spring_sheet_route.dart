@@ -309,7 +309,7 @@ class _HandleBar extends StatelessWidget {
     final dragOpacity = (dragOffset / 100).clamp(0.0, 0.3);
 
     return Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 4),
+      padding: const EdgeInsets.only(top: kSpacing8, bottom: kSpacing4),
       child: Center(
         child: Container(
           width: 36,

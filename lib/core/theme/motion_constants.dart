@@ -25,14 +25,6 @@ class MotionTokens {
     damping: 22.0,
   );
 
-  /// Gentle spring for sheets, cards, and content entrances.
-  /// Slower settle, soft overshoot — feels natural and organic.
-  static const SpringDescription springGentle = SpringDescription(
-    mass: 0.8,
-    stiffness: 300.0,
-    damping: 18.0,
-  );
-
   /// Bouncy spring for celebrations and emphasis moments.
   /// Noticeable overshoot — use sparingly for delight.
   static const SpringDescription springBouncy = SpringDescription(
@@ -103,10 +95,4 @@ class MotionTokens {
 
   /// Upward fling velocity threshold — snaps sheet to full open (px/s).
   static const double sheetSnapUpVelocity = -400.0;
-
-  /// Lower bound of the half-open (peek) snap zone as a fraction of sheet height.
-  static const double sheetHalfOpenFractionLower = 0.15;
-
-  /// Visible fraction of sheet height when snapped to peek mode.
-  static const double sheetHalfOpenVisibleFraction = 0.4;
 }
