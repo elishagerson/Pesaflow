@@ -50,7 +50,6 @@ class _SavingsGoalDetailScreenState
   final _scrollController = ScrollController();
   bool _hasShownMilestone = false;
 
-
   int _calculateDaysRemaining(DateTime targetDate) {
     final diff = targetDate.difference(DateTime.now()).inDays;
     return diff < 0 ? 0 : diff;
@@ -321,7 +320,11 @@ class _SavingsGoalDetailScreenState
                                       children: [
                                         Text(
                                           'TSh',
-                                          style: context.ts(16, fontWeight: FontWeight.w600, color: accentColor),
+                                          style: context.ts(
+                                            16,
+                                            fontWeight: FontWeight.w600,
+                                            color: accentColor,
+                                          ),
                                         ),
                                         const SizedBox(width: kSpacing12),
                                         Expanded(
@@ -381,8 +384,13 @@ class _SavingsGoalDetailScreenState
                                         _buildSheetPresetPill(
                                           label: '+10K',
                                           onTap: () {
-                                            final cur = CurrencyFormatter.parseToCents(_amountController.text);
-                                            _amountController.text = ((cur + 1000000) ~/ 100).toString();
+                                            final cur =
+                                                CurrencyFormatter.parseToCents(
+                                                  _amountController.text,
+                                                );
+                                            _amountController.text =
+                                                ((cur + 1000000) ~/ 100)
+                                                    .toString();
                                             setModalState(() {});
                                           },
                                           theme: theme,
@@ -391,8 +399,13 @@ class _SavingsGoalDetailScreenState
                                         _buildSheetPresetPill(
                                           label: '+50K',
                                           onTap: () {
-                                            final cur = CurrencyFormatter.parseToCents(_amountController.text);
-                                            _amountController.text = ((cur + 5000000) ~/ 100).toString();
+                                            final cur =
+                                                CurrencyFormatter.parseToCents(
+                                                  _amountController.text,
+                                                );
+                                            _amountController.text =
+                                                ((cur + 5000000) ~/ 100)
+                                                    .toString();
                                             setModalState(() {});
                                           },
                                           theme: theme,
@@ -401,8 +414,13 @@ class _SavingsGoalDetailScreenState
                                         _buildSheetPresetPill(
                                           label: '+100K',
                                           onTap: () {
-                                            final cur = CurrencyFormatter.parseToCents(_amountController.text);
-                                            _amountController.text = ((cur + 10000000) ~/ 100).toString();
+                                            final cur =
+                                                CurrencyFormatter.parseToCents(
+                                                  _amountController.text,
+                                                );
+                                            _amountController.text =
+                                                ((cur + 10000000) ~/ 100)
+                                                    .toString();
                                             setModalState(() {});
                                           },
                                           theme: theme,
@@ -411,31 +429,44 @@ class _SavingsGoalDetailScreenState
                                         _buildSheetPresetPill(
                                           label: '+500K',
                                           onTap: () {
-                                            final cur = CurrencyFormatter.parseToCents(_amountController.text);
-                                            _amountController.text = ((cur + 50000000) ~/ 100).toString();
+                                            final cur =
+                                                CurrencyFormatter.parseToCents(
+                                                  _amountController.text,
+                                                );
+                                            _amountController.text =
+                                                ((cur + 50000000) ~/ 100)
+                                                    .toString();
                                             setModalState(() {});
                                           },
                                           theme: theme,
                                         ),
-                                        if (isDeposit && goal.targetAmount > goal.currentAmount) ...[
+                                        if (isDeposit &&
+                                            goal.targetAmount >
+                                                goal.currentAmount) ...[
                                           const SizedBox(width: 6),
                                           _buildSheetPresetPill(
                                             label: 'Remaining Target',
                                             accentColor: accentColor,
                                             onTap: () {
-                                              final remaining = goal.targetAmount - goal.currentAmount;
-                                              _amountController.text = (remaining ~/ 100).toString();
+                                              final remaining =
+                                                  goal.targetAmount -
+                                                  goal.currentAmount;
+                                              _amountController.text =
+                                                  (remaining ~/ 100).toString();
                                               setModalState(() {});
                                             },
                                             theme: theme,
                                           ),
-                                        ] else if (!isDeposit && goal.currentAmount > 0) ...[
+                                        ] else if (!isDeposit &&
+                                            goal.currentAmount > 0) ...[
                                           const SizedBox(width: 6),
                                           _buildSheetPresetPill(
                                             label: 'Full Balance',
                                             accentColor: accentColor,
                                             onTap: () {
-                                              _amountController.text = (goal.currentAmount ~/ 100).toString();
+                                              _amountController.text =
+                                                  (goal.currentAmount ~/ 100)
+                                                      .toString();
                                               setModalState(() {});
                                             },
                                             theme: theme,

@@ -289,7 +289,10 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     const SizedBox(height: kSpacing2),
                                     Text(
                                       'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
-                                      style: context.ts(12, color: onSurface.withValues(alpha: 0.6)),
+                                      style: context.ts(
+                                        12,
+                                        color: onSurface.withValues(alpha: 0.6),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -430,7 +433,11 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     ),
                                     child: Text(
                                       'Clear',
-                                      style: context.ts(12, color: context.appColors.expenseColor.withValues(alpha: 0.8)),
+                                      style: context.ts(
+                                        12,
+                                        color: context.appColors.expenseColor
+                                            .withValues(alpha: 0.8),
+                                      ),
                                     ),
                                   ),
                               ],
@@ -466,7 +473,13 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         const SizedBox(width: kSpacing10),
                                         Text(
                                           'No accounts available. Create one first.',
-                                          style: context.ts(12, color: context.appColors.expenseColor.withValues(alpha: 0.9)),
+                                          style: context.ts(
+                                            12,
+                                            color: context
+                                                .appColors
+                                                .expenseColor
+                                                .withValues(alpha: 0.9),
+                                          ),
                                         ),
                                       ],
                                     ),

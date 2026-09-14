@@ -280,7 +280,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     width: 42,
                                     height: 42,
                                     decoration: BoxDecoration(
-                                      color: theme.colorScheme.surfaceContainerHigh,
+                                      color: theme
+                                          .colorScheme
+                                          .surfaceContainerHigh,
                                       shape: BoxShape.circle,
                                       border: Border.all(
                                         color: theme.colorScheme.outlineVariant
@@ -336,12 +338,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               vertical: kSpacing2,
                                             ),
                                             decoration: BoxDecoration(
-                                              color: context.appColors.expenseColor,
-                                              borderRadius: BorderRadius.circular(
-                                                AppTheme.radiusPill,
-                                              ),
+                                              color: context
+                                                  .appColors
+                                                  .expenseColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                    AppTheme.radiusPill,
+                                                  ),
                                               border: Border.all(
-                                                color: theme.colorScheme.surface,
+                                                color:
+                                                    theme.colorScheme.surface,
                                                 width: 1.5,
                                               ),
                                             ),
@@ -349,7 +355,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               '$pendingReviewCount',
                                               style: context.ts(
                                                 9,
-                                                color: theme.colorScheme.onPrimary,
+                                                color:
+                                                    theme.colorScheme.onPrimary,
                                                 fontWeight: FontWeight.w700,
                                               ),
                                             ),
@@ -411,7 +418,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 if (index == 0) {
                                   final isSelected = _selectedAccountId == null;
                                   return Padding(
-                                    padding: const EdgeInsets.only(right: kSpacing8),
+                                    padding: const EdgeInsets.only(
+                                      right: kSpacing8,
+                                    ),
                                     child: TactileSpringContainer(
                                       onTap: () {
                                         setState(() {
@@ -427,14 +436,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           color: isSelected
                                               ? theme.colorScheme.primary
                                                     .withValues(alpha: 0.16)
-                                              : theme.colorScheme.surfaceContainerHigh,
+                                              : theme
+                                                    .colorScheme
+                                                    .surfaceContainerHigh,
                                           borderRadius: BorderRadius.circular(
                                             AppTheme.radiusPill,
                                           ),
                                           border: Border.all(
                                             color: isSelected
                                                 ? theme.colorScheme.primary
-                                                : theme.colorScheme.outlineVariant
+                                                : theme
+                                                      .colorScheme
+                                                      .outlineVariant
                                                       .withValues(alpha: 0.35),
                                             width: isSelected ? 1.2 : 0.8,
                                           ),
@@ -461,12 +474,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     _selectedAccountId == account.id;
 
                                 return Padding(
-                                  padding: const EdgeInsets.only(right: kSpacing8),
+                                  padding: const EdgeInsets.only(
+                                    right: kSpacing8,
+                                  ),
                                   child: TactileSpringContainer(
                                     onTap: () {
                                       setState(() {
-                                        _selectedAccountId =
-                                            isSelected ? null : account.id;
+                                        _selectedAccountId = isSelected
+                                            ? null
+                                            : account.id;
                                       });
                                     },
                                     child: Container(
@@ -478,7 +494,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         color: isSelected
                                             ? theme.colorScheme.primary
                                                   .withValues(alpha: 0.16)
-                                            : theme.colorScheme.surfaceContainerHigh,
+                                            : theme
+                                                  .colorScheme
+                                                  .surfaceContainerHigh,
                                         borderRadius: BorderRadius.circular(
                                           AppTheme.radiusPill,
                                         ),
@@ -519,7 +537,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               fontWeight: FontWeight.w700,
                                               color: isSelected
                                                   ? theme.colorScheme.primary
-                                                  : theme.colorScheme.onSurfaceVariant,
+                                                  : theme
+                                                        .colorScheme
+                                                        .onSurfaceVariant,
                                             ),
                                           ),
                                         ],
@@ -551,9 +571,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               icon: PesaFlowIcons.income,
                               label: 'Income',
                               color: context.appColors.incomeColor,
-                              onTap: () => context.push(
-                                '/transactions/add?type=Income',
-                              ),
+                              onTap: () =>
+                                  context.push('/transactions/add?type=Income'),
                             ),
                             const SizedBox(width: kSpacing10),
                             _QuickActionButton(
@@ -636,7 +655,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         const SizedBox(height: kSpacing12),
 
                         SkeletonCrossfade(
-                          isLoading: recentTransAsync is AsyncLoading &&
+                          isLoading:
+                              recentTransAsync is AsyncLoading &&
                               !recentTransAsync.hasValue,
                           skeleton: const Column(
                             children: [
@@ -647,15 +667,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                           child: recentTransAsync.when(
                             data: (transactions) {
-                              final filtered = (_selectedAccountId == null
-                                      ? transactions
-                                      : transactions.where(
-                                          (t) =>
-                                              t.transaction.accountId ==
-                                              _selectedAccountId,
-                                        ))
-                                  .take(5)
-                                  .toList();
+                              final filtered =
+                                  (_selectedAccountId == null
+                                          ? transactions
+                                          : transactions.where(
+                                              (t) =>
+                                                  t.transaction.accountId ==
+                                                  _selectedAccountId,
+                                            ))
+                                      .take(5)
+                                      .toList();
 
                               if (filtered.isEmpty) {
                                 return Container(
@@ -665,7 +686,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     horizontal: kSpacing16,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: theme.colorScheme.surfaceContainerHigh,
+                                    color:
+                                        theme.colorScheme.surfaceContainerHigh,
                                     borderRadius: BorderRadius.circular(
                                       AppTheme.radiusCard,
                                     ),
@@ -729,8 +751,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       amtType = AmountType.expense;
                                     }
 
-                                    final catColor =
-                                        hexToColor(item.category.color);
+                                    final catColor = hexToColor(
+                                      item.category.color,
+                                    );
 
                                     return TactileSpringContainer(
                                       onTap: () => context.push(
@@ -835,19 +858,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               style: context.ts(
                                                 14,
                                                 fontWeight: FontWeight.w700,
-                                                color: amtType ==
-                                                        AmountType.income
+                                                color:
+                                                    amtType == AmountType.income
                                                     ? context
-                                                        .appColors
-                                                        .incomeColor
+                                                          .appColors
+                                                          .incomeColor
                                                     : (amtType ==
-                                                            AmountType.expense
-                                                        ? context
-                                                            .appColors
-                                                            .expenseColor
-                                                        : theme
-                                                            .colorScheme
-                                                            .onSurfaceVariant),
+                                                              AmountType.expense
+                                                          ? context
+                                                                .appColors
+                                                                .expenseColor
+                                                          : theme
+                                                                .colorScheme
+                                                                .onSurfaceVariant),
                                               ),
                                             ),
                                           ],
