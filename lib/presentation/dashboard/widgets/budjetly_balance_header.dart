@@ -174,7 +174,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                 return Positioned.fill(
                   child: IgnorePointer(
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.radiusDialog,
+                      ),
                       child: DecoratedBox(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -182,7 +184,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                             end: Alignment(-0.2 + t * 2, 0.6),
                             colors: [
                               Colors.transparent,
-                              context.appColors.textLow.withValues(alpha: 0.035),
+                              context.appColors.textLow.withValues(
+                                alpha: 0.035,
+                              ),
                               Colors.transparent,
                             ],
                             stops: const [0.0, 0.5, 1.0],
@@ -238,8 +242,12 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.error.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                              color: theme.colorScheme.error.withValues(
+                                alpha: 0.12,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusPill,
+                              ),
                             ),
                             child: Text(
                               'DEFICIT',
@@ -268,7 +276,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                           _isHidden
                               ? PesaFlowIcons.visibilityOff
                               : PesaFlowIcons.visibility,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.55,
+                          ),
                           size: 18,
                         ),
                       ),
@@ -311,7 +321,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                 Divider(
                   height: 1,
                   thickness: 0.8,
-                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.22),
+                  color: theme.colorScheme.outlineVariant.withValues(
+                    alpha: 0.22,
+                  ),
                 ),
                 const SizedBox(height: kSpacing14),
 
@@ -326,7 +338,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                             width: 28,
                             height: 28,
                             decoration: BoxDecoration(
-                              color: context.appColors.incomeColor.withValues(alpha: 0.12),
+                              color: context.appColors.incomeColor.withValues(
+                                alpha: 0.12,
+                              ),
                               shape: BoxShape.circle,
                             ),
                             alignment: Alignment.center,
@@ -353,7 +367,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                                 Text(
                                   _isHidden
                                       ? '••••'
-                                      : CurrencyFormatter.formatCents(widget.income),
+                                      : CurrencyFormatter.formatCents(
+                                          widget.income,
+                                        ),
                                   style: context.ts(
                                     13,
                                     fontWeight: FontWeight.w700,
@@ -372,8 +388,12 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                     Container(
                       width: 1,
                       height: 28,
-                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.22),
-                      margin: const EdgeInsets.symmetric(horizontal: kSpacing12),
+                      color: theme.colorScheme.outlineVariant.withValues(
+                        alpha: 0.22,
+                      ),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: kSpacing12,
+                      ),
                     ),
                     // Total Out
                     Expanded(
@@ -383,7 +403,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                             width: 28,
                             height: 28,
                             decoration: BoxDecoration(
-                              color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                              color: context.appColors.expenseColor.withValues(
+                                alpha: 0.12,
+                              ),
                               shape: BoxShape.circle,
                             ),
                             alignment: Alignment.center,
@@ -410,7 +432,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                                 Text(
                                   _isHidden
                                       ? '••••'
-                                      : CurrencyFormatter.formatCents(widget.expense),
+                                      : CurrencyFormatter.formatCents(
+                                          widget.expense,
+                                        ),
                                   style: context.ts(
                                     13,
                                     fontWeight: FontWeight.w700,

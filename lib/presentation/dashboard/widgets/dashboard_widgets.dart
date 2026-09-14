@@ -53,8 +53,8 @@ class FinancialHubGrid extends StatelessWidget {
 
     final savingsMetric = savingsGoals.isNotEmpty
         ? (savingsOverallPct != null
-            ? '${(savingsOverallPct * 100).round()}% funded'
-            : '${savingsGoals.length} goal${savingsGoals.length == 1 ? '' : 's'}')
+              ? '${(savingsOverallPct * 100).round()}% funded'
+              : '${savingsGoals.length} goal${savingsGoals.length == 1 ? '' : 's'}')
         : '0 goals';
     final savingsSub = savingsGoals.isNotEmpty
         ? '${savingsGoals.length} active goal${savingsGoals.length == 1 ? '' : 's'}'
@@ -63,9 +63,7 @@ class FinancialHubGrid extends StatelessWidget {
     final recurringMetric = dueCount > 0
         ? '$dueCount due today'
         : '$activeRecurringCount active';
-    final recurringSub = dueCount > 0
-        ? 'Payment pending'
-        : 'Subscriptions';
+    final recurringSub = dueCount > 0 ? 'Payment pending' : 'Subscriptions';
     final recurringColor = dueCount > 0
         ? theme.colorScheme.error
         : context.appColors.transferColor;
@@ -242,7 +240,9 @@ class _HubCard extends StatelessWidget {
                   Icon(
                     PesaFlowIcons.chevronRight,
                     size: 14,
-                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.4,
+                    ),
                   ),
               ],
             ),
@@ -260,10 +260,7 @@ class _HubCard extends StatelessWidget {
             const SizedBox(height: kSpacing2),
             Text(
               subtitle,
-              style: context.ts(
-                11,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+              style: context.ts(11, color: theme.colorScheme.onSurfaceVariant),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
