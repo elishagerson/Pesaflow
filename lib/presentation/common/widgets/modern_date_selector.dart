@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'tactile_spring_container.dart';
 
@@ -88,7 +89,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
             }
           },
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
+            duration: MotionTokens.durationExit,
             padding: const EdgeInsets.symmetric(
               horizontal: kSpacing16,
               vertical: kSpacing14,

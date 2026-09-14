@@ -1128,7 +1128,7 @@ class _TrendsTab extends ConsumerWidget {
         ref.read(trendRangeProvider.notifier).select(range);
       },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: MotionTokens.durationExit,
         curve: Curves.easeOutCubic,
         padding: const EdgeInsets.symmetric(
           horizontal: kSpacing14,

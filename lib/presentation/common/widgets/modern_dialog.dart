@@ -217,7 +217,7 @@ class _StaggeredActionsState extends State<_StaggeredActions>
         _controller.value = 1.0;
       } else {
         // Delay slightly after dialog entrance completes
-        Future.delayed(const Duration(milliseconds: 200), () {
+        Future.delayed(MotionTokens.durationExit, () {
           if (mounted) _controller.forward();
         });
       }

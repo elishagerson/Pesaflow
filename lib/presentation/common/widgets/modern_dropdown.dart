@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
@@ -98,7 +99,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
         TactileSpringContainer(
           onTap: () => _showSelectionSheet(context),
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
+            duration: MotionTokens.durationExit,
             padding: const EdgeInsets.symmetric(
               horizontal: kSpacing16,
               vertical: kSpacing14,

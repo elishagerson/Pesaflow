@@ -1407,7 +1407,7 @@ class _RawSmsPreviewState extends State<_RawSmsPreview> {
     return GestureDetector(
       onTap: isLong ? () => setState(() => _expanded = !_expanded) : null,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
+        duration: MotionTokens.durationSlow,
         curve: Curves.easeOutCubic,
         width: double.infinity,
         padding: const EdgeInsets.all(kSpacing10),
@@ -1692,7 +1692,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: MotionTokens.durationSlow,
     );
     _position = Tween<Offset>(
       begin: Offset.zero,

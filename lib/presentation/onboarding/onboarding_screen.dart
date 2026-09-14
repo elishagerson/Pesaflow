@@ -176,7 +176,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     children: List.generate(
                       4,
                       (i) => AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
+                        duration: MotionTokens.durationExit,
                         margin: const EdgeInsets.symmetric(
                           horizontal: kSpacing4,
                         ),

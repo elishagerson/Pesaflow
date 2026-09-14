@@ -200,7 +200,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               },
               behavior: HitTestBehavior.opaque,
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
+                duration: MotionTokens.durationNormal,
                 curve: Curves.easeOutCubic,
                 padding: const EdgeInsets.symmetric(vertical: kSpacing8),
                 decoration: BoxDecoration(
@@ -242,7 +242,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               },
               behavior: HitTestBehavior.opaque,
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
+                duration: MotionTokens.durationNormal,
                 curve: Curves.easeOutCubic,
                 padding: const EdgeInsets.symmetric(vertical: kSpacing8),
                 decoration: BoxDecoration(

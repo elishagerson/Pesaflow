@@ -46,7 +46,7 @@ class _ShakeWidgetState extends State<ShakeWidget>
     _controller =
         AnimationController(
           vsync: this,
-          duration: const Duration(milliseconds: 400),
+          duration: MotionTokens.durationSlow,
         )..addListener(() {
           setState(() => _offsetX = _shakeAnim.value);
         });

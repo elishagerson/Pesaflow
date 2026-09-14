@@ -6,6 +6,7 @@ import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
 
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:go_router/go_router.dart';
@@ -390,7 +391,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                     Navigator.pop(ctx);
                                   },
                             child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
+                              duration: MotionTokens.durationExit,
                               curve: Curves.easeOutCubic,
                               padding: const EdgeInsets.all(kSpacing16),
                               decoration: BoxDecoration(
@@ -540,7 +541,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         },
         child: Center(
           child: AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 200),
+            duration: MotionTokens.durationExit,
             style: context.ts(
               13,
               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
@@ -922,7 +923,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             return Stack(
                               children: [
                                 AnimatedPositioned(
-                                  duration: const Duration(milliseconds: 250),
+                                  duration: MotionTokens.durationNormal,
                                   curve: Curves.easeOutCubic,
                                   left: selectedIndex * tabWidth,
                                   top: 0,

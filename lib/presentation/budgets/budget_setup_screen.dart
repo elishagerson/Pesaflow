@@ -54,7 +54,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
     setState(() => _currentStep = step);
     _pageController.animateToPage(
       step,
-      duration: const Duration(milliseconds: 400),
+      duration: MotionTokens.durationSlow,
       curve: Curves.easeOutCubic,
     );
   }
@@ -456,7 +456,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                   },
                   selectedColor: theme.colorScheme.onSurface,
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
+                    duration: MotionTokens.durationNormal,
                     padding: const EdgeInsets.all(kSpacing16),
                     decoration: BoxDecoration(
                       color: isSelected
@@ -476,7 +476,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                         Row(
                           children: [
                             AnimatedContainer(
-                              duration: const Duration(milliseconds: 250),
+                              duration: MotionTokens.durationNormal,
                               width: 22,
                               height: 22,
                               decoration: BoxDecoration(

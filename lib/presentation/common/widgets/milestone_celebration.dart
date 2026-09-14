@@ -74,7 +74,7 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
 
     _checkController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: MotionTokens.durationSlow,
     );
 
     _ringController = AnimationController(
@@ -84,7 +84,7 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
 
     _textController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: MotionTokens.durationSlow,
     );
 
     _dismissController = AnimationController(

@@ -298,7 +298,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                   },
                   selectedColor: theme.colorScheme.onSurface,
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
+                    duration: MotionTokens.durationExit,
                     width: 76,
                     decoration: ShapeDecoration(
                       color: isSelected
@@ -961,7 +961,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                             ),
                                           ),
                                           AnimatedDefaultTextStyle(
-                                            duration: const Duration(milliseconds: 200),
+                                            duration: MotionTokens.durationExit,
                                             style: context.ts(14, fontWeight: FontWeight.w700, color: thresholdColor),
                                             child: Text(
                                               '${(_threshold * 100).round()}%',
@@ -1278,7 +1278,7 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
         setState(() => _isFocused = hasFocus);
       },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: MotionTokens.durationExit,
         padding: const EdgeInsets.symmetric(
           horizontal: kSpacing16,
           vertical: kSpacing6,
@@ -1300,7 +1300,7 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
         child: Row(
           children: [
             AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+              duration: MotionTokens.durationExit,
               padding: const EdgeInsets.all(kSpacing10),
               decoration: ShapeDecoration(
                 color: _isFocused
