@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -151,7 +152,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     onTap: () => context.pop(cat),
                     selectedColor: theme.colorScheme.onSurface,
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
+                      duration: MotionTokens.durationExit,
                       padding: const EdgeInsets.symmetric(
                         horizontal: kSpacing14,
                         vertical: kSpacing12,

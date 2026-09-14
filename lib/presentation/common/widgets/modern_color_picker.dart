@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
@@ -421,7 +422,7 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
           crossFadeState: _showCustom
               ? CrossFadeState.showSecond
               : CrossFadeState.showFirst,
-          duration: const Duration(milliseconds: 400),
+          duration: MotionTokens.durationSlow,
           sizeCurve: Curves.easeOutCubic,
         ),
       ],

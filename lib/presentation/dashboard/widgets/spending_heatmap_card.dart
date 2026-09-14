@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -237,7 +238,7 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                   });
                                 },
                                 child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
+                                  duration: MotionTokens.durationExit,
                                   curve: Curves.easeOutCubic,
                                   width: isSelected ? 15 : 13,
                                   height: isSelected ? 15 : 13,

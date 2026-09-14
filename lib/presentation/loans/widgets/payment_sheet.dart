@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
@@ -167,7 +168,7 @@ class QuickAmountChip extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: MotionTokens.durationExit,
           curve: Curves.easeOutCubic,
           padding: const EdgeInsets.symmetric(vertical: kSpacing10),
           decoration: BoxDecoration(
@@ -665,7 +666,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                               width: double.infinity,
                               height: 54,
                               child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 250),
+                                duration: MotionTokens.durationNormal,
                                 curve: Curves.easeOutCubic,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(

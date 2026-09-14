@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -381,7 +382,7 @@ class _CollapsibleSectionState extends State<CollapsibleSection> {
                           const SizedBox(width: kSpacing6),
                           AnimatedRotation(
                             turns: _isExpanded ? 0.5 : 0,
-                            duration: const Duration(milliseconds: 200),
+                            duration: MotionTokens.durationExit,
                             child: Icon(
                               PesaFlowIcons.chevronDown,
                               size: 20,
@@ -407,7 +408,7 @@ class _CollapsibleSectionState extends State<CollapsibleSection> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: kSpacing8),
           child: AnimatedSize(
-            duration: const Duration(milliseconds: 200),
+            duration: MotionTokens.durationExit,
             curve: Curves.easeInOut,
             alignment: Alignment.topCenter,
             child: _isExpanded
