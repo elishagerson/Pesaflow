@@ -218,14 +218,22 @@ class _SavingsGoalDetailSheetState
                                             isDeposit
                                                 ? 'Deposit Savings'
                                                 : 'Withdraw Savings',
-                                            style: context.ts(22, fontWeight: FontWeight.bold),
+                                            style: context.ts(
+                                              22,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                           const SizedBox(height: kSpacing2),
                                           Text(
                                             isDeposit
                                                 ? 'Add money to your savings goal'
                                                 : 'Take money out of your savings goal',
-                                            style: context.ts(12, color: onSurface.withValues(alpha: 0.6)),
+                                            style: context.ts(
+                                              12,
+                                              color: onSurface.withValues(
+                                                alpha: 0.6,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -258,7 +266,11 @@ class _SavingsGoalDetailSheetState
                                     children: [
                                       Text(
                                         'TSh',
-                                        style: context.ts(16, fontWeight: FontWeight.w600, color: accentColor),
+                                        style: context.ts(
+                                          16,
+                                          fontWeight: FontWeight.w600,
+                                          color: accentColor,
+                                        ),
                                       ),
                                       const SizedBox(width: kSpacing12),
                                       Expanded(
@@ -278,9 +290,7 @@ class _SavingsGoalDetailSheetState
                                             }
                                             return null;
                                           },
-                                          style: theme
-                                              .textTheme
-                                              .headlineMedium!
+                                          style: theme.textTheme.headlineMedium!
                                               .copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: onSurface,
@@ -329,8 +339,13 @@ class _SavingsGoalDetailSheetState
                                       _buildSheetPresetPill(
                                         label: '+10K',
                                         onTap: () {
-                                          final cur = CurrencyFormatter.parseToCents(_amountController.text);
-                                          _amountController.text = ((cur + 1000000) ~/ 100).toString();
+                                          final cur =
+                                              CurrencyFormatter.parseToCents(
+                                                _amountController.text,
+                                              );
+                                          _amountController.text =
+                                              ((cur + 1000000) ~/ 100)
+                                                  .toString();
                                           setModalState(() {});
                                         },
                                         theme: theme,
@@ -339,8 +354,13 @@ class _SavingsGoalDetailSheetState
                                       _buildSheetPresetPill(
                                         label: '+50K',
                                         onTap: () {
-                                          final cur = CurrencyFormatter.parseToCents(_amountController.text);
-                                          _amountController.text = ((cur + 5000000) ~/ 100).toString();
+                                          final cur =
+                                              CurrencyFormatter.parseToCents(
+                                                _amountController.text,
+                                              );
+                                          _amountController.text =
+                                              ((cur + 5000000) ~/ 100)
+                                                  .toString();
                                           setModalState(() {});
                                         },
                                         theme: theme,
@@ -349,8 +369,13 @@ class _SavingsGoalDetailSheetState
                                       _buildSheetPresetPill(
                                         label: '+100K',
                                         onTap: () {
-                                          final cur = CurrencyFormatter.parseToCents(_amountController.text);
-                                          _amountController.text = ((cur + 10000000) ~/ 100).toString();
+                                          final cur =
+                                              CurrencyFormatter.parseToCents(
+                                                _amountController.text,
+                                              );
+                                          _amountController.text =
+                                              ((cur + 10000000) ~/ 100)
+                                                  .toString();
                                           setModalState(() {});
                                         },
                                         theme: theme,
@@ -359,31 +384,45 @@ class _SavingsGoalDetailSheetState
                                       _buildSheetPresetPill(
                                         label: '+500K',
                                         onTap: () {
-                                          final cur = CurrencyFormatter.parseToCents(_amountController.text);
-                                          _amountController.text = ((cur + 50000000) ~/ 100).toString();
+                                          final cur =
+                                              CurrencyFormatter.parseToCents(
+                                                _amountController.text,
+                                              );
+                                          _amountController.text =
+                                              ((cur + 50000000) ~/ 100)
+                                                  .toString();
                                           setModalState(() {});
                                         },
                                         theme: theme,
                                       ),
-                                      if (isDeposit && widget.goal.targetAmount > widget.goal.currentAmount) ...[
+                                      if (isDeposit &&
+                                          widget.goal.targetAmount >
+                                              widget.goal.currentAmount) ...[
                                         const SizedBox(width: 6),
                                         _buildSheetPresetPill(
                                           label: 'Remaining Target',
                                           accentColor: accentColor,
                                           onTap: () {
-                                            final remaining = widget.goal.targetAmount - widget.goal.currentAmount;
-                                            _amountController.text = (remaining ~/ 100).toString();
+                                            final remaining =
+                                                widget.goal.targetAmount -
+                                                widget.goal.currentAmount;
+                                            _amountController.text =
+                                                (remaining ~/ 100).toString();
                                             setModalState(() {});
                                           },
                                           theme: theme,
                                         ),
-                                      ] else if (!isDeposit && widget.goal.currentAmount > 0) ...[
+                                      ] else if (!isDeposit &&
+                                          widget.goal.currentAmount > 0) ...[
                                         const SizedBox(width: 6),
                                         _buildSheetPresetPill(
                                           label: 'Full Balance',
                                           accentColor: accentColor,
                                           onTap: () {
-                                            _amountController.text = (widget.goal.currentAmount ~/ 100).toString();
+                                            _amountController.text =
+                                                (widget.goal.currentAmount ~/
+                                                        100)
+                                                    .toString();
                                             setModalState(() {});
                                           },
                                           theme: theme,
@@ -735,7 +774,10 @@ class _SavingsGoalDetailSheetState
                       const SizedBox(height: kSpacing4),
                       Text(
                         'Target deadline: ${widget.goal.targetDate.day}/${widget.goal.targetDate.month}/${widget.goal.targetDate.year} ($remainingDays days remaining)',
-                        style: context.ts(11, color: onSurface.withValues(alpha: 0.6)),
+                        style: context.ts(
+                          11,
+                          color: onSurface.withValues(alpha: 0.6),
+                        ),
                       ),
                     ],
                   ),
@@ -796,7 +838,11 @@ class _SavingsGoalDetailSheetState
                               ),
                               Text(
                                 '$percentInt%',
-                                style: context.ts(15, fontWeight: FontWeight.w700, color: goalColor),
+                                style: context.ts(
+                                  15,
+                                  fontWeight: FontWeight.w700,
+                                  color: goalColor,
+                                ),
                               ),
                             ],
                           ),
@@ -808,19 +854,31 @@ class _SavingsGoalDetailSheetState
                             children: [
                               Text(
                                 'TOTAL SAVED',
-                                style: context.ts(11, color: context.appColors.textMedium, fontWeight: FontWeight.bold, letterSpacing: 1.1),
+                                style: context.ts(
+                                  11,
+                                  color: context.appColors.textMedium,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.1,
+                                ),
                               ),
                               const SizedBox(height: kSpacing4),
                               Text(
                                 CurrencyFormatter.formatCents(
                                   widget.goal.currentAmount,
                                 ),
-                                style: context.ts(22, fontWeight: FontWeight.w800, color: onSurface),
+                                style: context.ts(
+                                  22,
+                                  fontWeight: FontWeight.w800,
+                                  color: onSurface,
+                                ),
                               ),
                               const SizedBox(height: kSpacing4),
                               Text(
                                 'Goal target: ${CurrencyFormatter.formatCents(widget.goal.targetAmount)}',
-                                style: context.ts(11, color: context.appColors.textMedium),
+                                style: context.ts(
+                                  11,
+                                  color: context.appColors.textMedium,
+                                ),
                               ),
                             ],
                           ),
@@ -860,7 +918,11 @@ class _SavingsGoalDetailSheetState
                                 const SizedBox(width: kSpacing6),
                                 Text(
                                   'Add Money',
-                                  style: context.ts(13, fontWeight: FontWeight.bold, color: context.appColors.incomeColor),
+                                  style: context.ts(
+                                    13,
+                                    fontWeight: FontWeight.bold,
+                                    color: context.appColors.incomeColor,
+                                  ),
                                 ),
                               ],
                             ),
@@ -895,7 +957,11 @@ class _SavingsGoalDetailSheetState
                                 const SizedBox(width: kSpacing6),
                                 Text(
                                   'Withdraw',
-                                  style: context.ts(13, fontWeight: FontWeight.bold, color: context.appColors.expenseColor),
+                                  style: context.ts(
+                                    13,
+                                    fontWeight: FontWeight.bold,
+                                    color: context.appColors.expenseColor,
+                                  ),
                                 ),
                               ],
                             ),
@@ -911,7 +977,12 @@ class _SavingsGoalDetailSheetState
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'CONTRIBUTION LEDGER',
-                      style: context.ts(11, color: context.appColors.textMedium, fontWeight: FontWeight.bold, letterSpacing: 1.1),
+                      style: context.ts(
+                        11,
+                        color: context.appColors.textMedium,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.1,
+                      ),
                     ),
                   ),
                   const SizedBox(height: kSpacing8),
@@ -926,7 +997,10 @@ class _SavingsGoalDetailSheetState
                           alignment: Alignment.center,
                           child: Text(
                             'No deposits or withdrawals logged yet.',
-                            style: context.ts(13, color: context.appColors.textMedium),
+                            style: context.ts(
+                              13,
+                              color: context.appColors.textMedium,
+                            ),
                           ),
                         );
                       }

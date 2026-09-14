@@ -124,7 +124,9 @@ class IosListRow extends StatelessWidget {
                   DefaultTextStyle.merge(
                     style: context.ts(
                       12,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                      color: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.55,
+                      ),
                     ),
                     child: subtitle!,
                   ),
@@ -248,9 +250,7 @@ class IosMetricCard extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(
-              alpha: context.isDark ? 0.2 : 0.03,
-            ),
+            color: Colors.black.withValues(alpha: context.isDark ? 0.2 : 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

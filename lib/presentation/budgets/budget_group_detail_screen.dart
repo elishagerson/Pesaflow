@@ -313,7 +313,10 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                           children: [
                             Text(
                               'Sub-Budgets',
-                              style: context.ts(14, fontWeight: FontWeight.w600),
+                              style: context.ts(
+                                14,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             const Spacer(),
                             Text(

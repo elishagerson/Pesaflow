@@ -554,10 +554,14 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     vertical: kSpacing4,
                   ),
                   decoration: BoxDecoration(
-                    color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                    color: context.appColors.expenseColor.withValues(
+                      alpha: 0.12,
+                    ),
                     borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                     border: Border.all(
-                      color: context.appColors.expenseColor.withValues(alpha: 0.25),
+                      color: context.appColors.expenseColor.withValues(
+                        alpha: 0.25,
+                      ),
                       width: 0.8,
                     ),
                   ),
@@ -589,10 +593,14 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     vertical: kSpacing4,
                   ),
                   decoration: BoxDecoration(
-                    color: context.appColors.incomeColor.withValues(alpha: 0.10),
+                    color: context.appColors.incomeColor.withValues(
+                      alpha: 0.10,
+                    ),
                     borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                     border: Border.all(
-                      color: context.appColors.incomeColor.withValues(alpha: 0.20),
+                      color: context.appColors.incomeColor.withValues(
+                        alpha: 0.20,
+                      ),
                       width: 0.8,
                     ),
                   ),
@@ -1592,7 +1600,11 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   const SizedBox(width: kSpacing8),
                   Text(
                     'Set Up Budget Plan',
-                    style: context.ts(12, fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimary),
+                    style: context.ts(
+                      12,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onPrimary,
+                    ),
                   ),
                 ],
               ),
@@ -1688,7 +1700,11 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     const SizedBox(width: kSpacing8),
                     Text(
                       'Set First Savings Goal',
-                      style: context.ts(12, fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimary),
+                      style: context.ts(
+                        12,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onPrimary,
+                      ),
                     ),
                   ],
                 ),
@@ -1735,7 +1751,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     color: theme.colorScheme.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
                     border: Border.all(
-                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
+                      color: theme.colorScheme.outlineVariant.withValues(
+                        alpha: 0.28,
+                      ),
                       width: 1,
                     ),
                     boxShadow: [
@@ -1759,7 +1777,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                               Container(
                                 padding: const EdgeInsets.all(kSpacing6),
                                 decoration: BoxDecoration(
-                                  color: context.appColors.incomeColor.withValues(alpha: 0.12),
+                                  color: context.appColors.incomeColor
+                                      .withValues(alpha: 0.12),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
@@ -1786,10 +1805,16 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                               vertical: kSpacing4,
                             ),
                             decoration: BoxDecoration(
-                              color: context.appColors.incomeColor.withValues(alpha: 0.10),
-                              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                              color: context.appColors.incomeColor.withValues(
+                                alpha: 0.10,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusPill,
+                              ),
                               border: Border.all(
-                                color: context.appColors.incomeColor.withValues(alpha: 0.20),
+                                color: context.appColors.incomeColor.withValues(
+                                  alpha: 0.20,
+                                ),
                                 width: 0.8,
                               ),
                             ),
@@ -1869,10 +1894,14 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         tween: Tween<double>(begin: 0, end: overallPct),
                         builder: (context, value, child) {
                           return ClipRRect(
-                            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusPill,
+                            ),
                             child: LinearProgressIndicator(
                               value: value,
-                              backgroundColor: onSurface.withValues(alpha: 0.06),
+                              backgroundColor: onSurface.withValues(
+                                alpha: 0.06,
+                              ),
                               color: context.appColors.incomeColor,
                               minHeight: 8,
                             ),
@@ -2049,7 +2078,12 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                                 ),
                                                 Text(
                                                   'by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
-                                                  style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
+                                                  style: context.ts(
+                                                    12,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .onSurfaceVariant,
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -2078,13 +2112,24 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                                   ),
                                                   child: Text(
                                                     'COMPLETED',
-                                                    style: context.ts(10, fontWeight: FontWeight.bold, color: AppTheme.transferColorDark),
+                                                    style: context.ts(
+                                                      10,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: AppTheme
+                                                          .transferColorDark,
+                                                    ),
                                                   ),
                                                 )
                                               else
                                                 Text(
                                                   '$daysLeft days remaining',
-                                                  style: context.ts(11, color: theme.colorScheme.onSurfaceVariant),
+                                                  style: context.ts(
+                                                    11,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .onSurfaceVariant,
+                                                  ),
                                                 ),
                                               const SizedBox(height: kSpacing4),
                                               GestureDetector(
@@ -2100,7 +2145,13 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                                 },
                                                 child: Text(
                                                   'Edit',
-                                                  style: context.ts(12, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+                                                  style: context.ts(
+                                                    12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .primary,
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -2115,11 +2166,19 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                           AmountText(
                                             amountInCents: goal.currentAmount,
                                             animate: true,
-                                            style: context.ts(12, fontWeight: FontWeight.bold),
+                                            style: context.ts(
+                                              12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                           Text(
                                             'Target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                                            style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
+                                            style: context.ts(
+                                              12,
+                                              color: theme
+                                                  .colorScheme
+                                                  .onSurfaceVariant,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -2150,7 +2209,12 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                       const SizedBox(height: kSpacing4),
                                       Text(
                                         '${(goalPct * 100).round()}% completed',
-                                        style: context.ts(11, color: theme.colorScheme.onSurfaceVariant),
+                                        style: context.ts(
+                                          11,
+                                          color: theme
+                                              .colorScheme
+                                              .onSurfaceVariant,
+                                        ),
                                       ),
                                     ],
                                   ),

@@ -53,12 +53,7 @@ class _EmptyStateState extends State<EmptyState>
     // Entrance spring — starts after first frame, settles once.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      springAnimate(
-        _entranceController,
-        MotionTokens.springSnappy,
-        0.0,
-        1.0,
-      );
+      springAnimate(_entranceController, MotionTokens.springSnappy, 0.0, 1.0);
     });
   }
 
@@ -88,10 +83,7 @@ class _EmptyStateState extends State<EmptyState>
         : AnimatedBuilder(
             animation: _entranceController,
             builder: (context, child) {
-              return Transform.scale(
-                scale: _entranceScale.value,
-                child: child,
-              );
+              return Transform.scale(scale: _entranceScale.value, child: child);
             },
             child: illustration,
           );
@@ -109,9 +101,7 @@ class _EmptyStateState extends State<EmptyState>
               entranceController: _entranceController,
               child: animatedIllustration,
             ),
-            SizedBox(
-              height: context.isCompactView ? kSpacing16 : kSpacing24,
-            ),
+            SizedBox(height: context.isCompactView ? kSpacing16 : kSpacing24),
             _DelayedFadeIn(
               delay: MotionTokens.durationSlow,
               child: Semantics(
@@ -127,9 +117,7 @@ class _EmptyStateState extends State<EmptyState>
               ),
             ),
             if (widget.subtitle != null) ...[
-              SizedBox(
-                height: context.isCompactView ? kSpacing8 : kSpacing12,
-              ),
+              SizedBox(height: context.isCompactView ? kSpacing8 : kSpacing12),
               _DelayedFadeIn(
                 delay: MotionTokens.durationSlow * 1.25,
                 child: Text(
@@ -143,9 +131,7 @@ class _EmptyStateState extends State<EmptyState>
               ),
             ],
             if (widget.action != null) ...[
-              SizedBox(
-                height: context.isCompactView ? kSpacing20 : kSpacing28,
-              ),
+              SizedBox(height: context.isCompactView ? kSpacing20 : kSpacing28),
               _DelayedFadeIn(
                 delay: MotionTokens.durationSlow * 1.75,
                 child: widget.action!,

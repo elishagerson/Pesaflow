@@ -482,9 +482,10 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
       vsync: this,
       duration: MotionTokens.durationFast,
     );
-    _scale = Tween<double>(begin: 1.0, end: MotionTokens.scalePress).animate(
-      _controller,
-    );
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: MotionTokens.scalePress,
+    ).animate(_controller);
   }
 
   @override

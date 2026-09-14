@@ -171,11 +171,7 @@ class _ShimmerEffect extends StatelessWidget {
           shaderCallback: (bounds) => LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [
-              Colors.transparent,
-              shimmerColor,
-              Colors.transparent,
-            ],
+            colors: [Colors.transparent, shimmerColor, Colors.transparent],
             stops: [
               animation.value - 0.3,
               animation.value,

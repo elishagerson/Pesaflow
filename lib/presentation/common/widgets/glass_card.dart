@@ -208,9 +208,7 @@ class _GlassCardState extends State<GlassCard>
         button: true,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTapDown: reducedMotion
-              ? null
-              : (_) => _controller.forward(),
+          onTapDown: reducedMotion ? null : (_) => _controller.forward(),
           onTapUp: reducedMotion ? null : (_) => _controller.reverse(),
           onTapCancel: reducedMotion ? null : () => _controller.reverse(),
           onTap: () {

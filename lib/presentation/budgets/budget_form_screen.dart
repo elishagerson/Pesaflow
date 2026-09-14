@@ -272,7 +272,12 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
           ),
           child: Text(
             'SELECT CATEGORY',
-            style: context.ts(10, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface.withValues(alpha: 0.5), letterSpacing: 0.5),
+            style: context.ts(
+              10,
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              letterSpacing: 0.5,
+            ),
           ),
         ),
         SizedBox(
@@ -471,7 +476,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                   child: Text(
                     'Tsh $formattedVal',
                     style: AppTheme.getMonospaceStyle(
-                      context.ts(24, color: theme.colorScheme.onSurface, letterSpacing: -0.5),
+                      context.ts(
+                        24,
+                        color: theme.colorScheme.onSurface,
+                        letterSpacing: -0.5,
+                      ),
                     ).copyWith(fontWeight: FontWeight.w800),
                   ),
                 ),
@@ -645,7 +654,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         }
                                         return null;
                                       },
-                                      style: context.ts(14, fontWeight: FontWeight.w500),
+                                      style: context.ts(
+                                        14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -679,7 +691,15 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       ),
                                       child: Text(
                                         'Week',
-                                        style: context.ts(12, fontWeight: FontWeight.bold, color: _period == 'weekly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
+                                        style: context.ts(
+                                          12,
+                                          fontWeight: FontWeight.bold,
+                                          color: _period == 'weekly'
+                                              ? theme.colorScheme.primary
+                                              : theme
+                                                    .colorScheme
+                                                    .onSurfaceVariant,
+                                        ),
                                       ),
                                     ),
                                     'biweekly': Padding(
@@ -689,7 +709,15 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       ),
                                       child: Text(
                                         '2 Wk',
-                                        style: context.ts(12, fontWeight: FontWeight.bold, color: _period == 'biweekly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
+                                        style: context.ts(
+                                          12,
+                                          fontWeight: FontWeight.bold,
+                                          color: _period == 'biweekly'
+                                              ? theme.colorScheme.primary
+                                              : theme
+                                                    .colorScheme
+                                                    .onSurfaceVariant,
+                                        ),
                                       ),
                                     ),
                                     'monthly': Padding(
@@ -699,7 +727,15 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       ),
                                       child: Text(
                                         'Month',
-                                        style: context.ts(12, fontWeight: FontWeight.bold, color: _period == 'monthly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
+                                        style: context.ts(
+                                          12,
+                                          fontWeight: FontWeight.bold,
+                                          color: _period == 'monthly'
+                                              ? theme.colorScheme.primary
+                                              : theme
+                                                    .colorScheme
+                                                    .onSurfaceVariant,
+                                        ),
                                       ),
                                     ),
                                     'yearly': Padding(
@@ -709,7 +745,15 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       ),
                                       child: Text(
                                         'Year',
-                                        style: context.ts(12, fontWeight: FontWeight.bold, color: _period == 'yearly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
+                                        style: context.ts(
+                                          12,
+                                          fontWeight: FontWeight.bold,
+                                          color: _period == 'yearly'
+                                              ? theme.colorScheme.primary
+                                              : theme
+                                                    .colorScheme
+                                                    .onSurfaceVariant,
+                                        ),
                                       ),
                                     ),
                                   },
@@ -860,7 +904,18 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                                     ),
                                                 child: Text(
                                                   'All',
-                                                  style: context.ts(12, fontWeight: FontWeight.bold, color: _rolloverType == 'all' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
+                                                  style: context.ts(
+                                                    12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color:
+                                                        _rolloverType == 'all'
+                                                        ? theme
+                                                              .colorScheme
+                                                              .primary
+                                                        : theme
+                                                              .colorScheme
+                                                              .onSurfaceVariant,
+                                                  ),
                                                 ),
                                               ),
                                               'capped': Padding(
@@ -871,7 +926,19 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                                     ),
                                                 child: Text(
                                                   'Capped',
-                                                  style: context.ts(12, fontWeight: FontWeight.bold, color: _rolloverType == 'capped' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
+                                                  style: context.ts(
+                                                    12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color:
+                                                        _rolloverType ==
+                                                            'capped'
+                                                        ? theme
+                                                              .colorScheme
+                                                              .primary
+                                                        : theme
+                                                              .colorScheme
+                                                              .onSurfaceVariant,
+                                                  ),
                                                 ),
                                               ),
                                             },
@@ -907,7 +974,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                                           .upcoming,
                                                       keyboardType:
                                                           TextInputType.number,
-                                                      style: context.ts(14, fontWeight: FontWeight.w500),
+                                                      style: context.ts(
+                                                        14,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
                                                     ),
                                                   ),
                                                 )
@@ -957,12 +1028,23 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                           Expanded(
                                             child: Text(
                                               'Notify when spending reaches',
-                                              style: context.ts(12, fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
+                                              style: context.ts(
+                                                12,
+                                                fontWeight: FontWeight.w500,
+                                                color: theme
+                                                    .colorScheme
+                                                    .onSurface
+                                                    .withValues(alpha: 0.7),
+                                              ),
                                             ),
                                           ),
                                           AnimatedDefaultTextStyle(
                                             duration: MotionTokens.durationExit,
-                                            style: context.ts(14, fontWeight: FontWeight.w700, color: thresholdColor),
+                                            style: context.ts(
+                                              14,
+                                              fontWeight: FontWeight.w700,
+                                              color: thresholdColor,
+                                            ),
                                             child: Text(
                                               '${(_threshold * 100).round()}%',
                                             ),
@@ -1065,7 +1147,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         isEditing
                                             ? 'Update Budget'
                                             : 'Create Budget',
-                                        style: context.ts(14, fontWeight: FontWeight.bold, color: context.appColors.onBgColor),
+                                        style: context.ts(
+                                          14,
+                                          fontWeight: FontWeight.bold,
+                                          color: context.appColors.onBgColor,
+                                        ),
                                       ),
                               ),
                             ),

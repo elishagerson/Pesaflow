@@ -186,10 +186,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                           _currentPage < _pages.length - 1
                               ? 'Next'
                               : 'Get Started',
-                          style: context.ts(
-                            16,
-                            fontWeight: FontWeight.w700,
-                          ),
+                          style: context.ts(16, fontWeight: FontWeight.w700),
                         ),
                       ),
                     ],

@@ -161,7 +161,16 @@ const _actions = <_PaletteAction>[
     label: 'SMS Review',
     subtitle: 'Process detected telecom & bank SMS',
     route: '/sms-review',
-    keywords: ['sms', 'review', 'pending', 'mpesa', 'selcom', 'airtel', 'crdb', 'nmb'],
+    keywords: [
+      'sms',
+      'review',
+      'pending',
+      'mpesa',
+      'selcom',
+      'airtel',
+      'crdb',
+      'nmb',
+    ],
     category: 'Navigation',
   ),
   _PaletteAction(
@@ -169,7 +178,15 @@ const _actions = <_PaletteAction>[
     label: 'Settings',
     subtitle: 'Preferences, security, and CSV import',
     route: '/settings',
-    keywords: ['settings', 'preferences', 'theme', 'import', 'export', 'security', 'lock'],
+    keywords: [
+      'settings',
+      'preferences',
+      'theme',
+      'import',
+      'export',
+      'security',
+      'lock',
+    ],
     category: 'Navigation',
   ),
 ];
@@ -666,18 +683,20 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                               decoration: BoxDecoration(
                                                 color: selected
                                                     ? theme.colorScheme.primary
-                                                        .withValues(alpha: 0.10)
+                                                          .withValues(
+                                                            alpha: 0.10,
+                                                          )
                                                     : Colors.transparent,
                                                 borderRadius:
                                                     BorderRadius.circular(12),
                                                 border: Border.all(
                                                   color: selected
                                                       ? theme
-                                                          .colorScheme
-                                                          .primary
-                                                          .withValues(
-                                                            alpha: 0.25,
-                                                          )
+                                                            .colorScheme
+                                                            .primary
+                                                            .withValues(
+                                                              alpha: 0.25,
+                                                            )
                                                       : Colors.transparent,
                                                   width: 1.0,
                                                 ),
@@ -690,21 +709,23 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                                     decoration: BoxDecoration(
                                                       color: selected
                                                           ? theme
-                                                              .colorScheme
-                                                              .primary
+                                                                .colorScheme
+                                                                .primary
                                                           : (action.isDataResult
-                                                              ? theme
-                                                                  .colorScheme
-                                                                  .secondary
-                                                                  .withValues(
-                                                                    alpha: 0.14,
-                                                                  )
-                                                              : theme
-                                                                  .colorScheme
-                                                                  .surfaceContainerHighest
-                                                                  .withValues(
-                                                                    alpha: 0.6,
-                                                                  )),
+                                                                ? theme
+                                                                      .colorScheme
+                                                                      .secondary
+                                                                      .withValues(
+                                                                        alpha:
+                                                                            0.14,
+                                                                      )
+                                                                : theme
+                                                                      .colorScheme
+                                                                      .surfaceContainerHighest
+                                                                      .withValues(
+                                                                        alpha:
+                                                                            0.6,
+                                                                      )),
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                             10,
@@ -715,13 +736,13 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                                       size: 17,
                                                       color: selected
                                                           ? theme
-                                                              .colorScheme
-                                                              .onPrimary
+                                                                .colorScheme
+                                                                .onPrimary
                                                           : (action.isDataResult
-                                                              ? theme
-                                                                  .colorScheme
-                                                                  .secondary
-                                                                  : theme
+                                                                ? theme
+                                                                      .colorScheme
+                                                                      .secondary
+                                                                : theme
                                                                       .colorScheme
                                                                       .onSurfaceVariant),
                                                     ),
@@ -741,9 +762,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                                             14,
                                                             fontWeight: selected
                                                                 ? FontWeight
-                                                                    .w700
+                                                                      .w700
                                                                 : FontWeight
-                                                                    .w600,
+                                                                      .w600,
                                                             color: theme
                                                                 .colorScheme
                                                                 .onSurface,
