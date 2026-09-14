@@ -84,12 +84,21 @@ class RecurringSection extends ConsumerWidget {
                       children: [
                         Text(
                           'Track recurring expenses',
-                          style: context.ts(16, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
+                          style: context.ts(
+                            16,
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.onSurface,
+                          ),
                         ),
                         const SizedBox(height: kSpacing4),
                         Text(
                           'Log recurring payments like streaming, utility bills, or memberships to get ahead of renewals.',
-                          style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                          style: context.ts(
+                            13,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -128,7 +137,11 @@ class RecurringSection extends ConsumerWidget {
                   children: [
                     Text(
                       '${CurrencyFormatter.formatCents(totals.monthly)}/mo',
-                      style: context.ts(24, fontWeight: FontWeight.w900, color: theme.colorScheme.primary),
+                      style: context.ts(
+                        24,
+                        fontWeight: FontWeight.w900,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
                     const SizedBox(height: kSpacing8),
                     Row(
@@ -199,7 +212,10 @@ class RecurringSection extends ConsumerWidget {
                             Expanded(
                               child: Text(
                                 sub.description ?? 'Recurring Expense',
-                                style: context.ts(13, fontWeight: FontWeight.w600),
+                                style: context.ts(
+                                  13,
+                                  fontWeight: FontWeight.w600,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -217,7 +233,10 @@ class RecurringSection extends ConsumerWidget {
                             AmountText(
                               amountInCents: sub.amount,
                               type: AmountType.expense,
-                              style: context.ts(13, fontWeight: FontWeight.bold),
+                              style: context.ts(
+                                13,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),

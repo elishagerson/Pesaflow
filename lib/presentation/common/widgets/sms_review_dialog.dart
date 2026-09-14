@@ -162,7 +162,10 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       trans.description.isNotEmpty
                           ? trans.description
                           : '(no description)',
-                      style: context.ts(15, color: theme.colorScheme.onSurfaceVariant),
+                      style: context.ts(
+                        15,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: kSpacing4),
@@ -179,7 +182,11 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       ),
                       child: Text(
                         widget.item.account!.name,
-                        style: context.ts(11, color: theme.colorScheme.primary, fontWeight: FontWeight.bold),
+                        style: context.ts(
+                          11,
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -260,7 +267,12 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         ),
                         title: Text(
                           cat.name,
-                          style: context.ts(14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
+                          style: context.ts(
+                            14,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
                         ),
                         subtitle: Text(
                           cat.type.toUpperCase(),
@@ -314,7 +326,11 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                             const SizedBox(width: kSpacing8),
                             Text(
                               'Reject',
-                              style: context.ts(14, color: theme.colorScheme.error, fontWeight: FontWeight.bold),
+                              style: context.ts(
+                                14,
+                                color: theme.colorScheme.error,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
@@ -356,7 +372,11 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                             const SizedBox(width: kSpacing8),
                             Text(
                               'Approve',
-                              style: context.ts(14, color: theme.colorScheme.onPrimary, fontWeight: FontWeight.bold),
+                              style: context.ts(
+                                14,
+                                color: theme.colorScheme.onPrimary,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),

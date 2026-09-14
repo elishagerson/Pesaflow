@@ -140,7 +140,10 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
               const SizedBox(height: kSpacing4),
               Text(
                 'Select a category for this loan',
-                style: context.ts(13, color: theme.colorScheme.onSurfaceVariant),
+                style: context.ts(
+                  13,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
               const SizedBox(height: kSpacing16),
               ...(_loanCategories.map((cat) {
@@ -188,7 +191,15 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                           Expanded(
                             child: Text(
                               cat,
-                              style: context.ts(15, fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400, color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurface),
+                              style: context.ts(
+                                15,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                                color: isSelected
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.onSurface,
+                              ),
                             ),
                           ),
                           if (isSelected)

@@ -38,7 +38,6 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
   bool _showSwipeHint = true;
   final _scrollController = ScrollController();
 
-
   String _formatProvider(String? provider) {
     if (provider == null) return 'Unknown';
     const names = {
@@ -156,8 +155,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                   width: 36,
                                   height: 36,
                                   decoration: BoxDecoration(
-                                    color: theme.colorScheme.primary
-                                        .withValues(alpha: 0.15),
+                                    color: theme.colorScheme.primary.withValues(
+                                      alpha: 0.15,
+                                    ),
                                     borderRadius: BorderRadius.circular(
                                       AppTheme.radiusSmall,
                                     ),
@@ -189,8 +189,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 width: 36,
                                 height: 36,
                                 decoration: BoxDecoration(
-                                  color: hexToColor(cat.color)
-                                      .withValues(alpha: 0.15),
+                                  color: hexToColor(
+                                    cat.color,
+                                  ).withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(
                                     AppTheme.radiusSmall,
                                   ),
@@ -330,7 +331,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                       onTap: () {
                         setState(() {
                           final items = reviewAsync.asData?.value ?? [];
-                          final isAllSelected = items.isNotEmpty &&
+                          final isAllSelected =
+                              items.isNotEmpty &&
                               _selectedIds.length == items.length;
                           if (isAllSelected || _selectAll) {
                             _selectedIds.clear();
@@ -470,7 +472,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                           AppTheme.radiusSmall,
                                         ),
                                         border: Border.all(
-                                          color: theme.colorScheme.outlineVariant
+                                          color: theme
+                                              .colorScheme
+                                              .outlineVariant
                                               .withValues(alpha: 0.18),
                                         ),
                                       ),
@@ -498,7 +502,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                           Icon(
                                             PesaFlowIcons.close,
                                             size: 10,
-                                            color: theme.colorScheme
+                                            color: theme
+                                                .colorScheme
                                                 .onSurfaceVariant
                                                 .withValues(alpha: 0.6),
                                           ),
@@ -606,7 +611,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                           color: isSelected
                                               ? theme.colorScheme.primary
                                                     .withValues(alpha: 0.06)
-                                              : theme.colorScheme
+                                              : theme
+                                                    .colorScheme
                                                     .surfaceContainerHigh,
                                           borderRadius: BorderRadius.circular(
                                             AppTheme.radiusCard,
@@ -615,11 +621,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             color: isSelected
                                                 ? theme.colorScheme.primary
                                                       .withValues(alpha: 0.38)
-                                                : theme.colorScheme
+                                                : theme
+                                                      .colorScheme
                                                       .outlineVariant
-                                                      .withValues(
-                                                        alpha: 0.28,
-                                                      ),
+                                                      .withValues(alpha: 0.28),
                                             width: isSelected ? 1.5 : 1.0,
                                           ),
                                           boxShadow: [
@@ -648,11 +653,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                 children: [
                                                   // Selection checkbox
                                                   AnimatedContainer(
-                                                    duration:
-                                                        MotionTokens
-                                                            .durationFast,
-                                                    curve:
-                                                        Curves.easeOutCubic,
+                                                    duration: MotionTokens
+                                                        .durationFast,
+                                                    curve: Curves.easeOutCubic,
                                                     width: 22,
                                                     height: 22,
                                                     margin:
@@ -666,8 +669,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                           ? theme
                                                                 .colorScheme
                                                                 .primary
-                                                          : Colors
-                                                                .transparent,
+                                                          : Colors.transparent,
                                                       border: Border.all(
                                                         color: isSelected
                                                             ? theme
@@ -681,8 +683,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                     ),
                                                     child: isSelected
                                                         ? Icon(
-                                                            PesaFlowIcons
-                                                                .check,
+                                                            PesaFlowIcons.check,
                                                             size: 13,
                                                             color: theme
                                                                 .colorScheme
@@ -697,9 +698,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                     decoration: BoxDecoration(
                                                       color: hexToColor(
                                                         item.category.color,
-                                                      ).withValues(
-                                                        alpha: 0.14,
-                                                      ),
+                                                      ).withValues(alpha: 0.14),
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                             AppTheme
@@ -1016,8 +1015,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                               Row(
                                                 children: [
                                                   _ActionPill(
-                                                    icon: PesaFlowIcons
-                                                        .category,
+                                                    icon:
+                                                        PesaFlowIcons.category,
                                                     label: 'Category',
                                                     color: theme
                                                         .colorScheme
@@ -1059,8 +1058,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                           message:
                                                               'Transaction approved',
                                                           type:
-                                                              ToastType
-                                                                  .success,
+                                                              ToastType.success,
                                                         );
                                                       }
                                                     },
@@ -1123,7 +1121,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                         Positioned(
                           left: kSpacing16,
                           right: kSpacing16,
-                          bottom: MediaQuery.paddingOf(context).bottom + kSpacing12,
+                          bottom:
+                              MediaQuery.paddingOf(context).bottom + kSpacing12,
                           child: Container(
                             padding: const EdgeInsets.all(kSpacing8),
                             decoration: BoxDecoration(
@@ -1354,7 +1353,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                         Text(
                           '$err',
                           textAlign: TextAlign.center,
-                          style: context.ts(14, color: theme.colorScheme.onSurfaceVariant),
+                          style: context.ts(
+                            14,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       ],
                     ),
@@ -1499,10 +1501,7 @@ class _ActionPill extends StatelessWidget {
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.10),
           borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-          border: Border.all(
-            color: color.withValues(alpha: 0.22),
-            width: 1.0,
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.22), width: 1.0),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -1511,11 +1510,7 @@ class _ActionPill extends StatelessWidget {
             const SizedBox(width: kSpacing6),
             Text(
               label,
-              style: context.ts(
-                12,
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
+              style: context.ts(12, fontWeight: FontWeight.w600, color: color),
             ),
           ],
         ),

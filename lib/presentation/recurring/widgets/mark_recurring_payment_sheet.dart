@@ -114,7 +114,11 @@ Future<void> showMarkRecurringPaymentSheet({
                             value: CurrencyFormatter.formatCents(
                               recurring.amount,
                             ),
-                            valueStyle: context.ts(16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+                            valueStyle: context.ts(
+                              16,
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
                           ),
                           const SizedBox(height: kSpacing14),
                           // Editable amount
@@ -138,7 +142,11 @@ Future<void> showMarkRecurringPaymentSheet({
                                   ),
                                   child: Text(
                                     'TSh',
-                                    style: context.ts(15, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                                    style: context.ts(
+                                      15,
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.5),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -203,13 +211,20 @@ Future<void> showMarkRecurringPaymentSheet({
                                       children: [
                                         Text(
                                           'Deduct from balance',
-                                          style: context.ts(15, fontWeight: FontWeight.w600),
+                                          style: context.ts(
+                                            15,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                         const SizedBox(height: kSpacing2),
                                         Text(
                                           'Record as a regular transaction'
                                           ' and adjust account balance',
-                                          style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                                          style: context.ts(
+                                            11,
+                                            color: theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.5),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -271,7 +286,8 @@ Future<void> showMarkRecurringPaymentSheet({
                                         if (context.mounted) {
                                           CustomToast.show(
                                             context,
-                                            message: 'Failed to mark payment: $e',
+                                            message:
+                                                'Failed to mark payment: $e',
                                             type: ToastType.error,
                                           );
                                         }
@@ -323,12 +339,13 @@ Widget _buildSummaryRow({
         width: 120,
         child: Text(
           label,
-          style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+          style: context.ts(
+            11,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
         ),
       ),
-      Expanded(
-        child: Text(value, style: valueStyle ?? context.ts(15)),
-      ),
+      Expanded(child: Text(value, style: valueStyle ?? context.ts(15))),
     ],
   );
 }

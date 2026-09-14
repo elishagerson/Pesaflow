@@ -631,8 +631,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                 shaking: _shakeFields,
                                 child: TextFormField(
                                   controller: _nameController,
-                                  textCapitalization:
-                                      TextCapitalization.words,
+                                  textCapitalization: TextCapitalization.words,
                                   style: context.ts(
                                     15,
                                     fontWeight: FontWeight.w500,
@@ -675,8 +674,9 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                     if (v == null || v.isEmpty) {
                                       return 'Enter a target amount';
                                     }
-                                    final val =
-                                        CurrencyFormatter.parseToCents(v);
+                                    final val = CurrencyFormatter.parseToCents(
+                                      v,
+                                    );
                                     if (val <= 0) {
                                       return 'Amount must be greater than 0';
                                     }
@@ -711,48 +711,48 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                 spacing: kSpacing8,
                                 runSpacing: kSpacing6,
                                 children: [
-                                  ...[100000, 500000, 1000000, 5000000].map(
-                                    (amt) {
-                                      final label = amt >= 1000000
-                                          ? '+${amt ~/ 1000000}M'
-                                          : '+${amt ~/ 1000}K';
-                                      return InkWell(
-                                        onTap: () => _adjustAmount(amt),
-                                        borderRadius: BorderRadius.circular(
-                                          AppTheme.radiusPill,
+                                  ...[100000, 500000, 1000000, 5000000].map((
+                                    amt,
+                                  ) {
+                                    final label = amt >= 1000000
+                                        ? '+${amt ~/ 1000000}M'
+                                        : '+${amt ~/ 1000}K';
+                                    return InkWell(
+                                      onTap: () => _adjustAmount(amt),
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusPill,
+                                      ),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 5,
                                         ),
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                            vertical: 5,
+                                        decoration: BoxDecoration(
+                                          color: theme
+                                              .colorScheme
+                                              .surfaceContainerHighest
+                                              .withValues(alpha: 0.4),
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.radiusPill,
                                           ),
-                                          decoration: BoxDecoration(
-                                            color: theme.colorScheme
-                                                .surfaceContainerHighest
-                                                .withValues(alpha: 0.4),
-                                            borderRadius: BorderRadius.circular(
-                                              AppTheme.radiusPill,
-                                            ),
-                                            border: Border.all(
-                                              color: theme
-                                                  .colorScheme
-                                                  .outlineVariant
-                                                  .withValues(alpha: 0.20),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            label,
-                                            style: context.ts(
-                                              11,
-                                              fontWeight: FontWeight.w600,
-                                              color:
-                                                  theme.colorScheme.onSurface,
-                                            ),
+                                          border: Border.all(
+                                            color: theme
+                                                .colorScheme
+                                                .outlineVariant
+                                                .withValues(alpha: 0.20),
                                           ),
                                         ),
-                                      );
-                                    },
-                                  ),
+                                        child: Text(
+                                          label,
+                                          style: context.ts(
+                                            11,
+                                            fontWeight: FontWeight.w600,
+                                            color: theme.colorScheme.onSurface,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
                                   if (_amountController.text.isNotEmpty)
                                     InkWell(
                                       onTap: _clearAmount,
@@ -819,11 +819,12 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                   ].map((h) {
                                     final days = h['days'] as int;
                                     final label = h['label'] as String;
-                                    final isSelected = (_selectedDate
-                                                .difference(DateTime.now())
-                                                .inDays -
-                                            days)
-                                        .abs() <=
+                                    final isSelected =
+                                        (_selectedDate
+                                                    .difference(DateTime.now())
+                                                    .inDays -
+                                                days)
+                                            .abs() <=
                                         2;
                                     return InkWell(
                                       onTap: () => _setDateHorizon(days),
@@ -838,7 +839,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         decoration: BoxDecoration(
                                           color: isSelected
                                               ? themeCol.withValues(alpha: 0.15)
-                                              : theme.colorScheme
+                                              : theme
+                                                    .colorScheme
                                                     .surfaceContainerHighest
                                                     .withValues(alpha: 0.4),
                                           borderRadius: BorderRadius.circular(
@@ -965,7 +967,10 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                           ? Icon(
                                               PesaFlowIcons.check,
                                               size: 16,
-                                              color: ThemeData.estimateBrightnessForColor(col) ==
+                                              color:
+                                                  ThemeData.estimateBrightnessForColor(
+                                                        col,
+                                                      ) ==
                                                       Brightness.dark
                                                   ? Colors.white
                                                   : Colors.black,
@@ -1001,11 +1006,11 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                 itemCount: _curatedIcons.length,
                                 gridDelegate:
                                     const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 6,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 10,
-                                  childAspectRatio: 1.0,
-                                ),
+                                      crossAxisCount: 6,
+                                      mainAxisSpacing: 10,
+                                      crossAxisSpacing: 10,
+                                      childAspectRatio: 1.0,
+                                    ),
                                 itemBuilder: (context, i) {
                                   final item = _curatedIcons[i];
                                   final name = item['name'] as String;
@@ -1023,7 +1028,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                       decoration: BoxDecoration(
                                         color: isSelected
                                             ? themeCol.withValues(alpha: 0.16)
-                                            : theme.colorScheme
+                                            : theme
+                                                  .colorScheme
                                                   .surfaceContainerHighest
                                                   .withValues(alpha: 0.35),
                                         borderRadius: BorderRadius.circular(
@@ -1085,7 +1091,10 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         width: 20,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          color: ThemeData.estimateBrightnessForColor(themeCol) ==
+                                          color:
+                                              ThemeData.estimateBrightnessForColor(
+                                                    themeCol,
+                                                  ) ==
                                                   Brightness.dark
                                               ? Colors.white
                                               : Colors.black,
@@ -1098,7 +1107,10 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         style: context.ts(
                                           16,
                                           fontWeight: FontWeight.w700,
-                                          color: ThemeData.estimateBrightnessForColor(themeCol) ==
+                                          color:
+                                              ThemeData.estimateBrightnessForColor(
+                                                    themeCol,
+                                                  ) ==
                                                   Brightness.dark
                                               ? Colors.white
                                               : Colors.black,

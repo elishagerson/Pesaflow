@@ -361,7 +361,9 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                   Container(
                     padding: const EdgeInsets.all(kSpacing6),
                     decoration: BoxDecoration(
-                      color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                      color: context.appColors.expenseColor.withValues(
+                        alpha: 0.12,
+                      ),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -391,7 +393,9 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                   color: context.appColors.expenseColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   border: Border.all(
-                    color: context.appColors.expenseColor.withValues(alpha: 0.25),
+                    color: context.appColors.expenseColor.withValues(
+                      alpha: 0.25,
+                    ),
                     width: 0.8,
                   ),
                 ),
@@ -449,8 +453,8 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
               color: isCritical
                   ? context.appColors.expenseColor
                   : (debtRatio > 0.5
-                      ? context.appColors.warningColor
-                      : context.appColors.transferColor),
+                        ? context.appColors.warningColor
+                        : context.appColors.transferColor),
               minHeight: 6,
             ),
           ),
@@ -518,7 +522,10 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                           children: [
                             Text(
                               loan.description ?? loan.sender ?? 'Loan',
-                              style: context.ts(14, fontWeight: FontWeight.bold),
+                              style: context.ts(
+                                14,
+                                fontWeight: FontWeight.bold,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -551,7 +558,11 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                                 ],
                                 Text(
                                   'Active',
-                                   style: context.ts(11, fontWeight: FontWeight.w700, color: progressColor),
+                                  style: context.ts(
+                                    11,
+                                    fontWeight: FontWeight.w700,
+                                    color: progressColor,
+                                  ),
                                 ),
                               ],
                             ),

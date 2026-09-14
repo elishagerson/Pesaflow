@@ -321,7 +321,11 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                     : isPaid
                     ? 'Fully Paid'
                     : 'Defaulted',
-                style: context.ts(13, fontWeight: FontWeight.w600, color: statusColor),
+                style: context.ts(
+                  13,
+                  fontWeight: FontWeight.w600,
+                  color: statusColor,
+                ),
               ),
               if (isActive) ...[
                 const SizedBox(height: kSpacing16),
@@ -342,7 +346,10 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                 const SizedBox(height: kSpacing8),
                 Text(
                   '${(ratio * 100).round()}% remaining of ${CurrencyFormatter.formatCents(loan.amount)}',
-                  style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                  style: context.ts(
+                    11,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
                 ),
               ],
             ],
@@ -521,13 +528,21 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                   const SizedBox(height: kSpacing2),
                   Text(
                     event.subtitle,
-                    style: context.ts(12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                    style: context.ts(
+                      12,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
                   ),
                   if (event.date != null) ...[
                     const SizedBox(height: kSpacing2),
                     Text(
                       DateFormatter.shortDate(event.date!),
-                      style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                      style: context.ts(
+                        11,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
+                      ),
                     ),
                   ],
                 ],
@@ -570,7 +585,12 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                     children: [
                       Text(
                         '$paid of $total installments paid',
-                        style: context.ts(12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                        style: context.ts(
+                          12,
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: kSpacing6),
                       ClipRRect(
@@ -821,7 +841,12 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                       ),
                       Text(
                         '${CurrencyFormatter.formatCents(loan.remaining)} remaining',
-                        style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                        style: context.ts(
+                          11,
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
+                        ),
                       ),
                     ],
                   ),

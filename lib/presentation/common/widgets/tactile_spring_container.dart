@@ -89,22 +89,19 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
     // Ensure quick taps (< 50ms) show a perceptible tactile bounce
     final startVal = _controller.value < 0.3 ? 0.3 : _controller.value;
     _controller.value = startVal;
-    springAnimate(
-      _controller,
-      MotionTokens.springSnappy,
-      startVal,
-      0.0,
-    );
+    springAnimate(_controller, MotionTokens.springSnappy, startVal, 0.0);
   }
 
   @override
   Widget build(BuildContext context) {
     final hasButton =
-        widget.semanticButton ?? (widget.onTap != null || widget.onLongPress != null);
+        widget.semanticButton ??
+        (widget.onTap != null || widget.onLongPress != null);
     // Haptic only fires when a tap action actually exists — an inert or
     // long-press-only container must not vibrate on a plain tap.
-    final effectiveHaptic =
-        widget.onTap == null ? null : (widget.haptic ?? HapticType.selection);
+    final effectiveHaptic = widget.onTap == null
+        ? null
+        : (widget.haptic ?? HapticType.selection);
 
     final core = GestureDetector(
       behavior: HitTestBehavior.opaque,

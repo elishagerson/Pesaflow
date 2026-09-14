@@ -138,7 +138,13 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                                 Expanded(
                                   child: Text(
                                     item.name,
-                                    style: context.ts(16, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, color: isSelected ? itemColor : null),
+                                    style: context.ts(
+                                      16,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: isSelected ? itemColor : null,
+                                    ),
                                   ),
                                 ),
                                 IconButton(

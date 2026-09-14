@@ -292,7 +292,14 @@ class _RecurringTransactionListScreenState
                                                     ),
                                                     Text(
                                                       'Mark Paid',
-                                                      style: context.ts(11, color: context.appColors.onBgColor, fontWeight: FontWeight.w600),
+                                                      style: context.ts(
+                                                        11,
+                                                        color: context
+                                                            .appColors
+                                                            .onBgColor,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -336,7 +343,14 @@ class _RecurringTransactionListScreenState
                                                               'active'
                                                           ? 'Pause'
                                                           : 'Resume',
-                                                      style: context.ts(11, color: context.appColors.onBgColor, fontWeight: FontWeight.w600),
+                                                      style: context.ts(
+                                                        11,
+                                                        color: context
+                                                            .appColors
+                                                            .onBgColor,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -475,10 +489,14 @@ class _RecurringTransactionListScreenState
                       vertical: kSpacing4,
                     ),
                     decoration: BoxDecoration(
-                      color: context.appColors.transferColor.withValues(alpha: 0.12),
+                      color: context.appColors.transferColor.withValues(
+                        alpha: 0.12,
+                      ),
                       borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                       border: Border.all(
-                        color: context.appColors.transferColor.withValues(alpha: 0.25),
+                        color: context.appColors.transferColor.withValues(
+                          alpha: 0.25,
+                        ),
                         width: 0.8,
                       ),
                     ),
@@ -510,10 +528,14 @@ class _RecurringTransactionListScreenState
                       vertical: kSpacing4,
                     ),
                     decoration: BoxDecoration(
-                      color: context.appColors.incomeColor.withValues(alpha: 0.10),
+                      color: context.appColors.incomeColor.withValues(
+                        alpha: 0.10,
+                      ),
                       borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                       border: Border.all(
-                        color: context.appColors.incomeColor.withValues(alpha: 0.20),
+                        color: context.appColors.incomeColor.withValues(
+                          alpha: 0.20,
+                        ),
                         width: 0.8,
                       ),
                     ),
@@ -564,10 +586,7 @@ class _RecurringTransactionListScreenState
                 ],
               ),
               const SizedBox(height: kSpacing14),
-              Divider(
-                height: 0.5,
-                color: onSurface.withValues(alpha: 0.08),
-              ),
+              Divider(height: 0.5, color: onSurface.withValues(alpha: 0.08)),
               const SizedBox(height: kSpacing14),
             ],
             // Stats row
@@ -628,7 +647,11 @@ class _RecurringTransactionListScreenState
         const SizedBox(height: kSpacing4),
         Text(
           label,
-          style: context.ts(11, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+          style: context.ts(
+            11,
+            fontWeight: FontWeight.w700,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
         ),
       ],
     );
@@ -646,7 +669,11 @@ class _RecurringTransactionListScreenState
       ),
       child: Text(
         text,
-        style: context.ts(10, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+        style: context.ts(
+          10,
+          fontWeight: FontWeight.w700,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+        ),
       ),
     );
   }
@@ -738,7 +765,13 @@ class _RecurringTransactionListScreenState
             children: [
               Text(
                 label,
-                style: context.ts(12, fontWeight: isActive ? FontWeight.w700 : FontWeight.w500, color: isActive ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                style: context.ts(
+                  12,
+                  fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+                  color: isActive
+                      ? theme.colorScheme.onSurface
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                ),
               ),
               if (count > 0) ...[
                 const SizedBox(width: kSpacing4),
@@ -755,7 +788,13 @@ class _RecurringTransactionListScreenState
                   ),
                   child: Text(
                     '$count',
-                    style: context.ts(10, fontWeight: FontWeight.w800, color: isActive ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.4)),
+                    style: context.ts(
+                      10,
+                      fontWeight: FontWeight.w800,
+                      color: isActive
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                    ),
                   ),
                 ),
               ],
@@ -1112,7 +1151,11 @@ class _RecurringTransactionListScreenState
               const SizedBox(width: kSpacing2),
               Text(
                 'Auto',
-                style: context.ts(10, fontWeight: FontWeight.w700, color: theme.colorScheme.primary),
+                style: context.ts(
+                  10,
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.primary,
+                ),
               ),
             ],
           ),

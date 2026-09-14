@@ -415,10 +415,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(
-                                      '📨',
-                                      style:                                       context.ts(12),
-                                    ),
+                                    Text('📨', style: context.ts(12)),
                                     const SizedBox(width: kSpacing6),
                                     Text(
                                       t.source.startsWith('sms')

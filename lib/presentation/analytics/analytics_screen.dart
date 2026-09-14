@@ -333,8 +333,12 @@ class _OverviewTab extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
                     border: Border.all(
                       color: isDeficit
-                          ? context.appColors.expenseColor.withValues(alpha: 0.35)
-                          : theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
+                          ? context.appColors.expenseColor.withValues(
+                              alpha: 0.35,
+                            )
+                          : theme.colorScheme.outlineVariant.withValues(
+                              alpha: 0.28,
+                            ),
                       width: 1,
                     ),
                     boxShadow: [
@@ -386,10 +390,14 @@ class _OverviewTab extends ConsumerWidget {
                                 vertical: kSpacing4,
                               ),
                               decoration: BoxDecoration(
-                                color: context.appColors.expenseColor.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                color: context.appColors.expenseColor
+                                    .withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusPill,
+                                ),
                                 border: Border.all(
-                                  color: context.appColors.expenseColor.withValues(alpha: 0.25),
+                                  color: context.appColors.expenseColor
+                                      .withValues(alpha: 0.25),
                                   width: 0.8,
                                 ),
                               ),
@@ -421,10 +429,15 @@ class _OverviewTab extends ConsumerWidget {
                                 vertical: kSpacing4,
                               ),
                               decoration: BoxDecoration(
-                                color: context.appColors.incomeColor.withValues(alpha: 0.10),
-                                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                color: context.appColors.incomeColor.withValues(
+                                  alpha: 0.10,
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusPill,
+                                ),
                                 border: Border.all(
-                                  color: context.appColors.incomeColor.withValues(alpha: 0.20),
+                                  color: context.appColors.incomeColor
+                                      .withValues(alpha: 0.20),
                                   width: 0.8,
                                 ),
                               ),
@@ -495,7 +508,9 @@ class _OverviewTab extends ConsumerWidget {
                             ),
                             decoration: BoxDecoration(
                               color: onSurface.withValues(alpha: 0.05),
-                              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusPill,
+                              ),
                             ),
                             child: Text(
                               'Savings Rate: $savingsRate%',
@@ -518,7 +533,9 @@ class _OverviewTab extends ConsumerWidget {
                         ),
                         decoration: BoxDecoration(
                           color: onSurface.withValues(alpha: 0.04),
-                          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusCard,
+                          ),
                           border: Border.all(
                             color: onSurface.withValues(alpha: 0.06),
                           ),
@@ -542,7 +559,9 @@ class _OverviewTab extends ConsumerWidget {
                                         style: context.ts(
                                           11,
                                           fontWeight: FontWeight.w600,
-                                          color: onSurface.withValues(alpha: 0.6),
+                                          color: onSurface.withValues(
+                                            alpha: 0.6,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -567,7 +586,9 @@ class _OverviewTab extends ConsumerWidget {
                             ),
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.only(left: kSpacing14),
+                                padding: const EdgeInsets.only(
+                                  left: kSpacing14,
+                                ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -584,7 +605,9 @@ class _OverviewTab extends ConsumerWidget {
                                           style: context.ts(
                                             11,
                                             fontWeight: FontWeight.w600,
-                                            color: onSurface.withValues(alpha: 0.6),
+                                            color: onSurface.withValues(
+                                              alpha: 0.6,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -735,16 +758,23 @@ class _OverviewTab extends ConsumerWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                             Text(
+                                            Text(
                                               goal.name,
-                                              style: context.ts(13, fontWeight: FontWeight.bold),
+                                              style: context.ts(
+                                                13,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             const SizedBox(height: kSpacing4),
                                             Text(
                                               '$percentInt% Completed',
-                                              style: context.ts(12, fontWeight: FontWeight.bold, color: goalColor),
+                                              style: context.ts(
+                                                12,
+                                                fontWeight: FontWeight.bold,
+                                                color: goalColor,
+                                              ),
                                             ),
                                             const SizedBox(height: kSpacing2),
                                             Text(
@@ -820,7 +850,12 @@ class _OverviewTab extends ConsumerWidget {
                               Expanded(
                                 child: Text(
                                   'SET A SAVINGS GOAL',
-                                  style: context.ts(11, color: context.appColors.textMedium, fontWeight: FontWeight.bold, letterSpacing: 1.1),
+                                  style: context.ts(
+                                    11,
+                                    color: context.appColors.textMedium,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.1,
+                                  ),
                                 ),
                               ),
                             ],
@@ -855,9 +890,12 @@ class _OverviewTab extends ConsumerWidget {
                               icon: Icon(PesaFlowIcons.add, size: 16),
                               label: FittedBox(
                                 fit: BoxFit.scaleDown,
-                                child:                                 Text(
+                                child: Text(
                                   'Set Monthly Savings Goal',
-                                  style: context.ts(13, fontWeight: FontWeight.w600),
+                                  style: context.ts(
+                                    13,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ),
@@ -1039,14 +1077,21 @@ class _OverviewTab extends ConsumerWidget {
                                               const SizedBox(width: kSpacing8),
                                               Text(
                                                 cat.categoryName,
-                                                style: context.ts(12, fontWeight: FontWeight.w600),
+                                                style: context.ts(
+                                                  12,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ],
                                           ),
                                           Text(
                                             '$pct%',
-                                            style: context.ts(11, fontWeight: FontWeight.bold, color: context.appColors.textLow),
+                                            style: context.ts(
+                                              11,
+                                              fontWeight: FontWeight.bold,
+                                              color: context.appColors.textLow,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -1140,7 +1185,13 @@ class _TrendsTab extends ConsumerWidget {
         ),
         child: Text(
           label,
-          style: context.ts(12, color: isSelected ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface.withValues(alpha: 0.62), fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500),
+          style: context.ts(
+            12,
+            color: isSelected
+                ? theme.colorScheme.onPrimary
+                : theme.colorScheme.onSurface.withValues(alpha: 0.62),
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+          ),
         ),
       ),
     );
@@ -1183,7 +1234,10 @@ class _TrendsTab extends ConsumerWidget {
                             : (currentRange == TrendRange.weeks
                                   ? 'Curved trend waves over the last 8 weeks'
                                   : 'Curved trend waves over the last 6 months'),
-                        style: context.ts(13, color: theme.colorScheme.onSurfaceVariant),
+                        style: context.ts(
+                          13,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),

@@ -85,10 +85,7 @@ class SpringSheetRoute<T> extends PopupRoute<T> {
     if (context.isReducedMotion) {
       return FadeTransition(opacity: animation, child: child);
     }
-    return _SpringSheetAnimatedTransition(
-      animation: animation,
-      child: child,
-    );
+    return _SpringSheetAnimatedTransition(animation: animation, child: child);
   }
 }
 
@@ -113,17 +110,16 @@ class _SpringSheetAnimatedTransition extends StatelessWidget {
 
         // Slide up smoothly from completely off-screen at bottom, slide down on exit
         final scale = 0.98 + (0.02 * t);
-        final opacity = isReverse ? t.clamp(0.0, 1.0) : (t * 2.5).clamp(0.0, 1.0);
+        final opacity = isReverse
+            ? t.clamp(0.0, 1.0)
+            : (t * 2.5).clamp(0.0, 1.0);
 
         return FractionalTranslation(
           translation: Offset(0, (1.0 - t).clamp(0.0, 1.0)),
           child: Transform.scale(
             scale: scale,
             alignment: Alignment.bottomCenter,
-            child: Opacity(
-              opacity: opacity,
-              child: child,
-            ),
+            child: Opacity(opacity: opacity, child: child),
           ),
         );
       },
@@ -216,12 +212,7 @@ class _SpringSheetHostState extends State<_SpringSheetHost>
     // for a consistent tactile feel across drag and tap interactions.
     _snapController.value = _dragOffset;
     _snapController.animateWith(
-      SpringSimulation(
-        MotionTokens.springSnappy,
-        _dragOffset,
-        0.0,
-        0.0,
-      ),
+      SpringSimulation(MotionTokens.springSnappy, _dragOffset, 0.0, 0.0),
     );
   }
 

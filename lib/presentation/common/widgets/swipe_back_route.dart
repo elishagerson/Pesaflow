@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:go_router/go_router.dart';
@@ -156,7 +155,9 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
     }
 
     final startProgress = _dragProgress;
-    final initialVelocity = velocity > 0 ? (velocity / 1000).clamp(0.5, 3.0) : 1.0;
+    final initialVelocity = velocity > 0
+        ? (velocity / 1000).clamp(0.5, 3.0)
+        : 1.0;
 
     final simulation = SpringSimulation(
       MotionTokens.springSnappy,
@@ -202,12 +203,17 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
       builder: (_, _) {
         final isReverse = widget.animation.status == AnimationStatus.reverse;
         final curve = isReverse ? Curves.easeInCubic : Curves.easeOutCubic;
-        final pushValue = curve.transform(widget.animation.value.clamp(0.0, 1.0));
+        final pushValue = curve.transform(
+          widget.animation.value.clamp(0.0, 1.0),
+        );
 
         // When stationary on screen: pushValue == 1.0, _dragProgress == 0.0 -> visibleFraction == 1.0.
         // During swipe-back drag or dismiss: visibleFraction tracks (1.0 - _dragProgress).
         // During normal Navigator.pop: pushValue reverses 1.0 -> 0.0 smoothly with curve.
-        final visibleFraction = (pushValue * (1.0 - _dragProgress)).clamp(0.0, 1.0);
+        final visibleFraction = (pushValue * (1.0 - _dragProgress)).clamp(
+          0.0,
+          1.0,
+        );
 
         final screenWidth = MediaQuery.sizeOf(context).width;
         // iOS-native: 0 offset = fully visible, screenWidth = fully off-screen right
@@ -258,7 +264,9 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
                           end: Alignment.centerRight,
                           colors: [
                             Colors.transparent,
-                            Colors.black.withValues(alpha: 0.12 * visibleFraction),
+                            Colors.black.withValues(
+                              alpha: 0.12 * visibleFraction,
+                            ),
                           ],
                         ),
                       ),

@@ -603,7 +603,12 @@ class _DateButton extends StatelessWidget {
             const SizedBox(height: kSpacing4),
             Text(
               date != null ? DateFormat('MMM d, yyyy').format(date!) : 'Any',
-              style: context.ts(14, color: date != null ? onSurface : onSurface.withValues(alpha: 0.38)),
+              style: context.ts(
+                14,
+                color: date != null
+                    ? onSurface
+                    : onSurface.withValues(alpha: 0.38),
+              ),
             ),
           ],
         ),

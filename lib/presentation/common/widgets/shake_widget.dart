@@ -44,12 +44,10 @@ class _ShakeWidgetState extends State<ShakeWidget>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(
-          vsync: this,
-          duration: MotionTokens.durationSlow,
-        )..addListener(() {
-          setState(() => _offsetX = _shakeAnim.value);
-        });
+        AnimationController(vsync: this, duration: MotionTokens.durationSlow)
+          ..addListener(() {
+            setState(() => _offsetX = _shakeAnim.value);
+          });
     _shakeAnim = _buildShakeAnimation();
   }
 

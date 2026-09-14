@@ -108,7 +108,12 @@ class SavingsSection extends ConsumerWidget {
                       const SizedBox(height: kSpacing4),
                       Text(
                         'Saved ${CurrencyFormatter.formatCents(goal.currentAmount)} of ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                        style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                        style: context.ts(
+                          11,
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -199,7 +204,11 @@ class SavingsReminder extends ConsumerWidget {
               Expanded(
                 child: Text(
                   message,
-                  style: context.ts(13, fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface.withValues(alpha: 0.78)),
+                  style: context.ts(
+                    13,
+                    fontWeight: FontWeight.w500,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.78),
+                  ),
                 ),
               ),
             ],

@@ -470,7 +470,15 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         const SizedBox(height: kSpacing2),
                                         Text(
                                           'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
-                                          style: context.ts(13, color: isDisabled ? theme.colorScheme.onSurface.withValues(alpha: 0.12) : onSurface.withValues(alpha: 0.38)),
+                                          style: context.ts(
+                                            13,
+                                            color: isDisabled
+                                                ? theme.colorScheme.onSurface
+                                                      .withValues(alpha: 0.12)
+                                                : onSurface.withValues(
+                                                    alpha: 0.38,
+                                                  ),
+                                          ),
                                         ),
                                       ],
                                     ),

@@ -350,7 +350,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   onPressed: _finish,
                   child: Text(
                     'Skip',
-                    style: context.ts(12, color: theme.colorScheme.onSurfaceVariant, fontWeight: FontWeight.w500),
+                    style: context.ts(
+                      12,
+                      color: theme.colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -400,7 +404,11 @@ class _WelcomePage extends StatelessWidget {
             Text(
               'Track your finances offline.\n100% private — data never leaves your device.',
               textAlign: TextAlign.center,
-              style: context.ts(16, color: theme.colorScheme.onSurfaceVariant, height: 1.5),
+              style: context.ts(
+                16,
+                color: theme.colorScheme.onSurfaceVariant,
+                height: 1.5,
+              ),
             ),
           ],
         ),
@@ -499,7 +507,10 @@ class _SmsPermissionPage extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'SMS data is processed locally and never sent anywhere.',
-                      style: context.ts(12, color: theme.colorScheme.onSurfaceVariant),
+                      style: context.ts(
+                        12,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ],
@@ -523,7 +534,12 @@ class _SmsPermissionPage extends StatelessWidget {
                   permissionGranted
                       ? 'SMS Permission Granted'
                       : 'You can also add transactions manually without SMS.',
-                  style: context.ts(12, color: permissionGranted ? context.appColors.incomeColor : context.appColors.textMedium),
+                  style: context.ts(
+                    12,
+                    color: permissionGranted
+                        ? context.appColors.incomeColor
+                        : context.appColors.textMedium,
+                  ),
                 ),
               ],
             ),
@@ -559,7 +575,11 @@ class _AccountsPage extends StatelessWidget {
             index: 0,
             child: Text(
               'Set Up Accounts',
-              style: context.ts(18, fontWeight: FontWeight.bold, letterSpacing: -0.5),
+              style: context.ts(
+                18,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
           const SizedBox(height: kSpacing8),
@@ -644,7 +664,15 @@ class _AccountsPage extends StatelessWidget {
                           Text(
                             e.key,
                             textAlign: TextAlign.center,
-                            style: context.ts(12, fontWeight: FontWeight.bold, color: isSelected ? (theme.brightness == Brightness.dark ? Colors.white : theme.colorScheme.primary) : context.appColors.textMedium),
+                            style: context.ts(
+                              12,
+                              fontWeight: FontWeight.bold,
+                              color: isSelected
+                                  ? (theme.brightness == Brightness.dark
+                                        ? Colors.white
+                                        : theme.colorScheme.primary)
+                                  : context.appColors.textMedium,
+                            ),
                           ),
                           const SizedBox(height: kSpacing8),
                           // Mini check bubble
@@ -719,7 +747,11 @@ class _CompletePage extends StatelessWidget {
             Text(
               'Your offline finance tracker is ready.\nStart recording transactions and take control of your money.',
               textAlign: TextAlign.center,
-              style: context.ts(16, color: theme.colorScheme.onSurfaceVariant, height: 1.5),
+              style: context.ts(
+                16,
+                color: theme.colorScheme.onSurfaceVariant,
+                height: 1.5,
+              ),
             ),
           ],
         ),

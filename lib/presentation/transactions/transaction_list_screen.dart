@@ -316,35 +316,35 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                       ref.read(transactionTypeFilterProvider.notifier).state =
                           'All';
                       ref
-                          .read(transactionAccountFilterProvider.notifier)
-                          .state = null;
+                              .read(transactionAccountFilterProvider.notifier)
+                              .state =
+                          null;
                       ref
-                          .read(transactionCategoryFilterProvider.notifier)
-                          .state = null;
-                      ref
-                          .read(transactionSearchQueryProvider.notifier)
-                          .state = '';
+                              .read(transactionCategoryFilterProvider.notifier)
+                              .state =
+                          null;
+                      ref.read(transactionSearchQueryProvider.notifier).state =
+                          '';
                       ref.read(transactionAmountMinProvider.notifier).state =
                           null;
                       ref.read(transactionAmountMaxProvider.notifier).state =
                           null;
                       ref.read(transactionDateFromProvider.notifier).state =
                           null;
-                      ref.read(transactionDateToProvider.notifier).state =
-                          null;
+                      ref.read(transactionDateToProvider.notifier).state = null;
                     },
                   ),
                 Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHighest
-                        .withValues(alpha: 0.45),
-                    borderRadius: BorderRadius.circular(
-                      AppTheme.radiusHero,
+                    color: theme.colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.45,
                     ),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusHero),
                     border: Border.all(
-                      color: theme.colorScheme.outlineVariant
-                          .withValues(alpha: 0.2),
+                      color: theme.colorScheme.outlineVariant.withValues(
+                        alpha: 0.2,
+                      ),
                       width: 1.0,
                     ),
                   ),
@@ -367,8 +367,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                       Container(
                         width: 1,
                         height: 18,
-                        color: theme.colorScheme.outlineVariant
-                            .withValues(alpha: 0.3),
+                        color: theme.colorScheme.outlineVariant.withValues(
+                          alpha: 0.3,
+                        ),
                       ),
                       TactileSpringContainer(
                         onTap: () {
@@ -377,10 +378,11 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                             if (!_isSearchVisible) {
                               _searchController.clear();
                               ref
-                                  .read(
-                                    transactionSearchQueryProvider.notifier,
-                                  )
-                                  .state = '';
+                                      .read(
+                                        transactionSearchQueryProvider.notifier,
+                                      )
+                                      .state =
+                                  '';
                             }
                           });
                         },
@@ -394,8 +396,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                             size: 17,
                             color: _isSearchVisible || searchQuery.isNotEmpty
                                 ? theme.colorScheme.primary
-                                : theme.colorScheme.onSurfaceVariant
-                                    .withValues(alpha: 0.7),
+                                : theme.colorScheme.onSurfaceVariant.withValues(
+                                    alpha: 0.7,
+                                  ),
                           ),
                         ),
                       ),
@@ -427,10 +430,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                             MotionTokens.durationNormal,
                             () {
                               ref
-                                  .read(
-                                    transactionSearchQueryProvider.notifier,
-                                  )
-                                  .state = val.trim();
+                                  .read(transactionSearchQueryProvider.notifier)
+                                  .state = val
+                                  .trim();
                             },
                           );
                         },
@@ -452,11 +454,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                   onPressed: () {
                                     _searchController.clear();
                                     ref
-                                        .read(
-                                          transactionSearchQueryProvider
-                                              .notifier,
-                                        )
-                                        .state = '';
+                                            .read(
+                                              transactionSearchQueryProvider
+                                                  .notifier,
+                                            )
+                                            .state =
+                                        '';
                                   },
                                 )
                               : null,
@@ -475,36 +478,37 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
-                  children: ['All', 'Income', 'Expense', 'Transfer']
-                      .map((type) {
+                  children: ['All', 'Income', 'Expense', 'Transfer'].map((
+                    type,
+                  ) {
                     final isSelected = activeType == type;
                     return Padding(
                       padding: const EdgeInsets.only(right: kSpacing8),
                       child: TactileSpringContainer(
                         onTap: () {
                           ref
-                              .read(transactionTypeFilterProvider.notifier)
-                              .state = type;
+                                  .read(transactionTypeFilterProvider.notifier)
+                                  .state =
+                              type;
                         },
                         child: AnimatedContainer(
                           duration: MotionTokens.durationFast,
                           curve: Curves.easeOutCubic,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? theme.colorScheme.primary
                                 : theme.colorScheme.surfaceContainerHighest
-                                    .withValues(alpha: 0.35),
+                                      .withValues(alpha: 0.35),
                             borderRadius: BorderRadius.circular(
                               AppTheme.radiusPill,
                             ),
                             border: Border.all(
                               color: isSelected
                                   ? theme.colorScheme.primary
-                                  : theme.colorScheme.outlineVariant
-                                      .withValues(alpha: 0.25),
+                                  : theme.colorScheme.outlineVariant.withValues(
+                                      alpha: 0.25,
+                                    ),
                               width: 1.0,
                             ),
                           ),
@@ -561,7 +565,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                   ref.invalidate(accountsStreamProvider);
                 },
                 child: SkeletonCrossfade(
-                  isLoading: transactionsAsync is AsyncLoading &&
+                  isLoading:
+                      transactionsAsync is AsyncLoading &&
                       !transactionsAsync.hasValue,
                   skeleton: const Padding(
                     padding: EdgeInsets.symmetric(
@@ -610,59 +615,67 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       subtitle: isFiltered
                                           ? 'Try adjusting your filters or typing a different query.'
                                           : 'Start logging your offline financial transactions to track your spending habits.',
-                                      illustration: PesaFlowIllustration
-                                          .emptyTransactions(),
+                                      illustration:
+                                          PesaFlowIllustration.emptyTransactions(),
                                       action: TactileSpringContainer(
                                         onTap: () {
                                           if (isFiltered) {
                                             ref
-                                                .read(
-                                                  transactionTypeFilterProvider
-                                                      .notifier,
-                                                )
-                                                .state = 'All';
+                                                    .read(
+                                                      transactionTypeFilterProvider
+                                                          .notifier,
+                                                    )
+                                                    .state =
+                                                'All';
                                             ref
-                                                .read(
-                                                  transactionAccountFilterProvider
-                                                      .notifier,
-                                                )
-                                                .state = null;
+                                                    .read(
+                                                      transactionAccountFilterProvider
+                                                          .notifier,
+                                                    )
+                                                    .state =
+                                                null;
                                             ref
-                                                .read(
-                                                  transactionCategoryFilterProvider
-                                                      .notifier,
-                                                )
-                                                .state = null;
+                                                    .read(
+                                                      transactionCategoryFilterProvider
+                                                          .notifier,
+                                                    )
+                                                    .state =
+                                                null;
                                             ref
-                                                .read(
-                                                  transactionSearchQueryProvider
-                                                      .notifier,
-                                                )
-                                                .state = '';
+                                                    .read(
+                                                      transactionSearchQueryProvider
+                                                          .notifier,
+                                                    )
+                                                    .state =
+                                                '';
                                             ref
-                                                .read(
-                                                  transactionAmountMinProvider
-                                                      .notifier,
-                                                )
-                                                .state = null;
+                                                    .read(
+                                                      transactionAmountMinProvider
+                                                          .notifier,
+                                                    )
+                                                    .state =
+                                                null;
                                             ref
-                                                .read(
-                                                  transactionAmountMaxProvider
-                                                      .notifier,
-                                                )
-                                                .state = null;
+                                                    .read(
+                                                      transactionAmountMaxProvider
+                                                          .notifier,
+                                                    )
+                                                    .state =
+                                                null;
                                             ref
-                                                .read(
-                                                  transactionDateFromProvider
-                                                      .notifier,
-                                                )
-                                                .state = null;
+                                                    .read(
+                                                      transactionDateFromProvider
+                                                          .notifier,
+                                                    )
+                                                    .state =
+                                                null;
                                             ref
-                                                .read(
-                                                  transactionDateToProvider
-                                                      .notifier,
-                                                )
-                                                .state = null;
+                                                    .read(
+                                                      transactionDateToProvider
+                                                          .notifier,
+                                                    )
+                                                    .state =
+                                                null;
                                           } else {
                                             context.push('/transactions/add');
                                           }
@@ -674,15 +687,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                           ),
                                           decoration: BoxDecoration(
                                             color: theme.colorScheme.primary,
-                                            borderRadius:
-                                                BorderRadius.circular(
+                                            borderRadius: BorderRadius.circular(
                                               AppTheme.radiusPill,
                                             ),
                                             boxShadow: [
                                               BoxShadow(
-                                                color: theme
-                                                    .colorScheme
-                                                    .primary
+                                                color: theme.colorScheme.primary
                                                     .withValues(alpha: 0.3),
                                                 blurRadius: 12,
                                                 offset: const Offset(0, 4),
@@ -738,7 +748,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
 
                       // Group items by calendar day
                       final Map<String, List<TransactionWithCategoryAndAccount>>
-                          grouped = {};
+                      grouped = {};
                       for (final item in visibleTransactions) {
                         final dayStr = DateFormat(
                           'yyyy-MM-dd',
@@ -819,16 +829,19 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                         vertical: kSpacing2,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: (dailyNetChange > 0
-                                                ? context.appColors.incomeColor
-                                                : (dailyNetChange < 0
+                                        color:
+                                            (dailyNetChange > 0
                                                     ? context
-                                                        .appColors
-                                                        .expenseColor
-                                                    : theme
-                                                        .colorScheme
-                                                        .onSurfaceVariant))
-                                            .withValues(alpha: 0.08),
+                                                          .appColors
+                                                          .incomeColor
+                                                    : (dailyNetChange < 0
+                                                          ? context
+                                                                .appColors
+                                                                .expenseColor
+                                                          : theme
+                                                                .colorScheme
+                                                                .onSurfaceVariant))
+                                                .withValues(alpha: 0.08),
                                         borderRadius: BorderRadius.circular(
                                           AppTheme.radiusPill,
                                         ),
@@ -838,8 +851,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                         type: dailyNetChange > 0
                                             ? AmountType.income
                                             : (dailyNetChange < 0
-                                                ? AmountType.expense
-                                                : AmountType.neutral),
+                                                  ? AmountType.expense
+                                                  : AmountType.neutral),
                                         style: context.ts(
                                           12,
                                           fontWeight: FontWeight.w700,
@@ -853,10 +866,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                               // Transaction Items as single group GlassListContainer
                               GlassListContainer(
                                 child: Column(
-                                  children: dayItems
-                                      .asMap()
-                                      .entries
-                                      .map((entry) {
+                                  children: dayItems.asMap().entries.map((
+                                    entry,
+                                  ) {
                                     final index = entry.key;
                                     final item = entry.value;
                                     final trans = item.transaction;
@@ -882,350 +894,351 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     final Widget row = Dismissible(
                                       key: Key(trans.id),
                                       direction: DismissDirection.endToStart,
-                                        background: Container(
-                                          alignment: Alignment.centerRight,
-                                          padding: const EdgeInsets.only(
-                                            right: kSpacing20,
-                                          ),
-                                          color: theme.colorScheme.error,
-                                          child: Icon(
-                                            PesaFlowIcons.delete,
-                                            color: theme.colorScheme.onError,
-                                          ),
+                                      background: Container(
+                                        alignment: Alignment.centerRight,
+                                        padding: const EdgeInsets.only(
+                                          right: kSpacing20,
                                         ),
-                                        confirmDismiss: (_) async {
-                                          return await ModernDialog.show<bool>(
-                                                context: context,
-                                                title: const Text(
-                                                  'Delete Transaction',
+                                        color: theme.colorScheme.error,
+                                        child: Icon(
+                                          PesaFlowIcons.delete,
+                                          color: theme.colorScheme.onError,
+                                        ),
+                                      ),
+                                      confirmDismiss: (_) async {
+                                        return await ModernDialog.show<bool>(
+                                              context: context,
+                                              title: const Text(
+                                                'Delete Transaction',
+                                              ),
+                                              titleIcon: PesaFlowIcons.warning,
+                                              iconColor: context
+                                                  .appColors
+                                                  .expenseColor,
+                                              content: const Text(
+                                                'This action cannot be undone.',
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).pop(false),
+                                                  child: const Text('Cancel'),
                                                 ),
-                                                titleIcon:
-                                                    PesaFlowIcons.warning,
-                                                iconColor: context
-                                                    .appColors
-                                                    .expenseColor,
-                                                content: const Text(
-                                                  'This action cannot be undone.',
+                                                ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                        backgroundColor: context
+                                                            .appColors
+                                                            .expenseColor,
+                                                      ),
+                                                  onPressed: () => Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).pop(true),
+                                                  child: const Text('Delete'),
                                                 ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.of(
-                                                      context,
-                                                      rootNavigator: true,
-                                                    ).pop(false),
-                                                    child: const Text('Cancel'),
-                                                  ),
-                                                  ElevatedButton(
-                                                    style:
-                                                        ElevatedButton.styleFrom(
-                                                      backgroundColor: context
-                                                          .appColors
-                                                          .expenseColor,
-                                                    ),
-                                                    onPressed: () =>
-                                                        Navigator.of(
-                                                      context,
-                                                      rootNavigator: true,
-                                                    ).pop(true),
-                                                    child: const Text('Delete'),
-                                                  ),
-                                                ],
-                                              ) ??
-                                              false;
-                                        },
-                                        onDismissed: (_) {
-                                          final tx = trans;
-                                          setState(() {
-                                            _pendingDeleteIds.add(tx.id);
-                                          });
-                                          UndoDelete.show(
-                                            context: context,
-                                            entityName: 'Transaction',
-                                            onUndo: () async {
-                                              setState(() {
-                                                _pendingDeleteIds.remove(tx.id);
-                                              });
-                                              await ref
-                                                  .read(
-                                                    transactionRepositoryProvider,
-                                                  )
-                                                  .createTransaction(tx);
-                                            },
-                                            onDelete: () async {
-                                              setState(() {
-                                                _pendingDeleteIds.remove(tx.id);
-                                              });
-                                              await ref
-                                                  .read(
-                                                    transactionRepositoryProvider,
-                                                  )
-                                                  .deleteTransaction(tx.id);
-                                            },
+                                              ],
+                                            ) ??
+                                            false;
+                                      },
+                                      onDismissed: (_) {
+                                        final tx = trans;
+                                        setState(() {
+                                          _pendingDeleteIds.add(tx.id);
+                                        });
+                                        UndoDelete.show(
+                                          context: context,
+                                          entityName: 'Transaction',
+                                          onUndo: () async {
+                                            setState(() {
+                                              _pendingDeleteIds.remove(tx.id);
+                                            });
+                                            await ref
+                                                .read(
+                                                  transactionRepositoryProvider,
+                                                )
+                                                .createTransaction(tx);
+                                          },
+                                          onDelete: () async {
+                                            setState(() {
+                                              _pendingDeleteIds.remove(tx.id);
+                                            });
+                                            await ref
+                                                .read(
+                                                  transactionRepositoryProvider,
+                                                )
+                                                .deleteTransaction(tx.id);
+                                          },
+                                        );
+                                      },
+                                      child: TactileSpringContainer(
+                                        onTap: () {
+                                          pushHeroCard(
+                                            context,
+                                            TransactionDetailScreen(
+                                              transactionId: trans.id,
+                                            ),
+                                            'transaction_${trans.id}',
                                           );
                                         },
-                                        child: TactileSpringContainer(
-                                          onTap: () {
-                                            pushHeroCard(
+                                        onLongPress: () =>
+                                            _showTransactionActions(
                                               context,
-                                              TransactionDetailScreen(
-                                                transactionId: trans.id,
-                                              ),
-                                              'transaction_${trans.id}',
-                                            );
-                                          },
-                                          onLongPress: () => _showTransactionActions(context, item),
-                                          selectedColor:
-                                              theme.colorScheme.onSurface,
-                                          child: Hero(
-                                            tag: 'transaction_${trans.id}',
-                                            child: Semantics(
-                                              label:
-                                                  '${trans.description.isNotEmpty ? trans.description : item.category.name}, ${CurrencyFormatter.formatCents(trans.amount)} ${trans.type}',
-                                              button: true,
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(
-                                                      horizontal: kSpacing16,
-                                                      vertical: kSpacing12,
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        Container(
-                                                          width: 38,
-                                                          height: 38,
-                                                          alignment:
-                                                              Alignment.center,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: categoryColor
-                                                                .withValues(
-                                                              alpha: 0.12,
-                                                            ),
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                              10,
-                                                            ),
-                                                          ),
-                                                          child: Icon(
-                                                            getCategoryIcon(
-                                                              item.category.icon,
-                                                            ),
-                                                            color: categoryColor,
-                                                            size: 18,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: kSpacing12,
-                                                        ),
-                                                        // Content
-                                                        Expanded(
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                trans.description
-                                                                        .isNotEmpty
-                                                                    ? trans
-                                                                        .description
-                                                                    : item
-                                                                        .category
-                                                                        .name,
-                                                                style: context.ts(
-                                                                  14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                  color:
-                                                                      onSurface,
-                                                                ),
-                                                                maxLines: 1,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
+                                              item,
+                                            ),
+                                        selectedColor:
+                                            theme.colorScheme.onSurface,
+                                        child: Hero(
+                                          tag: 'transaction_${trans.id}',
+                                          child: Semantics(
+                                            label:
+                                                '${trans.description.isNotEmpty ? trans.description : item.category.name}, ${CurrencyFormatter.formatCents(trans.amount)} ${trans.type}',
+                                            button: true,
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: kSpacing16,
+                                                        vertical: kSpacing12,
+                                                      ),
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        width: 38,
+                                                        height: 38,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        decoration: BoxDecoration(
+                                                          color: categoryColor
+                                                              .withValues(
+                                                                alpha: 0.12,
                                                               ),
-                                                              const SizedBox(
-                                                                height: 2,
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                10,
                                                               ),
-                                                              Row(
-                                                                children: [
-                                                                  Text(
-                                                                    item.account
-                                                                            ?.name ??
-                                                                        'Offline',
-                                                                    style: context.ts(
-                                                                      11,
-                                                                      color: theme
-                                                                          .colorScheme
-                                                                          .onSurfaceVariant,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
-                                                                  ),
-                                                                  if (trans.reference !=
-                                                                          null &&
-                                                                      trans
-                                                                          .reference!
-                                                                          .isNotEmpty) ...[
-                                                                    const SizedBox(
-                                                                      width:
-                                                                          kSpacing6,
-                                                                    ),
-                                                                    Text(
-                                                                      '•',
-                                                                      style: context.ts(
-                                                                          13,
-                                                                          color:
-                                                                              onSurface.withValues(alpha: 0.11)),
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width:
-                                                                          kSpacing6,
-                                                                    ),
-                                                                    Flexible(
-                                                                      child:
-                                                                          Text(
-                                                                        trans
-                                                                            .reference!,
-                                                                        style: context.ts(
-                                                                            13,
-                                                                            color:
-                                                                                onSurface.withValues(alpha: 0.34)),
-                                                                        maxLines:
-                                                                            1,
-                                                                        overflow:
-                                                                            TextOverflow
-                                                                                .ellipsis,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                  if (trans.source
-                                                                      .startsWith(
-                                                                    'sms',
-                                                                  )) ...[
-                                                                    const SizedBox(
-                                                                      width:
-                                                                          kSpacing6,
-                                                                    ),
-                                                                    Container(
-                                                                      padding: const EdgeInsets
-                                                                          .symmetric(
-                                                                        horizontal:
-                                                                            kSpacing6,
-                                                                        vertical:
-                                                                            kSpacing2,
-                                                                      ),
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: theme
-                                                                            .colorScheme
-                                                                            .primary
-                                                                            .withValues(
-                                                                              alpha:
-                                                                                  0.05,
-                                                                            ),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                          kSpacing6,
-                                                                        ),
-                                                                      ),
-                                                                      child:
-                                                                          Icon(
-                                                                        PesaFlowIcons
-                                                                            .sms,
-                                                                        size:
-                                                                            11,
-                                                                        color: theme
-                                                                            .colorScheme
-                                                                            .primary,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ],
-                                                             ),
-                                                            ],
+                                                        ),
+                                                        child: Icon(
+                                                          getCategoryIcon(
+                                                            item.category.icon,
                                                           ),
+                                                          color: categoryColor,
+                                                          size: 18,
                                                         ),
-                                                        const SizedBox(
-                                                          width: kSpacing12,
-                                                        ),
-                                                        // Amount & Time
-                                                        Column(
+                                                      ),
+                                                      const SizedBox(
+                                                        width: kSpacing12,
+                                                      ),
+                                                      // Content
+                                                      Expanded(
+                                                        child: Column(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
-                                                                  .end,
+                                                                  .start,
                                                           children: [
-                                                            AmountText(
-                                                              amountInCents:
-                                                                  trans.amount,
-                                                              type: amtType,
-                                                              showDecimals:
-                                                                  true,
+                                                            Text(
+                                                              trans
+                                                                      .description
+                                                                      .isNotEmpty
+                                                                  ? trans
+                                                                        .description
+                                                                  : item
+                                                                        .category
+                                                                        .name,
                                                               style: context.ts(
                                                                 14,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w700,
-                                                                color: amtType ==
-                                                                        AmountType
-                                                                            .income
-                                                                    ? context
-                                                                        .appColors
-                                                                        .incomeColor
-                                                                    : (amtType ==
-                                                                            AmountType
-                                                                                .expense
-                                                                        ? context
-                                                                            .appColors
-                                                                            .expenseColor
-                                                                        : theme
-                                                                            .colorScheme
-                                                                            .onSurfaceVariant),
+                                                                color:
+                                                                    onSurface,
                                                               ),
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
                                                             ),
                                                             const SizedBox(
                                                               height: 2,
                                                             ),
-                                                            Text(
-                                                              formattedTime,
-                                                              style: context.ts(
-                                                                10,
-                                                                color: theme
-                                                                    .colorScheme
-                                                                    .onSurfaceVariant,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  item
+                                                                          .account
+                                                                          ?.name ??
+                                                                      'Offline',
+                                                                  style: context.ts(
+                                                                    11,
+                                                                    color: theme
+                                                                        .colorScheme
+                                                                        .onSurfaceVariant,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                  ),
+                                                                ),
+                                                                if (trans.reference !=
+                                                                        null &&
+                                                                    trans
+                                                                        .reference!
+                                                                        .isNotEmpty) ...[
+                                                                  const SizedBox(
+                                                                    width:
+                                                                        kSpacing6,
+                                                                  ),
+                                                                  Text(
+                                                                    '•',
+                                                                    style: context.ts(
+                                                                      13,
+                                                                      color: onSurface.withValues(
+                                                                        alpha:
+                                                                            0.11,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    width:
+                                                                        kSpacing6,
+                                                                  ),
+                                                                  Flexible(
+                                                                    child: Text(
+                                                                      trans
+                                                                          .reference!,
+                                                                      style: context.ts(
+                                                                        13,
+                                                                        color: onSurface.withValues(
+                                                                          alpha:
+                                                                              0.34,
+                                                                        ),
+                                                                      ),
+                                                                      maxLines:
+                                                                          1,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                                if (trans.source
+                                                                    .startsWith(
+                                                                      'sms',
+                                                                    )) ...[
+                                                                  const SizedBox(
+                                                                    width:
+                                                                        kSpacing6,
+                                                                  ),
+                                                                  Container(
+                                                                    padding: const EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          kSpacing6,
+                                                                      vertical:
+                                                                          kSpacing2,
+                                                                    ),
+                                                                    decoration: BoxDecoration(
+                                                                      color: theme
+                                                                          .colorScheme
+                                                                          .primary
+                                                                          .withValues(
+                                                                            alpha:
+                                                                                0.05,
+                                                                          ),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                            kSpacing6,
+                                                                          ),
+                                                                    ),
+                                                                    child: Icon(
+                                                                      PesaFlowIcons
+                                                                          .sms,
+                                                                      size: 11,
+                                                                      color: theme
+                                                                          .colorScheme
+                                                                          .primary,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ],
                                                             ),
                                                           ],
                                                         ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: kSpacing12,
+                                                      ),
+                                                      // Amount & Time
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          AmountText(
+                                                            amountInCents:
+                                                                trans.amount,
+                                                            type: amtType,
+                                                            showDecimals: true,
+                                                            style: context.ts(
+                                                              14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              color:
+                                                                  amtType ==
+                                                                      AmountType
+                                                                          .income
+                                                                  ? context
+                                                                        .appColors
+                                                                        .incomeColor
+                                                                  : (amtType ==
+                                                                            AmountType.expense
+                                                                        ? context
+                                                                              .appColors
+                                                                              .expenseColor
+                                                                        : theme
+                                                                              .colorScheme
+                                                                              .onSurfaceVariant),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 2,
+                                                          ),
+                                                          Text(
+                                                            formattedTime,
+                                                            style: context.ts(
+                                                              10,
+                                                              color: theme
+                                                                  .colorScheme
+                                                                  .onSurfaceVariant,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
                                                   ),
-                                                  if (index <
-                                                      dayItems.length - 1)
-                                                    Divider(
-                                                      height: 1,
-                                                      thickness: 0.5,
-                                                      color: onSurface
-                                                          .withValues(
-                                                              alpha: 0.06),
-                                                      indent: 68,
-                                                      endIndent: 16,
+                                                ),
+                                                if (index < dayItems.length - 1)
+                                                  Divider(
+                                                    height: 1,
+                                                    thickness: 0.5,
+                                                    color: onSurface.withValues(
+                                                      alpha: 0.06,
                                                     ),
-                                                ],
-                                              ),
+                                                    indent: 68,
+                                                    endIndent: 16,
+                                                  ),
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      );
-                                      if (isNewRow) {
+                                      ),
+                                    );
+                                    if (isNewRow) {
                                       return _NewRowHighlight(child: row);
                                     }
                                     return row;
@@ -1264,7 +1277,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
     required List<Category> categories,
   }) {
     final theme = Theme.of(context);
-    final hasSecondaryFilters = activeAccount != null ||
+    final hasSecondaryFilters =
+        activeAccount != null ||
         activeCategory != null ||
         dateFrom != null ||
         dateTo != null ||
@@ -1278,23 +1292,27 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
     if (activeAccount != null) {
       final acc = accounts.where((a) => a.id == activeAccount).firstOrNull;
       final name = acc?.name ?? 'Account';
-      chips.add(_FilterChip(
-        icon: PesaFlowIcons.wallet,
-        label: name,
-        onDeleted: () =>
-            ref.read(transactionAccountFilterProvider.notifier).state = null,
-      ));
+      chips.add(
+        _FilterChip(
+          icon: PesaFlowIcons.wallet,
+          label: name,
+          onDeleted: () =>
+              ref.read(transactionAccountFilterProvider.notifier).state = null,
+        ),
+      );
     }
 
     if (activeCategory != null) {
       final cat = categories.where((c) => c.id == activeCategory).firstOrNull;
       final name = cat?.name ?? 'Category';
-      chips.add(_FilterChip(
-        icon: PesaFlowIcons.category,
-        label: name,
-        onDeleted: () =>
-            ref.read(transactionCategoryFilterProvider.notifier).state = null,
-      ));
+      chips.add(
+        _FilterChip(
+          icon: PesaFlowIcons.category,
+          label: name,
+          onDeleted: () =>
+              ref.read(transactionCategoryFilterProvider.notifier).state = null,
+        ),
+      );
     }
 
     if (dateFrom != null || dateTo != null) {
@@ -1307,14 +1325,16 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
       } else {
         dateLabel = 'Until ${DateFormat('MMM d').format(dateTo!)}';
       }
-      chips.add(_FilterChip(
-        icon: PesaFlowIcons.calendar,
-        label: dateLabel,
-        onDeleted: () {
-          ref.read(transactionDateFromProvider.notifier).state = null;
-          ref.read(transactionDateToProvider.notifier).state = null;
-        },
-      ));
+      chips.add(
+        _FilterChip(
+          icon: PesaFlowIcons.calendar,
+          label: dateLabel,
+          onDeleted: () {
+            ref.read(transactionDateFromProvider.notifier).state = null;
+            ref.read(transactionDateToProvider.notifier).state = null;
+          },
+        ),
+      );
     }
 
     if (amountMin != null || amountMax != null) {
@@ -1327,14 +1347,16 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
       } else {
         amountLabel = '<= ${CurrencyFormatter.formatCompact(amountMax!)}';
       }
-      chips.add(_FilterChip(
-        icon: PesaFlowIcons.analytics,
-        label: amountLabel,
-        onDeleted: () {
-          ref.read(transactionAmountMinProvider.notifier).state = null;
-          ref.read(transactionAmountMaxProvider.notifier).state = null;
-        },
-      ));
+      chips.add(
+        _FilterChip(
+          icon: PesaFlowIcons.analytics,
+          label: amountLabel,
+          onDeleted: () {
+            ref.read(transactionAmountMinProvider.notifier).state = null;
+            ref.read(transactionAmountMaxProvider.notifier).state = null;
+          },
+        ),
+      );
     }
 
     if (chips.length > 1) {
@@ -1429,12 +1451,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
         };
 
         return Padding(
-          padding: const EdgeInsets.fromLTRB(
-            0,
-            kSpacing20,
-            0,
-            kSpacing24,
-          ),
+          padding: const EdgeInsets.fromLTRB(0, kSpacing20, 0, kSpacing24),
           child: Container(
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerHigh,
@@ -1467,8 +1484,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                         ),
                         decoration: BoxDecoration(
                           color: accentColor.withValues(alpha: 0.12),
-                          borderRadius:
-                              BorderRadius.circular(AppTheme.radiusPill),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
                         ),
                         child: Text(
                           'EXECUTIVE INSIGHT',
@@ -1586,11 +1604,7 @@ class _FilterChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 12,
-            color: theme.colorScheme.primary,
-          ),
+          Icon(icon, size: 12, color: theme.colorScheme.primary),
           const SizedBox(width: kSpacing6),
           Text(
             label,
@@ -1694,8 +1708,9 @@ class _MiniBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final fraction =
-        maxCents > 0 ? (valueCents / maxCents).clamp(0.0, 1.0) : 0.0;
+    final fraction = maxCents > 0
+        ? (valueCents / maxCents).clamp(0.0, 1.0)
+        : 0.0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,

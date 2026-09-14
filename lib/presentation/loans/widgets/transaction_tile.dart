@@ -73,14 +73,21 @@ class TransactionTile extends StatelessWidget {
                 const SizedBox(height: kSpacing2),
                 Text(
                   DateFormatter.shortDate(tx.createdAt),
-                  style: context.ts(11, color: onSurface.withValues(alpha: 0.5)),
+                  style: context.ts(
+                    11,
+                    color: onSurface.withValues(alpha: 0.5),
+                  ),
                 ),
               ],
             ),
           ),
           Text(
             '${isCredit ? '+' : '-'}${CurrencyFormatter.formatCents(tx.amount)}',
-            style: context.ts(13, fontWeight: FontWeight.w600, color: amountColor),
+            style: context.ts(
+              13,
+              fontWeight: FontWeight.w600,
+              color: amountColor,
+            ),
           ),
         ],
       ),

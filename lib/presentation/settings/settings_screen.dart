@@ -177,7 +177,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 (acc.phoneNumber != null
                                     ? ' • ${acc.phoneNumber}'
                                     : ''),
-                            style: context.ts(12, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                            style: context.ts(
+                              12,
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
+                            ),
                           ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -1094,11 +1099,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
-        child: Icon(
-          icon,
-          color: color,
-          size: size,
-        ),
+        child: Icon(icon, color: color, size: size),
       ),
     );
   }
@@ -1133,9 +1134,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
             border: Border.all(
-              color: theme.colorScheme.outlineVariant.withValues(
-                alpha: 0.20,
-              ),
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.20),
             ),
           ),
           child: Column(
@@ -1186,7 +1185,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ref.watch(totalTransactionsCountProvider).value ?? 0;
     final trackers = ref.watch(allTrackersStreamProvider).value ?? [];
     final activeId = ref.watch(activeTrackerIdProvider);
-    final activeTracker = trackers.where((t) => t.id == activeId).firstOrNull ??
+    final activeTracker =
+        trackers.where((t) => t.id == activeId).firstOrNull ??
         (trackers.isNotEmpty ? trackers.first : null);
 
     return Scaffold(
@@ -1396,7 +1396,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         color: theme.colorScheme.primary,
                       ),
                       title: const Text('Manage Workspaces'),
-                      subtitle: const Text('Switch or create offline workspaces'),
+                      subtitle: const Text(
+                        'Switch or create offline workspaces',
+                      ),
                       onTap: () {
                         PesaHaptics.light();
                         showWorkspaceSelectorSheet(context, ref);
@@ -1577,8 +1579,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       subtitle: const Text(
                         'Require biometrics to open PesaFlow',
                       ),
-                      value:
-                          ref.watch(appLockEnabledProvider).value ?? false,
+                      value: ref.watch(appLockEnabledProvider).value ?? false,
                       onChanged: (val) {
                         PesaHaptics.light();
                         ref
@@ -1666,9 +1667,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         color: context.appColors.transferColor,
                       ),
                       title: const Text('Export to CSV'),
-                      subtitle: const Text(
-                        'Download transactions as CSV file',
-                      ),
+                      subtitle: const Text('Download transactions as CSV file'),
                       onTap: () => _handleExportCsv(context, ref),
                     ),
                     IosListRow(
@@ -1678,9 +1677,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         color: context.appColors.transferColor,
                       ),
                       title: const Text('Import CSV'),
-                      subtitle: const Text(
-                        'Import transactions from CSV file',
-                      ),
+                      subtitle: const Text('Import transactions from CSV file'),
                       onTap: () => _handleImportCsv(context, ref),
                     ),
                     IosListRow(

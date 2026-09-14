@@ -125,7 +125,11 @@ class InsightsTab extends ConsumerWidget {
                                   children: [
                                     Text(
                                       insight.title,
-                                      style: context.ts(14, fontWeight: FontWeight.bold, letterSpacing: -0.2),
+                                      style: context.ts(
+                                        14,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: -0.2,
+                                      ),
                                     ),
                                     const SizedBox(height: kSpacing6),
                                     Text(

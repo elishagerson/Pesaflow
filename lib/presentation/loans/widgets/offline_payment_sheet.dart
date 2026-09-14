@@ -84,12 +84,18 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   children: [
                                     Text(
                                       'Record Offline Payment',
-                                      style: context.ts(22, fontWeight: FontWeight.bold),
+                                      style: context.ts(
+                                        22,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     const SizedBox(height: kSpacing2),
                                     Text(
                                       'No wallet account will be affected',
-                                      style: context.ts(12, color: onSurface.withValues(alpha: 0.6)),
+                                      style: context.ts(
+                                        12,
+                                        color: onSurface.withValues(alpha: 0.6),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -113,7 +119,11 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   RegExp(r'[\d.,]'),
                                 ),
                               ],
-                              style: context.ts(28, fontWeight: FontWeight.bold, color: onSurface),
+                              style: context.ts(
+                                28,
+                                fontWeight: FontWeight.bold,
+                                color: onSurface,
+                              ),
                               decoration: context.inputDecoration(
                                 hintText: 'Enter amount',
                                 prefixText: 'TSh ',
@@ -265,17 +275,14 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                             Container(
                               padding: const EdgeInsets.all(kSpacing12),
                               decoration: BoxDecoration(
-                                color: context
-                                    .appColors
-                                    .incomeColor
-                                    .withValues(alpha: 0.05),
+                                color: context.appColors.incomeColor.withValues(
+                                  alpha: 0.05,
+                                ),
                                 borderRadius: BorderRadius.circular(
                                   AppTheme.radiusInput,
                                 ),
                                 border: Border.all(
-                                  color: context
-                                      .appColors
-                                      .incomeColor
+                                  color: context.appColors.incomeColor
                                       .withValues(alpha: 0.15),
                                 ),
                               ),
@@ -284,16 +291,19 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   Icon(
                                     PesaFlowIcons.info,
                                     size: 16,
-                                    color: context
-                                        .appColors
-                                        .incomeColor
+                                    color: context.appColors.incomeColor
                                         .withValues(alpha: 0.8),
                                   ),
                                   const SizedBox(width: kSpacing8),
                                   Expanded(
                                     child: Text(
                                       'This records the payment without deducting from any wallet account. Use this for cash or external payments.',
-                                      style: context.ts(11, color: context.appColors.incomeColor.withValues(alpha: 0.8), height: 1.3),
+                                      style: context.ts(
+                                        11,
+                                        color: context.appColors.incomeColor
+                                            .withValues(alpha: 0.8),
+                                        height: 1.3,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -367,7 +377,10 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         paymentAmount() <= 0
                                             ? 'Enter an amount'
                                             : 'Record ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                        style: context.ts(16, fontWeight: FontWeight.bold),
+                                        style: context.ts(
+                                          16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                               ),
                             ),

@@ -61,7 +61,9 @@ class SmsClassifier {
     // Signal: Contains URLs (promotional links — messages with promo links must not be parsed)
     if (_hasUrl(lower)) {
       score -= 20.0;
-      reasons.add('Contains promotional link/URL (www/http) → rejected as promo');
+      reasons.add(
+        'Contains promotional link/URL (www/http) → rejected as promo',
+      );
     }
 
     // Signal: Contains dial / USSD codes
@@ -238,7 +240,6 @@ class SmsClassifier {
       'promotion': 2.0,
       'campaign': 2.0,
       'pakua': 2.0, // "download"
-
       // Medium promo indicators (1.5 each)
       'offer': 1.5,
       'bure': 1.5, // "free"
@@ -252,7 +253,6 @@ class SmsClassifier {
       'zawadi': 1.5, // "gift/reward"
       'punguzo': 1.5, // "discount"
       'jiunge': 1.5, // "join"
-
       // Mild promo indicators (1.0 each)
       'upgrade': 1.0,
       'hamia': 1.0, // "switch to"
