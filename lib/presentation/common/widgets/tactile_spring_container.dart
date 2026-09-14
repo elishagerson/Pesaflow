@@ -99,14 +99,18 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
 
   @override
   Widget build(BuildContext context) {
-    final hasButton = widget.semanticButton ?? (widget.onTap != null);
-    final effectiveHaptic = widget.haptic ?? HapticType.selection;
+    final hasButton =
+        widget.semanticButton ?? (widget.onTap != null || widget.onLongPress != null);
+    // Haptic only fires when a tap action actually exists — an inert or
+    // long-press-only container must not vibrate on a plain tap.
+    final effectiveHaptic =
+        widget.onTap == null ? null : (widget.haptic ?? HapticType.selection);
 
     final core = GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTapDown: (_) => _pressDown(),
       onTapUp: (_) {
-        triggerHaptic(effectiveHaptic);
+        if (effectiveHaptic != null) triggerHaptic(effectiveHaptic);
         _springBack();
         widget.onTap?.call();
       },
@@ -144,7 +148,7 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
     return Semantics(
       label: widget.semanticLabel,
       button: hasButton,
-      enabled: widget.onTap != null,
+      enabled: widget.onTap != null || widget.onLongPress != null,
       child: core,
     );
   }

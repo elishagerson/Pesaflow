@@ -38,10 +38,10 @@ void triggerHaptic(HapticType type) {
       PesaHaptics.selection();
       break;
     case HapticType.impact:
-      PesaHaptics.light();
+      PesaHaptics.medium();
       break;
     case HapticType.soft:
-      PesaHaptics.light();
+      PesaHaptics.selection();
       break;
     case HapticType.rigid:
       PesaHaptics.heavy();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
@@ -15,7 +16,7 @@ class ShimmerCard extends StatefulWidget {
     super.key,
     this.height = 100,
     this.width = double.infinity,
-    this.borderRadius = 20,
+    this.borderRadius = AppTheme.radiusHero,
     this.barHeights = const [14, 10, 10],
     this.barWidths = const [120, double.infinity, 180],
     this.leading,
@@ -119,11 +120,12 @@ class _ShimmerCardState extends State<ShimmerCard>
   }
 
   Widget _pulseBar({double width = 80, double height = 12}) {
+    final theme = Theme.of(context);
     return Container(
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.15),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(height / 2),
       ),
     );
@@ -161,13 +163,17 @@ class _ShimmerEffect extends StatelessWidget {
     return AnimatedBuilder(
       animation: animation,
       builder: (_, child) {
+        final theme = Theme.of(context);
+        final shimmerColor = theme.brightness == Brightness.dark
+            ? Colors.white.withValues(alpha: 0.12)
+            : Colors.white.withValues(alpha: 0.30);
         return ShaderMask(
           shaderCallback: (bounds) => LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: const [
+            colors: [
               Colors.transparent,
-              Colors.white24,
+              shimmerColor,
               Colors.transparent,
             ],
             stops: [

@@ -116,11 +116,10 @@ class _IosTabBarState extends State<IosTabBar>
       ),
     ];
 
-    final isDark = theme.brightness == Brightness.dark;
-    final navBgColor = isDark
-        ? const Color(0xFF0F0F0F).withValues(alpha: 0.6)
-        : theme.colorScheme.surface.withValues(alpha: 0.7);
-    final navFgColor = isDark ? Colors.white : theme.colorScheme.onSurface;
+    // Both modes derive from the theme surface — the resolved dark surface
+    // is already the correct near-black (0xFF0F0F0F).
+    final navBgColor = theme.colorScheme.surface.withValues(alpha: 0.7);
+    final navFgColor = theme.colorScheme.onSurface;
 
     return Container(
       height: height + bottomPadding + (widget.minimized ? 6 : 14),
@@ -242,7 +241,7 @@ class _IosTabBarState extends State<IosTabBar>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
+                      duration: MotionTokens.durationExit,
                       switchInCurve: Curves.easeOutCubic,
                       switchOutCurve: Curves.easeInCubic,
                       transitionBuilder: (child, anim) {
@@ -479,11 +478,13 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
+    final controller = AnimationController(
       vsync: this,
       duration: MotionTokens.durationFast,
     );
-    _scale = Tween<double>(begin: 1.0, end: 0.94).animate(_controller);
+    _scale = Tween<double>(begin: 1.0, end: MotionTokens.scalePress).animate(
+      controller,
+    );
   }
 
   @override

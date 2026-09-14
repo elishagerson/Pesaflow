@@ -46,7 +46,6 @@ class GlassCard extends StatefulWidget {
 class _GlassCardState extends State<GlassCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  bool _hasShimmered = false;
 
   @override
   void initState() {
@@ -155,7 +154,8 @@ class _GlassCardState extends State<GlassCard>
             ),
             child: widget.child,
           ),
-          // Shimmer — fires only once on first tap
+          // Press sheen — sweeps across the card with the press-down,
+          // driven by the same press controller (zero extra frames).
           if (widget.onTap != null && !context.isReducedMotion)
             Positioned.fill(
               child: IgnorePointer(
@@ -163,7 +163,6 @@ class _GlassCardState extends State<GlassCard>
                   animation: _controller,
                   builder: (context, child) {
                     if (_controller.value == 0) return const SizedBox.shrink();
-                    if (_hasShimmered) return const SizedBox.shrink();
                     return FractionalTranslation(
                       translation: Offset((_controller.value * 1.8) - 0.9, 0),
                       child: Container(
@@ -211,12 +210,7 @@ class _GlassCardState extends State<GlassCard>
           behavior: HitTestBehavior.opaque,
           onTapDown: reducedMotion
               ? null
-              : (_) {
-                  _controller.forward();
-                  if (!_hasShimmered) {
-                    _hasShimmered = true;
-                  }
-                },
+              : (_) => _controller.forward(),
           onTapUp: reducedMotion ? null : (_) => _controller.reverse(),
           onTapCancel: reducedMotion ? null : () => _controller.reverse(),
           onTap: () {
@@ -342,5 +336,7 @@ class _GradientBorderPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter old) => false;
+  bool shouldRepaint(covariant _GradientBorderPainter old) {
+    return old.isDark != isDark || old.radius != radius;
+  }
 }
