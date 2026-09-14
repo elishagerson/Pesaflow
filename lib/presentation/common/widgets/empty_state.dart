@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
-
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/motion_aware.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 class EmptyState extends StatefulWidget {
@@ -27,38 +27,20 @@ class EmptyState extends StatefulWidget {
   State<EmptyState> createState() => _EmptyStateState();
 }
 
-class _EmptyStateState extends State<EmptyState> with TickerProviderStateMixin {
-  // Entrance: spring scale from 0.8 → 1.0
+class _EmptyStateState extends State<EmptyState>
+    with SingleTickerProviderStateMixin, MotionAwareMixin {
+  // Entrance: settle-once spring scale from 0.8 → 1.0 (no idle loop).
   late AnimationController _entranceController;
   late Animation<double> _entranceScale;
-
-  // Idle breathing: slow scale oscillation 1.0 → 1.02 → 1.0
-  late AnimationController _breathController;
-  late Animation<double> _breathScale;
 
   bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
-
-    _entranceController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-
+    _entranceController = AnimationController(vsync: this);
     _entranceScale = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _entranceController, curve: Curves.easeOutCubic),
-    );
-
-    // Breathing: subtle scale oscillation, 3s full cycle
-    _breathController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 3000),
-    );
-
-    _breathScale = Tween<double>(begin: 1.0, end: 1.02).animate(
-      CurvedAnimation(parent: _breathController, curve: Curves.easeInOut),
     );
   }
 
@@ -68,27 +50,21 @@ class _EmptyStateState extends State<EmptyState> with TickerProviderStateMixin {
     if (_initialized) return;
     _initialized = true;
 
-    if (context.isReducedMotion) {
-      _entranceController.value = 1.0;
-      // No breathing animation
-    } else {
-      // Entrance spring — starts after first frame
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        _entranceController.forward().then((_) {
-          // Begin breathing after entrance completes
-          if (mounted) {
-            _breathController.repeat(reverse: true);
-          }
-        });
-      });
-    }
+    // Entrance spring — starts after first frame, settles once.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      springAnimate(
+        _entranceController,
+        MotionTokens.springSnappy,
+        0.0,
+        1.0,
+      );
+    });
   }
 
   @override
   void dispose() {
     _entranceController.dispose();
-    _breathController.dispose();
     super.dispose();
   }
 
@@ -110,14 +86,12 @@ class _EmptyStateState extends State<EmptyState> with TickerProviderStateMixin {
     final animatedIllustration = context.isReducedMotion
         ? illustration
         : AnimatedBuilder(
-            animation: Listenable.merge([
-              _entranceController,
-              _breathController,
-            ]),
+            animation: _entranceController,
             builder: (context, child) {
-              // Combine entrance scale and breath scale
-              final combinedScale = _entranceScale.value * _breathScale.value;
-              return Transform.scale(scale: combinedScale, child: child);
+              return Transform.scale(
+                scale: _entranceScale.value,
+                child: child,
+              );
             },
             child: illustration,
           );
@@ -125,8 +99,8 @@ class _EmptyStateState extends State<EmptyState> with TickerProviderStateMixin {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: context.isCompactView ? 24 : 48,
-          vertical: 32,
+          horizontal: context.isCompactView ? kSpacing24 : kSpacing48,
+          vertical: kSpacing32,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -135,7 +109,9 @@ class _EmptyStateState extends State<EmptyState> with TickerProviderStateMixin {
               entranceController: _entranceController,
               child: animatedIllustration,
             ),
-            SizedBox(height: context.isCompactView ? 16 : 24),
+            SizedBox(
+              height: context.isCompactView ? kSpacing16 : kSpacing24,
+            ),
             _DelayedFadeIn(
               delay: MotionTokens.durationSlow,
               child: Semantics(
@@ -151,9 +127,11 @@ class _EmptyStateState extends State<EmptyState> with TickerProviderStateMixin {
               ),
             ),
             if (widget.subtitle != null) ...[
-              SizedBox(height: context.isCompactView ? 8 : 12),
+              SizedBox(
+                height: context.isCompactView ? kSpacing8 : kSpacing12,
+              ),
               _DelayedFadeIn(
-                delay: const Duration(milliseconds: 500),
+                delay: MotionTokens.durationSlow * 1.25,
                 child: Text(
                   widget.subtitle!,
                   style: context.ts(
@@ -165,9 +143,11 @@ class _EmptyStateState extends State<EmptyState> with TickerProviderStateMixin {
               ),
             ],
             if (widget.action != null) ...[
-              SizedBox(height: context.isCompactView ? 20 : 28),
+              SizedBox(
+                height: context.isCompactView ? kSpacing20 : kSpacing28,
+              ),
               _DelayedFadeIn(
-                delay: const Duration(milliseconds: 700),
+                delay: MotionTokens.durationSlow * 1.75,
                 child: widget.action!,
               ),
             ],

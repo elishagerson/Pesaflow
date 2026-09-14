@@ -6,6 +6,9 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
   final Color incomeColor;
   final Color expenseColor;
   final Color transferColor;
+
+  /// Positive/success feedback (saved, approved, completed).
+  final Color successColor;
   final Color surfaceLow;
   final Color surfaceHigh;
   final Color surfaceContainer;
@@ -36,6 +39,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     required this.incomeColor,
     required this.expenseColor,
     required this.transferColor,
+    required this.successColor,
     required this.surfaceLow,
     required this.surfaceHigh,
     required this.surfaceContainer,
