@@ -478,12 +478,12 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
   @override
   void initState() {
     super.initState();
-    final controller = AnimationController(
+    _controller = AnimationController(
       vsync: this,
       duration: MotionTokens.durationFast,
     );
     _scale = Tween<double>(begin: 1.0, end: MotionTokens.scalePress).animate(
-      controller,
+      _controller,
     );
   }
 
@@ -500,8 +500,8 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
     }
     _controller.animateTo(
       1.0,
-      duration: const Duration(milliseconds: 80),
-      curve: Curves.easeOut,
+      duration: MotionTokens.durationFast,
+      curve: Curves.easeOutCubic,
     );
   }
 
@@ -510,7 +510,9 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
       _controller.value = 0.0;
       return;
     }
-    final startVal = _controller.value < 0.35 ? 0.35 : _controller.value;
+    // Ensure quick taps (< 50ms) show a perceptible tactile bounce —
+    // same floor as TactileSpringContainer for consistent press feel.
+    final startVal = _controller.value < 0.3 ? 0.3 : _controller.value;
     final simulation = SpringSimulation(
       MotionTokens.springSnappy,
       startVal,
