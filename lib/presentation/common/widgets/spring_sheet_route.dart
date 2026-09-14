@@ -212,15 +212,17 @@ class _SpringSheetHostState extends State<_SpringSheetHost>
       setState(() => _dragOffset = 0.0);
       return;
     }
-    final startOffset = _dragOffset;
-    _snapController.reset();
-    late final Animation<double> anim;
-    anim = Tween<double>(begin: startOffset, end: 0.0).animate(
-      CurvedAnimation(parent: _snapController, curve: Curves.easeOutCubic),
-    )..addListener(() {
-        setState(() => _dragOffset = anim.value);
-      });
-    _snapController.forward();
+    // Physical spring settle-back — same spring preset as TactileSpringContainer
+    // for a consistent tactile feel across drag and tap interactions.
+    _snapController.value = _dragOffset;
+    _snapController.animateWith(
+      SpringSimulation(
+        MotionTokens.springSnappy,
+        _dragOffset,
+        0.0,
+        0.0,
+      ),
+    );
   }
 
   @override
@@ -250,15 +252,15 @@ class _SpringSheetHostState extends State<_SpringSheetHost>
                 offset: Offset(0, _dragOffset),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(24),
-                    topRight: Radius.circular(24),
+                    topLeft: Radius.circular(AppTheme.radiusDialog),
+                    topRight: Radius.circular(AppTheme.radiusDialog),
                   ),
                   child: Material(
                     color: bgColor,
                     elevation: 16,
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
+                      topLeft: Radius.circular(AppTheme.radiusDialog),
+                      topRight: Radius.circular(AppTheme.radiusDialog),
                     ),
                     child: Container(
                       width: double.infinity,
