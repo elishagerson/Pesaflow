@@ -159,10 +159,12 @@ class _SpringSheetHostState extends State<_SpringSheetHost>
   @override
   void initState() {
     super.initState();
-    _snapController = AnimationController(
-      vsync: this,
-      duration: MotionTokens.durationNormal,
-    );
+    _snapController = AnimationController(vsync: this)
+      ..addListener(() {
+        if (_snapController.isAnimating) {
+          setState(() => _dragOffset = _snapController.value);
+        }
+      });
   }
 
   @override
