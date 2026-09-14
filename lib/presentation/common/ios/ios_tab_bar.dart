@@ -216,7 +216,7 @@ class _IosTabBarState extends State<IosTabBar>
     return Expanded(
       flex: flex.round(),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing2),
         child: Semantics(
           label: tab.label,
           button: true,
@@ -266,7 +266,7 @@ class _IosTabBarState extends State<IosTabBar>
                       ),
                     ),
                     if (isSelected && !widget.minimized) ...[
-                      const SizedBox(width: 8),
+                      const SizedBox(width: kSpacing8),
                       Text(
                         tab.label,
                         style: context.ts(
@@ -373,7 +373,7 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
                   height: 44,
                   child: Row(
                     children: [
-                      effectiveLeading ?? const SizedBox(width: 48),
+                      effectiveLeading ?? const SizedBox(width: kSpacing48),
                       Expanded(
                         child: Text(
                           title,
@@ -390,7 +390,7 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
                       if (actions != null && actions!.isNotEmpty)
                         Row(mainAxisSize: MainAxisSize.min, children: actions!)
                       else
-                        const SizedBox(width: 48),
+                        const SizedBox(width: kSpacing48),
                     ],
                   ),
                 ),
@@ -403,7 +403,7 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(height: 12.0),
+                  const SizedBox(height: kSpacing12),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                     child: SizedBox(
