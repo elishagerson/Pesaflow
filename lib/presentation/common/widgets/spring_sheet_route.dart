@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 
 /// A bottom sheet route with physics-based spring animation and drag-to-dismiss.
 ///
 /// Features:
-/// - Native [PopupRoute] with smooth 320ms spring entrance and crisp 200ms cubic exit
+/// - Native [PopupRoute] with smooth 320ms cubic entrance and crisp 220ms cubic exit
 /// - Automatic exit transition on programmatic pop, barrier tap, and back button
 /// - Drag-to-dismiss with velocity-based fling decision
+/// - Physical spring snap-back via [SpringSimulation]
 /// - Reduced motion support
 ///
 /// Call [showSpringSheet] instead of `showModalBottomSheet`.
