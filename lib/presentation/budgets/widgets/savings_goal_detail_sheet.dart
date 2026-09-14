@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -571,7 +572,7 @@ class _SavingsGoalDetailSheetState
                                   width: double.infinity,
                                   height: 54,
                                   child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 250),
+                                    duration: MotionTokens.durationNormal,
                                     curve: Curves.easeOutCubic,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(

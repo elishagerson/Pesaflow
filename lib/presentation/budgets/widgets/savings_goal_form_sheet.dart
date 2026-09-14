@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
@@ -399,7 +400,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           Row(
                             children: [
                               AnimatedContainer(
-                                duration: const Duration(milliseconds: 250),
+                                duration: MotionTokens.durationNormal,
                                 width: 44,
                                 height: 44,
                                 decoration: BoxDecoration(
@@ -858,7 +859,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           haptic: HapticType.selection,
                           onTap: () => setState(() => _selectedColor = hex),
                           child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
+                            duration: MotionTokens.durationExit,
                             width: isSel ? 36 : 30,
                             height: isSel ? 36 : 30,
                             decoration: BoxDecoration(
@@ -933,7 +934,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             () => _selectedIcon = itm['name'] as String,
                           ),
                           child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
+                            duration: MotionTokens.durationExit,
                             decoration: BoxDecoration(
                               color: isSel
                                   ? themeCol.withValues(alpha: 0.16)
