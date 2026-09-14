@@ -101,7 +101,7 @@ class TransactionDetailScreen extends ConsumerWidget {
               child: Hero(
                 tag: 'transaction_$transactionId',
                 createRectTween: (begin, end) {
-                  return SpringRectTween(begin: begin!, end: end!);
+                  return CubicHeroRectTween(begin: begin!, end: end!);
                 },
                 child: Material(
                   type: MaterialType.transparency,

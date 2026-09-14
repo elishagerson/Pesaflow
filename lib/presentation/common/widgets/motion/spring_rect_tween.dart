@@ -2,12 +2,13 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-class SpringRectTween extends RectTween {
-  SpringRectTween({required Rect super.begin, required Rect super.end});
+/// Hero rect interpolation using an ease-out-cubic curve for a smooth
+/// (non-spring) flight between the source and destination rects.
+class CubicHeroRectTween extends RectTween {
+  CubicHeroRectTween({required Rect super.begin, required Rect super.end});
 
   @override
   Rect evaluate(Animation<double> animation) {
-    // Custom spring overshoot curve
     final double t = Curves.easeOutCubic.transform(animation.value);
 
     final double? left = ui.lerpDouble(begin?.left, end?.left, t);

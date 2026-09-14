@@ -163,7 +163,7 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final successColor = context.appColors.incomeColor;
+    final successColor = context.appColors.successColor;
     final reduced = context.isReducedMotion;
 
     return AnimatedBuilder(

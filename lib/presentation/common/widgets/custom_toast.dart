@@ -165,7 +165,7 @@ class _ToastWidgetState extends State<_ToastWidget>
     };
 
     final Color brandColor = switch (widget.type) {
-      ToastType.success => context.appColors.incomeColor,
+      ToastType.success => context.appColors.successColor,
       ToastType.error => context.appColors.expenseColor,
       ToastType.info => theme.colorScheme.primary,
     };
