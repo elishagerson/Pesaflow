@@ -52,10 +52,7 @@ Page<dynamic> _tabTransitionPage(Widget child) {
     reverseTransitionDuration: const Duration(milliseconds: 180),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return FadeTransition(
-        opacity: CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutCubic,
-        ),
+        opacity: CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
         child: child,
       );
     },
@@ -172,7 +169,11 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
             const SizedBox(height: kSpacing4),
             Text(
               'PesaFlow',
-              style: context.ts(11, fontWeight: FontWeight.w900, color: theme.colorScheme.onSurface),
+              style: context.ts(
+                11,
+                fontWeight: FontWeight.w900,
+                color: theme.colorScheme.onSurface,
+              ),
             ),
           ],
         ),
@@ -236,7 +237,11 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
                 const SizedBox(width: kSpacing12),
                 Text(
                   'PesaFlow',
-                  style: context.ts(16, fontWeight: FontWeight.w900, color: theme.colorScheme.onSurface),
+                  style: context.ts(
+                    16,
+                    fontWeight: FontWeight.w900,
+                    color: theme.colorScheme.onSurface,
+                  ),
                 ),
               ],
             ),
@@ -280,11 +285,17 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
                         const SizedBox(width: kSpacing12),
                         Text(
                           item.$2,
-                          style: context.ts(15, fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500, color: isSelected
+                          style: context.ts(
+                            15,
+                            fontWeight: isSelected
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                            color: isSelected
                                 ? theme.colorScheme.primary
                                 : theme.colorScheme.onSurface.withValues(
                                     alpha: 0.6,
-                                  )),
+                                  ),
+                          ),
                         ),
                       ],
                     ),
@@ -299,7 +310,10 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
             padding: const EdgeInsets.all(kSpacing16),
             child: Text(
               'PesaFlow v1.0.0',
-              style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+              style: context.ts(
+                13,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
             ),
           ),
         ],
@@ -335,7 +349,10 @@ class _RouterErrorPage extends StatelessWidget {
                 const SizedBox(height: kSpacing8),
                 Text(
                   'The screen you are looking for does not exist.',
-                  style: context.ts(15, color: theme.colorScheme.onSurfaceVariant),
+                  style: context.ts(
+                    15,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: kSpacing24),
