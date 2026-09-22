@@ -9,6 +9,7 @@ import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
+import 'package:pesaflow/core/utils/provider_brand_colors.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -339,33 +340,33 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   labelText: 'Carrier Provider',
                   value: provider ?? 'M-Pesa_TZ',
                   prefixIcon: PesaFlowIcons.cash,
-                  items: const [
+                  items: [
                     ModernDropdownItem(
                       value: 'M-Pesa_TZ',
                       label: 'Vodacom M-Pesa',
                       icon: PesaFlowIcons.offline,
-                      color: Colors.redAccent,
+                      color: kProviderBrandColors['M-Pesa_TZ']!,
                       subtitle: 'Vodacom Mobile Money service',
                     ),
                     ModernDropdownItem(
                       value: 'TigoPesa_TZ',
                       label: 'Tigo Pesa',
                       icon: PesaFlowIcons.offline,
-                      color: Colors.blueAccent,
+                      color: kProviderBrandColors['TigoPesa_TZ']!,
                       subtitle: 'Tigo Mobile Money service',
                     ),
                     ModernDropdownItem(
                       value: 'AirtelMoney_TZ',
                       label: 'Airtel Money',
                       icon: PesaFlowIcons.offline,
-                      color: Colors.red,
+                      color: kProviderBrandColors['AirtelMoney_TZ']!,
                       subtitle: 'Airtel Mobile Money service',
                     ),
                     ModernDropdownItem(
                       value: 'Halopesa_TZ',
                       label: 'HaloPesa',
                       icon: PesaFlowIcons.offline,
-                      color: Colors.orangeAccent,
+                      color: kProviderBrandColors['Halopesa_TZ']!,
                       subtitle: 'Halotel Mobile Money service',
                     ),
                   ],
@@ -397,21 +398,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       value: 'NMB',
                       label: 'NMB Bank',
                       icon: PesaFlowIcons.loans,
-                      color: Colors.blue,
+                      color: kProviderBrandColors['NMB']!,
                       subtitle: 'National Microfinance Bank',
                     ),
                     ModernDropdownItem(
                       value: 'CRDB',
                       label: 'CRDB Bank',
                       icon: PesaFlowIcons.loans,
-                      color: Colors.green,
+                      color: kProviderBrandColors['CRDB']!,
                       subtitle: 'CRDB Bank Plc',
                     ),
                     ModernDropdownItem(
                       value: 'NBC',
                       label: 'NBC Bank',
                       icon: PesaFlowIcons.loans,
-                      color: Colors.cyan,
+                      color: kProviderBrandColors['NBC']!,
                       subtitle: 'National Bank of Commerce',
                     ),
                   ],

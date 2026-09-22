@@ -15,6 +15,7 @@ import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_widgets.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -46,18 +47,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   /// Scrolls back to the top when the active Dashboard tab is re-tapped.
   void _scrollToTop() {
-    if (!(ModalRoute.of(context)?.isCurrent ?? false)) return;
-    if (!_scrollController.hasClients) return;
-    if (_scrollController.offset <= 0) return;
-    if (context.isReducedMotion) {
-      _scrollController.jumpTo(0);
-    } else {
-      _scrollController.animateTo(
-        0,
-        duration: MotionTokens.durationNormal,
-        curve: Curves.easeOutCubic,
-      );
-    }
+    _scrollController.scrollToTop(context);
   }
 
   String _formatCompact(int amountInCents) {

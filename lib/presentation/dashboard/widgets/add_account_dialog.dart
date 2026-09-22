@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/provider_brand_colors.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
@@ -86,33 +87,33 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
                 labelText: 'Carrier Provider',
                 value: provider ?? 'M-Pesa_TZ',
                 prefixIcon: PesaFlowIcons.cash,
-                items: const [
+                items: [
                   ModernDropdownItem(
                     value: 'M-Pesa_TZ',
                     label: 'Vodacom M-Pesa',
                     icon: PesaFlowIcons.offline,
-                    color: Colors.redAccent,
+                    color: kProviderBrandColors['M-Pesa_TZ']!,
                     subtitle: 'Vodacom Mobile Money service',
                   ),
                   ModernDropdownItem(
                     value: 'TigoPesa_TZ',
                     label: 'Tigo Pesa',
                     icon: PesaFlowIcons.offline,
-                    color: Colors.blueAccent,
+                    color: kProviderBrandColors['TigoPesa_TZ']!,
                     subtitle: 'Tigo Mobile Money service',
                   ),
                   ModernDropdownItem(
                     value: 'AirtelMoney_TZ',
                     label: 'Airtel Money',
                     icon: PesaFlowIcons.offline,
-                    color: Colors.red,
+                    color: kProviderBrandColors['AirtelMoney_TZ']!,
                     subtitle: 'Airtel Mobile Money service',
                   ),
                   ModernDropdownItem(
                     value: 'Halopesa_TZ',
                     label: 'HaloPesa',
                     icon: PesaFlowIcons.offline,
-                    color: Colors.orangeAccent,
+                    color: kProviderBrandColors['Halopesa_TZ']!,
                     subtitle: 'Halotel Mobile Money service',
                   ),
                 ],
@@ -141,26 +142,26 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
                 labelText: 'Bank Brand',
                 value: provider ?? 'NMB',
                 prefixIcon: PesaFlowIcons.loans,
-                items: const [
+                items: [
                   ModernDropdownItem(
                     value: 'NMB',
                     label: 'NMB Bank',
                     icon: PesaFlowIcons.loans,
-                    color: Colors.blue,
+                    color: kProviderBrandColors['NMB']!,
                     subtitle: 'National Microfinance Bank',
                   ),
                   ModernDropdownItem(
                     value: 'CRDB',
                     label: 'CRDB Bank',
                     icon: PesaFlowIcons.loans,
-                    color: Colors.green,
+                    color: kProviderBrandColors['CRDB']!,
                     subtitle: 'CRDB Bank Plc',
                   ),
                   ModernDropdownItem(
                     value: 'NBC',
                     label: 'NBC Bank',
                     icon: PesaFlowIcons.loans,
-                    color: Colors.cyan,
+                    color: kProviderBrandColors['NBC']!,
                     subtitle: 'National Bank of Commerce',
                   ),
                 ],

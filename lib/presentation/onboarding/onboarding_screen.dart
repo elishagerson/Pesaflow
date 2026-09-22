@@ -687,15 +687,15 @@ class _AccountsPage extends StatelessWidget {
                               border: Border.all(
                                 color: isSelected
                                     ? theme.colorScheme.primary
-                                    : Colors.grey,
+                                    : theme.colorScheme.outlineVariant,
                                 width: 1.5,
                               ),
                             ),
                             child: isSelected
-                                ? const Icon(
+                                ? Icon(
                                     PesaFlowIcons.check,
                                     size: 10,
-                                    color: Colors.white,
+                                    color: theme.colorScheme.onPrimary,
                                   )
                                 : null,
                           ),
