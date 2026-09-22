@@ -774,7 +774,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   alpha: 0.12,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(10),
+                                                    BorderRadius.circular(AppTheme.radiusCompact),
                                               ),
                                               alignment: Alignment.center,
                                               child: Icon(
@@ -985,7 +985,7 @@ class _QuickActionButton extends StatelessWidget {
                 height: 28,
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                 ),
                 alignment: Alignment.center,
                 child: Icon(icon, color: color, size: 16),

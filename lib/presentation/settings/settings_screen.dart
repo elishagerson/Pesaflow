@@ -658,7 +658,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           color: context.appColors.textMedium.withValues(
                             alpha: 0.2,
                           ),
-                          borderRadius: BorderRadius.circular(4.0),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
                         ),
                         child: Text(
                           'System',
@@ -1096,7 +1096,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       height: 36,
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
       ),
       child: Center(
         child: Icon(icon, color: color, size: size),
@@ -1144,7 +1144,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 height: 28,
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                 ),
                 child: Center(child: Icon(icon, color: color, size: 15)),
               ),

@@ -128,7 +128,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                   height: 36,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                   ),
                   child: Icon(
                     PesaFlowIcons.info,
@@ -152,7 +152,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                   height: 36,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.secondary.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                   ),
                   child: Icon(
                     PesaFlowIcons.edit,
@@ -176,7 +176,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                   height: 36,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.error.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                   ),
                   child: Icon(
                     PesaFlowIcons.delete,
@@ -1738,7 +1738,7 @@ class _MiniBar extends StatelessWidget {
         ),
         const SizedBox(height: kSpacing4),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
           child: TweenAnimationBuilder<double>(
             tween: Tween(begin: 0, end: fraction),
             duration: MotionTokens.durationNormal,
@@ -1749,7 +1749,7 @@ class _MiniBar extends StatelessWidget {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
                 ),
                 child: FractionallySizedBox(
                   alignment: Alignment.centerLeft,
@@ -1757,7 +1757,7 @@ class _MiniBar extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: color,
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
                     ),
                   ),
                 ),

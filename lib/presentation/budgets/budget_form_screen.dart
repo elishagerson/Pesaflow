@@ -1176,7 +1176,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                 decoration: BoxDecoration(
                                   color: context.appColors.expenseColor
                                       .withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(24.0),
+                                  borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
                                   border: Border.all(
                                     color: context.appColors.expenseColor
                                         .withValues(alpha: 0.3),

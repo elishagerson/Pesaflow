@@ -1389,7 +1389,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: paceColor.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(4),
+                                    borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
                                   ),
                                   child: Text(
                                     status.paceLabel,
@@ -1990,7 +1990,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                   width: 4,
                                   decoration: BoxDecoration(
                                     color: goalColor,
-                                    borderRadius: BorderRadius.circular(4),
+                                    borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
                                   ),
                                 ),
                               ),

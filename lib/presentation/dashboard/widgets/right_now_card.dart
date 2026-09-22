@@ -88,7 +88,7 @@ class RightNowCard extends ConsumerWidget {
                 padding: const EdgeInsets.all(kSpacing6),
                 decoration: BoxDecoration(
                   color: context.appColors.expenseColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                 ),
                 child: Icon(
                   PesaFlowIcons.bolt,
@@ -126,7 +126,7 @@ class RightNowCard extends ConsumerWidget {
                           height: 32,
                           decoration: BoxDecoration(
                             color: item.iconColor.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                           ),
                           alignment: Alignment.center,
                           child: Icon(

@@ -65,6 +65,7 @@ class AppTheme {
   static Color get surfaceContainerDark => surfaceHighDark;
 
   // Radii — generous, soft corners (Budjetly feel)
+  static const double radiusTiny = 4.0;
   static const double radiusSmall = 8.0;
   static const double radiusCompact = 10.0;
   static const double radiusInput = 12.0;

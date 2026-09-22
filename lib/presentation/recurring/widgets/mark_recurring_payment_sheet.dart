@@ -77,7 +77,7 @@ Future<void> showMarkRecurringPaymentSheet({
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.2,
                           ),
-                          borderRadius: BorderRadius.circular(2),
+                          borderRadius: BorderRadius.circular(kSpacing2),
                         ),
                       ),
                     ),

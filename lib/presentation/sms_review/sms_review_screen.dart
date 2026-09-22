@@ -123,7 +123,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                       height: kSpacing4,
                       decoration: BoxDecoration(
                         color: theme.colorScheme.outlineVariant,
-                        borderRadius: BorderRadius.circular(2),
+                        borderRadius: BorderRadius.circular(kSpacing2),
                       ),
                     ),
                     Padding(

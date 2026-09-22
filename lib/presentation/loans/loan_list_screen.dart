@@ -249,7 +249,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
             height: 18,
             decoration: BoxDecoration(
               color: accent,
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: BorderRadius.circular(kSpacing2),
             ),
           ),
           const SizedBox(width: kSpacing10),
@@ -608,7 +608,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                   ),
                   const SizedBox(height: kSpacing12),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
                     child: LinearProgressIndicator(
                       value: ratio.clamp(0.0, 1.0),
                       backgroundColor: progressColor.withValues(alpha: 0.12),

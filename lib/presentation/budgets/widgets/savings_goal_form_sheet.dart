@@ -405,7 +405,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                 height: 44,
                                 decoration: BoxDecoration(
                                   color: themeCol.withValues(alpha: 0.16),
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                                   border: Border.all(
                                     color: themeCol.withValues(alpha: 0.35),
                                   ),
@@ -939,7 +939,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               color: isSel
                                   ? themeCol.withValues(alpha: 0.16)
                                   : theme.colorScheme.surfaceContainerHigh,
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                               border: Border.all(
                                 color: isSel
                                     ? themeCol

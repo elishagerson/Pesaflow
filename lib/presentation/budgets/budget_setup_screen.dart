@@ -156,7 +156,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                           color: isActive
                               ? theme.colorScheme.primary
                               : onSurface.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(2),
+                          borderRadius: BorderRadius.circular(kSpacing2),
                         ),
                       ),
                     ),
@@ -1014,7 +1014,7 @@ class _SplitPreviewBar extends StatelessWidget {
           height: 8,
           decoration: BoxDecoration(
             color: color,
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(kSpacing2),
           ),
         ),
         const SizedBox(width: kSpacing4),

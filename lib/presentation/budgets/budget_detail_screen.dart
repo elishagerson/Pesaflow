@@ -1584,7 +1584,7 @@ class _PeriodRow extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: catColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
                         ),
                         child: Text(
                           'NOW',

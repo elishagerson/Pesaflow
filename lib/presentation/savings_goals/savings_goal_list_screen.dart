@@ -583,7 +583,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
       margin: const EdgeInsets.only(bottom: kSpacing14),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppTheme.radiusHero),
         border: Border.all(
           color: isCompleted
               ? context.appColors.incomeColor.withValues(alpha: 0.35)
@@ -609,7 +609,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
               'goal_${goal.id}',
             );
           },
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppTheme.radiusHero),
           child: Padding(
             padding: const EdgeInsets.all(kSpacing16),
             child: Column(
@@ -623,7 +623,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                       height: 42,
                       decoration: BoxDecoration(
                         color: goalColor.withValues(alpha: 0.14),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                         border: Border.all(
                           color: goalColor.withValues(alpha: 0.28),
                           width: 1,
@@ -1024,7 +1024,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                     height: 30,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                     ),
                     alignment: Alignment.center,
                     child: Icon(
@@ -1280,7 +1280,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                 padding: const EdgeInsets.all(kSpacing10),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainerHigh,
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   border: Border.all(
                     color: theme.colorScheme.outlineVariant.withValues(
                       alpha: 0.22,
@@ -1295,7 +1295,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                       height: 34,
                       decoration: BoxDecoration(
                         color: col.withValues(alpha: 0.14),
-                        borderRadius: BorderRadius.circular(9),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                         border: Border.all(
                           color: col.withValues(alpha: 0.25),
                           width: 0.8,
@@ -1429,7 +1429,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                           height: 38,
                           decoration: BoxDecoration(
                             color: goalColor.withValues(alpha: 0.14),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                             border: Border.all(
                               color: goalColor.withValues(alpha: 0.28),
                               width: 1,
@@ -1527,7 +1527,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                           vertical: kSpacing14,
                         ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                           borderSide: BorderSide(
                             color: theme.colorScheme.outlineVariant.withValues(
                               alpha: 0.3,
@@ -1535,7 +1535,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                           ),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                           borderSide: BorderSide(
                             color: theme.colorScheme.outlineVariant.withValues(
                               alpha: 0.3,
@@ -1543,7 +1543,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                           borderSide: BorderSide(color: goalColor, width: 1.5),
                         ),
                       ),
@@ -1595,7 +1595,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                         decoration: BoxDecoration(
                           color: theme.colorScheme.surfaceContainerHighest
                               .withValues(alpha: 0.3),
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                           border: Border.all(
                             color: theme.colorScheme.outlineVariant.withValues(
                               alpha: 0.2,
@@ -1645,7 +1645,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                                     vertical: kSpacing8,
                                   ),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                                     borderSide: BorderSide(
                                       color: theme.colorScheme.outlineVariant
                                           .withValues(alpha: 0.3),
