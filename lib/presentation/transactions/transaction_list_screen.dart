@@ -494,7 +494,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                         child: AnimatedContainer(
                           duration: MotionTokens.durationFast,
                           curve: Curves.easeOutCubic,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing16,
+                          ),
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? theme.colorScheme.primary
@@ -1651,7 +1653,10 @@ class _FilterButton extends StatelessWidget {
     return TactileSpringContainer(
       onTap: onPressed,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing14,
+          vertical: kSpacing10,
+        ),
         child: Stack(
           clipBehavior: Clip.none,
           children: [

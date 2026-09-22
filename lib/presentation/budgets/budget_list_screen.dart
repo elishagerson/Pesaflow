@@ -112,7 +112,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       context.push('/budgets/setup');
                     },
                     child: Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(kSpacing10),
                       decoration: BoxDecoration(
                         color: context.appColors.onBgColor.withValues(
                           alpha: 0.1,
@@ -142,7 +142,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     }
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(kSpacing10),
                     decoration: BoxDecoration(
                       color: context.appColors.onBgColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
@@ -1089,7 +1089,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         context.push('/budgets/groups/${g.group.id}/add');
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(kSpacing8),
                         decoration: BoxDecoration(
                           color: onSurface.withValues(alpha: 0.06),
                           shape: BoxShape.circle,

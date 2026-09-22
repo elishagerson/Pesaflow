@@ -463,7 +463,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                   setState(() => _selectedIndex = 0);
                                 },
                                 child: Container(
-                                  padding: const EdgeInsets.all(4),
+                                  padding: const EdgeInsets.all(kSpacing4),
                                   decoration: BoxDecoration(
                                     color: theme
                                         .colorScheme

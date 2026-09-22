@@ -900,7 +900,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               children: [
                 FloatingTopBar(
                   title: _isEditMode ? 'Edit Transaction' : 'New Transaction',
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                  padding: const EdgeInsets.fromLTRB(
+                    kSpacing20,
+                    kSpacing8,
+                    kSpacing20,
+                    kSpacing16,
+                  ),
                 ),
                 // TOP HALF: Display & Context
                 Expanded(
