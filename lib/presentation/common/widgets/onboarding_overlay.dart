@@ -156,7 +156,9 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                             width: _currentPage == i ? 24 : 8,
                             height: 8,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusTiny,
+                              ),
                               color: _currentPage == i
                                   ? accentColor
                                   : accentColor.withValues(alpha: 0.25),

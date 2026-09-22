@@ -489,7 +489,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                       .colorScheme
                                       .surfaceContainerHighest
                                       .withValues(alpha: 0.5),
-                                  borderRadius: BorderRadius.circular(6),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusSmall,
+                                  ),
                                   border: Border.all(
                                     color: theme.colorScheme.outlineVariant
                                         .withValues(alpha: 0.2),
