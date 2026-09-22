@@ -76,25 +76,18 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
       'days': 180,
     },
     {
-      'title': 'Vacation Trip',
-      'icon': 'flight',
-      'color': '#0A84FF',
-      'amount': '2000000',
-      'days': 120,
-    },
-    {
-      'title': 'New Vehicle',
-      'icon': 'car',
+      'title': 'Land & Construction',
+      'icon': 'home',
       'color': '#FF9F0A',
-      'amount': '5000000',
+      'amount': '10000000',
       'days': 365,
     },
     {
-      'title': 'Tech Upgrade',
-      'icon': 'laptop',
-      'color': '#5E5CE6',
-      'amount': '2500000',
-      'days': 90,
+      'title': 'Business Capital',
+      'icon': 'business',
+      'color': '#0A84FF',
+      'amount': '5000000',
+      'days': 180,
     },
     {
       'title': 'Education Tuition',
@@ -104,11 +97,25 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
       'days': 240,
     },
     {
-      'title': 'Special Event',
-      'icon': 'heart',
+      'title': 'Vacation Trip',
+      'icon': 'flight',
+      'color': '#64D2FF',
+      'amount': '2000000',
+      'days': 120,
+    },
+    {
+      'title': 'Tech Upgrade',
+      'icon': 'laptop',
+      'color': '#5E5CE6',
+      'amount': '2500000',
+      'days': 90,
+    },
+    {
+      'title': 'New Vehicle',
+      'icon': 'car',
       'color': '#FF375F',
-      'amount': '4000000',
-      'days': 300,
+      'amount': '8000000',
+      'days': 365,
     },
   ];
 
@@ -716,7 +723,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                 spacing: kSpacing8,
                                 runSpacing: kSpacing6,
                                 children: [
-                                  ...[100000, 500000, 1000000, 5000000].map((
+                                  ...[100000, 250000, 500000, 1000000, 2000000, 5000000].map((
                                     amt,
                                   ) {
                                     final label = amt >= 1000000

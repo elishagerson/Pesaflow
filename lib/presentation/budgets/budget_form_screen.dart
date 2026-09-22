@@ -482,7 +482,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                   child: Icon(
                     selectedCat != null
                         ? getCategoryIcon(selectedCat.icon)
-                        : PesaFlowIcons.pieChart,
+                        : PesaFlowIcons.budgets,
                     color: themeColor,
                     size: 20,
                   ),
@@ -730,27 +730,110 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   const SizedBox(height: kSpacing8),
                                   ShakeWidget(
                                     shaking: _shakeFields,
-                                    child: _InteractiveInputRow(
-                                      controller: _amountController,
-                                      label: 'Budget Amount (Tsh)',
-                                      hint: 'e.g. 300000',
-                                      icon: PesaFlowIcons.cash,
-                                      keyboardType: TextInputType.number,
-                                      validator: (v) {
-                                        if (v == null || v.isEmpty) {
-                                          return 'Enter a valid amount';
-                                        }
-                                        final val =
-                                            CurrencyFormatter.parseToCents(v);
-                                        if (val <= 0) {
-                                          return 'Enter a valid amount';
-                                        }
-                                        return null;
-                                      },
-                                      style: context.ts(
-                                        14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        _InteractiveInputRow(
+                                          controller: _amountController,
+                                          label: 'Budget Amount (Tsh)',
+                                          hint: 'e.g. 300000',
+                                          icon: PesaFlowIcons.cash,
+                                          keyboardType: TextInputType.number,
+                                          validator: (v) {
+                                            if (v == null || v.isEmpty) {
+                                              return 'Enter a valid amount';
+                                            }
+                                            final val =
+                                                CurrencyFormatter.parseToCents(v);
+                                            if (val <= 0) {
+                                              return 'Enter a valid amount';
+                                            }
+                                            return null;
+                                          },
+                                          style: context.ts(
+                                            14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const SizedBox(height: kSpacing10),
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: [
+                                              ...[50000, 100000, 250000, 500000, 1000000].map((tsh) {
+                                                final label = tsh >= 1000000
+                                                    ? '+${tsh ~/ 1000000}M'
+                                                    : '+${tsh ~/ 1000}K';
+                                                return Padding(
+                                                  padding: const EdgeInsets.only(right: kSpacing8),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      PesaHaptics.selection();
+                                                      final current = int.tryParse(_amountController.text) ?? 0;
+                                                      _amountController.text = (current + tsh).toString();
+                                                      setState(() {});
+                                                    },
+                                                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                                    child: Container(
+                                                      padding: const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 5,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: theme.colorScheme.surfaceContainerHighest
+                                                            .withValues(alpha: 0.4),
+                                                        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                                        border: Border.all(
+                                                          color: theme.colorScheme.outlineVariant
+                                                              .withValues(alpha: 0.20),
+                                                        ),
+                                                      ),
+                                                      child: Text(
+                                                        label,
+                                                        style: context.ts(
+                                                          11,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: theme.colorScheme.onSurface,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
+                                              if (_amountController.text.isNotEmpty)
+                                                InkWell(
+                                                  onTap: () {
+                                                    PesaHaptics.light();
+                                                    _amountController.clear();
+                                                    setState(() {});
+                                                  },
+                                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                                  child: Container(
+                                                    padding: const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 5,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: theme.colorScheme.error.withValues(alpha: 0.1),
+                                                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                                      border: Border.all(
+                                                        color: theme.colorScheme.error.withValues(alpha: 0.25),
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      'Clear',
+                                                      style: context.ts(
+                                                        11,
+                                                        fontWeight: FontWeight.w600,
+                                                        color: theme.colorScheme.error,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],

@@ -725,8 +725,8 @@ Future<void> showQuickDepositSheet(
                             )
                           : Text(
                               cents > 0
-                                  ? 'Deposit ${CurrencyFormatter.formatCents(cents)}'
-                                  : 'Enter an amount',
+                                  ? 'Confirm Deposit (${CurrencyFormatter.formatCents(cents)})'
+                                  : 'Confirm Deposit',
                               style: sheetCtx.ts(
                                 14,
                                 fontWeight: FontWeight.w700,
