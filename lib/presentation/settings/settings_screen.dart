@@ -200,7 +200,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                     _showEditAccountDialog(context, ref, acc),
                                 selectedColor: theme.colorScheme.onSurface,
                                 child: Container(
-                                  padding: const EdgeInsets.all(6),
+                                  padding: const EdgeInsets.all(kSpacing6),
                                   decoration: BoxDecoration(
                                     color: theme.colorScheme.primary.withValues(
                                       alpha: 0.1,
@@ -220,7 +220,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                     _confirmDeleteAccount(context, ref, acc),
                                 selectedColor: theme.colorScheme.onSurface,
                                 child: Container(
-                                  padding: const EdgeInsets.all(6),
+                                  padding: const EdgeInsets.all(kSpacing6),
                                   decoration: BoxDecoration(
                                     color: theme.colorScheme.error.withValues(
                                       alpha: 0.1,
