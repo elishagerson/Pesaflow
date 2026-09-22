@@ -37,10 +37,17 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
         builder: (context, setSheetState) {
           final canSubmit = paymentAmount() > 0;
 
+          void adjustAmount(int addTsh) {
+            PesaHaptics.selection();
+            final cur = paymentAmount();
+            final newCents = cur + (addTsh * 100);
+            amountController.text = (newCents ~/ 100).toString();
+          }
+
           return DraggableScrollableSheet(
-            initialChildSize: 0.5,
-            maxChildSize: 0.7,
-            minChildSize: 0.4,
+            initialChildSize: 0.68,
+            maxChildSize: 0.90,
+            minChildSize: 0.45,
             expand: false,
             builder: (ctx, scrollController) => Container(
               color: theme.colorScheme.surface,
@@ -101,9 +108,14 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: kSpacing24),
+                            const SizedBox(height: kSpacing20),
+                            LoanPayoffSimulatorCard(
+                              loan: loan,
+                              paymentCents: paymentAmount(),
+                            ),
+                            const SizedBox(height: kSpacing20),
                             Text(
-                              'AMOUNT',
+                              'PAYMENT AMOUNT',
                               style: context.ts(11, letterSpacing: 0.5),
                             ),
                             const SizedBox(height: kSpacing8),
@@ -165,7 +177,104 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                 setSheetState(() {});
                               },
                             ),
-                            const SizedBox(height: kSpacing16),
+                            const SizedBox(height: kSpacing10),
+                            // Quick Increment Pills
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  ...[50000, 100000, 500000, 1000000].map((
+                                    tsh,
+                                  ) {
+                                    final label = tsh >= 1000000
+                                        ? '+${tsh ~/ 1000000}M'
+                                        : '+${tsh ~/ 1000}K';
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        right: kSpacing8,
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          adjustAmount(tsh);
+                                          setSheetState(() {});
+                                        },
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusPill,
+                                        ),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: theme
+                                                .colorScheme
+                                                .surfaceContainerHighest
+                                                .withValues(alpha: 0.4),
+                                            borderRadius: BorderRadius.circular(
+                                              AppTheme.radiusPill,
+                                            ),
+                                            border: Border.all(
+                                              color: theme
+                                                  .colorScheme
+                                                  .outlineVariant
+                                                  .withValues(alpha: 0.20),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            label,
+                                            style: context.ts(
+                                              11,
+                                              fontWeight: FontWeight.w600,
+                                              color: theme
+                                                  .colorScheme
+                                                  .onSurface,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                  if (amountController.text.isNotEmpty)
+                                    InkWell(
+                                      onTap: () {
+                                        PesaHaptics.light();
+                                        amountController.clear();
+                                        setSheetState(() {});
+                                      },
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusPill,
+                                      ),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 5,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: theme.colorScheme.error
+                                              .withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.radiusPill,
+                                          ),
+                                          border: Border.all(
+                                            color: theme.colorScheme.error
+                                                .withValues(alpha: 0.25),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Clear',
+                                          style: context.ts(
+                                            11,
+                                            fontWeight: FontWeight.w600,
+                                            color: theme.colorScheme.error,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing12),
                             Row(
                               children: [
                                 QuickAmountChip(

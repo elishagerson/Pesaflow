@@ -146,6 +146,200 @@ class LoanProgressRing extends StatelessWidget {
   }
 }
 
+class LoanPayoffSimulatorCard extends StatelessWidget {
+  final Loan loan;
+  final int paymentCents;
+
+  const LoanPayoffSimulatorCard({
+    super.key,
+    required this.loan,
+    required this.paymentCents,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final onSurface = theme.colorScheme.onSurface;
+    final totalAmount = loan.amount;
+    final currentRemaining = loan.remaining;
+    final currentPaid = (totalAmount - currentRemaining).clamp(0, totalAmount);
+    final projectedPaid = (currentPaid + paymentCents).clamp(0, totalAmount);
+    final projectedRemaining = (totalAmount - projectedPaid).clamp(0, totalAmount);
+
+    final currentFraction = totalAmount > 0
+        ? (currentPaid / totalAmount).clamp(0.0, 1.0)
+        : 0.0;
+    final projectedFraction = totalAmount > 0
+        ? (projectedPaid / totalAmount).clamp(0.0, 1.0)
+        : 0.0;
+    final isFullPayoff = paymentCents > 0 && projectedRemaining == 0;
+
+    return Container(
+      padding: const EdgeInsets.all(kSpacing16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+        border: Border.all(
+          color: isFullPayoff
+              ? context.appColors.incomeColor.withValues(alpha: 0.4)
+              : onSurface.withValues(alpha: 0.08),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'REPAYMENT STATUS',
+                style: context.ts(
+                  10,
+                  fontWeight: FontWeight.w700,
+                  color: onSurface.withValues(alpha: 0.5),
+                  letterSpacing: 0.5,
+                ),
+              ),
+              if (paymentCents > 0)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kSpacing8,
+                    vertical: kSpacing2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: (isFullPayoff
+                            ? context.appColors.incomeColor
+                            : theme.colorScheme.primary)
+                        .withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                  ),
+                  child: Text(
+                    isFullPayoff
+                        ? 'FULL PAYOFF'
+                        : '+${((projectedFraction - currentFraction) * 100).round()}% JUMP',
+                    style: context.ts(
+                      10,
+                      fontWeight: FontWeight.w700,
+                      color: isFullPayoff
+                          ? context.appColors.incomeColor
+                          : theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: kSpacing12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+            child: Container(
+              height: 8,
+              width: double.infinity,
+              color: onSurface.withValues(alpha: 0.08),
+              child: Stack(
+                children: [
+                  FractionallySizedBox(
+                    widthFactor: projectedFraction,
+                    child: Container(
+                      color: context.appColors.incomeColor.withValues(
+                        alpha: 0.4,
+                      ),
+                    ),
+                  ),
+                  FractionallySizedBox(
+                    widthFactor: currentFraction,
+                    child: Container(
+                      color: context.appColors.incomeColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: kSpacing12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Paid: ${(currentFraction * 100).round()}%',
+                    style: context.ts(
+                      11,
+                      color: onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    CurrencyFormatter.formatCents(currentPaid),
+                    style: context.ts(
+                      13,
+                      fontWeight: FontWeight.w700,
+                      color: context.appColors.incomeColor,
+                    ),
+                  ),
+                ],
+              ),
+              if (paymentCents > 0) ...[
+                Icon(
+                  PesaFlowIcons.chevronRight,
+                  size: 16,
+                  color: onSurface.withValues(alpha: 0.3),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      isFullPayoff ? 'Remaining: TSh 0' : 'New Remaining',
+                      style: context.ts(
+                        11,
+                        color: onSurface.withValues(alpha: 0.6),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      CurrencyFormatter.formatCents(projectedRemaining),
+                      style: context.ts(
+                        13,
+                        fontWeight: FontWeight.w700,
+                        color: isFullPayoff
+                            ? context.appColors.incomeColor
+                            : context.appColors.expenseColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ] else ...[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Remaining',
+                      style: context.ts(
+                        11,
+                        color: onSurface.withValues(alpha: 0.6),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      CurrencyFormatter.formatCents(currentRemaining),
+                      style: context.ts(
+                        13,
+                        fontWeight: FontWeight.w700,
+                        color: context.appColors.expenseColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class QuickAmountChip extends StatelessWidget {
   final String label;
   final int amount;
@@ -230,13 +424,20 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
       int paymentAmount() =>
           CurrencyFormatter.parseToCents(amountController.text);
 
+      void adjustAmount(int addTsh) {
+        PesaHaptics.selection();
+        final cur = paymentAmount();
+        final newCents = cur + (addTsh * 100);
+        amountController.text = (newCents ~/ 100).toString();
+      }
+
       return StatefulBuilder(
         builder: (context, setSheetState) {
           final canSubmit = paymentAmount() > 0 && selectedAccountId != null;
 
           return DraggableScrollableSheet(
-            initialChildSize: 0.7,
-            maxChildSize: 0.9,
+            initialChildSize: 0.78,
+            maxChildSize: 0.94,
             minChildSize: 0.5,
             expand: false,
             builder: (ctx, scrollController) => Container(
@@ -298,12 +499,12 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: kSpacing24),
-                            LoanProgressRing(
+                            const SizedBox(height: kSpacing20),
+                            LoanPayoffSimulatorCard(
                               loan: loan,
-                              remainingCents: remainingCents,
+                              paymentCents: paymentAmount(),
                             ),
-                            const SizedBox(height: kSpacing24),
+                            const SizedBox(height: kSpacing20),
                             Text(
                               'PAYMENT AMOUNT',
                               style: context.ts(10, letterSpacing: 0.5),
@@ -316,7 +517,104 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                               paymentAmount: paymentAmount,
                               setSheetState: setSheetState,
                             ),
-                            const SizedBox(height: kSpacing16),
+                            const SizedBox(height: kSpacing10),
+                            // Quick Increment Pills
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  ...[50000, 100000, 500000, 1000000].map((
+                                    tsh,
+                                  ) {
+                                    final label = tsh >= 1000000
+                                        ? '+${tsh ~/ 1000000}M'
+                                        : '+${tsh ~/ 1000}K';
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        right: kSpacing8,
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          adjustAmount(tsh);
+                                          setSheetState(() {});
+                                        },
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusPill,
+                                        ),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: theme
+                                                .colorScheme
+                                                .surfaceContainerHighest
+                                                .withValues(alpha: 0.4),
+                                            borderRadius: BorderRadius.circular(
+                                              AppTheme.radiusPill,
+                                            ),
+                                            border: Border.all(
+                                              color: theme
+                                                  .colorScheme
+                                                  .outlineVariant
+                                                  .withValues(alpha: 0.20),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            label,
+                                            style: context.ts(
+                                              11,
+                                              fontWeight: FontWeight.w600,
+                                              color: theme
+                                                  .colorScheme
+                                                  .onSurface,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                  if (amountController.text.isNotEmpty)
+                                    InkWell(
+                                      onTap: () {
+                                        PesaHaptics.light();
+                                        amountController.clear();
+                                        setSheetState(() {});
+                                      },
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusPill,
+                                      ),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 5,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: theme.colorScheme.error
+                                              .withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.radiusPill,
+                                          ),
+                                          border: Border.all(
+                                            color: theme.colorScheme.error
+                                                .withValues(alpha: 0.25),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Clear',
+                                          style: context.ts(
+                                            11,
+                                            fontWeight: FontWeight.w600,
+                                            color: theme.colorScheme.error,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing12),
                             Row(
                               children: [
                                 QuickAmountChip(

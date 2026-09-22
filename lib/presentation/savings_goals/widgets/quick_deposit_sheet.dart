@@ -50,11 +50,12 @@ Future<void> showQuickDepositSheet(
 
       return StatefulBuilder(
         builder: (ctx, setSheetState) {
+          int depositCents() =>
+              CurrencyFormatter.parseToCents(amountController.text);
+
           void appendQuickAmount(int additionalCents) {
             PesaHaptics.selection();
-            final currentVal = CurrencyFormatter.parseToCents(
-              amountController.text,
-            );
+            final currentVal = depositCents();
             final newVal = currentVal + additionalCents;
             amountController.text = (newVal ~/ 100).toString();
             setSheetState(() {});
@@ -65,6 +66,26 @@ Future<void> showQuickDepositSheet(
             amountController.text = (remainingCents ~/ 100).toString();
             setSheetState(() {});
           }
+
+          final cents = depositCents();
+          final selectedAccount = accounts
+              .where((a) => a.id == selectedAccountId)
+              .firstOrNull;
+          final hasSufficientFunds = !deductFromWallet ||
+              selectedAccount == null ||
+              selectedAccount.balance >= cents;
+
+          final currentAmt = goal.currentAmount;
+          final targetAmt = goal.targetAmount;
+          final projectedAmt = (currentAmt + cents).clamp(0, targetAmt);
+          final currentFraction = targetAmt > 0
+              ? (currentAmt / targetAmt).clamp(0.0, 1.0)
+              : 0.0;
+          final projectedFraction = targetAmt > 0
+              ? (projectedAmt / targetAmt).clamp(0.0, 1.0)
+              : 0.0;
+          final remainingGap = (targetAmt - projectedAmt).clamp(0, targetAmt);
+          final isCompleted = cents > 0 && remainingGap == 0;
 
           return Padding(
             padding: EdgeInsets.only(
@@ -97,12 +118,12 @@ Future<void> showQuickDepositSheet(
                   Row(
                     children: [
                       Container(
-                        width: 38,
-                        height: 38,
+                        width: 42,
+                        height: 42,
                         decoration: BoxDecoration(
                           color: goalColor.withValues(alpha: 0.14),
                           borderRadius: BorderRadius.circular(
-                            AppTheme.radiusCompact,
+                            AppTheme.radiusCard,
                           ),
                           border: Border.all(
                             color: goalColor.withValues(alpha: 0.28),
@@ -113,7 +134,7 @@ Future<void> showQuickDepositSheet(
                         child: Icon(
                           getGoalIcon(goal.icon),
                           color: goalColor,
-                          size: 18,
+                          size: 20,
                         ),
                       ),
                       const SizedBox(width: kSpacing12),
@@ -124,7 +145,7 @@ Future<void> showQuickDepositSheet(
                             Text(
                               'Deposit into ${goal.name}',
                               style: sheetCtx.ts(
-                                16,
+                                17,
                                 fontWeight: FontWeight.w700,
                                 color: onSurface,
                               ),
@@ -137,7 +158,7 @@ Future<void> showQuickDepositSheet(
                                   ? '${CurrencyFormatter.formatCents(remainingCents)} remaining to target'
                                   : 'Target completed',
                               style: sheetCtx.ts(
-                                11,
+                                12,
                                 color: onSurface.withValues(alpha: 0.55),
                               ),
                             ),
@@ -146,11 +167,173 @@ Future<void> showQuickDepositSheet(
                       ),
                     ],
                   ),
-                  const SizedBox(height: kSpacing20),
+                  const SizedBox(height: kSpacing16),
+                  // ── Live Milestone Progress Simulator Card ──
+                  Container(
+                    padding: const EdgeInsets.all(kSpacing14),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerHigh,
+                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                      border: Border.all(
+                        color: isCompleted
+                            ? goalColor.withValues(alpha: 0.4)
+                            : onSurface.withValues(alpha: 0.08),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'MILESTONE PROGRESS',
+                              style: sheetCtx.ts(
+                                10,
+                                fontWeight: FontWeight.w700,
+                                color: onSurface.withValues(alpha: 0.5),
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            if (cents > 0)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: kSpacing8,
+                                  vertical: kSpacing2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: goalColor.withValues(alpha: 0.14),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusPill,
+                                  ),
+                                ),
+                                child: Text(
+                                  isCompleted
+                                      ? 'TARGET REACHED! 🎯'
+                                      : '+${((projectedFraction - currentFraction) * 100).round()}% JUMP',
+                                  style: sheetCtx.ts(
+                                    10,
+                                    fontWeight: FontWeight.w700,
+                                    color: goalColor,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: kSpacing12),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
+                          child: Container(
+                            height: 8,
+                            width: double.infinity,
+                            color: onSurface.withValues(alpha: 0.08),
+                            child: Stack(
+                              children: [
+                                FractionallySizedBox(
+                                  widthFactor: projectedFraction,
+                                  child: Container(
+                                    color: goalColor.withValues(alpha: 0.4),
+                                  ),
+                                ),
+                                FractionallySizedBox(
+                                  widthFactor: currentFraction,
+                                  child: Container(
+                                    color: goalColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Current: ${(currentFraction * 100).round()}%',
+                                  style: sheetCtx.ts(
+                                    11,
+                                    color: onSurface.withValues(alpha: 0.6),
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  CurrencyFormatter.formatCents(currentAmt),
+                                  style: sheetCtx.ts(
+                                    13,
+                                    fontWeight: FontWeight.w700,
+                                    color: goalColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (cents > 0) ...[
+                              Icon(
+                                PesaFlowIcons.chevronRight,
+                                size: 16,
+                                color: onSurface.withValues(alpha: 0.3),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    isCompleted
+                                        ? 'Target Achieved'
+                                        : 'Projected: ${(projectedFraction * 100).round()}%',
+                                    style: sheetCtx.ts(
+                                      11,
+                                      color: onSurface.withValues(alpha: 0.6),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    CurrencyFormatter.formatCents(projectedAmt),
+                                    style: sheetCtx.ts(
+                                      13,
+                                      fontWeight: FontWeight.w700,
+                                      color: goalColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ] else ...[
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    'Target Goal',
+                                    style: sheetCtx.ts(
+                                      11,
+                                      color: onSurface.withValues(alpha: 0.6),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    CurrencyFormatter.formatCents(targetAmt),
+                                    style: sheetCtx.ts(
+                                      13,
+                                      fontWeight: FontWeight.w700,
+                                      color: onSurface,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: kSpacing16),
                   Text(
                     'DEPOSIT AMOUNT',
                     style: sheetCtx.ts(
-                      11,
+                      10,
                       fontWeight: FontWeight.w700,
                       color: onSurface.withValues(alpha: 0.5),
                       letterSpacing: 0.5,
@@ -163,7 +346,7 @@ Future<void> showQuickDepositSheet(
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     autofocus: false,
                     style: sheetCtx.ts(
-                      22,
+                      24,
                       fontWeight: FontWeight.w800,
                       color: onSurface,
                     ),
@@ -180,7 +363,7 @@ Future<void> showQuickDepositSheet(
                           style: sheetCtx.ts(
                             16,
                             fontWeight: FontWeight.w700,
-                            color: onSurface.withValues(alpha: 0.6),
+                            color: goalColor,
                           ),
                         ),
                       ),
@@ -263,8 +446,48 @@ Future<void> showQuickDepositSheet(
                       ],
                     ),
                   ),
+                  const SizedBox(height: kSpacing16),
+                  // Note TextField
+                  TextField(
+                    controller: noteController,
+                    textCapitalization: TextCapitalization.sentences,
+                    style: sheetCtx.ts(13, color: onSurface),
+                    decoration: InputDecoration(
+                      hintText: 'Add a note (optional)',
+                      prefixIcon: Icon(
+                        PesaFlowIcons.edit,
+                        size: 18,
+                        color: onSurface.withValues(alpha: 0.4),
+                      ),
+                      filled: true,
+                      fillColor: theme.colorScheme.surfaceContainerHighest
+                          .withValues(alpha: 0.3),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing14,
+                        vertical: kSpacing12,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusCard,
+                        ),
+                        borderSide: BorderSide(
+                          color: theme.colorScheme.outlineVariant
+                              .withValues(alpha: 0.2),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusCard,
+                        ),
+                        borderSide: BorderSide(
+                          color: theme.colorScheme.outlineVariant
+                              .withValues(alpha: 0.2),
+                        ),
+                      ),
+                    ),
+                  ),
                   if (accounts.isNotEmpty) ...[
-                    const SizedBox(height: kSpacing16),
+                    const SizedBox(height: kSpacing14),
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: kSpacing12,
@@ -346,6 +569,27 @@ Future<void> showQuickDepositSheet(
                                 setSheetState(() => selectedAccountId = val);
                               },
                             ),
+                            if (!hasSufficientFunds && cents > 0) ...[
+                              const SizedBox(height: kSpacing6),
+                              Row(
+                                children: [
+                                  Icon(
+                                    PesaFlowIcons.warning,
+                                    size: 14,
+                                    color: context.appColors.expenseColor,
+                                  ),
+                                  const SizedBox(width: kSpacing4),
+                                  Text(
+                                    'Selected account has insufficient funds',
+                                    style: sheetCtx.ts(
+                                      11,
+                                      color: context.appColors.expenseColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ],
                         ],
                       ),
@@ -353,7 +597,7 @@ Future<void> showQuickDepositSheet(
                   ],
                   const SizedBox(height: kSpacing20),
                   TactileSpringContainer(
-                    onTap: isSubmitting
+                    onTap: isSubmitting || cents <= 0
                         ? null
                         : () async {
                             final cents = CurrencyFormatter.parseToCents(
@@ -453,17 +697,21 @@ Future<void> showQuickDepositSheet(
                         vertical: kSpacing14,
                       ),
                       decoration: BoxDecoration(
-                        color: goalColor,
+                        color: cents > 0
+                            ? goalColor
+                            : onSurface.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(
                           AppTheme.radiusPill,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: goalColor.withValues(alpha: 0.35),
-                            blurRadius: 10,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
+                        boxShadow: cents > 0
+                            ? [
+                                BoxShadow(
+                                  color: goalColor.withValues(alpha: 0.35),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ]
+                            : null,
                       ),
                       alignment: Alignment.center,
                       child: isSubmitting
@@ -476,11 +724,15 @@ Future<void> showQuickDepositSheet(
                               ),
                             )
                           : Text(
-                              'Confirm Deposit',
+                              cents > 0
+                                  ? 'Deposit ${CurrencyFormatter.formatCents(cents)}'
+                                  : 'Enter an amount',
                               style: sheetCtx.ts(
                                 14,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.white,
+                                color: cents > 0
+                                    ? Colors.white
+                                    : onSurface.withValues(alpha: 0.35),
                               ),
                             ),
                     ),

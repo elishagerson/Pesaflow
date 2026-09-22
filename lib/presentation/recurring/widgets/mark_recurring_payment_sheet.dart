@@ -46,22 +46,41 @@ Future<void> showMarkRecurringPaymentSheet({
     context,
     isScrollControlled: true,
     builder: (sheetContext) {
+      final projectedNextDate = () {
+        final d = recurring.nextDate;
+        final interval = recurring.intervalValue > 0 ? recurring.intervalValue : 1;
+        switch (recurring.frequency.toLowerCase()) {
+          case 'daily':
+            return d.add(Duration(days: interval));
+          case 'weekly':
+            return d.add(Duration(days: 7 * interval));
+          case 'monthly':
+            return DateTime(d.year, d.month + interval, d.day);
+          case 'yearly':
+            return DateTime(d.year + interval, d.month, d.day);
+          default:
+            return DateTime(d.year, d.month + 1, d.day);
+        }
+      }();
+
       return StatefulBuilder(
         builder: (context, setSheetState) {
+          final isCustomAmount = amountCents != recurring.amount;
+
           return DraggableScrollableSheet(
-            initialChildSize: 0.58,
-            maxChildSize: 0.7,
+            initialChildSize: 0.72,
+            maxChildSize: 0.92,
             minChildSize: 0.5,
             expand: false,
             builder: (ctx, scrollController) => ClipRRect(
               borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(24),
+                top: Radius.circular(AppTheme.radiusDialog),
               ),
               child: Container(
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface,
                   borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(24),
+                    top: Radius.circular(AppTheme.radiusDialog),
                   ),
                 ),
                 child: Column(
@@ -87,17 +106,46 @@ Future<void> showMarkRecurringPaymentSheet({
                         kSpacing20,
                         kSpacing16,
                         kSpacing20,
-                        kSpacing16,
+                        kSpacing12,
                       ),
-                      child: Text(
-                        'Mark Payment',
-                        style: context.ts(22, fontWeight: FontWeight.bold),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(kSpacing8),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                            ),
+                            child: Icon(
+                              PesaFlowIcons.refresh,
+                              color: theme.colorScheme.primary,
+                              size: 20,
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Mark Bill Paid',
+                                style: context.ts(20, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                'Record scheduled cycle payment',
+                                style: context.ts(
+                                  12,
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                     Divider(
                       height: 0.5,
                       color: theme.colorScheme.onSurface.withValues(
-                        alpha: 0.05,
+                        alpha: 0.08,
                       ),
                     ),
                     // Scrollable content
@@ -106,142 +154,294 @@ Future<void> showMarkRecurringPaymentSheet({
                         controller: scrollController,
                         padding: const EdgeInsets.all(kSpacing20),
                         children: [
-                          // Amount
-                          _buildSummaryRow(
-                            context: context,
-                            theme: theme,
-                            label: 'Amount',
-                            value: CurrencyFormatter.formatCents(
-                              recurring.amount,
+                          // ── Executive Receipt Card ──
+                          Container(
+                            padding: const EdgeInsets.all(kSpacing16),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceContainerHigh,
+                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                              border: Border.all(
+                                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                              ),
                             ),
-                            valueStyle: context.ts(
-                              16,
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            recurring.description ?? 'Recurring ${recurring.type}',
+                                            style: context.ts(16, fontWeight: FontWeight.w700),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            'Category: $categoryName • From: $accountName',
+                                            style: context.ts(
+                                              11,
+                                              color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing8,
+                                        vertical: kSpacing4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                      ),
+                                      child: Text(
+                                        recurring.frequency.toUpperCase(),
+                                        style: context.ts(
+                                          10,
+                                          fontWeight: FontWeight.w700,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: kSpacing16),
+                                // ── Timeline Advance Preview ──
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: kSpacing12,
+                                    vertical: kSpacing10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.surface,
+                                    borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                                    border: Border.all(
+                                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Current Cycle',
+                                              style: context.ts(
+                                                10,
+                                                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              '${recurring.nextDate.day}/${recurring.nextDate.month}/${recurring.nextDate.year}',
+                                              style: context.ts(12, fontWeight: FontWeight.w700),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.all(kSpacing4),
+                                        decoration: BoxDecoration(
+                                          color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          PesaFlowIcons.chevronRight,
+                                          size: 14,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              'Next Cycle Due',
+                                              style: context.ts(
+                                                10,
+                                                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              '${projectedNextDate.day}/${projectedNextDate.month}/${projectedNextDate.year}',
+                                              style: context.ts(
+                                                12,
+                                                fontWeight: FontWeight.w700,
+                                                color: theme.colorScheme.primary,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: kSpacing14),
-                          // Editable amount
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: kSpacing14),
-                            child: TextField(
-                              controller: amountController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              style: context.ts(15),
-                              decoration: context.inputDecoration(
-                                labelText: 'Pay amount',
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 12,
-                                    right: 8,
-                                    top: 12,
-                                    bottom: 12,
-                                  ),
+                          const SizedBox(height: kSpacing20),
+                          // Payment Amount Section
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'PAYMENT AMOUNT',
+                                style: context.ts(
+                                  10,
+                                  fontWeight: FontWeight.w700,
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              if (isCustomAmount)
+                                GestureDetector(
+                                  onTap: () {
+                                    PesaHaptics.light();
+                                    amountCents = recurring.amount;
+                                    amountController.text = (recurring.amount ~/ 100).toString();
+                                    setSheetState(() {});
+                                  },
                                   child: Text(
-                                    'TSh',
+                                    'Reset to default (${CurrencyFormatter.formatCents(recurring.amount)})',
                                     style: context.ts(
-                                      15,
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5),
+                                      11,
+                                      fontWeight: FontWeight.w600,
+                                      color: theme.colorScheme.primary,
                                     ),
                                   ),
                                 ),
-                              ),
-                              onChanged: (val) {
-                                final parsed = int.tryParse(val);
-                                if (parsed != null) {
-                                  amountCents = parsed;
-                                }
-                              },
+                            ],
+                          ),
+                          const SizedBox(height: kSpacing8),
+                          TextField(
+                            controller: amountController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            style: context.ts(
+                              22,
+                              fontWeight: FontWeight.w800,
+                              color: theme.colorScheme.onSurface,
                             ),
-                          ),
-                          const SizedBox(height: kSpacing14),
-                          _buildSummaryRow(
-                            context: context,
-                            theme: theme,
-                            label: 'Description',
-                            value:
-                                recurring.description ??
-                                'Recurring ${recurring.type}',
-                          ),
-                          const SizedBox(height: kSpacing14),
-                          _buildSummaryRow(
-                            context: context,
-                            theme: theme,
-                            label: 'Account',
-                            value: accountName,
-                          ),
-                          const SizedBox(height: kSpacing14),
-                          _buildSummaryRow(
-                            context: context,
-                            theme: theme,
-                            label: 'Category',
-                            value: categoryName,
-                          ),
-                          const SizedBox(height: kSpacing14),
-                          _buildSummaryRow(
-                            context: context,
-                            theme: theme,
-                            label: 'Next occurrence',
-                            value:
-                                '${recurring.nextDate.day}/'
-                                '${recurring.nextDate.month}/'
-                                '${recurring.nextDate.year}',
-                          ),
-                          const SizedBox(height: kSpacing24),
-                          // Deduct toggle
-                          GlassCard(
-                            borderRadius: 12,
-                            elevation: CardElevation.none,
-                            hasBorder: true,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: kSpacing14,
-                                vertical: kSpacing12,
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Deduct from balance',
-                                          style: context.ts(
-                                            15,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        const SizedBox(height: kSpacing2),
-                                        Text(
-                                          'Record as a regular transaction'
-                                          ' and adjust account balance',
-                                          style: context.ts(
-                                            11,
-                                            color: theme.colorScheme.onSurface
-                                                .withValues(alpha: 0.5),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                            decoration: InputDecoration(
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 14,
+                                  right: 8,
+                                  top: 12,
+                                ),
+                                child: Text(
+                                  'TSh',
+                                  style: context.ts(
+                                    16,
+                                    fontWeight: FontWeight.w700,
+                                    color: theme.colorScheme.primary,
                                   ),
-                                  Switch(
-                                    value: deductBalance,
-                                    onChanged: isProcessing
-                                        ? null
-                                        : (v) {
-                                            PesaHaptics.light();
-                                            setSheetState(
-                                              () => deductBalance = v,
-                                            );
-                                          },
-                                  ),
-                                ],
+                                ),
                               ),
+                              filled: true,
+                              fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: kSpacing16,
+                                vertical: kSpacing14,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                borderSide: BorderSide(
+                                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                borderSide: BorderSide(
+                                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                                ),
+                              ),
+                            ),
+                            onChanged: (val) {
+                              final parsed = int.tryParse(val);
+                              if (parsed != null) {
+                                amountCents = parsed * 100;
+                              } else {
+                                amountCents = 0;
+                              }
+                              setSheetState(() {});
+                            },
+                          ),
+                          const SizedBox(height: kSpacing20),
+                          // Deduct toggle card
+                          Container(
+                            padding: const EdgeInsets.all(kSpacing14),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceContainerHigh,
+                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                              border: Border.all(
+                                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(kSpacing8),
+                                  decoration: BoxDecoration(
+                                    color: (deductBalance ? context.appColors.incomeColor : theme.colorScheme.onSurface)
+                                        .withValues(alpha: 0.12),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    PesaFlowIcons.wallet,
+                                    size: 18,
+                                    color: deductBalance ? context.appColors.incomeColor : theme.colorScheme.onSurface,
+                                  ),
+                                ),
+                                const SizedBox(width: kSpacing12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Deduct from $accountName',
+                                        style: context.ts(
+                                          14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        deductBalance
+                                            ? 'Records regular transaction and reduces account balance'
+                                            : 'Marks cycle without modifying account balance',
+                                        style: context.ts(
+                                          11,
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Switch.adaptive(
+                                  value: deductBalance,
+                                  activeTrackColor: theme.colorScheme.primary,
+                                  onChanged: isProcessing
+                                      ? null
+                                      : (v) {
+                                          PesaHaptics.selection();
+                                          setSheetState(
+                                            () => deductBalance = v,
+                                          );
+                                        },
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -251,7 +451,7 @@ Future<void> showMarkRecurringPaymentSheet({
                     Padding(
                       padding: const EdgeInsets.fromLTRB(
                         kSpacing20,
-                        0,
+                        kSpacing12,
                         kSpacing20,
                         kSpacing24,
                       ),
@@ -262,9 +462,10 @@ Future<void> showMarkRecurringPaymentSheet({
                             width: double.infinity,
                             height: 48,
                             child: FilledButton(
-                              onPressed: isProcessing
+                              onPressed: isProcessing || amountCents <= 0
                                   ? null
                                   : () async {
+                                      PesaHaptics.success();
                                       setSheetState(() => isProcessing = true);
                                       try {
                                         await _confirmMarkPaid(
@@ -296,14 +497,16 @@ Future<void> showMarkRecurringPaymentSheet({
                               child: Text(
                                 isProcessing
                                     ? 'Processing…'
-                                    : 'Confirm Payment',
+                                    : amountCents > 0
+                                        ? 'Confirm Payment of ${CurrencyFormatter.formatCents(amountCents)}'
+                                        : 'Enter an amount',
                               ),
                             ),
                           ),
                           const SizedBox(height: kSpacing10),
                           SizedBox(
                             width: double.infinity,
-                            height: 48,
+                            height: 44,
                             child: OutlinedButton(
                               onPressed: isProcessing
                                   ? null
@@ -320,6 +523,7 @@ Future<void> showMarkRecurringPaymentSheet({
             ),
           );
         },
+      );
       );
     },
   );
