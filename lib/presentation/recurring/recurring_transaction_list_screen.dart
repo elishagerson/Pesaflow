@@ -513,7 +513,7 @@ class _RecurringTransactionListScreenState
                           size: 11,
                           color: context.appColors.transferColor,
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: kSpacing4),
                         Text(
                           '${dueIds.length} DUE NOW',
                           style: context.ts(

@@ -573,7 +573,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         size: 11,
                         color: context.appColors.expenseColor,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: kSpacing4),
                       Text(
                         'OVER BUDGET',
                         style: context.ts(
@@ -612,7 +612,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         size: 11,
                         color: context.appColors.incomeColor,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: kSpacing4),
                       Text(
                         'ON TRACK',
                         style: context.ts(
@@ -1128,7 +1128,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                 : onSurface,
                           ),
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: kSpacing4),
                         Text(
                           'of ${CurrencyFormatter.formatCents(allocated)}',
                           style: context.ts(
@@ -1196,7 +1196,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                 size: 12,
                                 color: catColor,
                               ),
-                              const SizedBox(width: 4),
+                              const SizedBox(width: kSpacing4),
                               Text(
                                 sub.category.name,
                                 style: context.ts(
@@ -1205,7 +1205,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                   color: onSurface.withValues(alpha: 0.7),
                                 ),
                               ),
-                              const SizedBox(width: 4),
+                              const SizedBox(width: kSpacing4),
                               Text(
                                 CurrencyFormatter.formatCents(
                                   sub.spentInPeriod,
@@ -1379,17 +1379,19 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                 color: onSurface,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: kSpacing4),
                             Row(
                               children: [
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 6,
+                                    horizontal: kSpacing6,
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
                                     color: paceColor.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusTiny,
+                                    ),
                                   ),
                                   child: Text(
                                     status.paceLabel,
@@ -1401,7 +1403,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                   ),
                                 ),
                                 if (status.daysLeft > 0) ...[
-                                  const SizedBox(width: 8),
+                                  const SizedBox(width: kSpacing8),
                                   Text(
                                     '${status.daysLeft} days left',
                                     style: context.ts(

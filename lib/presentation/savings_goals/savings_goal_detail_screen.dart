@@ -395,7 +395,7 @@ class _SavingsGoalDetailScreenState
                                           },
                                           theme: theme,
                                         ),
-                                        const SizedBox(width: 6),
+                                        const SizedBox(width: kSpacing6),
                                         _buildSheetPresetPill(
                                           label: '+50K',
                                           onTap: () {
@@ -410,7 +410,7 @@ class _SavingsGoalDetailScreenState
                                           },
                                           theme: theme,
                                         ),
-                                        const SizedBox(width: 6),
+                                        const SizedBox(width: kSpacing6),
                                         _buildSheetPresetPill(
                                           label: '+100K',
                                           onTap: () {
@@ -425,7 +425,7 @@ class _SavingsGoalDetailScreenState
                                           },
                                           theme: theme,
                                         ),
-                                        const SizedBox(width: 6),
+                                        const SizedBox(width: kSpacing6),
                                         _buildSheetPresetPill(
                                           label: '+500K',
                                           onTap: () {
@@ -443,7 +443,7 @@ class _SavingsGoalDetailScreenState
                                         if (isDeposit &&
                                             goal.targetAmount >
                                                 goal.currentAmount) ...[
-                                          const SizedBox(width: 6),
+                                          const SizedBox(width: kSpacing6),
                                           _buildSheetPresetPill(
                                             label: 'Remaining Target',
                                             accentColor: accentColor,
@@ -459,7 +459,7 @@ class _SavingsGoalDetailScreenState
                                           ),
                                         ] else if (!isDeposit &&
                                             goal.currentAmount > 0) ...[
-                                          const SizedBox(width: 6),
+                                          const SizedBox(width: kSpacing6),
                                           _buildSheetPresetPill(
                                             label: 'Full Balance',
                                             accentColor: accentColor,
