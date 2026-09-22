@@ -135,7 +135,12 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           children: [
             const FloatingTopBar(
               title: 'Budget Setup',
-              padding: EdgeInsets.fromLTRB(20, 8, 20, 8),
+              padding: const EdgeInsets.fromLTRB(
+                kSpacing20,
+                kSpacing8,
+                kSpacing20,
+                kSpacing8,
+              ),
             ),
 
             // Step indicator

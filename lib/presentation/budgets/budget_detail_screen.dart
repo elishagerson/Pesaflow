@@ -137,7 +137,12 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                 Hero(
                   tag: 'budget_${widget.budgetId}',
                   child: Container(
-                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                    padding: const EdgeInsets.fromLTRB(
+                      kSpacing20,
+                      kSpacing8,
+                      kSpacing20,
+                      kSpacing16,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -490,7 +495,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                             child: Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(8),
+                                  padding: const EdgeInsets.all(kSpacing8),
                                   decoration: BoxDecoration(
                                     color:
                                         (status.remaining <= 0
