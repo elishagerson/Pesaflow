@@ -467,7 +467,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                       color: theme.colorScheme.onSurface
                                           .withValues(alpha: 0.5),
                                     ),
-                                    const SizedBox(width: 4),
+                                    const SizedBox(width: kSpacing4),
                                     Text(
                                       _countdownText,
                                       style: context.ts(
@@ -535,7 +535,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               alpha: 0.45,
                             ),
                           ),
-                          const SizedBox(width: 5),
+                          const SizedBox(width: kSpacing5),
                           Text(
                             'QUICK STARTERS',
                             style: context.ts(
@@ -555,7 +555,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: _goalTemplates.length,
-                          separatorBuilder: (_, _) => const SizedBox(width: 8),
+                          separatorBuilder: (_, _) => const SizedBox(width: kSpacing8),
                           itemBuilder: (context, index) {
                             final tmpl = _goalTemplates[index];
                             final tmplCol = hexToColor(tmpl['color'] as String);
@@ -584,7 +584,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                       size: 13,
                                       color: tmplCol,
                                     ),
-                                    const SizedBox(width: 5),
+                                    const SizedBox(width: kSpacing5),
                                     Text(
                                       tmpl['title'] as String,
                                       style: context.ts(
@@ -734,19 +734,19 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             onTap: () => _addAmount(10000000),
                             theme: theme,
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: kSpacing6),
                           _buildIncrementPill(
                             label: '+500K',
                             onTap: () => _addAmount(50000000),
                             theme: theme,
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: kSpacing6),
                           _buildIncrementPill(
                             label: '+1M',
                             onTap: () => _addAmount(100000000),
                             theme: theme,
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: kSpacing6),
                           _buildIncrementPill(
                             label: '+5M',
                             onTap: () => _addAmount(500000000),
@@ -806,25 +806,25 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             months: 1,
                             theme: theme,
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: kSpacing6),
                           _buildHorizonChip(
                             label: '3 Mos',
                             months: 3,
                             theme: theme,
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: kSpacing6),
                           _buildHorizonChip(
                             label: '6 Mos',
                             months: 6,
                             theme: theme,
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: kSpacing6),
                           _buildHorizonChip(
                             label: '1 Yr',
                             months: 12,
                             theme: theme,
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: kSpacing6),
                           _buildHorizonChip(
                             label: '2 Yrs',
                             months: 24,
