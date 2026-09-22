@@ -25,7 +25,6 @@ import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
-import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 

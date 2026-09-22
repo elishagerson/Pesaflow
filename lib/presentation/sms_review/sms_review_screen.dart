@@ -7,6 +7,7 @@ import 'package:pesaflow/core/utils/provider_brand_colors.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
+import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
@@ -275,13 +276,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen(scrollToTopProvider, (_, _) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          0,
-          duration: MotionTokens.durationNormal,
-          curve: Curves.easeOut,
-        );
-      }
+      _scrollController.scrollToTop(context);
     });
     final theme = Theme.of(context);
 

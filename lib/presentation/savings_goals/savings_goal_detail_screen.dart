@@ -6,9 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
-import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
+import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
@@ -830,13 +830,7 @@ class _SavingsGoalDetailScreenState
   @override
   Widget build(BuildContext context) {
     ref.listen(scrollToTopProvider, (_, _) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          0,
-          duration: MotionTokens.durationSlow,
-          curve: Curves.easeOut,
-        );
-      }
+      _scrollController.scrollToTop(context);
     });
     final theme = Theme.of(context);
     final goalsAsync = ref.watch(savingsGoalsStreamProvider);
