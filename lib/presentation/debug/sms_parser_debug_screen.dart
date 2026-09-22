@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/domain/sms/provider_matcher.dart';
 import 'package:pesaflow/domain/sms/provider_config.dart';
@@ -128,7 +129,7 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('SMS Parser Debug')),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(kSpacing16),
         child: Column(
           children: [
             TextField(
@@ -137,13 +138,13 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
                 labelText: 'Sender (shortcode)',
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: kSpacing12),
             TextField(
               controller: _bodyController,
               decoration: const InputDecoration(labelText: 'SMS Body'),
               maxLines: 4,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: kSpacing12),
             TextField(
               controller: _timestampController,
               decoration: const InputDecoration(
@@ -151,7 +152,7 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
               ),
               keyboardType: TextInputType.number,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             SizedBox(
               width: double.infinity,
               child: FilledButton(
@@ -165,11 +166,11 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
                     : const Text('Run Full Pipeline'),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             Expanded(
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(kSpacing12),
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
@@ -185,9 +186,9 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: kSpacing12),
             Wrap(
-              spacing: 8,
+              spacing: kSpacing8,
               children: [
                 _presetButton(
                   'Selcom Income',

@@ -90,7 +90,12 @@ class _RecurringTransactionListScreenState
           children: [
             // ── OLED Header ──
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+              padding: const EdgeInsets.fromLTRB(
+                kSpacing20,
+                kSpacing16,
+                kSpacing20,
+                kSpacing8,
+              ),
               child: Text(
                 'Recurring Flows',
                 style: context.ts(
