@@ -38,6 +38,7 @@ import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/add_account_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/ios_large_title_header.dart';
+import 'widgets/accounts_manager_sheet.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -46,7 +47,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
   ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 
   static void showAccountsManager(BuildContext context, WidgetRef ref) =>
-      _SettingsScreenState._showAccountsManager(context, ref);
+      showAccountsManager(context, ref);
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
