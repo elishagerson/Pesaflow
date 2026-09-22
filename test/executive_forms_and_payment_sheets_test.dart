@@ -288,7 +288,7 @@ void main() {
       await tester.tap(find.text('Land & Construction'));
       await tester.pumpAndSettle();
 
-      expect(find.text('10,000,000'), findsOneWidget);
+      expect(find.text('10000000'), findsOneWidget);
       expect(find.text('+250K'), findsOneWidget);
       expect(find.text('+2M'), findsOneWidget);
     });

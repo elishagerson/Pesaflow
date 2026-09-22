@@ -569,30 +569,34 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                   color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
                 ),
               ),
-              child: Row(
-                children: [
-                  Icon(
-                    PesaFlowIcons.lightbulb,
-                    size: 15,
-                    color: themeColor,
-                  ),
-                  const SizedBox(width: kSpacing8),
-                  Text(
-                    'Daily spending allowance: ',
-                    style: context.ts(
-                      11,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                    ),
-                  ),
-                  Text(
-                    '~TSh $formattedDaily / day',
-                    style: context.ts(
-                      12,
-                      fontWeight: FontWeight.w700,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  children: [
+                    Icon(
+                      PesaFlowIcons.lightbulb,
+                      size: 15,
                       color: themeColor,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: kSpacing8),
+                    Text(
+                      'Daily spending allowance: ',
+                      style: context.ts(
+                        11,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      ),
+                    ),
+                    Text(
+                      '~TSh $formattedDaily / day',
+                      style: context.ts(
+                        12,
+                        fontWeight: FontWeight.w700,
+                        color: themeColor,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
