@@ -1,3 +1,4 @@
+import 'package:flutter/animation.dart';
 import 'package:flutter/physics.dart';
 
 /// Centralized motion design tokens for PesaFlow.
@@ -58,6 +59,33 @@ class MotionTokens {
 
   /// Exit/dismiss animations — always faster than entrance.
   static const Duration durationExit = Duration(milliseconds: 200);
+
+  /// Screen/sheet entrance transitions (push).
+  static const Duration durationEntrance = Duration(milliseconds: 320);
+
+  /// Screen/sheet dismiss transitions (pop).
+  static const Duration durationDismiss = Duration(milliseconds: 220);
+
+  /// Progress bar and data-driven animations.
+  static const Duration durationProgress = Duration(milliseconds: 800);
+
+  /// Post-save navigation delay (e.g. pop after form save).
+  static const Duration durationDelayedNav = Duration(milliseconds: 500);
+
+  /// Long progress animations (overall dashboard progress, etc.).
+  static const Duration durationLongProgress = Duration(milliseconds: 1000);
+
+  // ── Curves ──────────────────────────────────────────────────────────
+  // Named curves for consistent easing across the app.
+
+  /// Standard entrance curve — fast deceleration.
+  static const Curve curveEntrance = Curves.easeOutCubic;
+
+  /// Exit/dismiss curve — fast acceleration out.
+  static const Curve curveExit = Curves.easeInCubic;
+
+  /// Standard state-change curve.
+  static const Curve curveStandard = Curves.easeOutCubic;
 
   // ── Scale Factors ────────────────────────────────────────────────────
   // Press-down scale targets for different surface types.

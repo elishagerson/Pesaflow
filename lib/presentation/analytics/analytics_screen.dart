@@ -957,7 +957,7 @@ class _OverviewTab extends ConsumerWidget {
                     final colors = [
                       theme.colorScheme.primary,
                       context.appColors.transferColor,
-                      const Color(0xFF0EA5E9), // Sky blue
+                      theme.colorScheme.tertiary,
                       theme.colorScheme.secondary,
                       context.appColors.expenseColor,
                     ];

@@ -3,6 +3,7 @@ import 'package:flutter/physics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/provider_brand_colors.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
@@ -55,17 +56,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
 
   Color _providerColor(String? provider) {
     if (provider == null) return Theme.of(context).colorScheme.outline;
-    const colors = {
-      'M-Pesa_TZ': Color(0xFFE21A2C),
-      'Airtel_TZ': Color(0xFFED1C24),
-      'TigoPesa_TZ': Color(0xFF0066B3),
-      'Halopesa_TZ': Color(0xFF00A651),
-      'Selcom_Pesa': Color(0xFF1A1A2E),
-      'NMB_TZ': Color(0xFF003DA5),
-      'CRDB_TZ': Color(0xFF0066B3),
-      'NBC_TZ': Color(0xFF003366),
-    };
-    return colors[provider] ?? Theme.of(context).colorScheme.outline;
+    return kProviderBrandColors[provider] ?? Theme.of(context).colorScheme.outline;
   }
 
   String _formatTimestamp(DateTime? dt) {
