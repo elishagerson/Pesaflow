@@ -56,10 +56,10 @@ class SpringSheetRoute<T> extends PopupRoute<T> {
   String? get barrierLabel => 'Dismiss';
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 320);
+  Duration get transitionDuration => MotionTokens.durationEntrance;
 
   @override
-  Duration get reverseTransitionDuration => const Duration(milliseconds: 220);
+  Duration get reverseTransitionDuration => MotionTokens.durationDismiss;
 
   @override
   Widget buildPage(

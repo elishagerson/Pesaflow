@@ -22,8 +22,8 @@ class SwipeBackRoute<T> extends PageRouteBuilder<T> {
     : super(
         opaque: false,
         barrierDismissible: false,
-        transitionDuration: const Duration(milliseconds: 320),
-        reverseTransitionDuration: const Duration(milliseconds: 220),
+        transitionDuration: MotionTokens.durationEntrance,
+        reverseTransitionDuration: MotionTokens.durationDismiss,
         pageBuilder: (_, _, _) => page,
         transitionsBuilder: (_, animation, secondaryAnimation, child) {
           return _SwipeBackTransition(
@@ -46,8 +46,8 @@ Page<dynamic> swipeBackPage(Widget page) {
   return CustomTransitionPage(
     key: ValueKey(page.runtimeType),
     opaque: false,
-    transitionDuration: const Duration(milliseconds: 320),
-    reverseTransitionDuration: const Duration(milliseconds: 220),
+    transitionDuration: MotionTokens.durationEntrance,
+    reverseTransitionDuration: MotionTokens.durationDismiss,
     child: page,
     transitionsBuilder: (_, animation, secondaryAnimation, child) {
       return _SwipeBackTransition(

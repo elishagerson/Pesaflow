@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 /// A page route that uses Hero for smooth list→detail card transitions.
