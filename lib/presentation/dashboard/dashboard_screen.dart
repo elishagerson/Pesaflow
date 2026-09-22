@@ -641,7 +641,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       color: theme.colorScheme.primary,
                                     ),
                                   ),
-                                  const SizedBox(width: 4),
+                                  const SizedBox(width: kSpacing4),
                                   Icon(
                                     PesaFlowIcons.chevronRight,
                                     size: 14,
@@ -820,7 +820,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                               .onSurfaceVariant,
                                                         ),
                                                       ),
-                                                      const SizedBox(width: 6),
+                                                      const SizedBox(width: kSpacing6),
                                                       Text(
                                                         '•',
                                                         style: context.ts(
