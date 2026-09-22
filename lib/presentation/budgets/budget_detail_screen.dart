@@ -321,7 +321,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                     color: context.appColors.onBgColor
                                         .withValues(alpha: 0.7),
                                   ),
-                                  const SizedBox(width: 4),
+                                  const SizedBox(width: kSpacing4),
                                   Consumer(
                                     builder: (context, ref, _) {
                                       final groups =
