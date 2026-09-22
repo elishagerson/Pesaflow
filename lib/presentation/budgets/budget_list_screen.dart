@@ -817,7 +817,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           ),
           const SizedBox(height: kSpacing14),
           TweenAnimationBuilder<double>(
-            duration: const Duration(milliseconds: 1000),
+            duration: MotionTokens.durationLongProgress,
             curve: Curves.easeOutCubic,
             tween: Tween<double>(begin: 0, end: overallPct.clamp(0.0, 1.0)),
             builder: (context, value, _) {
@@ -1150,7 +1150,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                 ),
                 const SizedBox(height: kSpacing8),
                 TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 800),
+                  duration: MotionTokens.durationProgress,
                   curve: Curves.easeOutCubic,
                   tween: Tween<double>(begin: 0, end: pct.clamp(0.0, 1.0)),
                   builder: (context, value, _) {
@@ -1460,7 +1460,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                     child: TweenAnimationBuilder<double>(
-                      duration: const Duration(milliseconds: 600),
+                      duration: MotionTokens.durationSheet,
                       curve: Curves.easeOutCubic,
                       tween: Tween<double>(
                         begin: 0,
@@ -1889,7 +1889,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       ),
                       const SizedBox(height: kSpacing16),
                       TweenAnimationBuilder<double>(
-                        duration: const Duration(milliseconds: 1000),
+                        duration: MotionTokens.durationLongProgress,
                         curve: Curves.easeOutCubic,
                         tween: Tween<double>(begin: 0, end: overallPct),
                         builder: (context, value, child) {

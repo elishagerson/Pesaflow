@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -117,7 +118,7 @@ class CategoryBudgetCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   child: TweenAnimationBuilder<double>(
                     tween: Tween<double>(begin: 0, end: pct.clamp(0.0, 1.0)),
-                    duration: const Duration(milliseconds: 800),
+                    duration: MotionTokens.durationProgress,
                     curve: Curves.easeOutCubic,
                     builder: (context, value, _) => LinearProgressIndicator(
                       value: value,

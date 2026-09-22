@@ -1,5 +1,4 @@
 import 'package:flutter/animation.dart';
-import 'package:flutter/physics.dart';
 
 /// Centralized motion design tokens for PesaFlow.
 ///

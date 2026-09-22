@@ -333,7 +333,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                   borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                   child: TweenAnimationBuilder<double>(
                     tween: Tween<double>(begin: 0, end: ratio.clamp(0.0, 1.0)),
-                    duration: const Duration(milliseconds: 800),
+                    duration: MotionTokens.durationProgress,
                     curve: Curves.easeOutCubic,
                     builder: (context, value, _) => LinearProgressIndicator(
                       value: value,
@@ -600,7 +600,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                             begin: 0,
                             end: ratio.clamp(0.0, 1.0),
                           ),
-                          duration: const Duration(milliseconds: 800),
+                          duration: MotionTokens.durationProgress,
                           curve: Curves.easeOutCubic,
                           builder: (context, value, _) =>
                               LinearProgressIndicator(

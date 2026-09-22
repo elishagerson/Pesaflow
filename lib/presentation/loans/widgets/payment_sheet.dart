@@ -54,7 +54,7 @@ class LoanProgressRing extends StatelessWidget {
                 height: 64,
                 child: TweenAnimationBuilder<double>(
                   tween: Tween<double>(begin: 0, end: paidFraction),
-                  duration: const Duration(milliseconds: 800),
+                  duration: MotionTokens.durationProgress,
                   curve: Curves.easeOutCubic,
                   builder: (context, value, _) => CircularProgressIndicator(
                     value: value,
