@@ -795,7 +795,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
 
                 // ── Animated Progress Bar ──
                 TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 800),
+                  duration: MotionTokens.durationProgress,
                   curve: Curves.easeOutCubic,
                   tween: Tween<double>(begin: 0, end: goalPct),
                   builder: (context, value, _) {
