@@ -1514,7 +1514,10 @@ class _SavingsGoalDetailScreenState
       haptic: HapticType.selection,
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing10,
+          vertical: kSpacing5,
+        ),
         decoration: BoxDecoration(
           color: isCustomColor
               ? accentColor.withValues(alpha: 0.12)
