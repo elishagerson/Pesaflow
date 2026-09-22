@@ -20,7 +20,7 @@ class FakeBudgetRepository extends Fake implements BudgetRepository {}
 
 class FakeSavingsGoalRepository extends Fake implements SavingsGoalRepository {
   @override
-  Future<SavingsGoal?> getGoalById(String id) async => null;
+  Future<SavingsGoal?> getSavingsGoalById(String id) async => null;
 }
 
 void main() {
