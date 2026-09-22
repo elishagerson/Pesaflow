@@ -735,6 +735,47 @@ class _RecurringTransactionFormScreenState
     }
   }
 
+  DateTime _computeNextCycle(DateTime from, String frequency, int interval) {
+    final safeInterval = interval.clamp(1, 999);
+    switch (frequency) {
+      case 'weekly':
+        return from.add(Duration(days: 7 * safeInterval));
+      case 'biweekly':
+        return from.add(Duration(days: 14 * safeInterval));
+      case 'quarterly':
+        return DateTime(from.year, from.month + (3 * safeInterval), from.day);
+      case 'yearly':
+        return DateTime(from.year + safeInterval, from.month, from.day);
+      case 'monthly':
+      default:
+        return DateTime(from.year, from.month + safeInterval, from.day);
+    }
+  }
+
+  String get _upcomingCyclesStr {
+    final interval = int.tryParse(_intervalController.text) ?? 1;
+    final d1 = _nextDate;
+    final d2 = _computeNextCycle(d1, _frequency, interval);
+    final d3 = _computeNextCycle(d2, _frequency, interval);
+    final f = DateFormat('d MMM');
+    return '${f.format(d1)} → ${f.format(d2)} → ${f.format(d3)}';
+  }
+
+  static const _popularKeywords = [
+    'luku',
+    'gecl',
+    'tanesco',
+    'dawasa',
+    'dstv',
+    'azam',
+    'zuku',
+    'netflix',
+    'spotify',
+    'rent',
+    'salary',
+    'mshahara',
+  ];
+
   String get _dueCountdownText {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -1414,6 +1455,46 @@ class _RecurringTransactionFormScreenState
               color: theme.colorScheme.onSurface,
             ),
           ),
+          const SizedBox(height: kSpacing10),
+          // 3-Cycle Schedule Preview
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: kSpacing12,
+              vertical: kSpacing8,
+            ),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.6,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                Icon(PesaFlowIcons.calendar, size: 14, color: typeColor),
+                const SizedBox(width: kSpacing8),
+                Text(
+                  'Upcoming: ',
+                  style: context.ts(
+                    11,
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    _upcomingCyclesStr,
+                    style: context.ts(
+                      11,
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: kSpacing14),
           const Divider(height: 1, thickness: 1),
           const SizedBox(height: kSpacing14),
@@ -1642,6 +1723,82 @@ class _RecurringTransactionFormScreenState
                 11,
                 fontWeight: FontWeight.w500,
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+              ),
+            ),
+            const SizedBox(height: kSpacing8),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: _popularKeywords.map((kw) {
+                  final active = _keywordsController.text
+                      .toLowerCase()
+                      .contains(kw);
+                  return Padding(
+                    padding: const EdgeInsets.only(right: kSpacing6),
+                    child: TactileSpringContainer(
+                      onTap: () {
+                        PesaHaptics.selection();
+                        final current = _keywordsController.text.trim();
+                        if (active) {
+                          final cleaned = current
+                              .split(',')
+                              .map((s) => s.trim())
+                              .where((s) => s.toLowerCase() != kw)
+                              .join(', ');
+                          _keywordsController.text = cleaned;
+                        } else {
+                          _keywordsController.text =
+                              current.isEmpty ? kw : '$current, $kw';
+                        }
+                        setState(() {});
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing8,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: active
+                              ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                              : theme.colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
+                          border: Border.all(
+                            color: active
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.outlineVariant.withValues(
+                                    alpha: 0.25,
+                                  ),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (active) ...[
+                              Icon(
+                                PesaFlowIcons.check,
+                                size: 12,
+                                color: theme.colorScheme.primary,
+                              ),
+                              const SizedBox(width: 4),
+                            ],
+                            Text(
+                              kw,
+                              style: context.ts(
+                                11,
+                                fontWeight: FontWeight.w600,
+                                color: active
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
           ],

@@ -1168,39 +1168,60 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
             ),
             child: Row(
               children: [
-                Icon(PesaFlowIcons.calendar, size: 14, color: primaryColor),
-                const SizedBox(width: kSpacing6),
-                Text(
-                  'Disbursed: ${DateFormat('d MMM yyyy').format(_disbursedAt)}',
-                  style: context.ts(
-                    11,
-                    fontWeight: FontWeight.w600,
-                    color: context.appColors.textMedium,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(PesaFlowIcons.calendar, size: 13, color: primaryColor),
+                      const SizedBox(width: kSpacing4),
+                      Expanded(
+                        child: Text(
+                          'Disbursed: ${DateFormat('d MMM yyyy').format(_disbursedAt)}',
+                          style: context.ts(
+                            11,
+                            fontWeight: FontWeight.w600,
+                            color: context.appColors.textMedium,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const Spacer(),
-                Icon(
-                  PesaFlowIcons.arrowForward,
-                  size: 12,
-                  color: context.appColors.textLow,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kSpacing6),
+                  child: Icon(
+                    PesaFlowIcons.arrowForward,
+                    size: 11,
+                    color: context.appColors.textLow,
+                  ),
                 ),
-                const Spacer(),
-                Icon(
-                  PesaFlowIcons.schedule,
-                  size: 14,
-                  color: _dueAt != null ? expenseColor : primaryColor,
-                ),
-                const SizedBox(width: kSpacing6),
-                Text(
-                  _dueAt != null
-                      ? 'Due: ${DateFormat('d MMM yyyy').format(_dueAt!)}'
-                      : 'No fixed due date',
-                  style: context.ts(
-                    11,
-                    fontWeight: FontWeight.w700,
-                    color: _dueAt != null
-                        ? onSurface
-                        : context.appColors.textLow,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(
+                        PesaFlowIcons.schedule,
+                        size: 13,
+                        color: _dueAt != null ? expenseColor : primaryColor,
+                      ),
+                      const SizedBox(width: kSpacing4),
+                      Expanded(
+                        child: Text(
+                          _dueAt != null
+                              ? 'Due: ${DateFormat('d MMM yyyy').format(_dueAt!)}'
+                              : 'No due date',
+                          style: context.ts(
+                            11,
+                            fontWeight: FontWeight.w700,
+                            color: _dueAt != null
+                                ? onSurface
+                                : context.appColors.textLow,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
