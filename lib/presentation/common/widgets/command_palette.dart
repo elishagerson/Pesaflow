@@ -7,6 +7,8 @@ import 'package:pesaflow/core/router/app_router.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/global_search_provider.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';

@@ -1,5 +1,6 @@
 const double kSpacing2 = 2;
 const double kSpacing4 = 4;
+const double kSpacing5 = 5;
 const double kSpacing6 = 6;
 const double kSpacing8 = 8;
 const double kSpacing10 = 10;
