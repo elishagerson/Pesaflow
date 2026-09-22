@@ -358,7 +358,7 @@ class _SavingsGoalDetailSheetState
                                         },
                                         theme: theme,
                                       ),
-                                      const SizedBox(width: 6),
+                                      const SizedBox(width: kSpacing6),
                                       _buildSheetPresetPill(
                                         label: '+50K',
                                         onTap: () {
@@ -373,7 +373,7 @@ class _SavingsGoalDetailSheetState
                                         },
                                         theme: theme,
                                       ),
-                                      const SizedBox(width: 6),
+                                      const SizedBox(width: kSpacing6),
                                       _buildSheetPresetPill(
                                         label: '+100K',
                                         onTap: () {
@@ -388,7 +388,7 @@ class _SavingsGoalDetailSheetState
                                         },
                                         theme: theme,
                                       ),
-                                      const SizedBox(width: 6),
+                                      const SizedBox(width: kSpacing6),
                                       _buildSheetPresetPill(
                                         label: '+500K',
                                         onTap: () {
