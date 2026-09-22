@@ -604,6 +604,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                         theme: theme,
                         title: 'INTEREST & FEES',
                         children: [
+                          _buildInterestPresetsRow(theme, rate),
+                          const SizedBox(height: kSpacing12),
                           TextFormField(
                             controller: _interestRateController,
                             keyboardType: const TextInputType.numberWithOptions(
@@ -1152,6 +1154,59 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
             ),
           ),
           const SizedBox(height: kSpacing12),
+          // Timeline visual
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: kSpacing12,
+              vertical: kSpacing8,
+            ),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHigh.withValues(
+                alpha: 0.6,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                Icon(PesaFlowIcons.calendar, size: 14, color: primaryColor),
+                const SizedBox(width: kSpacing6),
+                Text(
+                  'Disbursed: ${DateFormat('d MMM yyyy').format(_disbursedAt)}',
+                  style: context.ts(
+                    11,
+                    fontWeight: FontWeight.w600,
+                    color: context.appColors.textMedium,
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  PesaFlowIcons.arrowForward,
+                  size: 12,
+                  color: context.appColors.textLow,
+                ),
+                const Spacer(),
+                Icon(
+                  PesaFlowIcons.schedule,
+                  size: 14,
+                  color: _dueAt != null ? expenseColor : primaryColor,
+                ),
+                const SizedBox(width: kSpacing6),
+                Text(
+                  _dueAt != null
+                      ? 'Due: ${DateFormat('d MMM yyyy').format(_dueAt!)}'
+                      : 'No fixed due date',
+                  style: context.ts(
+                    11,
+                    fontWeight: FontWeight.w700,
+                    color: _dueAt != null
+                        ? onSurface
+                        : context.appColors.textLow,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: kSpacing12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -1250,12 +1305,89 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     );
   }
 
+  static const _lenderBrandColors = {
+    'Vodacom': Color(0xFFE21A2C),
+    'Tigo': Color(0xFF0066B3),
+    'Airtel': Color(0xFFED1C24),
+    'NMB': Color(0xFF003DA5),
+    'CRDB': Color(0xFF0066B3),
+    'NBC': Color(0xFF003366),
+    'Family': Color(0xFF10B981),
+    'SACCOS': Color(0xFF059669),
+  };
+
+  Widget _buildInterestPresetsRow(ThemeData theme, double? currentRate) {
+    const presets = [
+      {'label': '0% Free', 'rate': 0.0},
+      {'label': '5% Songesha', 'rate': 5.0},
+      {'label': '10% Advance', 'rate': 10.0},
+      {'label': '14% Bank Loan', 'rate': 14.0},
+      {'label': '18% Commercial', 'rate': 18.0},
+    ];
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: presets.map((item) {
+          final r = item['rate'] as double;
+          final isSelected = currentRate != null && (currentRate - r).abs() < 0.01;
+          final label = item['label'] as String;
+
+          return Padding(
+            padding: const EdgeInsets.only(right: kSpacing6),
+            child: TactileSpringContainer(
+              onTap: () {
+                PesaHaptics.selection();
+                setState(() {
+                  _interestRateController.text = r == 0.0 ? '0' : r.toString();
+                });
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kSpacing10,
+                  vertical: kSpacing6,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                      : theme.colorScheme.surfaceContainerHighest.withValues(
+                          alpha: 0.5,
+                        ),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                  border: Border.all(
+                    color: isSelected
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.outlineVariant.withValues(
+                            alpha: 0.25,
+                          ),
+                  ),
+                ),
+                child: Text(
+                  label,
+                  style: context.ts(
+                    11,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    color: isSelected
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   Widget _buildQuickLenderChips(ThemeData theme) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: _quickLenders.map((lender) {
           final isSelected = _senderController.text.contains(lender);
+          final brandColor = _lenderBrandColors[lender] ?? theme.colorScheme.primary;
+
           return Padding(
             padding: const EdgeInsets.only(right: kSpacing6),
             child: TactileSpringContainer(
@@ -1275,26 +1407,40 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                 ),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                      ? brandColor.withValues(alpha: 0.15)
                       : theme.colorScheme.surfaceContainerHighest.withValues(
                           alpha: 0.5,
                         ),
                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   border: Border.all(
                     color: isSelected
-                        ? theme.colorScheme.primary
+                        ? brandColor
                         : theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
                   ),
                 ),
-                child: Text(
-                  lender,
-                  style: context.ts(
-                    11,
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    color: isSelected
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.onSurface,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        color: brandColor,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: kSpacing6),
+                    Text(
+                      lender,
+                      style: context.ts(
+                        11,
+                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                        color: isSelected
+                            ? brandColor
+                            : theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

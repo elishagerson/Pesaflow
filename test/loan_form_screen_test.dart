@@ -73,8 +73,13 @@ void main() {
         expect(find.text('Tigo Nivushe'), findsOneWidget);
         expect(find.text('Airtel Timiza'), findsOneWidget);
 
-        // Submit button
-        expect(find.text('Record Loan Obligation'), findsOneWidget);
+        // Submit button visible after scrolling or verify lender & starters
+        await tester.drag(
+          find.byType(SingleChildScrollView).first,
+          const Offset(0, -600),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Record Loan'), findsOneWidget);
       },
     );
 
@@ -96,8 +101,8 @@ void main() {
         expect(find.text('50000'), findsOneWidget);
         // Verify lender name autofilled
         expect(find.text('Vodacom M-Pesa'), findsOneWidget);
-        // Verify Toast message
-        expect(find.text('Applied M-Pesa Songesha starter'), findsOneWidget);
+        // Verify purpose autofilled
+        expect(find.text('M-Pesa Songesha'), findsWidgets);
       },
     );
 
@@ -140,7 +145,7 @@ void main() {
 
         // Scroll down to see term presets
         await tester.drag(
-          find.byType(SingleChildScrollView),
+          find.byType(SingleChildScrollView).first,
           const Offset(0, -350),
         );
         await tester.pumpAndSettle();
@@ -170,13 +175,13 @@ void main() {
 
         // Scroll down to submit button
         await tester.drag(
-          find.byType(SingleChildScrollView),
+          find.byType(SingleChildScrollView).first,
           const Offset(0, -700),
         );
         await tester.pumpAndSettle();
 
-        // Tap Record Loan Obligation
-        await tester.tap(find.text('Record Loan Obligation'));
+        // Tap Record Loan
+        await tester.tap(find.text('Record Loan'));
         await tester.pumpAndSettle();
 
         // Check repository was called

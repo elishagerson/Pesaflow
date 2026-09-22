@@ -44,41 +44,47 @@ class FloatingTopBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              if (showPop)
-                TactileSpringContainer(
-                  haptic: HapticType.soft,
-                  onTap: () {
-                    context.pop();
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(
-                      right: title != null ? kSpacing12 : 0,
-                    ),
-                    padding: const EdgeInsets.all(kSpacing10),
-                    decoration: BoxDecoration(
-                      color: effectiveColor.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      PesaFlowIcons.back,
-                      color: effectiveColor,
-                      size: 18,
+          Expanded(
+            child: Row(
+              children: [
+                if (showPop)
+                  TactileSpringContainer(
+                    haptic: HapticType.soft,
+                    onTap: () {
+                      context.pop();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        right: title != null ? kSpacing12 : 0,
+                      ),
+                      padding: const EdgeInsets.all(kSpacing10),
+                      decoration: BoxDecoration(
+                        color: effectiveColor.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        PesaFlowIcons.back,
+                        color: effectiveColor,
+                        size: 18,
+                      ),
                     ),
                   ),
-                ),
-              if (title != null)
-                Text(
-                  title!,
-                  style: context.ts(
-                    34,
-                    fontWeight: FontWeight.w800,
-                    color: effectiveColor,
-                    letterSpacing: -0.5,
+                if (title != null)
+                  Expanded(
+                    child: Text(
+                      title!,
+                      style: context.ts(
+                        34,
+                        fontWeight: FontWeight.w800,
+                        color: effectiveColor,
+                        letterSpacing: -0.5,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
           if (actions != null) Row(children: actions!),
         ],
