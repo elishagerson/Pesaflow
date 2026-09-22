@@ -1040,7 +1040,10 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
       haptic: HapticType.selection,
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing10,
+          vertical: kSpacing5,
+        ),
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
@@ -1073,7 +1076,10 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
       haptic: HapticType.selection,
       onTap: () => _setHorizonMonths(months),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing10,
+          vertical: kSpacing5,
+        ),
         decoration: BoxDecoration(
           color: isMatching
               ? theme.colorScheme.primary.withValues(alpha: 0.12)

@@ -579,7 +579,12 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
             children: [
               FloatingTopBar(
                 title: isEditing ? 'Edit Budget' : 'New Budget',
-                padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                padding: const EdgeInsets.fromLTRB(
+                  kSpacing20,
+                  kSpacing8,
+                  kSpacing20,
+                  kSpacing16,
+                ),
               ),
               Expanded(
                 child: SingleChildScrollView(
