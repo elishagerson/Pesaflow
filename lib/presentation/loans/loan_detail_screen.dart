@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
@@ -49,13 +50,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen(scrollToTopProvider, (_, _) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          0,
-          duration: MotionTokens.durationSlow,
-          curve: Curves.easeOut,
-        );
-      }
+      _scrollController.scrollToTop(context);
     });
     final theme = Theme.of(context);
     final loansAsync = ref.watch(loansStreamProvider);

@@ -10,6 +10,7 @@ import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
+import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
@@ -51,13 +52,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen(scrollToTopProvider, (_, _) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          0,
-          duration: MotionTokens.durationNormal,
-          curve: Curves.easeOut,
-        );
-      }
+      _scrollController.scrollToTop(context);
     });
     final theme = Theme.of(context);
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);

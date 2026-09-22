@@ -7,6 +7,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
+import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
@@ -196,17 +197,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   void _scrollToTop() {
-    if (!_scrollController.hasClients) return;
-    if (_scrollController.offset <= 0) return;
-    if (context.isReducedMotion) {
-      _scrollController.jumpTo(0);
-    } else {
-      _scrollController.animateTo(
-        0,
-        duration: MotionTokens.durationNormal,
-        curve: Curves.easeOutCubic,
-      );
-    }
+    _scrollController.scrollToTop(context);
   }
 
   @override

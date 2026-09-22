@@ -19,7 +19,6 @@ import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_widgets.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
-import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/services/home_widgets_renderer.dart';
 import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';

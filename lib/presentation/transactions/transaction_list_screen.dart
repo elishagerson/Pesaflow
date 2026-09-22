@@ -14,6 +14,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -73,17 +74,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
   }
 
   void _scrollToTop() {
-    if (!_scrollController.hasClients) return;
-    if (_scrollController.offset <= 0) return;
-    if (context.isReducedMotion) {
-      _scrollController.jumpTo(0);
-    } else {
-      _scrollController.animateTo(
-        0,
-        duration: MotionTokens.durationNormal,
-        curve: Curves.easeOutCubic,
-      );
-    }
+    _scrollController.scrollToTop(context);
   }
 
   void _showTransactionActions(

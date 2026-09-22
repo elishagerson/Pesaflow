@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
@@ -86,13 +87,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen(scrollToTopProvider, (_, _) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          0,
-          duration: MotionTokens.durationSlow,
-          curve: Curves.easeOut,
-        );
-      }
+      _scrollController.scrollToTop(context);
     });
     final detailAsync = ref.watch(budgetDetailProvider(widget.budgetId));
     final periodsAsync = ref.watch(budgetPeriodsProvider(widget.budgetId));
