@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
@@ -11,7 +13,6 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
 import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:go_router/go_router.dart';
@@ -73,13 +74,13 @@ Future<void> showMarkRecurringPaymentSheet({
             minChildSize: 0.5,
             expand: false,
             builder: (ctx, scrollController) => ClipRRect(
-              borderRadius: const BorderRadius.vertical(
+              borderRadius: BorderRadius.vertical(
                 top: Radius.circular(AppTheme.radiusDialog),
               ),
               child: Container(
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface,
-                  borderRadius: const BorderRadius.vertical(
+                  borderRadius: BorderRadius.vertical(
                     top: Radius.circular(AppTheme.radiusDialog),
                   ),
                 ),
@@ -117,7 +118,7 @@ Future<void> showMarkRecurringPaymentSheet({
                               borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                             ),
                             child: Icon(
-                              PesaFlowIcons.refresh,
+                              PesaFlowIcons.sync,
                               color: theme.colorScheme.primary,
                               size: 20,
                             ),
@@ -524,33 +525,7 @@ Future<void> showMarkRecurringPaymentSheet({
           );
         },
       );
-      );
     },
-  );
-}
-
-Widget _buildSummaryRow({
-  required BuildContext context,
-  required ThemeData theme,
-  required String label,
-  required String value,
-  TextStyle? valueStyle,
-}) {
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(
-        width: 120,
-        child: Text(
-          label,
-          style: context.ts(
-            11,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-          ),
-        ),
-      ),
-      Expanded(child: Text(value, style: valueStyle ?? context.ts(15))),
-    ],
   );
 }
 

@@ -420,94 +420,182 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
     final double amount = double.tryParse(_amountController.text) ?? 0.0;
     final formattedVal = NumberFormat('#,###').format(amount);
 
+    final now = DateTime.now();
+    final daysInPeriod = () {
+      switch (_period) {
+        case 'weekly':
+          return 7;
+        case 'biweekly':
+          return 14;
+        case 'monthly':
+          return DateTime(now.year, now.month + 1, 0).day;
+        case 'quarterly':
+          return 90;
+        case 'yearly':
+          return 365;
+        default:
+          return 30;
+      }
+    }();
+
+    final dailyAllowance = amount > 0 ? (amount / daysInPeriod).round() : 0;
+    final formattedDaily = NumberFormat('#,###').format(dailyAllowance);
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: kSpacing20),
-      alignment: Alignment.center,
-      child: Stack(
-        alignment: Alignment.center,
+      margin: const EdgeInsets.symmetric(
+        horizontal: kSpacing16,
+        vertical: kSpacing12,
+      ),
+      padding: const EdgeInsets.all(kSpacing16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+        border: Border.all(
+          color: themeColor.withValues(alpha: 0.35),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: themeColor.withValues(alpha: context.isDark ? 0.2 : 0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AnimatedContainer(
-            duration: MotionTokens.durationNormal,
-            width: 140,
-            height: 140,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: themeColor.withValues(alpha: 0.16),
-                  blurRadius: 40,
-                  spreadRadius: 8,
-                ),
-              ],
-            ),
-          ),
-          AnimatedContainer(
-            duration: MotionTokens.durationNormal,
-            width: 130,
-            height: 130,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: themeColor.withValues(alpha: 0.3),
-                width: 1.5,
-              ),
-            ),
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
+          Row(
             children: [
-              Text(
-                _nameController.text.isEmpty
-                    ? 'NEW BUDGET'
-                    : _nameController.text.toUpperCase(),
-                style: context.ts(
-                  10,
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                  letterSpacing: 1.5,
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: themeColor.withValues(alpha: 0.16),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                  border: Border.all(
+                    color: themeColor.withValues(alpha: 0.3),
+                  ),
                 ),
-              ),
-              const SizedBox(height: kSpacing4),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: kSpacing12),
-                  child: Text(
-                    'Tsh $formattedVal',
-                    style: AppTheme.getMonospaceStyle(
-                      context.ts(
-                        24,
-                        color: theme.colorScheme.onSurface,
-                        letterSpacing: -0.5,
-                      ),
-                    ).copyWith(fontWeight: FontWeight.w800),
+                child: Center(
+                  child: Icon(
+                    selectedCat != null
+                        ? getCategoryIcon(selectedCat.icon)
+                        : PesaFlowIcons.pieChart,
+                    color: themeColor,
+                    size: 20,
                   ),
                 ),
               ),
-              const SizedBox(height: kSpacing4),
-              AnimatedContainer(
-                duration: MotionTokens.durationNormal,
+              const SizedBox(width: kSpacing12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _nameController.text.trim().isEmpty
+                          ? 'New Budget'
+                          : _nameController.text.trim(),
+                      style: context.ts(16, fontWeight: FontWeight.w700),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      selectedCat != null
+                          ? selectedCat.name
+                          : 'Select a category below',
+                      style: context.ts(
+                        12,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: kSpacing8,
+                  horizontal: kSpacing10,
                   vertical: kSpacing4,
                 ),
                 decoration: BoxDecoration(
                   color: themeColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                  border: Border.all(color: themeColor.withValues(alpha: 0.25)),
                 ),
                 child: Text(
                   _period.toUpperCase(),
                   style: context.ts(
-                    10,
+                    11,
                     fontWeight: FontWeight.w700,
                     color: themeColor,
-                    letterSpacing: 0.5,
                   ),
                 ),
               ),
             ],
           ),
+          const SizedBox(height: kSpacing16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                'Allocation: ',
+                style: context.ts(
+                  12,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
+              ),
+              Text(
+                'TSh $formattedVal',
+                style: AppTheme.getMonospaceStyle(
+                  context.ts(24, fontWeight: FontWeight.w800),
+                ),
+              ),
+            ],
+          ),
+          if (amount > 0) ...[
+            const SizedBox(height: kSpacing10),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kSpacing12,
+                vertical: kSpacing8,
+              ),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface,
+                borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                border: Border.all(
+                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    PesaFlowIcons.lightbulb,
+                    size: 15,
+                    color: themeColor,
+                  ),
+                  const SizedBox(width: kSpacing8),
+                  Text(
+                    'Daily spending allowance: ',
+                    style: context.ts(
+                      11,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
+                  Text(
+                    '~TSh $formattedDaily / day',
+                    style: context.ts(
+                      12,
+                      fontWeight: FontWeight.w700,
+                      color: themeColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -1202,6 +1290,84 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         15,
                                         fontWeight: FontWeight.w600,
                                         color: context.appColors.expenseColor,
+                                      ),
+                                    ),
+                                    const SizedBox(height: kSpacing10),
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          ...[50000, 100000, 250000, 500000, 1000000].map((tsh) {
+                                            final label = tsh >= 1000000
+                                                ? '+${tsh ~/ 1000000}M'
+                                                : '+${tsh ~/ 1000}K';
+                                            return Padding(
+                                              padding: const EdgeInsets.only(right: kSpacing8),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  PesaHaptics.selection();
+                                                  final current = int.tryParse(_amountController.text) ?? 0;
+                                                  _amountController.text = (current + tsh).toString();
+                                                  setState(() {});
+                                                },
+                                                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                                child: Container(
+                                                  padding: const EdgeInsets.symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 5,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: theme.colorScheme.surfaceContainerHighest
+                                                        .withValues(alpha: 0.4),
+                                                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                                    border: Border.all(
+                                                      color: theme.colorScheme.outlineVariant
+                                                          .withValues(alpha: 0.20),
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    label,
+                                                    style: context.ts(
+                                                      11,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: theme.colorScheme.onSurface,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                          if (_amountController.text.isNotEmpty)
+                                            InkWell(
+                                              onTap: () {
+                                                PesaHaptics.light();
+                                                _amountController.clear();
+                                                setState(() {});
+                                              },
+                                              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                  horizontal: 10,
+                                                  vertical: 5,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: theme.colorScheme.error.withValues(alpha: 0.1),
+                                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                                  border: Border.all(
+                                                    color: theme.colorScheme.error.withValues(alpha: 0.25),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  'Clear',
+                                                  style: context.ts(
+                                                    11,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: theme.colorScheme.error,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
                                       ),
                                     ),
                                   ],
