@@ -406,7 +406,7 @@ class _SavingsGoalDetailSheetState
                                       if (isDeposit &&
                                           widget.goal.targetAmount >
                                               widget.goal.currentAmount) ...[
-                                        const SizedBox(width: 6),
+                                        const SizedBox(width: kSpacing6),
                                         _buildSheetPresetPill(
                                           label: 'Remaining Target',
                                           accentColor: accentColor,
@@ -422,7 +422,7 @@ class _SavingsGoalDetailSheetState
                                         ),
                                       ] else if (!isDeposit &&
                                           widget.goal.currentAmount > 0) ...[
-                                        const SizedBox(width: 6),
+                                        const SizedBox(width: kSpacing6),
                                         _buildSheetPresetPill(
                                           label: 'Full Balance',
                                           accentColor: accentColor,

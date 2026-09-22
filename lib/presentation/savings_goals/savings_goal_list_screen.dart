@@ -696,7 +696,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                                   size: 11,
                                   color: context.appColors.incomeColor,
                                 ),
-                                const SizedBox(width: 4),
+                                const SizedBox(width: kSpacing4),
                                 Text(
                                   'COMPLETED',
                                   style: context.ts(
@@ -842,7 +842,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                             size: 12,
                             color: goalColor,
                           ),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: kSpacing4),
                           Flexible(
                             child: Text(
                               paceInsight,
@@ -899,7 +899,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                                 size: 13,
                                 color: goalColor,
                               ),
-                              const SizedBox(width: 4),
+                              const SizedBox(width: kSpacing4),
                               Text(
                                 'Deposit',
                                 style: context.ts(
@@ -940,7 +940,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                               size: 12,
                               color: onSurface.withValues(alpha: 0.75),
                             ),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: kSpacing4),
                             Text(
                               'Edit',
                               style: context.ts(
