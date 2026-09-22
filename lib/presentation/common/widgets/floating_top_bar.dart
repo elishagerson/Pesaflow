@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:go_router/go_router.dart';
@@ -32,7 +33,14 @@ class FloatingTopBar extends StatelessWidget {
         : customColor ?? theme.colorScheme.onSurface;
 
     return Padding(
-      padding: padding ?? const EdgeInsets.fromLTRB(20, 16, 20, 16),
+      padding:
+          padding ??
+          const EdgeInsets.fromLTRB(
+            kSpacing20,
+            kSpacing16,
+            kSpacing20,
+            kSpacing16,
+          ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -45,8 +53,10 @@ class FloatingTopBar extends StatelessWidget {
                     context.pop();
                   },
                   child: Container(
-                    margin: EdgeInsets.only(right: title != null ? 12 : 0),
-                    padding: const EdgeInsets.all(10),
+                    margin: EdgeInsets.only(
+                      right: title != null ? kSpacing12 : 0,
+                    ),
+                    padding: const EdgeInsets.all(kSpacing10),
                     decoration: BoxDecoration(
                       color: effectiveColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
