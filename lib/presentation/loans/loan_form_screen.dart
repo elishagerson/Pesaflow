@@ -762,7 +762,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
 
   Widget _buildStartersCarousel() {
     return SizedBox(
-      height: 96,
+      height: 110,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
@@ -774,7 +774,10 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
             onTap: () => _applyStarter(starter),
             child: Container(
               width: 146,
-              padding: const EdgeInsets.all(kSpacing12),
+              padding: const EdgeInsets.symmetric(
+                horizontal: kSpacing12,
+                vertical: kSpacing10,
+              ),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surfaceContainerHigh,
                 borderRadius: BorderRadius.circular(AppTheme.radiusCard),

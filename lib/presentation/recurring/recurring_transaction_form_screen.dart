@@ -1068,7 +1068,7 @@ class _RecurringTransactionFormScreenState
 
   Widget _buildStartersCarousel(BuildContext context) {
     return SizedBox(
-      height: 98,
+      height: 110,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
@@ -1080,7 +1080,10 @@ class _RecurringTransactionFormScreenState
             onTap: () => _applyStarter(starter),
             child: Container(
               width: 150,
-              padding: const EdgeInsets.all(kSpacing12),
+              padding: const EdgeInsets.symmetric(
+                horizontal: kSpacing12,
+                vertical: kSpacing10,
+              ),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surfaceContainerHigh,
                 borderRadius: BorderRadius.circular(AppTheme.radiusCard),
