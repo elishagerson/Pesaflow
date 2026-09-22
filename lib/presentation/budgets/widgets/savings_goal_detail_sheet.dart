@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -185,7 +186,12 @@ class _SavingsGoalDetailSheetState
                           child: SingleChildScrollView(
                             controller: scrollController,
                             physics: const ClampingScrollPhysics(),
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                            padding: const EdgeInsets.fromLTRB(
+                              kSpacing20,
+                              0,
+                              kSpacing20,
+                              kSpacing24,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -312,7 +318,9 @@ class _SavingsGoalDetailSheetState
                                             setModalState(() {});
                                           },
                                           child: Container(
-                                            padding: const EdgeInsets.all(4),
+                                            padding: const EdgeInsets.all(
+                                              kSpacing4,
+                                            ),
                                             decoration: BoxDecoration(
                                               color: onSurface.withValues(
                                                 alpha: 0.07,
@@ -1195,7 +1203,10 @@ class _SavingsGoalDetailSheetState
       haptic: HapticType.selection,
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing10,
+          vertical: kSpacing5,
+        ),
         decoration: BoxDecoration(
           color: isCustomColor
               ? accentColor.withValues(alpha: 0.12)
