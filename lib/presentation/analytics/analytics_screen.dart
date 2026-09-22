@@ -232,7 +232,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               // iOS-style sliding capsule control
               Container(
                 height: 44,
-                margin: const EdgeInsets.fromLTRB(16, 10, 16, 6),
+                margin: const EdgeInsets.fromLTRB(
+                  kSpacing16,
+                  kSpacing10,
+                  kSpacing16,
+                  kSpacing6,
+                ),
                 padding: const EdgeInsets.all(kSpacing4),
                 decoration: BoxDecoration(
                   color: appColors.surfaceContainerHighest.withValues(
