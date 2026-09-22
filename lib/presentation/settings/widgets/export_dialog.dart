@@ -52,7 +52,10 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
           ).colorScheme.outlineVariant.withValues(alpha: 0.3),
         ),
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: kSpacing16,
+        vertical: kSpacing14,
+      ),
     );
   }
 
