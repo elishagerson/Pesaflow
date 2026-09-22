@@ -217,7 +217,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                                     ),
                                   ),
                                 ],
-                                const SizedBox(height: 80),
+                                const SizedBox(height: kSpacing80),
                               ],
                             ).children,
                           ],

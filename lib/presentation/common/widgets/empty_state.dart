@@ -243,7 +243,10 @@ class SectionHeader extends StatelessWidget {
     return Padding(
       padding:
           padding ??
-          EdgeInsets.symmetric(horizontal: context.spacing, vertical: 8),
+          EdgeInsets.symmetric(
+            horizontal: context.spacing,
+            vertical: kSpacing8,
+          ),
       child: Row(
         children: [
           Semantics(

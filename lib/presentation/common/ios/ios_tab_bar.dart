@@ -133,11 +133,14 @@ class _IosTabBarState extends State<IosTabBar>
         height: height,
         child: GlassCard(
           frosted: true,
-          borderRadius: 100,
+          borderRadius: AppTheme.radiusPill,
           backgroundColor: navBgColor,
           elevation: CardElevation.medium,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            padding: const EdgeInsets.symmetric(
+              horizontal: kSpacing8,
+              vertical: kSpacing8,
+            ),
             child: AnimatedBuilder(
               animation: _selController,
               builder: (context, _) {

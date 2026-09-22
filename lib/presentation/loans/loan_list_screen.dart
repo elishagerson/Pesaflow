@@ -91,7 +91,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
               children: [
                 // ── Floating Top Bar ──
                 const FloatingTopBar(title: 'Loans', padding: EdgeInsets.zero),
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
                 ...StaggeredEntrance(
                   children: [
                     // Outstanding header
@@ -407,7 +407,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                       size: 11,
                       color: context.appColors.expenseColor,
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: kSpacing4),
                     Text(
                       'ACTIVE DEBT',
                       style: context.ts(
