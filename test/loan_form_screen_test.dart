@@ -62,11 +62,10 @@ void main() {
 
         // Section headers & titles
         expect(find.text('QUICK STARTERS'), findsOneWidget);
-        expect(find.text('LOAN PRINCIPAL'), findsOneWidget);
-        expect(find.text('LIVE REPAYMENT PROJECTION'), findsOneWidget);
+        expect(find.text('PRINCIPAL AMOUNT'), findsOneWidget);
+        expect(find.text('LIVE LOAN PROJECTION'), findsOneWidget);
         expect(find.text('LENDER & PURPOSE'), findsOneWidget);
-        expect(find.text('CATEGORY'), findsOneWidget);
-        expect(find.text('TERM & TIMELINE'), findsOneWidget);
+        expect(find.text('CATEGORY & REPAYMENT SCHEDULE'), findsOneWidget);
         expect(find.text('INTEREST & FEES'), findsOneWidget);
 
         // Starters present
@@ -96,7 +95,7 @@ void main() {
         // Verify autofilled amount (50,000)
         expect(find.text('50000'), findsOneWidget);
         // Verify lender name autofilled
-        expect(find.text('Vodacom Songesha'), findsOneWidget);
+        expect(find.text('Vodacom M-Pesa'), findsOneWidget);
         // Verify Toast message
         expect(find.text('Applied M-Pesa Songesha starter'), findsOneWidget);
       },
@@ -139,12 +138,19 @@ void main() {
         await tester.pumpWidget(createTestWidget());
         await tester.pumpAndSettle();
 
-        // Tap 60d preset
-        await tester.tap(find.text('60d'));
+        // Scroll down to see term presets
+        await tester.drag(
+          find.byType(SingleChildScrollView),
+          const Offset(0, -350),
+        );
         await tester.pumpAndSettle();
 
-        // Verify 60 days in term input
-        expect(find.text('60'), findsOneWidget);
+        // Tap 60 Days preset
+        await tester.tap(find.text('60 Days'));
+        await tester.pumpAndSettle();
+
+        // Verify term reflects 60 days
+        expect(find.text('Due in 60 days'), findsOneWidget);
       },
     );
 
@@ -158,14 +164,14 @@ void main() {
         await tester.pumpWidget(createTestWidget());
         await tester.pumpAndSettle();
 
-        // Autofill using CRDB Personal Credit starter
-        await tester.tap(find.text('CRDB Personal Credit'));
+        // Autofill using M-Pesa Songesha starter
+        await tester.tap(find.text('M-Pesa Songesha'));
         await tester.pumpAndSettle();
 
         // Scroll down to submit button
         await tester.drag(
           find.byType(SingleChildScrollView),
-          const Offset(0, -600),
+          const Offset(0, -700),
         );
         await tester.pumpAndSettle();
 
@@ -176,9 +182,9 @@ void main() {
         // Check repository was called
         expect(fakeLoanRepo.createdLoans.length, 1);
         final created = fakeLoanRepo.createdLoans.first;
-        expect(created.sender, 'CRDB Bank');
-        expect(created.amount, 150000000); // 1,500,000 TSh in cents
-        expect(created.interestRate, 14.0);
+        expect(created.sender, 'Vodacom M-Pesa');
+        expect(created.amount, 5000000); // 50,000 TSh in cents
+        expect(created.interestRate, 5.0);
         expect(created.status, 'active');
       },
     );
