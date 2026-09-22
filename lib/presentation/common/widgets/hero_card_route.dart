@@ -13,8 +13,8 @@ class HeroCardRoute<T> extends PageRouteBuilder<T> {
 
   HeroCardRoute({required this.page, required this.heroTag, super.settings})
     : super(
-        transitionDuration: const Duration(milliseconds: 320),
-        reverseTransitionDuration: const Duration(milliseconds: 220),
+        transitionDuration: MotionTokens.durationEntrance,
+        reverseTransitionDuration: MotionTokens.durationDismiss,
         pageBuilder: (context, animation, secondaryAnimation) => page,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           final isReverse = animation.status == AnimationStatus.reverse;
