@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'widgets/quick_deposit_sheet.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
@@ -870,7 +869,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                   children: [
                     if (!isCompleted) ...[
                       TactileSpringContainer(
-                        onTap: () => _showQuickDepositSheet(context, ref, goal),
+                        onTap: () => showQuickDepositSheet(context, ref, goal),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: kSpacing12,
