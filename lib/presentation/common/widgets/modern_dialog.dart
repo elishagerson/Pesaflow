@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -116,7 +117,7 @@ class ModernDialog extends StatelessWidget {
       ),
       child: GlassCard(
         frosted: true,
-        borderRadius: 28.0,
+        borderRadius: AppTheme.radiusButton,
         backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.9),
         hasBorder: true,
         elevation: CardElevation.medium,
@@ -128,7 +129,12 @@ class ModernDialog extends StatelessWidget {
             children: [
               // Header
               Padding(
-                padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 16.0),
+                padding: const EdgeInsets.fromLTRB(
+                  kSpacing24,
+                  kSpacing24,
+                  kSpacing24,
+                  kSpacing16,
+                ),
                 child: Row(
                   children: [
                     if (titleIcon != null) ...[
@@ -177,7 +183,12 @@ class ModernDialog extends StatelessWidget {
               // Actions — with staggered appearance
               if (actions != null && actions!.isNotEmpty) ...[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 24.0),
+                  padding: const EdgeInsets.fromLTRB(
+                    kSpacing24,
+                    kSpacing16,
+                    kSpacing24,
+                    kSpacing24,
+                  ),
                   child: _StaggeredActions(actions: actions!),
                 ),
               ] else ...[

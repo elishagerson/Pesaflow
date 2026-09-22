@@ -336,10 +336,10 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
               child: Container(
                 width: paletteWidth,
                 constraints: BoxConstraints(maxHeight: paletteMaxHeight),
-                margin: const EdgeInsets.symmetric(horizontal: 16),
+                margin: const EdgeInsets.symmetric(horizontal: kSpacing16),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainerHigh,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
                   border: Border.all(
                     color: theme.colorScheme.outlineVariant.withValues(
                       alpha: 0.28,
@@ -360,13 +360,18 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                   ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       // ── Search Input Header ──
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+                        padding: const EdgeInsets.fromLTRB(
+                          kSpacing16,
+                          kSpacing14,
+                          kSpacing16,
+                          kSpacing12,
+                        ),
                         child: Row(
                           children: [
                             Container(
@@ -376,7 +381,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                 color: theme.colorScheme.primary.withValues(
                                   alpha: 0.12,
                                 ),
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusCompact,
+                                ),
                               ),
                               child: Icon(
                                 PesaFlowIcons.search,
@@ -384,7 +391,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                 color: theme.colorScheme.primary,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: kSpacing12),
                             Expanded(
                               child: TextField(
                                 controller: _searchController,
@@ -514,7 +521,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                       if (results.isEmpty)
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
+                            horizontal: kSpacing24,
                             vertical: 36,
                           ),
                           child: Column(
@@ -535,7 +542,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                   color: theme.colorScheme.primary,
                                 ),
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: kSpacing12),
                               Text(
                                 query.trim().isNotEmpty
                                     ? 'No results found'
@@ -547,7 +554,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                 ),
                                 textAlign: TextAlign.center,
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: kSpacing4),
                               Text(
                                 query.trim().isNotEmpty
                                     ? 'Try searching for transactions, budgets, goals, or loans'
@@ -559,7 +566,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                 textAlign: TextAlign.center,
                               ),
                               if (query.trim().isNotEmpty) ...[
-                                const SizedBox(height: 14),
+                                const SizedBox(height: kSpacing14),
                                 OutlinedButton.icon(
                                   onPressed: () {
                                     _searchController.clear();
@@ -574,8 +581,8 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                   label: const Text('Clear search'),
                                   style: OutlinedButton.styleFrom(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 14,
-                                      vertical: 8,
+                                      horizontal: kSpacing14,
+                                      vertical: kSpacing8,
                                     ),
                                     visualDensity: VisualDensity.compact,
                                   ),
@@ -588,7 +595,12 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                         Flexible(
                           child: ListView(
                             controller: _scrollController,
-                            padding: const EdgeInsets.fromLTRB(8, 6, 8, 8),
+                            padding: const EdgeInsets.fromLTRB(
+                              kSpacing8,
+                              kSpacing6,
+                              kSpacing8,
+                              kSpacing8,
+                            ),
                             children: [
                               for (
                                 var flatIndex = 0, entryIdx = 0;
@@ -606,10 +618,10 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                   items.add(
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                        14,
-                                        12,
-                                        14,
-                                        6,
+                                        kSpacing14,
+                                        kSpacing12,
+                                        kSpacing14,
+                                        kSpacing6,
                                       ),
                                       child: Row(
                                         children: [
@@ -620,14 +632,14 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                               color:
                                                   context.appColors.textMedium,
                                               fontWeight: FontWeight.w800,
-                                              letterSpacing: 1.1,
+                                              letterSpacing: 0.8,
                                             ),
                                           ),
-                                          const SizedBox(width: 8),
+                                          const SizedBox(width: kSpacing8),
                                           Container(
                                             padding: const EdgeInsets.symmetric(
-                                              horizontal: 6,
-                                              vertical: 1.5,
+                                              horizontal: kSpacing6,
+                                              vertical: 2,
                                             ),
                                             decoration: BoxDecoration(
                                               color: theme
@@ -635,7 +647,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                                   .surfaceContainerHighest
                                                   .withValues(alpha: 0.6),
                                               borderRadius:
-                                                  BorderRadius.circular(8),
+                                                  BorderRadius.circular(
+                                                    AppTheme.radiusSmall,
+                                                  ),
                                             ),
                                             child: Text(
                                               '${categoryActions.length}',
@@ -666,7 +680,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                           ),
                                           child: InkWell(
                                             borderRadius: BorderRadius.circular(
-                                              12,
+                                              AppTheme.radiusInput,
                                             ),
                                             onTap: () => _select(action),
                                             onHover: (_) => setState(
@@ -679,8 +693,8 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                               curve: Curves.easeOutCubic,
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                    horizontal: 10,
-                                                    vertical: 8,
+                                                    horizontal: kSpacing10,
+                                                    vertical: kSpacing8,
                                                   ),
                                               decoration: BoxDecoration(
                                                 color: selected
@@ -690,7 +704,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                                           )
                                                     : Colors.transparent,
                                                 borderRadius:
-                                                    BorderRadius.circular(12),
+                                                    BorderRadius.circular(
+                                                      AppTheme.radiusInput,
+                                                    ),
                                                 border: Border.all(
                                                   color: selected
                                                       ? theme
@@ -749,24 +765,22 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                                                       .onSurfaceVariant),
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 12),
+                                                  const SizedBox(
+                                                    width: kSpacing12,
+                                                  ),
                                                   Expanded(
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
                                                       children: [
                                                         Text(
                                                           action.label,
                                                           style: context.ts(
                                                             14,
-                                                            fontWeight: selected
-                                                                ? FontWeight
-                                                                      .w700
-                                                                : FontWeight
-                                                                      .w600,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600,
                                                             color: theme
                                                                 .colorScheme
                                                                 .onSurface,
@@ -778,7 +792,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                                         if (action.subtitle !=
                                                             null) ...[
                                                           const SizedBox(
-                                                            height: 1.5,
+                                                            height: 2,
                                                           ),
                                                           Text(
                                                             action.subtitle!,
@@ -786,7 +800,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                                               12,
                                                               color: context
                                                                   .appColors
-                                                                  .textMedium,
+                                                                  .textLow,
                                                             ),
                                                             maxLines: 1,
                                                             overflow:
@@ -797,26 +811,33 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                                       ],
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 8),
-                                                  if (selected)
+                                                  if (selected) ...[
+                                                    const SizedBox(
+                                                      width: kSpacing8,
+                                                    ),
                                                     Container(
                                                       padding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal: 7,
+                                                          const EdgeInsets
+                                                              .symmetric(
+                                                            horizontal:
+                                                                kSpacing6,
                                                             vertical: 3,
                                                           ),
-                                                      decoration: BoxDecoration(
-                                                        color: theme
-                                                            .colorScheme
-                                                            .primary
-                                                            .withValues(
-                                                              alpha: 0.12,
-                                                            ),
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              6,
-                                                            ),
-                                                      ),
+                                                      decoration:
+                                                          BoxDecoration(
+                                                            color: theme
+                                                                .colorScheme
+                                                                .primary
+                                                                .withValues(
+                                                                  alpha: 0.12,
+                                                                ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                      AppTheme
+                                                                          .radiusSmall,
+                                                                    ),
+                                                          ),
                                                       child: Row(
                                                         mainAxisSize:
                                                             MainAxisSize.min,
@@ -846,8 +867,8 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                                           ),
                                                         ],
                                                       ),
-                                                    )
-                                                  else
+                                                    ),
+                                                  ] else
                                                     Icon(
                                                       PesaFlowIcons
                                                           .chevronRight,
@@ -876,14 +897,14 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                       // ── Pro Footer Bar with Keyboard Shortcuts ──
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
+                          horizontal: kSpacing16,
                           vertical: 9,
                         ),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.surfaceContainerHighest
                               .withValues(alpha: 0.35),
                           borderRadius: const BorderRadius.vertical(
-                            bottom: Radius.circular(24),
+                            bottom: Radius.circular(AppTheme.radiusDialog),
                           ),
                           border: Border(
                             top: BorderSide(
@@ -900,13 +921,13 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                               keys: const ['↑', '↓'],
                               label: 'Navigate',
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: kSpacing12),
                             _KeyHint(
                               theme: theme,
                               keys: const ['↵'],
                               label: 'Open',
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: kSpacing12),
                             _KeyHint(
                               theme: theme,
                               keys: const ['esc'],
@@ -955,12 +976,15 @@ class _KeyHint extends StatelessWidget {
         for (final k in keys) ...[
           Container(
             margin: const EdgeInsets.only(right: 2),
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+            padding: const EdgeInsets.symmetric(
+              horizontal: kSpacing5,
+              vertical: 1.5,
+            ),
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerHighest.withValues(
                 alpha: 0.7,
               ),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
               border: Border.all(
                 color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
                 width: 0.5,
