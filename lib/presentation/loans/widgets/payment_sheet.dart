@@ -501,19 +501,23 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           () => selectedAccountId = account.id,
                                         ),
                                         child: AnimatedContainer(
-                                          duration: const Duration(
-                                            milliseconds: 200,
-                                          ),
+                                          duration:
+                                              MotionTokens.durationExit,
                                           curve: Curves.easeOutCubic,
-                                          padding: const EdgeInsets.all(14),
+                                          padding: const EdgeInsets.all(
+                                            kSpacing14,
+                                          ),
                                           decoration: BoxDecoration(
                                             color: isSelected
-                                                ? context.appColors.incomeColor
+                                                ? context
+                                                      .appColors
+                                                      .incomeColor
                                                       .withValues(alpha: 0.12)
                                                 : theme.colorScheme.surface,
-                                            borderRadius: BorderRadius.circular(
-                                              14,
-                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(
+                                                  AppTheme.radiusCard,
+                                                ),
                                             border: Border.all(
                                               color: isSelected
                                                   ? context

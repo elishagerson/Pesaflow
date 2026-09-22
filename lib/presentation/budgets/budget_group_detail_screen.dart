@@ -75,7 +75,12 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
               children: [
                 // Header
                 Container(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                  padding: const EdgeInsets.fromLTRB(
+                    kSpacing20,
+                    kSpacing8,
+                    kSpacing20,
+                    kSpacing16,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
