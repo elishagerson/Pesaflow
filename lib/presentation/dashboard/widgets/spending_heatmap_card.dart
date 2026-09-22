@@ -295,7 +295,7 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: kSpacing4),
                         ...[0, 100, 200, 300, 400].map((val) {
                           return Container(
                             width: 9,
@@ -312,7 +312,7 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                             ),
                           );
                         }),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: kSpacing4),
                         Text(
                           'More',
                           style: context.ts(

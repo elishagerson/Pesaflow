@@ -25,7 +25,6 @@ import 'package:pesaflow/data/repositories/analytics_repository.dart';
 
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
-import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
@@ -415,7 +414,7 @@ class _OverviewTab extends ConsumerWidget {
                                     size: 11,
                                     color: context.appColors.expenseColor,
                                   ),
-                                  const SizedBox(width: 4),
+                                  const SizedBox(width: kSpacing4),
                                   Text(
                                     'DEFICIT',
                                     style: context.ts(
@@ -455,7 +454,7 @@ class _OverviewTab extends ConsumerWidget {
                                     size: 11,
                                     color: context.appColors.incomeColor,
                                   ),
-                                  const SizedBox(width: 4),
+                                  const SizedBox(width: kSpacing4),
                                   Text(
                                     'SURPLUS',
                                     style: context.ts(
@@ -559,7 +558,7 @@ class _OverviewTab extends ConsumerWidget {
                                         size: 13,
                                         color: incomeColorVal,
                                       ),
-                                      const SizedBox(width: 4),
+                                      const SizedBox(width: kSpacing4),
                                       Text(
                                         'Total Inflow',
                                         style: context.ts(
@@ -605,7 +604,7 @@ class _OverviewTab extends ConsumerWidget {
                                           size: 13,
                                           color: expenseColorVal,
                                         ),
-                                        const SizedBox(width: 4),
+                                        const SizedBox(width: kSpacing4),
                                         Text(
                                           'Total Outflow',
                                           style: context.ts(

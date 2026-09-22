@@ -830,7 +830,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                               .onSurfaceVariant,
                                                         ),
                                                       ),
-                                                      const SizedBox(width: 6),
+                                                      const SizedBox(width: kSpacing6),
                                                       Text(
                                                         DateFormat(
                                                           'MMM d',

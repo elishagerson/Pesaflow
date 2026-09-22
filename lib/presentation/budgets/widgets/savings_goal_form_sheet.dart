@@ -503,7 +503,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                     size: 12,
                                     color: themeCol,
                                   ),
-                                  const SizedBox(width: 6),
+                                  const SizedBox(width: kSpacing6),
                                   Expanded(
                                     child: Text(
                                       paceInsight,
