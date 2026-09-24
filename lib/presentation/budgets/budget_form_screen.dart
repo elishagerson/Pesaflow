@@ -457,7 +457,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: themeColor.withValues(alpha: context.isDark ? 0.2 : 0.08),
+            color: themeColor.withValues(alpha: theme.brightness == Brightness.dark ? 0.2 : 0.08),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
