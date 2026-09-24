@@ -421,7 +421,6 @@ class _SliderTrack extends StatelessWidget {
   final double max;
   final double step;
   final Color accentColor;
-  final bool isDark;
   final bool isDragging;
   final ValueChanged<double> onChanged;
   final VoidCallback onDragStart;
@@ -433,7 +432,6 @@ class _SliderTrack extends StatelessWidget {
     required this.max,
     required this.step,
     required this.accentColor,
-    required this.isDark,
     required this.isDragging,
     required this.onChanged,
     required this.onDragStart,
@@ -478,7 +476,7 @@ class _SliderTrack extends StatelessWidget {
                   bottom: 14,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: isDark
+                      color: context.isDark
                           ? Colors.white.withValues(alpha: 0.08)
                           : Colors.black.withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(kSpacing4),
@@ -583,13 +581,11 @@ class _GlassThumb extends StatelessWidget {
   final double radius;
   final bool isDragging;
   final Color accentColor;
-  final bool isDark;
 
   const _GlassThumb({
     required this.radius,
     required this.isDragging,
     required this.accentColor,
-    required this.isDark,
   });
 
   @override
@@ -606,7 +602,7 @@ class _GlassThumb extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            isDark
+            context.isDark
                 ? Colors.white.withValues(alpha: isDragging ? 0.30 : 0.22)
                 : Colors.white.withValues(alpha: isDragging ? 0.95 : 0.90),
             isDark
