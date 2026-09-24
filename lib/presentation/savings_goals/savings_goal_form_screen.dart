@@ -379,14 +379,14 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                             boxShadow: [
                               BoxShadow(
                                 color: themeCol.withValues(
-                                  alpha: context.isDark ? 0.22 : 0.08,
+                                  alpha: theme.brightness == Brightness.dark ? 0.22 : 0.08,
                                 ),
                                 blurRadius: 16,
                                 offset: const Offset(0, 6),
                               ),
                               BoxShadow(
                                 color: Colors.black.withValues(
-                                  alpha: context.isDark ? 0.20 : 0.03,
+                                  alpha: theme.brightness == Brightness.dark ? 0.20 : 0.03,
                                 ),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
@@ -628,7 +628,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withValues(
-                                  alpha: context.isDark ? 0.20 : 0.03,
+                                  alpha: theme.brightness == Brightness.dark ? 0.20 : 0.03,
                                 ),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
@@ -920,7 +920,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withValues(
-                                  alpha: context.isDark ? 0.20 : 0.03,
+                                  alpha: theme.brightness == Brightness.dark ? 0.20 : 0.03,
                                 ),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),

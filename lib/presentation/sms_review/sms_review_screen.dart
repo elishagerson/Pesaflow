@@ -358,7 +358,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(
-                                alpha: context.isDark ? 0.2 : 0.04,
+                                alpha: theme.brightness == Brightness.dark ? 0.2 : 0.04,
                               ),
                               blurRadius: 6,
                               offset: const Offset(0, 2),
