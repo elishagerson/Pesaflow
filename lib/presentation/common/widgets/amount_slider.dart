@@ -109,7 +109,6 @@ class _AmountSliderState extends State<AmountSlider> {
             max: widget.max,
             step: widget.step,
             accentColor: accent,
-            isDark: isDark,
             isDragging: _isDragging,
             onChanged: (v) {
               final snapped = (v / widget.step).round() * widget.step;
@@ -511,7 +510,6 @@ class _SliderTrack extends StatelessWidget {
                     radius: thumbRadius,
                     isDragging: isDragging,
                     accentColor: accentColor,
-                    isDark: isDark,
                   ),
                 ),
               ],
@@ -605,7 +603,7 @@ class _GlassThumb extends StatelessWidget {
             context.isDark
                 ? Colors.white.withValues(alpha: isDragging ? 0.30 : 0.22)
                 : Colors.white.withValues(alpha: isDragging ? 0.95 : 0.90),
-            isDark
+            context.isDark
                 ? Colors.white.withValues(alpha: isDragging ? 0.15 : 0.10)
                 : Colors.white.withValues(alpha: isDragging ? 0.80 : 0.70),
           ],
@@ -613,7 +611,7 @@ class _GlassThumb extends StatelessWidget {
         border: Border.all(
           color: isDragging
               ? accentColor.withValues(alpha: 0.6)
-              : (isDark
+              : (context.isDark
                     ? Colors.white.withValues(alpha: 0.20)
                     : Colors.white.withValues(alpha: 0.50)),
           width: isDragging ? 2.0 : 1.5,
@@ -625,7 +623,7 @@ class _GlassThumb extends StatelessWidget {
             offset: const Offset(0, 2),
           ),
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+            color: Colors.black.withValues(alpha: context.isDark ? 0.3 : 0.08),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
