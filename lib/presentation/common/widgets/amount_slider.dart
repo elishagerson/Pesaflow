@@ -68,7 +68,6 @@ class _AmountSliderState extends State<AmountSlider> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appColors = context.appColors;
-    final isDark = context.isDark;
     final accent = widget.accentColor ?? theme.colorScheme.primary;
     final reducedMotion = context.isReducedMotion;
 
