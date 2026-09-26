@@ -627,6 +627,9 @@ final transactionDetailProvider =
       ref,
       id,
     ) {
+      // Re-read when the row changes so an edit or deletion made elsewhere is
+      // reflected without leaving and re-opening the detail screen.
+      ref.watch(dataChangesStreamProvider);
       final repo = ref.watch(transactionRepositoryProvider);
       return repo.getTransactionById(id);
     });

@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -417,6 +418,84 @@ void main() {
         isTrue,
         reason:
             'spending pattern previously watched nothing and never recomputed',
+      );
+    });
+  });
+
+  group('transaction detail', () {
+    test('re-reads when the underlying transaction is edited', () async {
+      await db.into(db.transactions).insert(
+        Transaction(
+          id: 'tx-detail',
+          accountId: null,
+          categoryId: existingCategoryId,
+          trackerId: trackerId,
+          amount: 1000,
+          type: 'expense',
+          description: 'Original',
+          reference: 'REF-tx-detail',
+          provider: 'M-Pesa_TZ',
+          smsTimestamp: t0,
+          source: 'manual',
+          createdAt: t0,
+          updatedAt: t0,
+        ),
+      );
+      watch(transactionDetailProvider('tx-detail'));
+      await container.read(transactionDetailProvider('tx-detail').future);
+      expect(
+        container.read(transactionDetailProvider('tx-detail')).value!
+            .transaction
+            .description,
+        'Original',
+      );
+
+      await (db.update(db.transactions)
+            ..where((t) => t.id.equals('tx-detail')))
+          .write(const TransactionsCompanion(description: Value('Edited')));
+      await Future<void>.delayed(const Duration(milliseconds: 80));
+
+      expect(
+        container.read(transactionDetailProvider('tx-detail')).value!
+            .transaction
+            .description,
+        'Edited',
+        reason: 'an edit made elsewhere must show up without re-opening',
+      );
+    });
+  });
+
+  group('due recurring', () {
+    test('re-evaluates when a recurring flow is added', () async {
+      watch(dueRecurringTransactionsProvider);
+      await container.read(dueRecurringTransactionsProvider.future);
+      final before = container.read(dueRecurringTransactionsProvider).value!;
+
+      await db.into(db.recurringTransactions).insert(
+        RecurringTransaction(
+          id: 'rec-1',
+          trackerId: trackerId,
+          accountId: 'no-account',
+          categoryId: existingCategoryId,
+          description: 'LUKU',
+          amount: 50000,
+          type: 'expense',
+          frequency: 'monthly',
+          intervalValue: 1,
+          nextDate: DateTime.now().subtract(const Duration(days: 1)),
+          status: 'active',
+          totalPaid: 0,
+          paymentCount: 0,
+          createdAt: t0,
+          updatedAt: t0,
+        ),
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      expect(
+        container.read(dueRecurringTransactionsProvider).value!.length,
+        greaterThan(before.length),
+        reason: 'a newly overdue flow must appear without a manual refresh',
       );
     });
   });
