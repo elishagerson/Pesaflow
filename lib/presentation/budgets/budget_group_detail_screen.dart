@@ -753,7 +753,9 @@ class _SubBudgetCard extends ConsumerWidget {
                       ),
                       decoration: BoxDecoration(
                         color: paceColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusTiny,
+                        ),
                       ),
                       child: Text(
                         isOver ? 'Over' : '${(pct * 100).round()}%',

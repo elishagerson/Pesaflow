@@ -77,220 +77,228 @@ void main() {
   ];
 
   group('LoanPayoffSimulatorCard', () {
-    testWidgets('renders initial status and remaining balance when payment is 0', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.lightTheme,
-          home: Scaffold(
-            body: LoanPayoffSimulatorCard(
-              loan: testLoan,
-              paymentCents: 0,
+    testWidgets(
+      'renders initial status and remaining balance when payment is 0',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.lightTheme,
+            home: Scaffold(
+              body: LoanPayoffSimulatorCard(loan: testLoan, paymentCents: 0),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('REPAYMENT STATUS'), findsOneWidget);
-      expect(find.text('Paid: 40%'), findsOneWidget);
-      expect(find.text('Remaining'), findsOneWidget);
-      expect(find.text('FULL PAYOFF'), findsNothing);
-      expect(find.textContaining('JUMP'), findsNothing);
-    });
+        expect(find.text('REPAYMENT STATUS'), findsOneWidget);
+        expect(find.text('Paid: 40%'), findsOneWidget);
+        expect(find.text('Remaining'), findsOneWidget);
+        expect(find.text('FULL PAYOFF'), findsNothing);
+        expect(find.textContaining('JUMP'), findsNothing);
+      },
+    );
 
-    testWidgets('displays projected remaining balance and % jump when payment > 0', (
-      WidgetTester tester,
-    ) async {
-      // Paying 300,000 Tsh (30,000,000 cents) -> 30% jump
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.lightTheme,
-          home: Scaffold(
-            body: LoanPayoffSimulatorCard(
-              loan: testLoan,
-              paymentCents: 30000000,
+    testWidgets(
+      'displays projected remaining balance and % jump when payment > 0',
+      (WidgetTester tester) async {
+        // Paying 300,000 Tsh (30,000,000 cents) -> 30% jump
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.lightTheme,
+            home: Scaffold(
+              body: LoanPayoffSimulatorCard(
+                loan: testLoan,
+                paymentCents: 30000000,
+              ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('+30% JUMP'), findsOneWidget);
-      expect(find.text('New Remaining'), findsOneWidget);
-      expect(find.text('FULL PAYOFF'), findsNothing);
-    });
+        expect(find.text('+30% JUMP'), findsOneWidget);
+        expect(find.text('New Remaining'), findsOneWidget);
+        expect(find.text('FULL PAYOFF'), findsNothing);
+      },
+    );
 
-    testWidgets('displays FULL PAYOFF badge when payment settles total remaining', (
-      WidgetTester tester,
-    ) async {
-      // Paying full 600,000 Tsh (60,000,000 cents)
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.lightTheme,
-          home: Scaffold(
-            body: LoanPayoffSimulatorCard(
-              loan: testLoan,
-              paymentCents: 60000000,
+    testWidgets(
+      'displays FULL PAYOFF badge when payment settles total remaining',
+      (WidgetTester tester) async {
+        // Paying full 600,000 Tsh (60,000,000 cents)
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.lightTheme,
+            home: Scaffold(
+              body: LoanPayoffSimulatorCard(
+                loan: testLoan,
+                paymentCents: 60000000,
+              ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('FULL PAYOFF'), findsOneWidget);
-      expect(find.text('Remaining: TSh 0'), findsOneWidget);
-    });
+        expect(find.text('FULL PAYOFF'), findsOneWidget);
+        expect(find.text('Remaining: TSh 0'), findsOneWidget);
+      },
+    );
   });
 
   group('QuickDepositSheet Executive Features', () {
-    testWidgets('renders live milestone progress simulator and quick increment chips', (
-      WidgetTester tester,
-    ) async {
-      tester.view.physicalSize = const Size(1080, 2400);
-      tester.view.devicePixelRatio = 2.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
+    testWidgets(
+      'renders live milestone progress simulator and quick increment chips',
+      (WidgetTester tester) async {
+        tester.view.physicalSize = const Size(1080, 2400);
+        tester.view.devicePixelRatio = 2.0;
+        addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            activeTrackerIdProvider.overrideWith(
-              () => MockActiveTrackerIdNotifier(),
-            ),
-            accountsStreamProvider.overrideWith((ref) => Stream.value([])),
-            currencyShowDecimalsProvider.overrideWith(
-              (ref) => Stream.value(false),
-            ),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.lightTheme,
-            home: Scaffold(
-              body: Builder(
-                builder: (context) => Consumer(
-                  builder: (context, ref, _) => ElevatedButton(
-                    onPressed: () =>
-                        showQuickDepositSheet(context, ref, testGoal),
-                    child: const Text('Open Deposit'),
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              activeTrackerIdProvider.overrideWith(
+                () => MockActiveTrackerIdNotifier(),
+              ),
+              accountsStreamProvider.overrideWith((ref) => Stream.value([])),
+              currencyShowDecimalsProvider.overrideWith(
+                (ref) => Stream.value(false),
+              ),
+            ],
+            child: MaterialApp(
+              theme: AppTheme.lightTheme,
+              home: Scaffold(
+                body: Builder(
+                  builder: (context) => Consumer(
+                    builder: (context, ref, _) => ElevatedButton(
+                      onPressed: () =>
+                          showQuickDepositSheet(context, ref, testGoal),
+                      child: const Text('Open Deposit'),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Open Deposit'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Open Deposit'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Deposit into Emergency Buffer'), findsOneWidget);
-      expect(find.text('MILESTONE PROGRESS'), findsOneWidget);
-      expect(find.text('Current: 50%'), findsOneWidget);
-      expect(find.text('Confirm Deposit'), findsOneWidget);
-      expect(find.text('+10,000'), findsOneWidget);
-      expect(find.text('+50,000'), findsOneWidget);
-      expect(find.text('Remainder'), findsOneWidget);
+        expect(find.text('Deposit into Emergency Buffer'), findsOneWidget);
+        expect(find.text('MILESTONE PROGRESS'), findsOneWidget);
+        expect(find.text('Current: 50%'), findsOneWidget);
+        expect(find.text('Confirm Deposit'), findsOneWidget);
+        expect(find.text('+10,000'), findsOneWidget);
+        expect(find.text('+50,000'), findsOneWidget);
+        expect(find.text('Remainder'), findsOneWidget);
 
-      // Tap quick increment chip +50,000
-      await tester.tap(find.text('+50,000'));
-      await tester.pumpAndSettle();
+        // Tap quick increment chip +50,000
+        await tester.tap(find.text('+50,000'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('+25% JUMP'), findsOneWidget);
-      expect(find.textContaining('Confirm Deposit (Tsh 50,000)'), findsOneWidget);
-    });
+        expect(find.text('+25% JUMP'), findsOneWidget);
+        expect(
+          find.textContaining('Confirm Deposit (Tsh 50,000)'),
+          findsOneWidget,
+        );
+      },
+    );
   });
 
   group('BudgetFormScreen Executive Features', () {
-    testWidgets('renders budget allocation hero and interactive quick increment pills', (
-      WidgetTester tester,
-    ) async {
-      tester.view.physicalSize = const Size(1080, 2400);
-      tester.view.devicePixelRatio = 2.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
+    testWidgets(
+      'renders budget allocation hero and interactive quick increment pills',
+      (WidgetTester tester) async {
+        tester.view.physicalSize = const Size(1080, 2400);
+        tester.view.devicePixelRatio = 2.0;
+        addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            budgetRepositoryProvider.overrideWithValue(FakeBudgetRepository()),
-            activeTrackerIdProvider.overrideWith(
-              () => MockActiveTrackerIdNotifier(),
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              budgetRepositoryProvider.overrideWithValue(
+                FakeBudgetRepository(),
+              ),
+              activeTrackerIdProvider.overrideWith(
+                () => MockActiveTrackerIdNotifier(),
+              ),
+              categoriesFutureProvider.overrideWith(
+                (ref) async => testCategories,
+              ),
+              currencyShowDecimalsProvider.overrideWith(
+                (ref) => Stream.value(false),
+              ),
+            ],
+            child: MaterialApp(
+              theme: AppTheme.lightTheme,
+              home: const BudgetFormScreen(),
             ),
-            categoriesFutureProvider.overrideWith(
-              (ref) async => testCategories,
-            ),
-            currencyShowDecimalsProvider.overrideWith(
-              (ref) => Stream.value(false),
-            ),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.lightTheme,
-            home: const BudgetFormScreen(),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Allocation: '), findsOneWidget);
-      expect(find.text('+100K'), findsOneWidget);
-      expect(find.text('+500K'), findsOneWidget);
-      expect(find.text('+1M'), findsOneWidget);
+        expect(find.text('Allocation: '), findsOneWidget);
+        expect(find.text('+100K'), findsOneWidget);
+        expect(find.text('+500K'), findsOneWidget);
+        expect(find.text('+1M'), findsOneWidget);
 
-      // Tap +100K
-      await tester.tap(find.text('+100K'));
-      await tester.pumpAndSettle();
+        // Tap +100K
+        await tester.tap(find.text('+100K'));
+        await tester.pumpAndSettle();
 
-      // Check allocation reflects 100,000
-      expect(find.textContaining('100,000'), findsWidgets);
-      expect(find.text('Daily spending allowance: '), findsOneWidget);
+        // Check allocation reflects 100,000
+        expect(find.textContaining('100,000'), findsWidgets);
+        expect(find.text('Daily spending allowance: '), findsOneWidget);
 
-      // Tap Clear
-      await tester.tap(find.text('Clear'));
-      await tester.pumpAndSettle();
+        // Tap Clear
+        await tester.tap(find.text('Clear'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('TSh 0'), findsWidgets);
-    });
+        expect(find.text('TSh 0'), findsWidgets);
+      },
+    );
   });
 
   group('SavingsGoalFormScreen Executive Features', () {
-    testWidgets('renders Tanzanian milestone presets and applies template on tap', (
-      WidgetTester tester,
-    ) async {
-      tester.view.physicalSize = const Size(1080, 2400);
-      tester.view.devicePixelRatio = 2.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
+    testWidgets(
+      'renders Tanzanian milestone presets and applies template on tap',
+      (WidgetTester tester) async {
+        tester.view.physicalSize = const Size(1080, 2400);
+        tester.view.devicePixelRatio = 2.0;
+        addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            savingsGoalRepositoryProvider.overrideWithValue(
-              FakeSavingsGoalRepository(),
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              savingsGoalRepositoryProvider.overrideWithValue(
+                FakeSavingsGoalRepository(),
+              ),
+              activeTrackerIdProvider.overrideWith(
+                () => MockActiveTrackerIdNotifier(),
+              ),
+              currencyShowDecimalsProvider.overrideWith(
+                (ref) => Stream.value(false),
+              ),
+            ],
+            child: MaterialApp(
+              theme: AppTheme.lightTheme,
+              home: const SavingsGoalFormScreen(),
             ),
-            activeTrackerIdProvider.overrideWith(
-              () => MockActiveTrackerIdNotifier(),
-            ),
-            currencyShowDecimalsProvider.overrideWith(
-              (ref) => Stream.value(false),
-            ),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.lightTheme,
-            home: const SavingsGoalFormScreen(),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Emergency Fund'), findsOneWidget);
-      expect(find.text('Land & Construction'), findsOneWidget);
+        expect(find.text('Emergency Fund'), findsOneWidget);
+        expect(find.text('Land & Construction'), findsOneWidget);
 
-      // Tap Land & Construction template
-      await tester.tap(find.text('Land & Construction'));
-      await tester.pumpAndSettle();
+        // Tap Land & Construction template
+        await tester.tap(find.text('Land & Construction'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('10000000'), findsOneWidget);
-      expect(find.text('+250K'), findsOneWidget);
-      expect(find.text('+2M'), findsOneWidget);
-    });
+        expect(find.text('10000000'), findsOneWidget);
+        expect(find.text('+250K'), findsOneWidget);
+        expect(find.text('+2M'), findsOneWidget);
+      },
+    );
   });
 }

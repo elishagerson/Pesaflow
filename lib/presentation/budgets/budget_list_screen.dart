@@ -1983,7 +1983,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                   width: 4,
                                   decoration: BoxDecoration(
                                     color: goalColor,
-                                    borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusTiny,
+                                    ),
                                   ),
                                 ),
                               ),

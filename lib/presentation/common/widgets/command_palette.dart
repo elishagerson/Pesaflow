@@ -781,8 +781,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                                           style: context.ts(
                                                             14,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .w600,
+                                                                FontWeight.w600,
                                                             color: theme
                                                                 .colorScheme
                                                                 .onSurface,
@@ -819,27 +818,24 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                                     ),
                                                     Container(
                                                       padding:
-                                                          const EdgeInsets
-                                                              .symmetric(
+                                                          const EdgeInsets.symmetric(
                                                             horizontal:
                                                                 kSpacing6,
                                                             vertical: 3,
                                                           ),
-                                                      decoration:
-                                                          BoxDecoration(
-                                                            color: theme
-                                                                .colorScheme
-                                                                .primary
-                                                                .withValues(
-                                                                  alpha: 0.12,
-                                                                ),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                      AppTheme
-                                                                          .radiusSmall,
-                                                                    ),
-                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color: theme
+                                                            .colorScheme
+                                                            .primary
+                                                            .withValues(
+                                                              alpha: 0.12,
+                                                            ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              AppTheme
+                                                                  .radiusSmall,
+                                                            ),
+                                                      ),
                                                       child: Row(
                                                         mainAxisSize:
                                                             MainAxisSize.min,

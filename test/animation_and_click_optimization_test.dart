@@ -69,8 +69,9 @@ void main() {
       expect(find.text('Spring Sheet Content'), findsNothing);
     });
 
-    testWidgets('dismisses via barrier tap with exit animation',
-        (tester) async {
+    testWidgets('dismisses via barrier tap with exit animation', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -110,92 +111,97 @@ void main() {
   });
 
   group('SwipeBackRoute Interactive Navigation Tests', () {
-    testWidgets('interactive edge drag moves page and pops on release past threshold',
-        (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder: (context) {
-                return ElevatedButton(
-                  onPressed: () {
-                    pushSwipeBack(
-                      context,
-                      const Scaffold(
-                        body: Center(child: Text('Secondary Screen Page')),
-                      ),
-                    );
-                  },
-                  child: const Text('Push Screen'),
-                );
-              },
+    testWidgets(
+      'interactive edge drag moves page and pops on release past threshold',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      pushSwipeBack(
+                        context,
+                        const Scaffold(
+                          body: Center(child: Text('Secondary Screen Page')),
+                        ),
+                      );
+                    },
+                    child: const Text('Push Screen'),
+                  );
+                },
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      // Push secondary screen
-      await tester.tap(find.text('Push Screen'));
-      await tester.pumpAndSettle();
-      expect(find.text('Secondary Screen Page'), findsOneWidget);
+        // Push secondary screen
+        await tester.tap(find.text('Push Screen'));
+        await tester.pumpAndSettle();
+        expect(find.text('Secondary Screen Page'), findsOneWidget);
 
-      // Drag from left edge (x = 10) to the right past 40% of screen width (e.g. 400px)
-      final gesture = await tester.startGesture(const Offset(10, 300));
-      await tester.pump();
-      await gesture.moveBy(const Offset(400, 0));
-      await tester.pump();
-      await gesture.up();
+        // Drag from left edge (x = 10) to the right past 40% of screen width (e.g. 400px)
+        final gesture = await tester.startGesture(const Offset(10, 300));
+        await tester.pump();
+        await gesture.moveBy(const Offset(400, 0));
+        await tester.pump();
+        await gesture.up();
 
-      // Settle spring animation
-      await tester.pumpAndSettle();
+        // Settle spring animation
+        await tester.pumpAndSettle();
 
-      // Screen should be dismissed
-      expect(find.text('Secondary Screen Page'), findsNothing);
-      expect(find.text('Push Screen'), findsOneWidget);
-    });
+        // Screen should be dismissed
+        expect(find.text('Secondary Screen Page'), findsNothing);
+        expect(find.text('Push Screen'), findsOneWidget);
+      },
+    );
   });
 
   group('GlassCard & TactileSpringContainer Click Response Tests', () {
-    testWidgets('GlassCard animates scale and runs callback across multiple consecutive taps',
-        (tester) async {
-      int tapCount = 0;
+    testWidgets(
+      'GlassCard animates scale and runs callback across multiple consecutive taps',
+      (tester) async {
+        int tapCount = 0;
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: GlassCard(
-                onTap: () => tapCount++,
-                child: const Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text('Interactive Card'),
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: GlassCard(
+                  onTap: () => tapCount++,
+                  child: const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Text('Interactive Card'),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('Interactive Card'), findsOneWidget);
+        expect(find.text('Interactive Card'), findsOneWidget);
 
-      // Tap 1
-      await tester.tap(find.text('Interactive Card'));
-      await tester.pumpAndSettle();
-      expect(tapCount, 1);
+        // Tap 1
+        await tester.tap(find.text('Interactive Card'));
+        await tester.pumpAndSettle();
+        expect(tapCount, 1);
 
-      // Tap 2 (verifies _hasShimmered does not lock out subsequent taps)
-      await tester.tap(find.text('Interactive Card'));
-      await tester.pumpAndSettle();
-      expect(tapCount, 2);
+        // Tap 2 (verifies _hasShimmered does not lock out subsequent taps)
+        await tester.tap(find.text('Interactive Card'));
+        await tester.pumpAndSettle();
+        expect(tapCount, 2);
 
-      // Tap 3
-      await tester.tap(find.text('Interactive Card'));
-      await tester.pumpAndSettle();
-      expect(tapCount, 3);
-    });
+        // Tap 3
+        await tester.tap(find.text('Interactive Card'));
+        await tester.pumpAndSettle();
+        expect(tapCount, 3);
+      },
+    );
 
-    testWidgets('TactileSpringContainer triggers onTap and onLongPress',
-        (tester) async {
+    testWidgets('TactileSpringContainer triggers onTap and onLongPress', (
+      tester,
+    ) async {
       int tapCount = 0;
       int longPressCount = 0;
 
@@ -279,53 +285,56 @@ void main() {
   });
 
   group('HeroCardRoute Entrance & Exit Tests', () {
-    testWidgets('pushes HeroCardRoute with slide and fade transition and dismisses cleanly',
-        (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder: (context) {
-                return ElevatedButton(
-                  onPressed: () {
-                    pushHeroCard(
-                      context,
-                      const Scaffold(
-                        body: Center(child: Text('Hero Destination Content')),
-                      ),
-                      'hero_tag_1',
-                    );
-                  },
-                  child: const Text('Open Hero'),
-                );
-              },
+    testWidgets(
+      'pushes HeroCardRoute with slide and fade transition and dismisses cleanly',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      pushHeroCard(
+                        context,
+                        const Scaffold(
+                          body: Center(child: Text('Hero Destination Content')),
+                        ),
+                        'hero_tag_1',
+                      );
+                    },
+                    child: const Text('Open Hero'),
+                  );
+                },
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.text('Open Hero'));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 150));
-      expect(find.text('Hero Destination Content'), findsOneWidget);
+        await tester.tap(find.text('Open Hero'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 150));
+        expect(find.text('Hero Destination Content'), findsOneWidget);
 
-      await tester.pumpAndSettle();
-      expect(find.text('Hero Destination Content'), findsOneWidget);
+        await tester.pumpAndSettle();
+        expect(find.text('Hero Destination Content'), findsOneWidget);
 
-      // Pop route
-      final nav = tester.state<NavigatorState>(find.byType(Navigator));
-      nav.pop();
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100));
-      await tester.pumpAndSettle();
+        // Pop route
+        final nav = tester.state<NavigatorState>(find.byType(Navigator));
+        nav.pop();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Hero Destination Content'), findsNothing);
-    });
+        expect(find.text('Hero Destination Content'), findsNothing);
+      },
+    );
   });
 
   group('SwipeBackRoute Secondary Parallax Tests', () {
-    testWidgets('secondaryAnimation causes underlying screen to shift and dim',
-        (tester) async {
+    testWidgets('secondaryAnimation causes underlying screen to shift and dim', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -394,60 +403,58 @@ void main() {
   });
 
   group('CommandPalette Refinement Tests', () {
-    testWidgets('renders search input, category headers, actions, and pro footer',
-        (tester) async {
-      tester.view.physicalSize = const Size(1080, 1920);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() {
-        tester.view.resetPhysicalSize();
-        tester.view.resetDevicePixelRatio();
-      });
+    testWidgets(
+      'renders search input, category headers, actions, and pro footer',
+      (tester) async {
+        tester.view.physicalSize = const Size(1080, 1920);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
 
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: CommandPalette(),
-            ),
+        await tester.pumpWidget(
+          const ProviderScope(
+            child: MaterialApp(home: Scaffold(body: CommandPalette())),
           ),
-        ),
-      );
+        );
 
-      await tester.pumpAndSettle();
+        await tester.pumpAndSettle();
 
-      // Search input and ESC pill
-      expect(find.text('Type a command or search...'), findsOneWidget);
-      expect(find.text('ESC'), findsOneWidget);
+        // Search input and ESC pill
+        expect(find.text('Type a command or search...'), findsOneWidget);
+        expect(find.text('ESC'), findsOneWidget);
 
-      // Section headers
-      expect(find.text('QUICK ACTIONS'), findsOneWidget);
-      expect(find.text('NAVIGATION'), findsOneWidget);
+        // Section headers
+        expect(find.text('QUICK ACTIONS'), findsOneWidget);
+        expect(find.text('NAVIGATION'), findsOneWidget);
 
-      // Actions in initial view
-      expect(find.text('Record Expense'), findsOneWidget);
-      expect(find.text('Record Income'), findsOneWidget);
+        // Actions in initial view
+        expect(find.text('Record Expense'), findsOneWidget);
+        expect(find.text('Record Income'), findsOneWidget);
 
-      // Pro footer keyboard hints
-      expect(find.text('Navigate'), findsOneWidget);
-      expect(find.text('Open'), findsOneWidget);
-      expect(find.text('Dismiss'), findsOneWidget);
+        // Pro footer keyboard hints
+        expect(find.text('Navigate'), findsOneWidget);
+        expect(find.text('Open'), findsOneWidget);
+        expect(find.text('Dismiss'), findsOneWidget);
 
-      // Filter by typing 'Dashboard'
-      await tester.enterText(find.byType(TextField), 'Dashboard');
-      await tester.pump(const Duration(milliseconds: 200));
-      await tester.pump(const Duration(milliseconds: 200));
+        // Filter by typing 'Dashboard'
+        await tester.enterText(find.byType(TextField), 'Dashboard');
+        await tester.pump(const Duration(milliseconds: 200));
+        await tester.pump(const Duration(milliseconds: 200));
 
-      expect(find.text('Go to Dashboard'), findsOneWidget);
-      expect(find.text('Record Income'), findsNothing);
+        expect(find.text('Go to Dashboard'), findsOneWidget);
+        expect(find.text('Record Income'), findsNothing);
 
-      // Filter by typing 'budget'
-      await tester.enterText(find.byType(TextField), 'budget');
-      await tester.pump(const Duration(milliseconds: 200));
-      await tester.pump(const Duration(milliseconds: 200));
+        // Filter by typing 'budget'
+        await tester.enterText(find.byType(TextField), 'budget');
+        await tester.pump(const Duration(milliseconds: 200));
+        await tester.pump(const Duration(milliseconds: 200));
 
-      expect(find.text('New Budget'), findsOneWidget);
-      expect(find.text('View Budgets'), findsOneWidget);
-      expect(find.text('Record Income'), findsNothing);
-    });
+        expect(find.text('New Budget'), findsOneWidget);
+        expect(find.text('View Budgets'), findsOneWidget);
+        expect(find.text('Record Income'), findsNothing);
+      },
+    );
   });
 }

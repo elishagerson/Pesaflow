@@ -201,11 +201,7 @@ void showAccountsManager(BuildContext context, WidgetRef ref) {
   );
 }
 
-void _showEditAccountDialog(
-  BuildContext context,
-  WidgetRef ref,
-  Account acc,
-) {
+void _showEditAccountDialog(BuildContext context, WidgetRef ref, Account acc) {
   final nameController = TextEditingController(text: acc.name);
   String accountType;
   switch (acc.type) {
@@ -464,11 +460,7 @@ void _showEditAccountDialog(
   );
 }
 
-void _confirmDeleteAccount(
-  BuildContext context,
-  WidgetRef ref,
-  Account acc,
-) {
+void _confirmDeleteAccount(BuildContext context, WidgetRef ref, Account acc) {
   final theme = Theme.of(context);
   ModernDialog.show(
     context: context,

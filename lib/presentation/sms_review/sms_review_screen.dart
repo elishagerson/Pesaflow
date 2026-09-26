@@ -57,7 +57,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
 
   Color _providerColor(String? provider) {
     if (provider == null) return Theme.of(context).colorScheme.outline;
-    return kProviderBrandColors[provider] ?? Theme.of(context).colorScheme.outline;
+    return kProviderBrandColors[provider] ??
+        Theme.of(context).colorScheme.outline;
   }
 
   String _formatTimestamp(DateTime? dt) {
@@ -358,7 +359,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(
-                                alpha: theme.brightness == Brightness.dark ? 0.2 : 0.04,
+                                alpha: theme.brightness == Brightness.dark
+                                    ? 0.2
+                                    : 0.04,
                               ),
                               blurRadius: 6,
                               offset: const Offset(0, 2),

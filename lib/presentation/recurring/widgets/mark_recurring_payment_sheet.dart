@@ -49,7 +49,9 @@ Future<void> showMarkRecurringPaymentSheet({
     builder: (sheetContext) {
       final projectedNextDate = () {
         final d = recurring.nextDate;
-        final interval = recurring.intervalValue > 0 ? recurring.intervalValue : 1;
+        final interval = recurring.intervalValue > 0
+            ? recurring.intervalValue
+            : 1;
         switch (recurring.frequency.toLowerCase()) {
           case 'daily':
             return d.add(Duration(days: interval));
@@ -114,8 +116,12 @@ Future<void> showMarkRecurringPaymentSheet({
                           Container(
                             padding: const EdgeInsets.all(kSpacing8),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.12,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusCompact,
+                              ),
                             ),
                             child: Icon(
                               PesaFlowIcons.sync,
@@ -129,13 +135,18 @@ Future<void> showMarkRecurringPaymentSheet({
                             children: [
                               Text(
                                 'Mark Bill Paid',
-                                style: context.ts(20, fontWeight: FontWeight.bold),
+                                style: context.ts(
+                                  20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text(
                                 'Record scheduled cycle payment',
                                 style: context.ts(
                                   12,
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.55,
+                                  ),
                                 ),
                               ),
                             ],
@@ -160,9 +171,12 @@ Future<void> showMarkRecurringPaymentSheet({
                             padding: const EdgeInsets.all(kSpacing16),
                             decoration: BoxDecoration(
                               color: theme.colorScheme.surfaceContainerHigh,
-                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusCard,
+                              ),
                               border: Border.all(
-                                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                                color: theme.colorScheme.outlineVariant
+                                    .withValues(alpha: 0.3),
                               ),
                             ),
                             child: Column(
@@ -172,11 +186,16 @@ Future<void> showMarkRecurringPaymentSheet({
                                   children: [
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            recurring.description ?? 'Recurring ${recurring.type}',
-                                            style: context.ts(16, fontWeight: FontWeight.w700),
+                                            recurring.description ??
+                                                'Recurring ${recurring.type}',
+                                            style: context.ts(
+                                              16,
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
@@ -185,7 +204,8 @@ Future<void> showMarkRecurringPaymentSheet({
                                             'Category: $categoryName • From: $accountName',
                                             style: context.ts(
                                               11,
-                                              color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                                              color: theme.colorScheme.onSurface
+                                                  .withValues(alpha: 0.55),
                                             ),
                                           ),
                                         ],
@@ -197,8 +217,11 @@ Future<void> showMarkRecurringPaymentSheet({
                                         vertical: kSpacing4,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                                        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                        color: theme.colorScheme.primary
+                                            .withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusPill,
+                                        ),
                                       ),
                                       child: Text(
                                         recurring.frequency.toUpperCase(),
@@ -220,37 +243,50 @@ Future<void> showMarkRecurringPaymentSheet({
                                   ),
                                   decoration: BoxDecoration(
                                     color: theme.colorScheme.surface,
-                                    borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusCompact,
+                                    ),
                                     border: Border.all(
-                                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
+                                      color: theme.colorScheme.outlineVariant
+                                          .withValues(alpha: 0.2),
                                     ),
                                   ),
                                   child: Row(
                                     children: [
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               'Current Cycle',
                                               style: context.ts(
                                                 10,
-                                                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                                color: theme
+                                                    .colorScheme
+                                                    .onSurface
+                                                    .withValues(alpha: 0.5),
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
                                             const SizedBox(height: 2),
                                             Text(
                                               '${recurring.nextDate.day}/${recurring.nextDate.month}/${recurring.nextDate.year}',
-                                              style: context.ts(12, fontWeight: FontWeight.w700),
+                                              style: context.ts(
+                                                12,
+                                                fontWeight: FontWeight.w700,
+                                              ),
                                             ),
                                           ],
                                         ),
                                       ),
                                       Container(
-                                        padding: const EdgeInsets.all(kSpacing4),
+                                        padding: const EdgeInsets.all(
+                                          kSpacing4,
+                                        ),
                                         decoration: BoxDecoration(
-                                          color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                                          color: theme.colorScheme.primary
+                                              .withValues(alpha: 0.12),
                                           shape: BoxShape.circle,
                                         ),
                                         child: Icon(
@@ -261,13 +297,17 @@ Future<void> showMarkRecurringPaymentSheet({
                                       ),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
                                           children: [
                                             Text(
                                               'Next Cycle Due',
                                               style: context.ts(
                                                 10,
-                                                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                                color: theme
+                                                    .colorScheme
+                                                    .onSurface
+                                                    .withValues(alpha: 0.5),
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
@@ -277,7 +317,8 @@ Future<void> showMarkRecurringPaymentSheet({
                                               style: context.ts(
                                                 12,
                                                 fontWeight: FontWeight.w700,
-                                                color: theme.colorScheme.primary,
+                                                color:
+                                                    theme.colorScheme.primary,
                                               ),
                                             ),
                                           ],
@@ -299,7 +340,9 @@ Future<void> showMarkRecurringPaymentSheet({
                                 style: context.ts(
                                   10,
                                   fontWeight: FontWeight.w700,
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.5,
+                                  ),
                                   letterSpacing: 0.5,
                                 ),
                               ),
@@ -308,7 +351,8 @@ Future<void> showMarkRecurringPaymentSheet({
                                   onTap: () {
                                     PesaHaptics.light();
                                     amountCents = recurring.amount;
-                                    amountController.text = (recurring.amount ~/ 100).toString();
+                                    amountController.text =
+                                        (recurring.amount ~/ 100).toString();
                                     setSheetState(() {});
                                   },
                                   child: Text(
@@ -351,21 +395,30 @@ Future<void> showMarkRecurringPaymentSheet({
                                 ),
                               ),
                               filled: true,
-                              fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                              fillColor: theme
+                                  .colorScheme
+                                  .surfaceContainerHighest
+                                  .withValues(alpha: 0.4),
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: kSpacing16,
                                 vertical: kSpacing14,
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusCard,
+                                ),
                                 borderSide: BorderSide(
-                                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                                  color: theme.colorScheme.outlineVariant
+                                      .withValues(alpha: 0.3),
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusCard,
+                                ),
                                 borderSide: BorderSide(
-                                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                                  color: theme.colorScheme.outlineVariant
+                                      .withValues(alpha: 0.3),
                                 ),
                               ),
                             ),
@@ -385,9 +438,12 @@ Future<void> showMarkRecurringPaymentSheet({
                             padding: const EdgeInsets.all(kSpacing14),
                             decoration: BoxDecoration(
                               color: theme.colorScheme.surfaceContainerHigh,
-                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusCard,
+                              ),
                               border: Border.all(
-                                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
+                                color: theme.colorScheme.outlineVariant
+                                    .withValues(alpha: 0.25),
                               ),
                             ),
                             child: Row(
@@ -395,20 +451,26 @@ Future<void> showMarkRecurringPaymentSheet({
                                 Container(
                                   padding: const EdgeInsets.all(kSpacing8),
                                   decoration: BoxDecoration(
-                                    color: (deductBalance ? context.appColors.incomeColor : theme.colorScheme.onSurface)
-                                        .withValues(alpha: 0.12),
+                                    color:
+                                        (deductBalance
+                                                ? context.appColors.incomeColor
+                                                : theme.colorScheme.onSurface)
+                                            .withValues(alpha: 0.12),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
                                     PesaFlowIcons.wallet,
                                     size: 18,
-                                    color: deductBalance ? context.appColors.incomeColor : theme.colorScheme.onSurface,
+                                    color: deductBalance
+                                        ? context.appColors.incomeColor
+                                        : theme.colorScheme.onSurface,
                                   ),
                                 ),
                                 const SizedBox(width: kSpacing12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Deduct from $accountName',
@@ -424,7 +486,8 @@ Future<void> showMarkRecurringPaymentSheet({
                                             : 'Marks cycle without modifying account balance',
                                         style: context.ts(
                                           11,
-                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                          color: theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.5),
                                         ),
                                       ),
                                     ],
@@ -499,8 +562,8 @@ Future<void> showMarkRecurringPaymentSheet({
                                 isProcessing
                                     ? 'Processing…'
                                     : amountCents > 0
-                                        ? 'Confirm Payment of ${CurrencyFormatter.formatCents(amountCents)}'
-                                        : 'Enter an amount',
+                                    ? 'Confirm Payment of ${CurrencyFormatter.formatCents(amountCents)}'
+                                    : 'Enter an amount',
                               ),
                             ),
                           ),

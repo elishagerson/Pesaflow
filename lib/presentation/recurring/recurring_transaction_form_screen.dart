@@ -33,7 +33,8 @@ class _RecurringStarter {
   final String subtitle;
   final int amount; // in whole TSh
   final String type; // 'expense', 'income'
-  final String frequency; // 'weekly', 'biweekly', 'monthly', 'quarterly', 'yearly'
+  final String
+  frequency; // 'weekly', 'biweekly', 'monthly', 'quarterly', 'yearly'
   final int interval;
   final String categoryHint;
   final String keywords;
@@ -256,7 +257,9 @@ class _RecurringTransactionFormScreenState
   void _incrementAmount(int delta) {
     PesaHaptics.selection();
     final current =
-        int.tryParse(_amountController.text.replaceAll(RegExp(r'[^0-9]'), '')) ??
+        int.tryParse(
+          _amountController.text.replaceAll(RegExp(r'[^0-9]'), ''),
+        ) ??
         0;
     final next = (current + delta).clamp(0, 1000000000);
     setState(() {
@@ -434,7 +437,12 @@ class _RecurringTransactionFormScreenState
     showSpringSheet(
       context,
       builder: (sheetContext) => Container(
-        padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing8, kSpacing16, kSpacing24),
+        padding: const EdgeInsets.fromLTRB(
+          kSpacing16,
+          kSpacing8,
+          kSpacing16,
+          kSpacing24,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -445,7 +453,9 @@ class _RecurringTransactionFormScreenState
                 height: 4,
                 margin: const EdgeInsets.only(bottom: kSpacing16),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.3,
+                  ),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -477,7 +487,9 @@ class _RecurringTransactionFormScreenState
                     border: Border.all(
                       color: isSelected
                           ? theme.colorScheme.primary
-                          : theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                          : theme.colorScheme.outlineVariant.withValues(
+                              alpha: 0.3,
+                            ),
                       width: isSelected ? 1.5 : 1.0,
                     ),
                   ),
@@ -488,7 +500,9 @@ class _RecurringTransactionFormScreenState
                         height: 40,
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                              ? theme.colorScheme.primary.withValues(
+                                  alpha: 0.15,
+                                )
                               : theme.colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -549,7 +563,12 @@ class _RecurringTransactionFormScreenState
     showSpringSheet(
       context,
       builder: (sheetContext) => Container(
-        padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing8, kSpacing16, kSpacing24),
+        padding: const EdgeInsets.fromLTRB(
+          kSpacing16,
+          kSpacing8,
+          kSpacing16,
+          kSpacing24,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -560,7 +579,9 @@ class _RecurringTransactionFormScreenState
                 height: 4,
                 margin: const EdgeInsets.only(bottom: kSpacing16),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.3,
+                  ),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -672,7 +693,10 @@ class _RecurringTransactionFormScreenState
 
   int get _monthlyImpact {
     final amount = _parsedAmount;
-    final interval = (int.tryParse(_intervalController.text) ?? 1).clamp(1, 999);
+    final interval = (int.tryParse(_intervalController.text) ?? 1).clamp(
+      1,
+      999,
+    );
     switch (_frequency) {
       case 'weekly':
         return ((amount * 52) / (12 * interval)).round();
@@ -690,7 +714,10 @@ class _RecurringTransactionFormScreenState
 
   int get _annualImpact {
     final amount = _parsedAmount;
-    final interval = (int.tryParse(_intervalController.text) ?? 1).clamp(1, 999);
+    final interval = (int.tryParse(_intervalController.text) ?? 1).clamp(
+      1,
+      999,
+    );
     switch (_frequency) {
       case 'weekly':
         return ((amount * 52) / interval).round();
@@ -1070,11 +1097,7 @@ class _RecurringTransactionFormScreenState
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 15,
-            color: theme.colorScheme.primary,
-          ),
+          Icon(icon, size: 15, color: theme.colorScheme.primary),
           const SizedBox(width: kSpacing8),
           Expanded(
             child: Column(
@@ -1162,7 +1185,9 @@ class _RecurringTransactionFormScreenState
                         ),
                         decoration: BoxDecoration(
                           color: starter.accentColor.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
                         ),
                         child: Text(
                           starter.type == 'income' ? 'Income' : 'Bill',
@@ -1193,9 +1218,7 @@ class _RecurringTransactionFormScreenState
                         style: context.ts(
                           11,
                           fontWeight: FontWeight.w600,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurfaceVariant,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -1425,16 +1448,11 @@ class _RecurringTransactionFormScreenState
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: typeColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                  border: Border.all(
-                    color: typeColor.withValues(alpha: 0.25),
-                  ),
+                  border: Border.all(color: typeColor.withValues(alpha: 0.25)),
                 ),
                 child: Text(
                   _dueCountdownText,
@@ -1658,7 +1676,9 @@ class _RecurringTransactionFormScreenState
                     opt['label'] as String,
                     style: context.ts(
                       13,
-                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                      fontWeight: isSelected
+                          ? FontWeight.w800
+                          : FontWeight.w600,
                       color: isSelected
                           ? activeColor
                           : theme.colorScheme.onSurfaceVariant,
@@ -1723,7 +1743,9 @@ class _RecurringTransactionFormScreenState
               style: context.ts(
                 11,
                 fontWeight: FontWeight.w500,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.7,
+                ),
               ),
             ),
             const SizedBox(height: kSpacing8),
@@ -1748,8 +1770,9 @@ class _RecurringTransactionFormScreenState
                               .join(', ');
                           _keywordsController.text = cleaned;
                         } else {
-                          _keywordsController.text =
-                              current.isEmpty ? kw : '$current, $kw';
+                          _keywordsController.text = current.isEmpty
+                              ? kw
+                              : '$current, $kw';
                         }
                         setState(() {});
                       },
@@ -1760,7 +1783,9 @@ class _RecurringTransactionFormScreenState
                         ),
                         decoration: BoxDecoration(
                           color: active
-                              ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                              ? theme.colorScheme.primary.withValues(
+                                  alpha: 0.15,
+                                )
                               : theme.colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(
                             AppTheme.radiusPill,
@@ -1841,9 +1866,10 @@ class _RecurringTransactionFormScreenState
           const SizedBox(height: kSpacing8),
           accountsAsync.when(
             data: (accounts) {
-              final Account? selected = accounts
-                  .where((a) => a.id == _selectedAccountId)
-                  .firstOrNull ??
+              final Account? selected =
+                  accounts
+                      .where((a) => a.id == _selectedAccountId)
+                      .firstOrNull ??
                   accounts.firstOrNull;
 
               // Auto-assign first account if none set
@@ -1856,7 +1882,9 @@ class _RecurringTransactionFormScreenState
               }
 
               return TactileSpringContainer(
-                onTap: accounts.isEmpty ? null : () => _showAccountPicker(accounts),
+                onTap: accounts.isEmpty
+                    ? null
+                    : () => _showAccountPicker(accounts),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: kSpacing14,
@@ -1879,7 +1907,9 @@ class _RecurringTransactionFormScreenState
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.15,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
@@ -1947,10 +1977,13 @@ class _RecurringTransactionFormScreenState
           const SizedBox(height: kSpacing8),
           categoriesAsync.when(
             data: (categories) {
-              final filtered = categories.where((c) => c.type == _type).toList();
-              final selectedCat = categories
-                  .where((c) => c.id == _selectedCategoryId)
-                  .firstOrNull ??
+              final filtered = categories
+                  .where((c) => c.type == _type)
+                  .toList();
+              final selectedCat =
+                  categories
+                      .where((c) => c.id == _selectedCategoryId)
+                      .firstOrNull ??
                   filtered.firstOrNull ??
                   categories.firstOrNull;
 
@@ -2138,10 +2171,13 @@ class _RecurringTransactionFormScreenState
                   IconButton(
                     tooltip: 'Decrease interval',
                     onPressed: () {
-                      final val = (int.tryParse(_intervalController.text) ?? 1) - 1;
+                      final val =
+                          (int.tryParse(_intervalController.text) ?? 1) - 1;
                       if (val >= 1) {
                         PesaHaptics.selection();
-                        setState(() => _intervalController.text = val.toString());
+                        setState(
+                          () => _intervalController.text = val.toString(),
+                        );
                       }
                     },
                     icon: Icon(
@@ -2169,10 +2205,13 @@ class _RecurringTransactionFormScreenState
                   IconButton(
                     tooltip: 'Increase interval',
                     onPressed: () {
-                      final val = (int.tryParse(_intervalController.text) ?? 1) + 1;
+                      final val =
+                          (int.tryParse(_intervalController.text) ?? 1) + 1;
                       if (val <= 99) {
                         PesaHaptics.selection();
-                        setState(() => _intervalController.text = val.toString());
+                        setState(
+                          () => _intervalController.text = val.toString(),
+                        );
                       }
                     },
                     icon: Icon(
@@ -2209,7 +2248,9 @@ class _RecurringTransactionFormScreenState
                 color: theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                 border: Border.all(
-                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                  color: theme.colorScheme.outlineVariant.withValues(
+                    alpha: 0.3,
+                  ),
                 ),
               ),
               child: Row(
@@ -2283,7 +2324,9 @@ class _RecurringTransactionFormScreenState
                 color: theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                 border: Border.all(
-                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                  color: theme.colorScheme.outlineVariant.withValues(
+                    alpha: 0.3,
+                  ),
                 ),
               ),
               child: Row(

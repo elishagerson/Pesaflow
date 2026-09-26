@@ -457,7 +457,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: themeColor.withValues(alpha: theme.brightness == Brightness.dark ? 0.2 : 0.08),
+            color: themeColor.withValues(
+              alpha: theme.brightness == Brightness.dark ? 0.2 : 0.08,
+            ),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -474,9 +476,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                 decoration: BoxDecoration(
                   color: themeColor.withValues(alpha: 0.16),
                   borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
-                  border: Border.all(
-                    color: themeColor.withValues(alpha: 0.3),
-                  ),
+                  border: Border.all(color: themeColor.withValues(alpha: 0.3)),
                 ),
                 child: Center(
                   child: Icon(
@@ -508,7 +508,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           : 'Select a category below',
                       style: context.ts(
                         12,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.55,
+                        ),
                       ),
                     ),
                   ],
@@ -566,7 +568,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                 color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                 border: Border.all(
-                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
+                  color: theme.colorScheme.outlineVariant.withValues(
+                    alpha: 0.2,
+                  ),
                 ),
               ),
               child: FittedBox(
@@ -574,17 +578,15 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                 alignment: Alignment.centerLeft,
                 child: Row(
                   children: [
-                    Icon(
-                      PesaFlowIcons.lightbulb,
-                      size: 15,
-                      color: themeColor,
-                    ),
+                    Icon(PesaFlowIcons.lightbulb, size: 15, color: themeColor),
                     const SizedBox(width: kSpacing8),
                     Text(
                       'Daily spending allowance: ',
                       style: context.ts(
                         11,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                     Text(
@@ -735,7 +737,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   ShakeWidget(
                                     shaking: _shakeFields,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         _InteractiveInputRow(
                                           controller: _amountController,
@@ -748,7 +751,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                               return 'Enter a valid amount';
                                             }
                                             final val =
-                                                CurrencyFormatter.parseToCents(v);
+                                                CurrencyFormatter.parseToCents(
+                                                  v,
+                                                );
                                             if (val <= 0) {
                                               return 'Enter a valid amount';
                                             }
@@ -764,72 +769,129 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                           scrollDirection: Axis.horizontal,
                                           child: Row(
                                             children: [
-                                              ...[50000, 100000, 250000, 500000, 1000000].map((tsh) {
+                                              ...[
+                                                50000,
+                                                100000,
+                                                250000,
+                                                500000,
+                                                1000000,
+                                              ].map((tsh) {
                                                 final label = tsh >= 1000000
                                                     ? '+${tsh ~/ 1000000}M'
                                                     : '+${tsh ~/ 1000}K';
                                                 return Padding(
-                                                  padding: const EdgeInsets.only(right: kSpacing8),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        right: kSpacing8,
+                                                      ),
                                                   child: InkWell(
                                                     onTap: () {
                                                       PesaHaptics.selection();
-                                                      final current = int.tryParse(_amountController.text) ?? 0;
-                                                      _amountController.text = (current + tsh).toString();
+                                                      final current =
+                                                          int.tryParse(
+                                                            _amountController
+                                                                .text,
+                                                          ) ??
+                                                          0;
+                                                      _amountController.text =
+                                                          (current + tsh)
+                                                              .toString();
                                                       setState(() {});
                                                     },
-                                                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          AppTheme.radiusPill,
+                                                        ),
                                                     child: Container(
-                                                      padding: const EdgeInsets.symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 5,
-                                                      ),
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 10,
+                                                            vertical: 5,
+                                                          ),
                                                       decoration: BoxDecoration(
-                                                        color: theme.colorScheme.surfaceContainerHighest
-                                                            .withValues(alpha: 0.4),
-                                                        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                                        color: theme
+                                                            .colorScheme
+                                                            .surfaceContainerHighest
+                                                            .withValues(
+                                                              alpha: 0.4,
+                                                            ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              AppTheme
+                                                                  .radiusPill,
+                                                            ),
                                                         border: Border.all(
-                                                          color: theme.colorScheme.outlineVariant
-                                                              .withValues(alpha: 0.20),
+                                                          color: theme
+                                                              .colorScheme
+                                                              .outlineVariant
+                                                              .withValues(
+                                                                alpha: 0.20,
+                                                              ),
                                                         ),
                                                       ),
                                                       child: Text(
                                                         label,
                                                         style: context.ts(
                                                           11,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: theme.colorScheme.onSurface,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onSurface,
                                                         ),
                                                       ),
                                                     ),
                                                   ),
                                                 );
                                               }),
-                                              if (_amountController.text.isNotEmpty)
+                                              if (_amountController
+                                                  .text
+                                                  .isNotEmpty)
                                                 InkWell(
                                                   onTap: () {
                                                     PesaHaptics.light();
                                                     _amountController.clear();
                                                     setState(() {});
                                                   },
-                                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        AppTheme.radiusPill,
+                                                      ),
                                                   child: Container(
-                                                    padding: const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 5,
-                                                    ),
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 10,
+                                                          vertical: 5,
+                                                        ),
                                                     decoration: BoxDecoration(
-                                                      color: theme.colorScheme.error.withValues(alpha: 0.1),
-                                                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                                                      color: theme
+                                                          .colorScheme
+                                                          .error
+                                                          .withValues(
+                                                            alpha: 0.1,
+                                                          ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            AppTheme.radiusPill,
+                                                          ),
                                                       border: Border.all(
-                                                        color: theme.colorScheme.error.withValues(alpha: 0.25),
+                                                        color: theme
+                                                            .colorScheme
+                                                            .error
+                                                            .withValues(
+                                                              alpha: 0.25,
+                                                            ),
                                                       ),
                                                     ),
                                                     child: Text(
                                                       'Clear',
                                                       style: context.ts(
                                                         11,
-                                                        fontWeight: FontWeight.w600,
-                                                        color: theme.colorScheme.error,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: theme
+                                                            .colorScheme
+                                                            .error,
                                                       ),
                                                     ),
                                                   ),
@@ -1356,7 +1418,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                 decoration: BoxDecoration(
                                   color: context.appColors.expenseColor
                                       .withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusDialog,
+                                  ),
                                   border: Border.all(
                                     color: context.appColors.expenseColor
                                         .withValues(alpha: 0.3),

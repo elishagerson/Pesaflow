@@ -5,8 +5,9 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 
 void main() {
   group('IosTabBar animation and switching tests', () {
-    testWidgets('animates to selected tab without duration exception',
-        (tester) async {
+    testWidgets('animates to selected tab without duration exception', (
+      tester,
+    ) async {
       int selectedIndex = 0;
 
       await tester.pumpWidget(

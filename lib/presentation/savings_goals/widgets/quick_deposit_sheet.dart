@@ -71,7 +71,8 @@ Future<void> showQuickDepositSheet(
           final selectedAccount = accounts
               .where((a) => a.id == selectedAccountId)
               .firstOrNull;
-          final hasSufficientFunds = !deductFromWallet ||
+          final hasSufficientFunds =
+              !deductFromWallet ||
               selectedAccount == null ||
               selectedAccount.balance >= cents;
 
@@ -239,9 +240,7 @@ Future<void> showQuickDepositSheet(
                                 ),
                                 FractionallySizedBox(
                                   widthFactor: currentFraction,
-                                  child: Container(
-                                    color: goalColor,
-                                  ),
+                                  child: Container(color: goalColor),
                                 ),
                               ],
                             ),
@@ -389,8 +388,9 @@ Future<void> showQuickDepositSheet(
                           AppTheme.radiusCard,
                         ),
                         borderSide: BorderSide(
-                          color: theme.colorScheme.outlineVariant
-                              .withValues(alpha: 0.3),
+                          color: theme.colorScheme.outlineVariant.withValues(
+                            alpha: 0.3,
+                          ),
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
@@ -398,8 +398,9 @@ Future<void> showQuickDepositSheet(
                           AppTheme.radiusCard,
                         ),
                         borderSide: BorderSide(
-                          color: theme.colorScheme.outlineVariant
-                              .withValues(alpha: 0.3),
+                          color: theme.colorScheme.outlineVariant.withValues(
+                            alpha: 0.3,
+                          ),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -472,8 +473,9 @@ Future<void> showQuickDepositSheet(
                           AppTheme.radiusCard,
                         ),
                         borderSide: BorderSide(
-                          color: theme.colorScheme.outlineVariant
-                              .withValues(alpha: 0.2),
+                          color: theme.colorScheme.outlineVariant.withValues(
+                            alpha: 0.2,
+                          ),
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
@@ -481,8 +483,9 @@ Future<void> showQuickDepositSheet(
                           AppTheme.radiusCard,
                         ),
                         borderSide: BorderSide(
-                          color: theme.colorScheme.outlineVariant
-                              .withValues(alpha: 0.2),
+                          color: theme.colorScheme.outlineVariant.withValues(
+                            alpha: 0.2,
+                          ),
                         ),
                       ),
                     ),
@@ -501,8 +504,9 @@ Future<void> showQuickDepositSheet(
                           AppTheme.radiusCard,
                         ),
                         border: Border.all(
-                          color: theme.colorScheme.outlineVariant
-                              .withValues(alpha: 0.2),
+                          color: theme.colorScheme.outlineVariant.withValues(
+                            alpha: 0.2,
+                          ),
                         ),
                       ),
                       child: Column(
@@ -694,9 +698,7 @@ Future<void> showQuickDepositSheet(
                           },
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: kSpacing14,
-                      ),
+                      padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                       decoration: BoxDecoration(
                         color: cents > 0
                             ? goalColor

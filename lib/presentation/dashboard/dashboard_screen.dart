@@ -763,7 +763,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   alpha: 0.12,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(AppTheme.radiusCompact),
+                                                    BorderRadius.circular(
+                                                      AppTheme.radiusCompact,
+                                                    ),
                                               ),
                                               alignment: Alignment.center,
                                               child: Icon(
@@ -809,7 +811,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                               .onSurfaceVariant,
                                                         ),
                                                       ),
-                                                      const SizedBox(width: kSpacing6),
+                                                      const SizedBox(
+                                                        width: kSpacing6,
+                                                      ),
                                                       Text(
                                                         '•',
                                                         style: context.ts(
@@ -819,7 +823,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                               .onSurfaceVariant,
                                                         ),
                                                       ),
-                                                      const SizedBox(width: kSpacing6),
+                                                      const SizedBox(
+                                                        width: kSpacing6,
+                                                      ),
                                                       Text(
                                                         DateFormat(
                                                           'MMM d',

@@ -33,6 +33,16 @@ class TactileSpringContainer extends StatefulWidget {
   /// Opacity of the selection highlight. Defaults to 0.08 (Apple's default).
   final double selectedOpacity;
 
+  /// Minimum edge length of the touch target, in logical pixels.
+  ///
+  /// Apple HIG requires interactive targets to be at least 44pt. The visual
+  /// [child] keeps its intrinsic size and is centred; only the *hit area* grows
+  /// to meet the minimum. Larger children are left untouched.
+  ///
+  /// Set to `0` to opt out — e.g. a tappable sliver that already sits inside a
+  /// row whose own hit area already satisfies the guideline.
+  final double minTapSize;
+
   const TactileSpringContainer({
     super.key,
     required this.child,
@@ -44,6 +54,7 @@ class TactileSpringContainer extends StatefulWidget {
     this.semanticButton,
     this.selectedColor,
     this.selectedOpacity = 0.08,
+    this.minTapSize = 44,
   });
 
   @override
@@ -102,6 +113,21 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
     final effectiveHaptic = widget.onTap == null
         ? null
         : (widget.haptic ?? HapticType.selection);
+    final isInteractive = widget.onTap != null || widget.onLongPress != null;
+
+    // Grow the touch target to the 44pt HIG minimum without altering the
+    // visual size of the child. A Stack centres the child inside the minimum
+    // box and, because it sizes to the largest child under the incoming
+    // constraints, stays inert for children that already exceed it.
+    final visual = (isInteractive && widget.minTapSize > 0)
+        ? ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: widget.minTapSize,
+              minHeight: widget.minTapSize,
+            ),
+            child: Stack(alignment: Alignment.center, children: [widget.child]),
+          )
+        : widget.child;
 
     final core = GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -137,7 +163,7 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
             ),
           );
         },
-        child: widget.child,
+        child: visual,
       ),
     );
 

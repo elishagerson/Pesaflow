@@ -226,9 +226,8 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             style: context.ts(
                                               11,
                                               fontWeight: FontWeight.w600,
-                                              color: theme
-                                                  .colorScheme
-                                                  .onSurface,
+                                              color:
+                                                  theme.colorScheme.onSurface,
                                             ),
                                           ),
                                         ),

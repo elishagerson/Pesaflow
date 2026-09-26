@@ -88,35 +88,39 @@ void main() {
   group('accounts', () {
     test('provider reflects an account inserted AFTER first read', () async {
       watch(accountsStreamProvider);
-      await db.into(db.accounts).insert(
-        Account(
-          id: 'a1',
-          name: 'M-Pesa',
-          type: 'mobile_money',
-          balance: 500000,
-          provider: 'M-Pesa_TZ',
-          icon: 'wallet',
-          sortOrder: 0,
-          isArchived: false,
-          createdAt: t0,
-        ),
-      );
+      await db
+          .into(db.accounts)
+          .insert(
+            Account(
+              id: 'a1',
+              name: 'M-Pesa',
+              type: 'mobile_money',
+              balance: 500000,
+              provider: 'M-Pesa_TZ',
+              icon: 'wallet',
+              sortOrder: 0,
+              isArchived: false,
+              createdAt: t0,
+            ),
+          );
       final first = await container.read(accountsStreamProvider.future);
       expect(first.length, 1);
 
-      await db.into(db.accounts).insert(
-        Account(
-          id: 'a2',
-          name: 'Tigo Pesa',
-          type: 'mobile_money',
-          balance: 250000,
-          provider: 'Tigo_TZ',
-          icon: 'wallet',
-          sortOrder: 1,
-          isArchived: false,
-          createdAt: t0,
-        ),
-      );
+      await db
+          .into(db.accounts)
+          .insert(
+            Account(
+              id: 'a2',
+              name: 'Tigo Pesa',
+              type: 'mobile_money',
+              balance: 250000,
+              provider: 'Tigo_TZ',
+              icon: 'wallet',
+              sortOrder: 1,
+              isArchived: false,
+              createdAt: t0,
+            ),
+          );
       await Future<void>.delayed(const Duration(milliseconds: 50));
 
       final second = await container.read(accountsStreamProvider.future);
@@ -129,21 +133,27 @@ void main() {
   });
 
   group('savings goals', () {
-    Future<void> seedGoal(String id, {int current = 0, int target = 1000000}) async {
-      await db.into(db.savingsGoals).insert(
-        SavingsGoal(
-          id: id,
-          trackerId: trackerId,
-          name: 'Emergency Fund',
-          targetAmount: target,
-          currentAmount: current,
-          targetDate: DateTime(2026, 12, 31),
-          color: '#4CAF50',
-          icon: 'savings',
-          isCompleted: false,
-          createdAt: t0,
-        ),
-      );
+    Future<void> seedGoal(
+      String id, {
+      int current = 0,
+      int target = 1000000,
+    }) async {
+      await db
+          .into(db.savingsGoals)
+          .insert(
+            SavingsGoal(
+              id: id,
+              trackerId: trackerId,
+              name: 'Emergency Fund',
+              targetAmount: target,
+              currentAmount: current,
+              targetDate: DateTime(2026, 12, 31),
+              color: '#4CAF50',
+              icon: 'savings',
+              isCompleted: false,
+              createdAt: t0,
+            ),
+          );
     }
 
     test('goal progress updates in real time after a contribution', () async {
@@ -151,7 +161,10 @@ void main() {
       await seedGoal('g1');
 
       await Future<void>.delayed(const Duration(milliseconds: 30));
-      expect(container.read(savingsGoalsStreamProvider).value!.first.currentAmount, 0);
+      expect(
+        container.read(savingsGoalsStreamProvider).value!.first.currentAmount,
+        0,
+      );
 
       final repo = container.read(savingsGoalRepositoryProvider);
       await repo.addContribution(savingsGoalId: 'g1', amount: 250000);
@@ -172,10 +185,7 @@ void main() {
       await seedGoal('g2');
 
       await Future<void>.delayed(const Duration(milliseconds: 30));
-      expect(
-        container.read(savingsGoalsStreamProvider).value!.length,
-        2,
-      );
+      expect(container.read(savingsGoalsStreamProvider).value!.length, 2);
 
       final repo = container.read(savingsGoalRepositoryProvider);
       await repo.deleteSavingsGoal('g1');
@@ -191,28 +201,31 @@ void main() {
       expect(goals.single.id, 'g2');
     });
 
-    test('deleting a contribution reverts the saved amount in real time', () async {
-      watch(savingsGoalsStreamProvider);
-      await seedGoal('g1');
-      final repo = container.read(savingsGoalRepositoryProvider);
-      await repo.addContribution(savingsGoalId: 'g1', amount: 100000);
-      await Future<void>.delayed(const Duration(milliseconds: 30));
-      expect(
-        container.read(savingsGoalsStreamProvider).value!.first.currentAmount,
-        100000,
-      );
+    test(
+      'deleting a contribution reverts the saved amount in real time',
+      () async {
+        watch(savingsGoalsStreamProvider);
+        await seedGoal('g1');
+        final repo = container.read(savingsGoalRepositoryProvider);
+        await repo.addContribution(savingsGoalId: 'g1', amount: 100000);
+        await Future<void>.delayed(const Duration(milliseconds: 30));
+        expect(
+          container.read(savingsGoalsStreamProvider).value!.first.currentAmount,
+          100000,
+        );
 
-      final contributions = await repo.getContributions('g1');
-      await repo.deleteContribution(contributions.single.id);
+        final contributions = await repo.getContributions('g1');
+        await repo.deleteContribution(contributions.single.id);
 
-      await Future<void>.delayed(const Duration(milliseconds: 80));
+        await Future<void>.delayed(const Duration(milliseconds: 80));
 
-      expect(
-        container.read(savingsGoalsStreamProvider).value!.first.currentAmount,
-        0,
-        reason: 'removing a deposit must immediately reduce the saved amount',
-      );
-    });
+        expect(
+          container.read(savingsGoalsStreamProvider).value!.first.currentAmount,
+          0,
+          reason: 'removing a deposit must immediately reduce the saved amount',
+        );
+      },
+    );
   });
 
   group('tracker', () {
@@ -226,68 +239,78 @@ void main() {
 
   group('transactions', () {
     Future<void> seedTxn(String id, {int amount = 50000}) async {
-      await db.into(db.transactions).insert(
-        Transaction(
-          id: id,
-          accountId: null,
-          categoryId: existingCategoryId,
-          trackerId: trackerId,
-          amount: amount,
-          type: 'expense',
-          description: 'Txn $id',
-          reference: 'REF-$id',
-          provider: 'M-Pesa_TZ',
-          smsTimestamp: t0,
-          source: 'manual',
-          createdAt: t0,
-          updatedAt: t0,
-        ),
-      );
+      await db
+          .into(db.transactions)
+          .insert(
+            Transaction(
+              id: id,
+              accountId: null,
+              categoryId: existingCategoryId,
+              trackerId: trackerId,
+              amount: amount,
+              type: 'expense',
+              description: 'Txn $id',
+              reference: 'REF-$id',
+              provider: 'M-Pesa_TZ',
+              smsTimestamp: t0,
+              source: 'manual',
+              createdAt: t0,
+              updatedAt: t0,
+            ),
+          );
     }
 
-    test('a new transaction appears in the filtered list in real time', () async {
-      watch(filteredTransactionsStreamProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 30));
-      final before = container.read(filteredTransactionsStreamProvider).value!;
-      expect(before.where((t) => t.transaction.id == 'tx-new'), isEmpty);
-
-      await seedTxn('tx-new');
-
-      await Future<void>.delayed(const Duration(milliseconds: 80));
-      final after = container.read(filteredTransactionsStreamProvider).value!;
-      expect(
-        after.map((t) => t.transaction.id),
-        contains('tx-new'),
-        reason: 'a saved transaction must show up without leaving the screen',
-      );
-    });
-
-    test('deleting a transaction removes it from the list in real time', () async {
-      await seedTxn('tx-del');
-      watch(filteredTransactionsStreamProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 30));
-      expect(
-        container
+    test(
+      'a new transaction appears in the filtered list in real time',
+      () async {
+        watch(filteredTransactionsStreamProvider);
+        await Future<void>.delayed(const Duration(milliseconds: 30));
+        final before = container
             .read(filteredTransactionsStreamProvider)
-            .value!
-            .map((t) => t.transaction.id),
-        contains('tx-del'),
-      );
+            .value!;
+        expect(before.where((t) => t.transaction.id == 'tx-new'), isEmpty);
 
-      await container
-          .read(transactionRepositoryProvider)
-          .deleteTransaction('tx-del');
+        await seedTxn('tx-new');
 
-      await Future<void>.delayed(const Duration(milliseconds: 80));
-      expect(
-        container
-            .read(filteredTransactionsStreamProvider)
-            .value!
-            .map((t) => t.transaction.id),
-        isNot(contains('tx-del')),
-        reason: 'a deleted transaction must disappear immediately',
-      );
-    });
+        await Future<void>.delayed(const Duration(milliseconds: 80));
+        final after = container.read(filteredTransactionsStreamProvider).value!;
+        expect(
+          after.map((t) => t.transaction.id),
+          contains('tx-new'),
+          reason: 'a saved transaction must show up without leaving the screen',
+        );
+      },
+    );
+
+    test(
+      'deleting a transaction removes it from the list in real time',
+      () async {
+        await seedTxn('tx-del');
+        watch(filteredTransactionsStreamProvider);
+        await Future<void>.delayed(const Duration(milliseconds: 30));
+        expect(
+          container
+              .read(filteredTransactionsStreamProvider)
+              .value!
+              .map((t) => t.transaction.id),
+          contains('tx-del'),
+        );
+
+        await container
+            .read(transactionRepositoryProvider)
+            .deleteTransaction('tx-del');
+
+        await Future<void>.delayed(const Duration(milliseconds: 80));
+        expect(
+          container
+              .read(filteredTransactionsStreamProvider)
+              .value!
+              .map((t) => t.transaction.id),
+          isNot(contains('tx-del')),
+          reason: 'a deleted transaction must disappear immediately',
+        );
+      },
+    );
 
     test('recent transactions reflect a new transaction', () async {
       watch(recentTransactionsStreamProvider);
@@ -309,23 +332,25 @@ void main() {
       await Future<void>.delayed(const Duration(milliseconds: 30));
       final before = container.read(monthlyTotalsProvider).value!;
 
-      await db.into(db.transactions).insert(
-        Transaction(
-          id: 'tx-tot',
-          accountId: null,
-          categoryId: existingCategoryId,
-          trackerId: trackerId,
-          amount: 777000,
-          type: 'expense',
-          description: 'Big expense',
-          reference: 'REF-tx-tot',
-          provider: 'M-Pesa_TZ',
-          smsTimestamp: DateTime.now(),
-          source: 'manual',
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        ),
-      );
+      await db
+          .into(db.transactions)
+          .insert(
+            Transaction(
+              id: 'tx-tot',
+              accountId: null,
+              categoryId: existingCategoryId,
+              trackerId: trackerId,
+              amount: 777000,
+              type: 'expense',
+              description: 'Big expense',
+              reference: 'REF-tx-tot',
+              provider: 'M-Pesa_TZ',
+              smsTimestamp: DateTime.now(),
+              source: 'manual',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          );
 
       await Future<void>.delayed(const Duration(milliseconds: 120));
       final after = container.read(monthlyTotalsProvider).value!;
@@ -341,23 +366,25 @@ void main() {
       await Future<void>.delayed(const Duration(milliseconds: 30));
       container.read(insightsProvider); // resolve initial
 
-      await db.into(db.transactions).insert(
-        Transaction(
-          id: 'tx-ins',
-          accountId: null,
-          categoryId: existingCategoryId,
-          trackerId: trackerId,
-          amount: 999000,
-          type: 'expense',
-          description: 'Huge expense',
-          reference: 'REF-tx-ins',
-          provider: 'M-Pesa_TZ',
-          smsTimestamp: DateTime.now(),
-          source: 'manual',
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        ),
-      );
+      await db
+          .into(db.transactions)
+          .insert(
+            Transaction(
+              id: 'tx-ins',
+              accountId: null,
+              categoryId: existingCategoryId,
+              trackerId: trackerId,
+              amount: 999000,
+              type: 'expense',
+              description: 'Huge expense',
+              reference: 'REF-tx-ins',
+              provider: 'M-Pesa_TZ',
+              smsTimestamp: DateTime.now(),
+              source: 'manual',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          );
 
       await Future<void>.delayed(const Duration(milliseconds: 120));
       expect(
@@ -394,23 +421,25 @@ void main() {
       container.read(currentSpendingPatternProvider); // resolve initial
 
       final now = DateTime.now();
-      await db.into(db.transactions).insert(
-        Transaction(
-          id: 'tx-pat',
-          accountId: null,
-          categoryId: existingCategoryId,
-          trackerId: trackerId,
-          amount: 42000,
-          type: 'expense',
-          description: 'Pattern txn',
-          reference: 'REF-tx-pat',
-          provider: 'M-Pesa_TZ',
-          smsTimestamp: now,
-          source: 'manual',
-          createdAt: now,
-          updatedAt: now,
-        ),
-      );
+      await db
+          .into(db.transactions)
+          .insert(
+            Transaction(
+              id: 'tx-pat',
+              accountId: null,
+              categoryId: existingCategoryId,
+              trackerId: trackerId,
+              amount: 42000,
+              type: 'expense',
+              description: 'Pattern txn',
+              reference: 'REF-tx-pat',
+              provider: 'M-Pesa_TZ',
+              smsTimestamp: now,
+              source: 'manual',
+              createdAt: now,
+              updatedAt: now,
+            ),
+          );
 
       await Future<void>.delayed(const Duration(milliseconds: 120));
       expect(
@@ -424,39 +453,44 @@ void main() {
 
   group('transaction detail', () {
     test('re-reads when the underlying transaction is edited', () async {
-      await db.into(db.transactions).insert(
-        Transaction(
-          id: 'tx-detail',
-          accountId: null,
-          categoryId: existingCategoryId,
-          trackerId: trackerId,
-          amount: 1000,
-          type: 'expense',
-          description: 'Original',
-          reference: 'REF-tx-detail',
-          provider: 'M-Pesa_TZ',
-          smsTimestamp: t0,
-          source: 'manual',
-          createdAt: t0,
-          updatedAt: t0,
-        ),
-      );
+      await db
+          .into(db.transactions)
+          .insert(
+            Transaction(
+              id: 'tx-detail',
+              accountId: null,
+              categoryId: existingCategoryId,
+              trackerId: trackerId,
+              amount: 1000,
+              type: 'expense',
+              description: 'Original',
+              reference: 'REF-tx-detail',
+              provider: 'M-Pesa_TZ',
+              smsTimestamp: t0,
+              source: 'manual',
+              createdAt: t0,
+              updatedAt: t0,
+            ),
+          );
       watch(transactionDetailProvider('tx-detail'));
       await container.read(transactionDetailProvider('tx-detail').future);
       expect(
-        container.read(transactionDetailProvider('tx-detail')).value!
+        container
+            .read(transactionDetailProvider('tx-detail'))
+            .value!
             .transaction
             .description,
         'Original',
       );
 
-      await (db.update(db.transactions)
-            ..where((t) => t.id.equals('tx-detail')))
+      await (db.update(db.transactions)..where((t) => t.id.equals('tx-detail')))
           .write(const TransactionsCompanion(description: Value('Edited')));
       await Future<void>.delayed(const Duration(milliseconds: 80));
 
       expect(
-        container.read(transactionDetailProvider('tx-detail')).value!
+        container
+            .read(transactionDetailProvider('tx-detail'))
+            .value!
             .transaction
             .description,
         'Edited',
@@ -471,25 +505,27 @@ void main() {
       await container.read(dueRecurringTransactionsProvider.future);
       final before = container.read(dueRecurringTransactionsProvider).value!;
 
-      await db.into(db.recurringTransactions).insert(
-        RecurringTransaction(
-          id: 'rec-1',
-          trackerId: trackerId,
-          accountId: 'no-account',
-          categoryId: existingCategoryId,
-          description: 'LUKU',
-          amount: 50000,
-          type: 'expense',
-          frequency: 'monthly',
-          intervalValue: 1,
-          nextDate: DateTime.now().subtract(const Duration(days: 1)),
-          status: 'active',
-          totalPaid: 0,
-          paymentCount: 0,
-          createdAt: t0,
-          updatedAt: t0,
-        ),
-      );
+      await db
+          .into(db.recurringTransactions)
+          .insert(
+            RecurringTransaction(
+              id: 'rec-1',
+              trackerId: trackerId,
+              accountId: 'no-account',
+              categoryId: existingCategoryId,
+              description: 'LUKU',
+              amount: 50000,
+              type: 'expense',
+              frequency: 'monthly',
+              intervalValue: 1,
+              nextDate: DateTime.now().subtract(const Duration(days: 1)),
+              status: 'active',
+              totalPaid: 0,
+              paymentCount: 0,
+              createdAt: t0,
+              updatedAt: t0,
+            ),
+          );
       await Future<void>.delayed(const Duration(milliseconds: 100));
 
       expect(

@@ -421,7 +421,9 @@ class LoanOverviewSection extends ConsumerWidget {
                       ),
                       const SizedBox(height: kSpacing10),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusTiny,
+                        ),
                         child: SizedBox(
                           height: kSpacing6,
                           child: Row(
@@ -430,7 +432,9 @@ class LoanOverviewSection extends ConsumerWidget {
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: loanSeverity.withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusTiny,
+                                    ),
                                   ),
                                   child: FractionallySizedBox(
                                     alignment: Alignment.centerLeft,
@@ -443,7 +447,9 @@ class LoanOverviewSection extends ConsumerWidget {
                                             loanSeverity.withValues(alpha: 0.5),
                                           ],
                                         ),
-                                        borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusTiny,
+                                        ),
                                       ),
                                     ),
                                   ),

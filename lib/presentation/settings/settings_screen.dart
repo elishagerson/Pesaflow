@@ -534,7 +534,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(
-                          alpha: theme.brightness == Brightness.dark ? 0.22 : 0.04,
+                          alpha: theme.brightness == Brightness.dark
+                              ? 0.22
+                              : 0.04,
                         ),
                         blurRadius: 10,
                         offset: const Offset(0, 3),

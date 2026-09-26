@@ -30,9 +30,7 @@ class Deduplicator {
         sms.reference.startsWith('NBC-REF-');
 
     if (!isSentinel) {
-      return _transactionRepository.transactionExistsByReference(
-        sms.reference,
-      );
+      return _transactionRepository.transactionExistsByReference(sms.reference);
     }
 
     // 2. No usable reference, so fall back to a fuzzy match on provider + type +

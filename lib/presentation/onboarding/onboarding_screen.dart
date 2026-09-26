@@ -186,7 +186,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           color: i == _currentPage
                               ? theme.colorScheme.primary
                               : theme.colorScheme.outlineVariant,
-                          borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusTiny,
+                          ),
                         ),
                       ),
                     ),

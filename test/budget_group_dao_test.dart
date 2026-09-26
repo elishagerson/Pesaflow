@@ -137,32 +137,36 @@ void main() {
 
       // Insert account and transaction in period to generate spending
       final accountId = uuid.v4();
-      await database.into(database.accounts).insert(
-        Account(
-          id: accountId,
-          name: 'Cash',
-          type: 'cash',
-          balance: 100000000,
-          icon: 'wallet',
-          sortOrder: 0,
-          isArchived: false,
-          createdAt: now,
-        ),
-      );
+      await database
+          .into(database.accounts)
+          .insert(
+            Account(
+              id: accountId,
+              name: 'Cash',
+              type: 'cash',
+              balance: 100000000,
+              icon: 'wallet',
+              sortOrder: 0,
+              isArchived: false,
+              createdAt: now,
+            ),
+          );
 
-      await database.into(database.transactions).insert(
-        Transaction(
-          id: uuid.v4(),
-          accountId: accountId,
-          categoryId: cat.id,
-          amount: 10000000,
-          type: 'expense',
-          description: 'Groceries spend',
-          source: 'manual',
-          createdAt: now,
-          updatedAt: now,
-        ),
-      );
+      await database
+          .into(database.transactions)
+          .insert(
+            Transaction(
+              id: uuid.v4(),
+              accountId: accountId,
+              categoryId: cat.id,
+              amount: 10000000,
+              type: 'expense',
+              description: 'Groceries spend',
+              source: 'manual',
+              createdAt: now,
+              updatedAt: now,
+            ),
+          );
 
       // 4. Query joined data
       final groupsWithChildren = await groupDao.getGroupsWithChildren();
@@ -192,63 +196,67 @@ void main() {
 
       final needs = allGroups.firstWhere((g) => g.groupType == 'needs');
       final wants = allGroups.firstWhere((g) => g.groupType == 'wants');
-      final investments =
-          allGroups.firstWhere((g) => g.groupType == 'investments');
+      final investments = allGroups.firstWhere(
+        (g) => g.groupType == 'investments',
+      );
 
       expect(needs.allocatedAmount, equals(50000000));
       expect(wants.allocatedAmount, equals(30000000));
       expect(investments.allocatedAmount, equals(20000000));
     });
 
-    test('getStandaloneBudgetsWithProgress returns only ungrouped budgets', () async {
-      final categories = await categoryDao.getAllCategories();
-      final cat = categories.first;
+    test(
+      'getStandaloneBudgetsWithProgress returns only ungrouped budgets',
+      () async {
+        final categories = await categoryDao.getAllCategories();
+        final cat = categories.first;
 
-      // Grouped budget
-      final groupId = uuid.v4();
-      await groupDao.insertGroup(
-        BudgetGroup(
-          id: groupId,
-          name: 'Needs',
-          groupType: 'needs',
-          percentage: 0.5,
-          allocatedAmount: 500000,
-          icon: 'home',
-          color: '#2196F3',
-          sortOrder: 0,
-          isActive: true,
-          createdAt: DateTime.now(),
-        ),
-      );
+        // Grouped budget
+        final groupId = uuid.v4();
+        await groupDao.insertGroup(
+          BudgetGroup(
+            id: groupId,
+            name: 'Needs',
+            groupType: 'needs',
+            percentage: 0.5,
+            allocatedAmount: 500000,
+            icon: 'home',
+            color: '#2196F3',
+            sortOrder: 0,
+            isActive: true,
+            createdAt: DateTime.now(),
+          ),
+        );
 
-      await budgetRepo.createBudget(
-        name: 'Grouped Budget',
-        categoryId: cat.id,
-        groupId: groupId,
-        period: 'monthly',
-        amount: 200000,
-        rollover: false,
-        rolloverType: 'none',
-        startDate: DateTime.now(),
-      );
+        await budgetRepo.createBudget(
+          name: 'Grouped Budget',
+          categoryId: cat.id,
+          groupId: groupId,
+          period: 'monthly',
+          amount: 200000,
+          rollover: false,
+          rolloverType: 'none',
+          startDate: DateTime.now(),
+        );
 
-      // Standalone budget
-      await budgetRepo.createBudget(
-        name: 'Standalone Budget',
-        categoryId: cat.id,
-        groupId: null,
-        period: 'monthly',
-        amount: 100000,
-        rollover: false,
-        rolloverType: 'none',
-        startDate: DateTime.now(),
-      );
+        // Standalone budget
+        await budgetRepo.createBudget(
+          name: 'Standalone Budget',
+          categoryId: cat.id,
+          groupId: null,
+          period: 'monthly',
+          amount: 100000,
+          rollover: false,
+          rolloverType: 'none',
+          startDate: DateTime.now(),
+        );
 
-      final standalone = await groupRepo.getStandaloneBudgetsWithProgress();
-      expect(standalone.length, equals(1));
-      expect(standalone.first.budget.name, equals('Standalone Budget'));
-      expect(standalone.first.budget.groupId, isNull);
-    });
+        final standalone = await groupRepo.getStandaloneBudgetsWithProgress();
+        expect(standalone.length, equals(1));
+        expect(standalone.first.budget.name, equals('Standalone Budget'));
+        expect(standalone.first.budget.groupId, isNull);
+      },
+    );
 
     test('deleting a budget removes it and its periods', () async {
       final categories = await categoryDao.getAllCategories();
@@ -332,62 +340,68 @@ void main() {
       expect(standalone.first.budget.groupId, isNull);
     });
 
-    test('deleteAllGroups removes all groups and preserves child budgets', () async {
-      final categories = await categoryDao.getAllCategories();
-      final cat = categories.first;
+    test(
+      'deleteAllGroups removes all groups and preserves child budgets',
+      () async {
+        final categories = await categoryDao.getAllCategories();
+        final cat = categories.first;
 
-      await groupRepo.createBudgetPlan(
-        rule: BudgetRuleType.rule503020,
-        monthlyIncomeCents: 100000000,
-      );
+        await groupRepo.createBudgetPlan(
+          rule: BudgetRuleType.rule503020,
+          monthlyIncomeCents: 100000000,
+        );
 
-      final groups = await groupDao.getAllActiveGroups();
-      expect(groups.length, equals(3));
+        final groups = await groupDao.getAllActiveGroups();
+        expect(groups.length, equals(3));
 
-      await budgetRepo.createBudget(
-        name: 'Sub In Needs',
-        categoryId: cat.id,
-        groupId: groups.first.id,
-        period: 'monthly',
-        amount: 200000,
-        rollover: false,
-        rolloverType: 'none',
-        startDate: DateTime.now(),
-      );
+        await budgetRepo.createBudget(
+          name: 'Sub In Needs',
+          categoryId: cat.id,
+          groupId: groups.first.id,
+          period: 'monthly',
+          amount: 200000,
+          rollover: false,
+          rolloverType: 'none',
+          startDate: DateTime.now(),
+        );
 
-      await groupRepo.deleteAllGroups(keepSubBudgets: true);
+        await groupRepo.deleteAllGroups(keepSubBudgets: true);
 
-      final groupsAfter = await groupDao.getAllActiveGroups();
-      expect(groupsAfter, isEmpty);
+        final groupsAfter = await groupDao.getAllActiveGroups();
+        expect(groupsAfter, isEmpty);
 
-      final standalone = await groupRepo.getStandaloneBudgetsWithProgress();
-      expect(standalone.length, equals(1));
-      expect(standalone.first.budget.name, equals('Sub In Needs'));
-      expect(standalone.first.budget.groupId, isNull);
-    });
+        final standalone = await groupRepo.getStandaloneBudgetsWithProgress();
+        expect(standalone.length, equals(1));
+        expect(standalone.first.budget.name, equals('Sub In Needs'));
+        expect(standalone.first.budget.groupId, isNull);
+      },
+    );
 
-    test('reconfiguring budget plan updates existing groups without creating duplicates', () async {
-      await groupRepo.createBudgetPlan(
-        rule: BudgetRuleType.rule503020,
-        monthlyIncomeCents: 100000000, // 1,000,000 TZS
-      );
+    test(
+      'reconfiguring budget plan updates existing groups without creating duplicates',
+      () async {
+        await groupRepo.createBudgetPlan(
+          rule: BudgetRuleType.rule503020,
+          monthlyIncomeCents: 100000000, // 1,000,000 TZS
+        );
 
-      var groups = await groupDao.getAllActiveGroups();
-      expect(groups.length, equals(3));
+        var groups = await groupDao.getAllActiveGroups();
+        expect(groups.length, equals(3));
 
-      // Reconfigure plan with different income and rule
-      await groupRepo.createBudgetPlan(
-        rule: BudgetRuleType.rule702010,
-        monthlyIncomeCents: 200000000, // 2,000,000 TZS
-      );
+        // Reconfigure plan with different income and rule
+        await groupRepo.createBudgetPlan(
+          rule: BudgetRuleType.rule702010,
+          monthlyIncomeCents: 200000000, // 2,000,000 TZS
+        );
 
-      groups = await groupDao.getAllActiveGroups();
-      // Still exactly 3 groups, not 6
-      expect(groups.length, equals(3));
+        groups = await groupDao.getAllActiveGroups();
+        // Still exactly 3 groups, not 6
+        expect(groups.length, equals(3));
 
-      final needs = groups.firstWhere((g) => g.groupType == 'needs');
-      expect(needs.percentage, equals(0.70));
-      expect(needs.allocatedAmount, equals(140000000));
-    });
+        final needs = groups.firstWhere((g) => g.groupType == 'needs');
+        expect(needs.percentage, equals(0.70));
+        expect(needs.allocatedAmount, equals(140000000));
+      },
+    );
   });
 }

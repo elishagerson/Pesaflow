@@ -405,7 +405,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                 height: 44,
                                 decoration: BoxDecoration(
                                   color: themeCol.withValues(alpha: 0.16),
-                                  borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusInput,
+                                  ),
                                   border: Border.all(
                                     color: themeCol.withValues(alpha: 0.35),
                                   ),
@@ -555,7 +557,8 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: _goalTemplates.length,
-                          separatorBuilder: (_, _) => const SizedBox(width: kSpacing8),
+                          separatorBuilder: (_, _) =>
+                              const SizedBox(width: kSpacing8),
                           itemBuilder: (context, index) {
                             final tmpl = _goalTemplates[index];
                             final tmplCol = hexToColor(tmpl['color'] as String);
@@ -940,7 +943,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               color: isSel
                                   ? themeCol.withValues(alpha: 0.16)
                                   : theme.colorScheme.surfaceContainerHigh,
-                              borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusCompact,
+                              ),
                               border: Border.all(
                                 color: isSel
                                     ? themeCol

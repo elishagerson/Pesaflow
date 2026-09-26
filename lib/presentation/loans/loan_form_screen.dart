@@ -299,8 +299,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     final desc = _descriptionController.text.trim().isNotEmpty
         ? _descriptionController.text.trim()
         : (_senderController.text.trim().isNotEmpty
-            ? '${_senderController.text.trim()} Loan'
-            : 'Personal Loan');
+              ? '${_senderController.text.trim()} Loan'
+              : 'Personal Loan');
 
     if (_existingLoan != null) {
       final paid = _existingLoan!.amount - _existingLoan!.remaining;
@@ -524,7 +524,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                               },
                               decoration: context.inputDecoration(
                                 labelText: 'Loan Purpose / Description',
-                                hintText: 'e.g. M-Pesa Songesha, Working Capital',
+                                hintText:
+                                    'e.g. M-Pesa Songesha, Working Capital',
                                 prefixIcon: const Icon(
                                   PesaFlowIcons.edit,
                                   size: 18,
@@ -550,7 +551,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                           TextField(
                             controller: _referenceController,
                             decoration: context.inputDecoration(
-                              labelText: 'Reference / Account Number (Optional)',
+                              labelText:
+                                  'Reference / Account Number (Optional)',
                               hintText: 'e.g. LN-829103, Contract No.',
                               prefixIcon: const Icon(
                                 PesaFlowIcons.tag,
@@ -751,13 +753,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
           ),
         ),
         const SizedBox(height: 2),
-        Text(
-          subtitle,
-          style: context.ts(
-            12,
-            color: context.appColors.textLow,
-          ),
-        ),
+        Text(subtitle, style: context.ts(12, color: context.appColors.textLow)),
       ],
     );
   }
@@ -812,7 +808,11 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                           ),
                         ),
                         alignment: Alignment.center,
-                        child: Icon(starter.icon, size: 16, color: starter.color),
+                        child: Icon(
+                          starter.icon,
+                          size: 16,
+                          color: starter.color,
+                        ),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -841,15 +841,14 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     children: [
                       Text(
                         starter.title,
-                        style: context.ts(
-                          12,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        style: context.ts(12, fontWeight: FontWeight.w700),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        CurrencyFormatter.formatCents(starter.defaultAmountCents),
+                        CurrencyFormatter.formatCents(
+                          starter.defaultAmountCents,
+                        ),
                         style: context.ts(
                           11,
                           fontWeight: FontWeight.w600,
@@ -909,7 +908,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                      color: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.08,
+                      ),
                       borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                     ),
                     child: Text(
@@ -1014,14 +1015,14 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
           vertical: kSpacing6,
         ),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(
-                alpha: 0.6,
-              ),
+          color: Theme.of(
+            context,
+          ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
           border: Border.all(
-            color: Theme.of(context).colorScheme.outlineVariant.withValues(
-                  alpha: 0.2,
-                ),
+            color: Theme.of(
+              context,
+            ).colorScheme.outlineVariant.withValues(alpha: 0.2),
           ),
         ),
         child: Text(
@@ -1053,7 +1054,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     return Container(
       padding: const EdgeInsets.all(kSpacing16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(
+          alpha: 0.45,
+        ),
         borderRadius: BorderRadius.circular(AppTheme.radiusHero),
         border: Border.all(
           color: primaryColor.withValues(alpha: hasAmount ? 0.35 : 0.15),
@@ -1082,7 +1085,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     style: context.ts(
                       10,
                       fontWeight: FontWeight.w800,
-                      color: hasAmount ? primaryColor : context.appColors.textLow,
+                      color: hasAmount
+                          ? primaryColor
+                          : context.appColors.textLow,
                       letterSpacing: 0.6,
                     ),
                   ),
@@ -1171,7 +1176,11 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                 Expanded(
                   child: Row(
                     children: [
-                      Icon(PesaFlowIcons.calendar, size: 13, color: primaryColor),
+                      Icon(
+                        PesaFlowIcons.calendar,
+                        size: 13,
+                        color: primaryColor,
+                      ),
                       const SizedBox(width: kSpacing4),
                       Expanded(
                         child: Text(
@@ -1273,7 +1282,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   Text(
                     monthlyInstallmentCents != null
                         ? '~${CurrencyFormatter.formatCents(monthlyInstallmentCents)}'
-                        : (hasAmount ? CurrencyFormatter.formatCents(totalPayoffCents) : '—'),
+                        : (hasAmount
+                              ? CurrencyFormatter.formatCents(totalPayoffCents)
+                              : '—'),
                     style: context.ts(12, fontWeight: FontWeight.w700),
                   ),
                 ],
@@ -1351,7 +1362,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       child: Row(
         children: presets.map((item) {
           final r = item['rate'] as double;
-          final isSelected = currentRate != null && (currentRate - r).abs() < 0.01;
+          final isSelected =
+              currentRate != null && (currentRate - r).abs() < 0.01;
           final label = item['label'] as String;
 
           return Padding(
@@ -1407,7 +1419,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       child: Row(
         children: _quickLenders.map((lender) {
           final isSelected = _senderController.text.contains(lender);
-          final brandColor = _lenderBrandColors[lender] ?? theme.colorScheme.primary;
+          final brandColor =
+              _lenderBrandColors[lender] ?? theme.colorScheme.primary;
 
           return Padding(
             padding: const EdgeInsets.only(right: kSpacing6),
@@ -1436,7 +1449,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   border: Border.all(
                     color: isSelected
                         ? brandColor
-                        : theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
+                        : theme.colorScheme.outlineVariant.withValues(
+                            alpha: 0.2,
+                          ),
                   ),
                 ),
                 child: Row(
@@ -1455,7 +1470,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       lender,
                       style: context.ts(
                         11,
-                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
                         color: isSelected
                             ? brandColor
                             : theme.colorScheme.onSurface,
@@ -1524,9 +1541,12 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       cat,
                       style: context.ts(
                         12,
-                        fontWeight:
-                            isSelected ? FontWeight.w700 : FontWeight.w500,
-                        color: isSelected ? primary : theme.colorScheme.onSurface,
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                        color: isSelected
+                            ? primary
+                            : theme.colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -1568,7 +1588,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
             children: terms.map((item) {
               final days = item['days'] as int;
               final label = item['label'] as String;
-              final isCurrent = _dueAt != null &&
+              final isCurrent =
+                  _dueAt != null &&
                   _dueAt!.difference(_disbursedAt).inDays == days;
 
               return Padding(
@@ -1583,9 +1604,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     decoration: BoxDecoration(
                       color: isCurrent
                           ? theme.colorScheme.primary.withValues(alpha: 0.15)
-                          : theme.colorScheme.surfaceContainerHighest.withValues(
-                              alpha: 0.4,
-                            ),
+                          : theme.colorScheme.surfaceContainerHighest
+                                .withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                       border: Border.all(
                         color: isCurrent
@@ -1599,8 +1619,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       label,
                       style: context.ts(
                         11,
-                        fontWeight:
-                            isCurrent ? FontWeight.w700 : FontWeight.w500,
+                        fontWeight: isCurrent
+                            ? FontWeight.w700
+                            : FontWeight.w500,
                         color: isCurrent
                             ? theme.colorScheme.primary
                             : theme.colorScheme.onSurface,
@@ -1624,7 +1645,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     VoidCallback? onClear,
   }) {
     final onSurface = theme.colorScheme.onSurface;
-    final dateStr = date != null ? DateFormat('d MMM yyyy').format(date) : 'Set date';
+    final dateStr = date != null
+        ? DateFormat('d MMM yyyy').format(date)
+        : 'Set date';
 
     return TactileSpringContainer(
       onTap: onTap,
@@ -1634,7 +1657,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
           vertical: kSpacing12,
         ),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(
+            alpha: 0.35,
+          ),
           borderRadius: BorderRadius.circular(AppTheme.radiusCard),
           border: Border.all(
             color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
@@ -1662,8 +1687,12 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     dateStr,
                     style: context.ts(
                       13,
-                      fontWeight: date != null ? FontWeight.w700 : FontWeight.w400,
-                      color: date != null ? onSurface : onSurface.withValues(alpha: 0.5),
+                      fontWeight: date != null
+                          ? FontWeight.w700
+                          : FontWeight.w400,
+                      color: date != null
+                          ? onSurface
+                          : onSurface.withValues(alpha: 0.5),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

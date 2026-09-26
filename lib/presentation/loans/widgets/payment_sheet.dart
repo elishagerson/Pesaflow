@@ -164,7 +164,10 @@ class LoanPayoffSimulatorCard extends StatelessWidget {
     final currentRemaining = loan.remaining;
     final currentPaid = (totalAmount - currentRemaining).clamp(0, totalAmount);
     final projectedPaid = (currentPaid + paymentCents).clamp(0, totalAmount);
-    final projectedRemaining = (totalAmount - projectedPaid).clamp(0, totalAmount);
+    final projectedRemaining = (totalAmount - projectedPaid).clamp(
+      0,
+      totalAmount,
+    );
 
     final currentFraction = totalAmount > 0
         ? (currentPaid / totalAmount).clamp(0.0, 1.0)
@@ -207,10 +210,11 @@ class LoanPayoffSimulatorCard extends StatelessWidget {
                     vertical: kSpacing2,
                   ),
                   decoration: BoxDecoration(
-                    color: (isFullPayoff
-                            ? context.appColors.incomeColor
-                            : theme.colorScheme.primary)
-                        .withValues(alpha: 0.12),
+                    color:
+                        (isFullPayoff
+                                ? context.appColors.incomeColor
+                                : theme.colorScheme.primary)
+                            .withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   ),
                   child: Text(
@@ -247,9 +251,7 @@ class LoanPayoffSimulatorCard extends StatelessWidget {
                   ),
                   FractionallySizedBox(
                     widthFactor: currentFraction,
-                    child: Container(
-                      color: context.appColors.incomeColor,
-                    ),
+                    child: Container(color: context.appColors.incomeColor),
                   ),
                 ],
               ),
@@ -566,9 +568,8 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             style: context.ts(
                                               11,
                                               fontWeight: FontWeight.w600,
-                                              color: theme
-                                                  .colorScheme
-                                                  .onSurface,
+                                              color:
+                                                  theme.colorScheme.onSurface,
                                             ),
                                           ),
                                         ),
@@ -799,23 +800,19 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           () => selectedAccountId = account.id,
                                         ),
                                         child: AnimatedContainer(
-                                          duration:
-                                              MotionTokens.durationExit,
+                                          duration: MotionTokens.durationExit,
                                           curve: Curves.easeOutCubic,
                                           padding: const EdgeInsets.all(
                                             kSpacing14,
                                           ),
                                           decoration: BoxDecoration(
                                             color: isSelected
-                                                ? context
-                                                      .appColors
-                                                      .incomeColor
+                                                ? context.appColors.incomeColor
                                                       .withValues(alpha: 0.12)
                                                 : theme.colorScheme.surface,
-                                            borderRadius:
-                                                BorderRadius.circular(
-                                                  AppTheme.radiusCard,
-                                                ),
+                                            borderRadius: BorderRadius.circular(
+                                              AppTheme.radiusCard,
+                                            ),
                                             border: Border.all(
                                               color: isSelected
                                                   ? context

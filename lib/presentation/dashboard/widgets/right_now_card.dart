@@ -127,7 +127,9 @@ class RightNowCard extends ConsumerWidget {
                           height: 32,
                           decoration: BoxDecoration(
                             color: item.iconColor.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusSmall,
+                            ),
                           ),
                           alignment: Alignment.center,
                           child: Icon(

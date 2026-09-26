@@ -613,7 +613,9 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                       height: 42,
                       decoration: BoxDecoration(
                         color: goalColor.withValues(alpha: 0.14),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusInput,
+                        ),
                         border: Border.all(
                           color: goalColor.withValues(alpha: 0.28),
                           width: 1,
@@ -1285,7 +1287,9 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                       height: 34,
                       decoration: BoxDecoration(
                         color: col.withValues(alpha: 0.14),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusCompact,
+                        ),
                         border: Border.all(
                           color: col.withValues(alpha: 0.25),
                           width: 0.8,

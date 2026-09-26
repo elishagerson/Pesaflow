@@ -286,9 +286,7 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                     ),
                     child: Container(
                       height: 12,
-                      margin: const EdgeInsets.symmetric(
-                        vertical: kSpacing8,
-                      ),
+                      margin: const EdgeInsets.symmetric(vertical: kSpacing8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(
                           AppTheme.radiusSmall,
@@ -340,9 +338,7 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                     ),
                     child: Container(
                       height: 12,
-                      margin: const EdgeInsets.symmetric(
-                        vertical: kSpacing8,
-                      ),
+                      margin: const EdgeInsets.symmetric(vertical: kSpacing8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(
                           AppTheme.radiusSmall,
@@ -389,9 +385,7 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                     ),
                     child: Container(
                       height: 12,
-                      margin: const EdgeInsets.symmetric(
-                        vertical: kSpacing8,
-                      ),
+                      margin: const EdgeInsets.symmetric(vertical: kSpacing8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(
                           AppTheme.radiusSmall,
