@@ -14,14 +14,14 @@ void main() {
   Widget createTestWidget({required Widget child}) {
     return ProviderScope(
       overrides: [
-        activeTrackerIdProvider.overrideWith(() => MockActiveTrackerIdNotifier()),
+        activeTrackerIdProvider.overrideWith(
+          () => MockActiveTrackerIdNotifier(),
+        ),
       ],
       child: MaterialApp(
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
-        home: Scaffold(
-          body: child,
-        ),
+        home: Scaffold(body: child),
       ),
     );
   }
@@ -35,9 +35,7 @@ void main() {
       addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(
-        createTestWidget(
-          child: const SavingsGoalFormSheet(),
-        ),
+        createTestWidget(child: const SavingsGoalFormSheet()),
       );
       await tester.pumpAndSettle();
 
@@ -49,28 +47,27 @@ void main() {
       expect(find.text('Vacation Trip'), findsOneWidget);
     });
 
-    testWidgets('selecting a quick starter populates title, amount, and updates live preview', (
-      WidgetTester tester,
-    ) async {
-      tester.view.physicalSize = const Size(1080, 2400);
-      tester.view.devicePixelRatio = 2.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
+    testWidgets(
+      'selecting a quick starter populates title, amount, and updates live preview',
+      (WidgetTester tester) async {
+        tester.view.physicalSize = const Size(1080, 2400);
+        tester.view.devicePixelRatio = 2.0;
+        addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(
-        createTestWidget(
-          child: const SavingsGoalFormSheet(),
-        ),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          createTestWidget(child: const SavingsGoalFormSheet()),
+        );
+        await tester.pumpAndSettle();
 
-      // Tap "Emergency Fund" template
-      await tester.tap(find.text('Emergency Fund'));
-      await tester.pumpAndSettle();
+        // Tap "Emergency Fund" template
+        await tester.tap(find.text('Emergency Fund'));
+        await tester.pumpAndSettle();
 
-      // Live preview should now reflect Emergency Fund (card preview, starter chip, and text field)
-      expect(find.text('Emergency Fund'), findsNWidgets(3));
-      expect(find.text('Target: Tsh 2,000,000'), findsOneWidget);
-    });
+        // Live preview should now reflect Emergency Fund (card preview, starter chip, and text field)
+        expect(find.text('Emergency Fund'), findsNWidgets(3));
+        expect(find.text('Target: Tsh 2,000,000'), findsOneWidget);
+      },
+    );
 
     testWidgets('quick increment pills update target amount and pace insight', (
       WidgetTester tester,
@@ -80,9 +77,7 @@ void main() {
       addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(
-        createTestWidget(
-          child: const SavingsGoalFormSheet(),
-        ),
+        createTestWidget(child: const SavingsGoalFormSheet()),
       );
       await tester.pumpAndSettle();
 
@@ -107,14 +102,15 @@ void main() {
       addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(
-        createTestWidget(
-          child: const SavingsGoalFormSheet(),
-        ),
+        createTestWidget(child: const SavingsGoalFormSheet()),
       );
       await tester.pumpAndSettle();
 
       // Scroll to button
-      await tester.drag(find.byType(SingleChildScrollView).first, const Offset(0, -600));
+      await tester.drag(
+        find.byType(SingleChildScrollView).first,
+        const Offset(0, -600),
+      );
       await tester.pumpAndSettle();
 
       // Tap "Create Savings Goal" button without entering title

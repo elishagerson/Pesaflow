@@ -58,15 +58,11 @@ void main() {
   }) {
     return ProviderScope(
       overrides: [
-        reviewQueueStreamProvider.overrideWith(
-          (ref) => Stream.value(items),
-        ),
+        reviewQueueStreamProvider.overrideWith((ref) => Stream.value(items)),
         categoriesFutureProvider.overrideWith(
           (ref) => Future.value([testCategory]),
         ),
-        currencyShowDecimalsProvider.overrideWith(
-          (ref) => Stream.value(false),
-        ),
+        currencyShowDecimalsProvider.overrideWith((ref) => Stream.value(false)),
       ],
       child: MaterialApp(
         theme: AppTheme.lightTheme,
@@ -77,17 +73,18 @@ void main() {
   }
 
   group('SmsReviewScreen Icons & Buttons Refinement', () {
-    testWidgets('renders empty state with success icon when no reviews pending', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(createTestWidget(items: []));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 800));
+    testWidgets(
+      'renders empty state with success icon when no reviews pending',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(items: []));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 800));
 
-      expect(find.text('SMS Review'), findsOneWidget);
-      expect(find.text('All Clear!'), findsOneWidget);
-      expect(find.byIcon(PesaFlowIcons.selectAll), findsOneWidget);
-    });
+        expect(find.text('SMS Review'), findsOneWidget);
+        expect(find.text('All Clear!'), findsOneWidget);
+        expect(find.byIcon(PesaFlowIcons.selectAll), findsOneWidget);
+      },
+    );
 
     testWidgets(
       'renders pending card with wallet icon, action buttons, and icons',

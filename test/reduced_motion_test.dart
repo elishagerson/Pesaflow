@@ -58,11 +58,7 @@ void main() {
       await tester.pumpWidget(
         const MediaQuery(
           data: MediaQueryData(disableAnimations: false),
-          child: MaterialApp(
-            home: Scaffold(
-              body: _TestMotionWidget(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: _TestMotionWidget())),
         ),
       );
 
@@ -70,8 +66,9 @@ void main() {
       expect(find.text('isReducedMotion: false'), findsOneWidget);
       expect(find.text('motionDuration: 300'), findsOneWidget);
 
-      final state =
-          tester.state<_TestMotionWidgetState>(find.byType(_TestMotionWidget));
+      final state = tester.state<_TestMotionWidgetState>(
+        find.byType(_TestMotionWidget),
+      );
       state.runSpring();
       // Animation has started with simulation
       expect(state.controller.isAnimating, isTrue);
@@ -88,11 +85,7 @@ void main() {
       await tester.pumpWidget(
         const MediaQuery(
           data: MediaQueryData(disableAnimations: true),
-          child: MaterialApp(
-            home: Scaffold(
-              body: _TestMotionWidget(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: _TestMotionWidget())),
         ),
       );
 
@@ -100,8 +93,9 @@ void main() {
       expect(find.text('isReducedMotion: true'), findsOneWidget);
       expect(find.text('motionDuration: 0'), findsOneWidget);
 
-      final state =
-          tester.state<_TestMotionWidgetState>(find.byType(_TestMotionWidget));
+      final state = tester.state<_TestMotionWidgetState>(
+        find.byType(_TestMotionWidget),
+      );
       state.runSpring();
       // Jumps instantly without running a simulation
       expect(state.controller.value, 1.0);

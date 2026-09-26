@@ -1015,7 +1015,12 @@ void main() {
       expect(NmbBankParser().parse(promoWithLink, now), isNull);
       expect(CrdbBankParser().parse(promoWithLink, now), isNull);
       expect(NbcBankParser().parse(promoWithLink, now), isNull);
-      expect(const GenericFallbackParser(provider: 'SelcomPesa_TZ').parse(promoWithLink, now), isNull);
+      expect(
+        const GenericFallbackParser(
+          provider: 'SelcomPesa_TZ',
+        ).parse(promoWithLink, now),
+        isNull,
+      );
     });
 
     test('M-Pesa parser handles large amounts correctly', () {

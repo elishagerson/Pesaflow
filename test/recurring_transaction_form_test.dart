@@ -98,7 +98,9 @@ void main() {
         activeTrackerIdProvider.overrideWith(
           () => MockActiveTrackerIdNotifier(),
         ),
-        accountsStreamProvider.overrideWith((ref) => Stream.value(testAccounts)),
+        accountsStreamProvider.overrideWith(
+          (ref) => Stream.value(testAccounts),
+        ),
         categoriesFutureProvider.overrideWith(
           (ref) => Future.value(testCategories),
         ),

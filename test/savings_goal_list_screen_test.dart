@@ -12,22 +12,16 @@ class MockActiveTrackerIdNotifier extends ActiveTrackerIdNotifier {
 }
 
 void main() {
-  Widget createTestWidget({
-    required List<SavingsGoal> goals,
-    int? totalSaved,
-  }) {
+  Widget createTestWidget({required List<SavingsGoal> goals, int? totalSaved}) {
     final computedTotal =
-        totalSaved ??
-        goals.fold<int>(0, (sum, g) => sum + g.currentAmount);
+        totalSaved ?? goals.fold<int>(0, (sum, g) => sum + g.currentAmount);
 
     return ProviderScope(
       overrides: [
         activeTrackerIdProvider.overrideWith(
           () => MockActiveTrackerIdNotifier(),
         ),
-        savingsGoalsStreamProvider.overrideWith(
-          (ref) => Stream.value(goals),
-        ),
+        savingsGoalsStreamProvider.overrideWith((ref) => Stream.value(goals)),
         savingsGoalsTotalSavedProvider.overrideWithValue(computedTotal),
         accountsStreamProvider.overrideWith((ref) => Stream.value([])),
         currencyShowDecimalsProvider.overrideWith((ref) => Stream.value(false)),

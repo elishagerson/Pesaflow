@@ -64,23 +64,17 @@ void main() {
       recentTransactionsStreamProvider.overrideWith(
         (ref) => Stream.value(transactions),
       ),
-      accountsStreamProvider.overrideWith(
-        (ref) => Stream.value([testAccount]),
-      ),
+      accountsStreamProvider.overrideWith((ref) => Stream.value([testAccount])),
       categoriesFutureProvider.overrideWith(
         (ref) => Future.value([testCategory]),
       ),
-      currencyShowDecimalsProvider.overrideWith(
-        (ref) => Stream.value(false),
-      ),
+      currencyShowDecimalsProvider.overrideWith((ref) => Stream.value(false)),
       insightsProvider.overrideWith((ref) => Future.value(insights)),
       monthlyTotalsProvider.overrideWith((ref) => Future.value(monthlyTotals)),
     ];
   }
 
-  Widget createTestWidget({
-    List<dynamic> overrides = const [],
-  }) {
+  Widget createTestWidget({List<dynamic> overrides = const []}) {
     return ProviderScope(
       overrides: overrides.cast(),
       child: MaterialApp(
@@ -95,11 +89,7 @@ void main() {
     testWidgets('renders title, type filters, and action buttons', (
       WidgetTester tester,
     ) async {
-      await tester.pumpWidget(
-        createTestWidget(
-          overrides: baseOverrides(),
-        ),
-      );
+      await tester.pumpWidget(createTestWidget(overrides: baseOverrides()));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 800));
 
@@ -114,11 +104,7 @@ void main() {
     testWidgets('toggles search input field smoothly', (
       WidgetTester tester,
     ) async {
-      await tester.pumpWidget(
-        createTestWidget(
-          overrides: baseOverrides(),
-        ),
-      );
+      await tester.pumpWidget(createTestWidget(overrides: baseOverrides()));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 350));
 
@@ -139,9 +125,7 @@ void main() {
     testWidgets('renders active secondary filter chips and allows dismissal', (
       WidgetTester tester,
     ) async {
-      final container = ProviderContainer(
-        overrides: baseOverrides().cast(),
-      );
+      final container = ProviderContainer(overrides: baseOverrides().cast());
 
       // Set active filters
       container.read(transactionAccountFilterProvider.notifier).state = 'acc1';
@@ -191,10 +175,7 @@ void main() {
                   icon: 'trending_down',
                 ),
               ],
-              monthlyTotals: {
-                'income': 5000000,
-                'expense': 1500000,
-              },
+              monthlyTotals: {'income': 5000000, 'expense': 1500000},
             ),
           ),
         );

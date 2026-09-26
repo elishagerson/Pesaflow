@@ -21,31 +21,35 @@ void main() {
 
   setUp(() async {
     db = AppDatabase(NativeDatabase.memory());
-    await db.into(db.accounts).insert(
-      Account(
-        id: accountId,
-        name: 'M-Pesa',
-        type: 'mobile_money',
-        balance: 1000000,
-        provider: 'M-Pesa_TZ',
-        icon: 'wallet',
-        sortOrder: 0,
-        isArchived: false,
-        createdAt: t0,
-      ),
-    );
-    await db.into(db.categories).insert(
-      Category(
-        id: categoryId,
-        name: 'Food',
-        type: 'expense',
-        color: '#FF9800',
-        icon: 'restaurant',
-        isSystem: false,
-        sortOrder: 0,
-        createdAt: t0,
-      ),
-    );
+    await db
+        .into(db.accounts)
+        .insert(
+          Account(
+            id: accountId,
+            name: 'M-Pesa',
+            type: 'mobile_money',
+            balance: 1000000,
+            provider: 'M-Pesa_TZ',
+            icon: 'wallet',
+            sortOrder: 0,
+            isArchived: false,
+            createdAt: t0,
+          ),
+        );
+    await db
+        .into(db.categories)
+        .insert(
+          Category(
+            id: categoryId,
+            name: 'Food',
+            type: 'expense',
+            color: '#FF9800',
+            icon: 'restaurant',
+            isSystem: false,
+            sortOrder: 0,
+            createdAt: t0,
+          ),
+        );
     repo = TransactionRepository(
       TransactionDao(db),
       null,
@@ -97,11 +101,7 @@ void main() {
 
   group('reference check', () {
     test('flags a genuine repeat of the same reference', () async {
-      await insertExisting(
-        id: 'a',
-        reference: 'MPX-111',
-        smsTimestamp: t0,
-      );
+      await insertExisting(id: 'a', reference: 'MPX-111', smsTimestamp: t0);
       expect(
         await dedup.isDuplicate(sms(reference: 'MPX-111', timestamp: t0)),
         isTrue,
@@ -109,11 +109,7 @@ void main() {
     });
 
     test('allows a new reference 10 minutes later', () async {
-      await insertExisting(
-        id: 'a',
-        reference: 'MPX-111',
-        smsTimestamp: t0,
-      );
+      await insertExisting(id: 'a', reference: 'MPX-111', smsTimestamp: t0);
       expect(
         await dedup.isDuplicate(
           sms(
@@ -130,15 +126,14 @@ void main() {
     test(
       'a second DISTINCT same-amount transfer 30s later is admitted',
       () async {
-        await insertExisting(
-          id: 'a',
-          reference: 'MPX-111',
-          smsTimestamp: t0,
-        );
+        await insertExisting(id: 'a', reference: 'MPX-111', smsTimestamp: t0);
 
         // Genuinely different reference, different money movement, 30s apart.
         final isDup = await dedup.isDuplicate(
-          sms(reference: 'MPX-999', timestamp: t0.add(const Duration(seconds: 30))),
+          sms(
+            reference: 'MPX-999',
+            timestamp: t0.add(const Duration(seconds: 30)),
+          ),
         );
 
         expect(
@@ -174,11 +169,7 @@ void main() {
     });
 
     test('a different amount in the same window is not a duplicate', () async {
-      await insertExisting(
-        id: 'a',
-        reference: 'MPX-111',
-        smsTimestamp: t0,
-      );
+      await insertExisting(id: 'a', reference: 'MPX-111', smsTimestamp: t0);
       expect(
         await dedup.isDuplicate(
           sms(
@@ -192,11 +183,7 @@ void main() {
     });
 
     test('same amount after the window is not a duplicate', () async {
-      await insertExisting(
-        id: 'a',
-        reference: 'MPX-111',
-        smsTimestamp: t0,
-      );
+      await insertExisting(id: 'a', reference: 'MPX-111', smsTimestamp: t0);
       expect(
         await dedup.isDuplicate(
           sms(

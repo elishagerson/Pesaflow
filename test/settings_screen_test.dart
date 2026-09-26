@@ -53,13 +53,23 @@ void main() {
   Widget createTestWidget() {
     return ProviderScope(
       overrides: [
-        accountsStreamProvider.overrideWith((ref) => Stream.value([testAccount])),
-        categoriesFutureProvider.overrideWith((ref) => Future.value([testCategory])),
+        accountsStreamProvider.overrideWith(
+          (ref) => Stream.value([testAccount]),
+        ),
+        categoriesFutureProvider.overrideWith(
+          (ref) => Future.value([testCategory]),
+        ),
         totalTransactionsCountProvider.overrideWith((ref) => Stream.value(128)),
-        allTrackersStreamProvider.overrideWith((ref) => Stream.value([testTracker])),
-        activeTrackerIdProvider.overrideWith(() => MockActiveTrackerIdNotifier()),
+        allTrackersStreamProvider.overrideWith(
+          (ref) => Stream.value([testTracker]),
+        ),
+        activeTrackerIdProvider.overrideWith(
+          () => MockActiveTrackerIdNotifier(),
+        ),
         appLockEnabledProvider.overrideWith((ref) => Stream.value(false)),
-        lockScreenBalanceEnabledProvider.overrideWith((ref) => Stream.value(true)),
+        lockScreenBalanceEnabledProvider.overrideWith(
+          (ref) => Stream.value(true),
+        ),
         currencyShowDecimalsProvider.overrideWith((ref) => Stream.value(true)),
         smsAutoDeduplicationProvider.overrideWith((ref) => Stream.value(true)),
         autoBudgetEnabledProvider.overrideWith((ref) => Stream.value(false)),
@@ -108,37 +118,38 @@ void main() {
       expect(find.text('DATA & STORAGE'), findsOneWidget);
     });
 
-    testWidgets('renders key organization and security rows without duplicates', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(createTestWidget());
-      await tester.pumpAndSettle();
+    testWidgets(
+      'renders key organization and security rows without duplicates',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget());
+        await tester.pumpAndSettle();
 
-      // Organization rows
-      expect(find.text('Manage Workspaces'), findsOneWidget);
-      expect(find.text('Accounts Manager'), findsOneWidget);
-      expect(find.text('Categories Manager'), findsOneWidget);
-      expect(find.text('Recurring & Bills'), findsOneWidget);
+        // Organization rows
+        expect(find.text('Manage Workspaces'), findsOneWidget);
+        expect(find.text('Accounts Manager'), findsOneWidget);
+        expect(find.text('Categories Manager'), findsOneWidget);
+        expect(find.text('Recurring & Bills'), findsOneWidget);
 
-      // Automation & preferences rows
-      expect(find.text('Auto-Budget on Income'), findsOneWidget);
-      expect(find.text('SMS Auto-Deduplication'), findsOneWidget);
-      expect(find.text('App Theme'), findsOneWidget);
-      expect(find.text('Show Decimals'), findsOneWidget);
-      expect(find.text('Biometric App Lock'), findsOneWidget);
-      expect(find.text('Offline Privacy Guarantee'), findsOneWidget);
+        // Automation & preferences rows
+        expect(find.text('Auto-Budget on Income'), findsOneWidget);
+        expect(find.text('SMS Auto-Deduplication'), findsOneWidget);
+        expect(find.text('App Theme'), findsOneWidget);
+        expect(find.text('Show Decimals'), findsOneWidget);
+        expect(find.text('Biometric App Lock'), findsOneWidget);
+        expect(find.text('Offline Privacy Guarantee'), findsOneWidget);
 
-      // Data rows
-      expect(find.text('Export Monthly Statement'), findsOneWidget);
-      expect(find.text('Backup Database'), findsOneWidget);
-      expect(find.text('Restore Database'), findsOneWidget);
+        // Data rows
+        expect(find.text('Export Monthly Statement'), findsOneWidget);
+        expect(find.text('Backup Database'), findsOneWidget);
+        expect(find.text('Restore Database'), findsOneWidget);
 
-      // Hardcoded footer is removed
-      expect(find.text('PesaFlow v1.0.0'), findsNothing);
-      expect(
-        find.text('100% Offline & Private • Built for Tanzania 🇹🇿'),
-        findsNothing,
-      );
-    });
+        // Hardcoded footer is removed
+        expect(find.text('PesaFlow v1.0.0'), findsNothing);
+        expect(
+          find.text('100% Offline & Private • Built for Tanzania 🇹🇿'),
+          findsNothing,
+        );
+      },
+    );
   });
 }

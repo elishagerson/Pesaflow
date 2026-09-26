@@ -20,31 +20,35 @@ void main() {
   setUp(() async {
     db = AppDatabase(NativeDatabase.memory());
     dao = TransactionDao(db);
-    await db.into(db.accounts).insert(
-      Account(
-        id: accountId,
-        name: 'M-Pesa',
-        type: 'mobile_money',
-        balance: 100000,
-        provider: 'M-Pesa_TZ',
-        icon: 'wallet',
-        sortOrder: 0,
-        isArchived: false,
-        createdAt: DateTime(2026, 1, 1),
-      ),
-    );
-    await db.into(db.categories).insert(
-      Category(
-        id: categoryId,
-        name: 'Food',
-        type: 'expense',
-        color: '#FF9800',
-        icon: 'restaurant',
-        isSystem: false,
-        sortOrder: 0,
-        createdAt: DateTime(2026, 1, 1),
-      ),
-    );
+    await db
+        .into(db.accounts)
+        .insert(
+          Account(
+            id: accountId,
+            name: 'M-Pesa',
+            type: 'mobile_money',
+            balance: 100000,
+            provider: 'M-Pesa_TZ',
+            icon: 'wallet',
+            sortOrder: 0,
+            isArchived: false,
+            createdAt: DateTime(2026, 1, 1),
+          ),
+        );
+    await db
+        .into(db.categories)
+        .insert(
+          Category(
+            id: categoryId,
+            name: 'Food',
+            type: 'expense',
+            color: '#FF9800',
+            icon: 'restaurant',
+            isSystem: false,
+            sortOrder: 0,
+            createdAt: DateTime(2026, 1, 1),
+          ),
+        );
   });
 
   tearDown(() async => db.close());
@@ -71,32 +75,38 @@ void main() {
   );
 
   Future<int> balance() async {
-    final row = await (db.select(db.accounts)
-          ..where((a) => a.id.equals(accountId)))
-        .getSingle();
+    final row = await (db.select(
+      db.accounts,
+    )..where((a) => a.id.equals(accountId))).getSingle();
     return row.balance;
   }
 
-  test('capturing a pending review transaction moves the balance immediately',
-      () async {
-    await dao.writeTransactionWithBalanceAdjustment(
-      expense(id: 'pending-1', source: 'sms_reviewed'),
-    );
+  test(
+    'capturing a pending review transaction moves the balance immediately',
+    () async {
+      await dao.writeTransactionWithBalanceAdjustment(
+        expense(id: 'pending-1', source: 'sms_reviewed'),
+      );
 
-    expect(
-      await balance(),
-      75000,
-      reason: 'a captured SMS is real money movement and must show up at once',
-    );
-  });
+      expect(
+        await balance(),
+        75000,
+        reason:
+            'a captured SMS is real money movement and must show up at once',
+      );
+    },
+  );
 
-  test('capturing an auto-approved SMS transaction moves the balance', () async {
-    await dao.writeTransactionWithBalanceAdjustment(
-      expense(id: 'auto-1', source: 'sms_auto'),
-    );
+  test(
+    'capturing an auto-approved SMS transaction moves the balance',
+    () async {
+      await dao.writeTransactionWithBalanceAdjustment(
+        expense(id: 'auto-1', source: 'sms_auto'),
+      );
 
-    expect(await balance(), 75000);
-  });
+      expect(await balance(), 75000);
+    },
+  );
 
   test('approving does not deduct a second time', () async {
     final tx = expense(id: 'pending-2', source: 'sms_reviewed');
@@ -142,26 +152,28 @@ void main() {
 
   test('approving still applies a category change', () async {
     const other = 'cat-transport';
-    await db.into(db.categories).insert(
-      Category(
-        id: other,
-        name: 'Transport',
-        type: 'expense',
-        color: '#2196F3',
-        icon: 'car',
-        isSystem: false,
-        sortOrder: 1,
-        createdAt: DateTime(2026, 1, 1),
-      ),
-    );
+    await db
+        .into(db.categories)
+        .insert(
+          Category(
+            id: other,
+            name: 'Transport',
+            type: 'expense',
+            color: '#2196F3',
+            icon: 'car',
+            isSystem: false,
+            sortOrder: 1,
+            createdAt: DateTime(2026, 1, 1),
+          ),
+        );
     final tx = expense(id: 'pending-5', source: 'sms_reviewed');
     await dao.writeTransactionWithBalanceAdjustment(tx);
 
     await dao.approveReviewedTransaction(tx.id, newCategoryId: other);
 
-    final row = await (db.select(db.transactions)
-          ..where((t) => t.id.equals(tx.id)))
-        .getSingle();
+    final row = await (db.select(
+      db.transactions,
+    )..where((t) => t.id.equals(tx.id))).getSingle();
     expect(row.categoryId, other);
     expect(row.source, 'sms_auto');
   });
@@ -178,9 +190,9 @@ void main() {
       100000,
       reason: 'reversing must undo the delta applied at capture',
     );
-    final remaining = await (db.select(db.transactions)
-          ..where((t) => t.id.equals(tx.id)))
-        .get();
+    final remaining = await (db.select(
+      db.transactions,
+    )..where((t) => t.id.equals(tx.id))).get();
     expect(remaining, isEmpty);
   });
 }
