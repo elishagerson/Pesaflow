@@ -290,7 +290,7 @@ Future<void> _generateAndShare(
         .watchFilteredTransactions(startDate: dateStart, endDate: dateEnd)
         .firstWhere((_) => true, orElse: () => []);
 
-    final accounts = ref.read(accountsStreamProvider).value ?? [];
+    final accounts = ref.watch(accountsStreamProvider).value ?? [];
 
     final analyticsRepo = ref.read(analyticsRepositoryProvider);
     final totals = await analyticsRepo.getDateRangeTotals(dateStart, dateEnd);

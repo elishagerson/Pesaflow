@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'state_providers.dart';
 
 class SearchResult {
   final String title;
@@ -29,7 +30,9 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
 ) async {
   if (query.trim().length < 2) return [];
 
-  final db = ref.read(databaseProvider);
+  // Re-run the search when data changes so results reflect new/edited records.
+  ref.watch(dataChangesStreamProvider);
+  final db = ref.watch(databaseProvider);
   final words = query
       .toLowerCase()
       .split(RegExp(r'\s+'))

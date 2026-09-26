@@ -72,7 +72,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Future<void> _handleImportCsv(BuildContext context, WidgetRef ref) async {
-    final accounts = ref.read(accountsStreamProvider).value ?? [];
+    final accounts = ref.watch(accountsStreamProvider).value ?? [];
     final categories = await ref
         .read(categoryRepositoryProvider)
         .getAllCategories();

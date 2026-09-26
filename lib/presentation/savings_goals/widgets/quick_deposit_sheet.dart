@@ -30,7 +30,7 @@ Future<void> showQuickDepositSheet(
   String? selectedAccountId;
   bool isSubmitting = false;
 
-  final accounts = ref.read(accountsStreamProvider).value ?? [];
+  final accounts = ref.watch(accountsStreamProvider).value ?? [];
   if (accounts.isNotEmpty) {
     selectedAccountId = accounts.first.id;
   }
@@ -634,7 +634,7 @@ Future<void> showQuickDepositSheet(
                                   transactionRepositoryProvider,
                                 );
                                 final categories =
-                                    ref.read(categoriesFutureProvider).value ??
+                                    ref.watch(categoriesFutureProvider).value ??
                                     [];
                                 final savingsCategory = categories.firstWhere(
                                   (c) =>

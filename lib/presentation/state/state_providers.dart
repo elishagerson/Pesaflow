@@ -63,6 +63,8 @@ final cardholderNameProvider = StreamProvider<String>((ref) {
 });
 
 final activeTrackerProvider = FutureProvider<Tracker?>((ref) async {
+  // Re-resolve whenever a tracker row changes (rename, delete, archive).
+  ref.watch(dataChangesStreamProvider);
   final id = ref.watch(activeTrackerIdProvider);
   final repo = ref.watch(trackerRepositoryProvider);
   return repo.getTrackerById(id);
@@ -74,6 +76,9 @@ final accountsStreamProvider = StreamProvider<List<Account>>((ref) {
 });
 
 final categoriesFutureProvider = FutureProvider<List<Category>>((ref) {
+  // Re-query when categories change, otherwise a newly added/renamed/removed
+  // category only appeared after leaving and re-entering the screen.
+  ref.watch(dataChangesStreamProvider);
   final repo = ref.watch(categoryRepositoryProvider);
   return repo.getAllCategories();
 });
@@ -272,6 +277,12 @@ final dataChangesStreamProvider = StreamProvider<int>((ref) {
           db.budgets,
           db.budgetPeriods,
           db.budgetGroups,
+          // These three were previously missing, which silently froze every
+          // provider that watches this ticker whenever a category, tracker or
+          // setting changed.
+          db.categories,
+          db.trackers,
+          db.appSettings,
         }),
       )
       .map((_) => DateTime.now().microsecondsSinceEpoch);
@@ -326,6 +337,7 @@ final standaloneBudgetsProvider = FutureProvider<List<BudgetWithProgress>>((
 
 /// Monthly income setting (TZS cents), stored in app_settings.
 final monthlyIncomeProvider = FutureProvider<int>((ref) async {
+  ref.watch(dataChangesStreamProvider);
   final settingsRepo = ref.watch(settingsRepositoryProvider);
   final value = await settingsRepo.getSetting('monthly_income');
   if (value == null) return 0;
@@ -334,6 +346,7 @@ final monthlyIncomeProvider = FutureProvider<int>((ref) async {
 
 /// The active budget rule type, stored in app_settings.
 final budgetRuleProvider = FutureProvider<String?>((ref) async {
+  ref.watch(dataChangesStreamProvider);
   final settingsRepo = ref.watch(settingsRepositoryProvider);
   return settingsRepo.getSetting('budget_rule');
 });
@@ -496,6 +509,9 @@ final recurringTransactionsStreamProvider =
 
 final dueRecurringTransactionsProvider =
     FutureProvider<List<RecurringTransaction>>((ref) {
+      // Re-evaluate when a recurring flow is added, edited, marked paid or
+      // deleted, so "due today" never lags behind the list.
+      ref.watch(dataChangesStreamProvider);
       final repo = ref.watch(recurringTransactionRepositoryProvider);
       return repo.getDueTransactions(DateTime.now());
     });

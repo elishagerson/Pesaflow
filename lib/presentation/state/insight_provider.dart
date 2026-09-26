@@ -4,6 +4,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
+import 'state_providers.dart';
 
 class InsightData {
   final String title;
@@ -20,6 +21,9 @@ class InsightData {
 }
 
 final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
+  // Re-derive when any financial table mutates, otherwise insights only
+  // refreshed after leaving and re-entering the screen.
+  ref.watch(dataChangesStreamProvider);
   final transactionDao = ref.watch(transactionDaoProvider);
   final now = DateTime.now();
   final startOfMonth = DateTime(now.year, now.month, 1);

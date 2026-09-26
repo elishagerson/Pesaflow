@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/database/database_providers.dart';
+import 'state_providers.dart';
 
 class SpendingPattern {
   final String categoryId;
@@ -21,8 +22,11 @@ class SpendingPattern {
 final currentSpendingPatternProvider = FutureProvider<SpendingPattern?>((
   ref,
 ) async {
-  final db = ref.read(databaseProvider);
-  final catDao = ref.read(categoryDaoProvider);
+  // Refresh on any financial change; this provider previously watched nothing
+  // and was therefore frozen for the lifetime of the container.
+  ref.watch(dataChangesStreamProvider);
+  final db = ref.watch(databaseProvider);
+  final catDao = ref.watch(categoryDaoProvider);
 
   final now = DateTime.now();
   final currentHour = now.hour;

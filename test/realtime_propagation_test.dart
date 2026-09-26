@@ -4,6 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
+import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/presentation/state/spending_pattern_provider.dart';
+import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 /// These tests exercise the REAL providers against a REAL database. They exist
@@ -13,6 +16,10 @@ void main() {
   late AppDatabase db;
   late ProviderContainer container;
   final closers = <void Function()>[];
+
+  /// A category that actually exists in the seeded DB. The transaction list
+  /// inner-joins categories, so an unknown id would hide the row entirely.
+  late String existingCategoryId;
 
   /// Keeps a live subscription so StreamProviders actually recompute.
   /// `container.read(...)` alone does not subscribe, which would make
@@ -25,8 +32,9 @@ void main() {
 
   final t0 = DateTime(2026, 4, 1, 9);
 
-  setUp(() {
+  setUp(() async {
     db = AppDatabase(NativeDatabase.memory());
+    existingCategoryId = (await db.select(db.categories).get()).first.id;
     container = ProviderContainer(
       overrides: [databaseProvider.overrideWithValue(db)],
     );
@@ -41,7 +49,6 @@ void main() {
     await db.close();
   });
 
-  /// Records every value a provider emits so we can assert on propagation.
   Category cat(String id, String name) => Category(
     id: id,
     name: name,
@@ -55,21 +62,22 @@ void main() {
 
   group('categories', () {
     test('provider reflects a category inserted AFTER first read', () async {
-      // Seed one row and let the provider resolve.
-      watch(categoriesFutureProvider);
+      // Seed a row, then subscribe and let the provider resolve.
       await db.into(db.categories).insert(cat('c1', 'ZZ Food'));
-      final first = await container.read(categoriesFutureProvider.future);
-      expect(first.map((c) => c.name), contains('ZZ Food'));
-
-      // Now insert another row the way the rest of the app would.
-      await db.into(db.categories).insert(cat('c2', 'ZZ Transport'));
-
-      // Give any stream/rebuild a chance to propagate.
-      await Future<void>.delayed(const Duration(milliseconds: 50));
-
-      final second = await container.read(categoriesFutureProvider.future);
+      watch(categoriesFutureProvider);
+      await container.read(categoriesFutureProvider.future);
       expect(
-        second.map((c) => c.name),
+        container.read(categoriesFutureProvider).value!.map((c) => c.name),
+        contains('ZZ Food'),
+      );
+
+      // Now insert another row the way the rest of the app would. Note we read
+      // `.value` (current state), not `.future` (a cached Future).
+      await db.into(db.categories).insert(cat('c2', 'ZZ Transport'));
+      await Future<void>.delayed(const Duration(milliseconds: 60));
+
+      expect(
+        container.read(categoriesFutureProvider).value!.map((c) => c.name),
         containsAll(['ZZ Food', 'ZZ Transport']),
         reason: 'a newly added category must appear without a manual refresh',
       );
@@ -212,6 +220,204 @@ void main() {
       watch(activeTrackerProvider);
       final t = await container.read(activeTrackerProvider.future);
       expect(t?.id, trackerId);
+    });
+  });
+
+  group('transactions', () {
+    Future<void> seedTxn(String id, {int amount = 50000}) async {
+      await db.into(db.transactions).insert(
+        Transaction(
+          id: id,
+          accountId: null,
+          categoryId: existingCategoryId,
+          trackerId: trackerId,
+          amount: amount,
+          type: 'expense',
+          description: 'Txn $id',
+          reference: 'REF-$id',
+          provider: 'M-Pesa_TZ',
+          smsTimestamp: t0,
+          source: 'manual',
+          createdAt: t0,
+          updatedAt: t0,
+        ),
+      );
+    }
+
+    test('a new transaction appears in the filtered list in real time', () async {
+      watch(filteredTransactionsStreamProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      final before = container.read(filteredTransactionsStreamProvider).value!;
+      expect(before.where((t) => t.transaction.id == 'tx-new'), isEmpty);
+
+      await seedTxn('tx-new');
+
+      await Future<void>.delayed(const Duration(milliseconds: 80));
+      final after = container.read(filteredTransactionsStreamProvider).value!;
+      expect(
+        after.map((t) => t.transaction.id),
+        contains('tx-new'),
+        reason: 'a saved transaction must show up without leaving the screen',
+      );
+    });
+
+    test('deleting a transaction removes it from the list in real time', () async {
+      await seedTxn('tx-del');
+      watch(filteredTransactionsStreamProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      expect(
+        container
+            .read(filteredTransactionsStreamProvider)
+            .value!
+            .map((t) => t.transaction.id),
+        contains('tx-del'),
+      );
+
+      await container
+          .read(transactionRepositoryProvider)
+          .deleteTransaction('tx-del');
+
+      await Future<void>.delayed(const Duration(milliseconds: 80));
+      expect(
+        container
+            .read(filteredTransactionsStreamProvider)
+            .value!
+            .map((t) => t.transaction.id),
+        isNot(contains('tx-del')),
+        reason: 'a deleted transaction must disappear immediately',
+      );
+    });
+
+    test('recent transactions reflect a new transaction', () async {
+      watch(recentTransactionsStreamProvider);
+      await seedTxn('tx-recent');
+      await Future<void>.delayed(const Duration(milliseconds: 80));
+      expect(
+        container
+            .read(recentTransactionsStreamProvider)
+            .value!
+            .map((t) => t.transaction.id),
+        contains('tx-recent'),
+      );
+    });
+  });
+
+  group('analytics aggregates', () {
+    test('monthly totals re-query after a transaction is added', () async {
+      watch(monthlyTotalsProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      final before = container.read(monthlyTotalsProvider).value!;
+
+      await db.into(db.transactions).insert(
+        Transaction(
+          id: 'tx-tot',
+          accountId: null,
+          categoryId: existingCategoryId,
+          trackerId: trackerId,
+          amount: 777000,
+          type: 'expense',
+          description: 'Big expense',
+          reference: 'REF-tx-tot',
+          provider: 'M-Pesa_TZ',
+          smsTimestamp: DateTime.now(),
+          source: 'manual',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
+
+      await Future<void>.delayed(const Duration(milliseconds: 120));
+      final after = container.read(monthlyTotalsProvider).value!;
+      expect(
+        after,
+        isNot(equals(before)),
+        reason: 'monthly totals must recompute when transactions change',
+      );
+    });
+
+    test('insights re-query after a transaction is added', () async {
+      watch(insightsProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      container.read(insightsProvider); // resolve initial
+
+      await db.into(db.transactions).insert(
+        Transaction(
+          id: 'tx-ins',
+          accountId: null,
+          categoryId: existingCategoryId,
+          trackerId: trackerId,
+          amount: 999000,
+          type: 'expense',
+          description: 'Huge expense',
+          reference: 'REF-tx-ins',
+          provider: 'M-Pesa_TZ',
+          smsTimestamp: DateTime.now(),
+          source: 'manual',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
+
+      await Future<void>.delayed(const Duration(milliseconds: 120));
+      expect(
+        container.read(insightsProvider).hasValue,
+        isTrue,
+        reason: 'insights must stay populated and refresh on new data',
+      );
+    });
+  });
+
+  group('settings-backed providers', () {
+    test('monthly income updates when the setting changes', () async {
+      watch(monthlyIncomeProvider);
+      await container.read(monthlyIncomeProvider.future);
+      expect(container.read(monthlyIncomeProvider).value, 0);
+
+      await container
+          .read(settingsRepositoryProvider)
+          .setSetting('monthly_income', '4500000');
+
+      await Future<void>.delayed(const Duration(milliseconds: 80));
+      expect(
+        container.read(monthlyIncomeProvider).value,
+        4500000,
+        reason: 'monthly income must refresh immediately after being set',
+      );
+    });
+  });
+
+  group('spending pattern', () {
+    test('recomputes when a transaction is added', () async {
+      watch(currentSpendingPatternProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      container.read(currentSpendingPatternProvider); // resolve initial
+
+      final now = DateTime.now();
+      await db.into(db.transactions).insert(
+        Transaction(
+          id: 'tx-pat',
+          accountId: null,
+          categoryId: existingCategoryId,
+          trackerId: trackerId,
+          amount: 42000,
+          type: 'expense',
+          description: 'Pattern txn',
+          reference: 'REF-tx-pat',
+          provider: 'M-Pesa_TZ',
+          smsTimestamp: now,
+          source: 'manual',
+          createdAt: now,
+          updatedAt: now,
+        ),
+      );
+
+      await Future<void>.delayed(const Duration(milliseconds: 120));
+      expect(
+        container.read(currentSpendingPatternProvider).hasValue,
+        isTrue,
+        reason:
+            'spending pattern previously watched nothing and never recomputed',
+      );
     });
   });
 }

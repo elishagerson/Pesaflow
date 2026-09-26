@@ -122,7 +122,7 @@ class _SavingsGoalDetailScreenState
     if (_deductFromWallet && _selectedAccountId != null) {
       try {
         final txRepo = ref.read(transactionRepositoryProvider);
-        final categories = ref.read(categoriesFutureProvider).value ?? [];
+        final categories = ref.watch(categoriesFutureProvider).value ?? [];
         if (categories.isNotEmpty) {
           final savingsCategory = categories.firstWhere(
             (c) => c.name.toLowerCase() == 'savings' || c.icon == 'piggy-bank',
@@ -177,7 +177,7 @@ class _SavingsGoalDetailScreenState
     _deductFromWallet = false;
     _selectedAccountId = null;
 
-    final accounts = ref.read(accountsStreamProvider).value ?? [];
+    final accounts = ref.watch(accountsStreamProvider).value ?? [];
     if (accounts.isNotEmpty) {
       _selectedAccountId = accounts.first.id;
     }
