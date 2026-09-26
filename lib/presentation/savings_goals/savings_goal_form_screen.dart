@@ -20,6 +20,7 @@ import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/shake_widget.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 class SavingsGoalFormScreen extends ConsumerStatefulWidget {
   final String? goalId;
@@ -239,7 +240,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) {
       setState(() => _shakeFields = true);
-      Future.delayed(const Duration(milliseconds: 500), () {
+      Future.delayed(MotionTokens.durationDelayedNav, () {
         if (mounted) setState(() => _shakeFields = false);
       });
       return;

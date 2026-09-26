@@ -696,6 +696,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         ),
                         suffixIcon: _amountController.text.isNotEmpty
                             ? IconButton(
+                                tooltip: 'Clear amount',
                                 icon: Icon(
                                   PesaFlowIcons.close,
                                   size: 16,

@@ -369,7 +369,8 @@ Future<void> showQuickDepositSheet(
                       ),
                       suffixIcon: amountController.text.isNotEmpty
                           ? IconButton(
-                              icon: const Icon(Icons.clear, size: 18),
+                              tooltip: 'Clear amount',
+                              icon: const Icon(PesaFlowIcons.clear, size: 18),
                               onPressed: () {
                                 amountController.clear();
                                 setSheetState(() {});

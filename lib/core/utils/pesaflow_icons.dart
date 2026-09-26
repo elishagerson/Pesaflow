@@ -41,6 +41,7 @@ class PesaFlowIcons {
   static const IconData percent = Icons.percent_outlined;
   static const IconData chart = Icons.bar_chart_rounded;
   static const IconData goal = Icons.flag_outlined;
+  static const IconData celebration = Icons.celebration_rounded;
   static const IconData target = Icons.track_changes_outlined;
 
   // Status

@@ -6,6 +6,7 @@ import 'package:pesaflow/presentation/state/insight_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 class MorphingInsightCard extends StatefulWidget {
   final InsightData data;
@@ -38,7 +39,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
     _expanded = widget.expanded ?? false;
     _expandController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 320),
+      duration: MotionTokens.durationEntrance,
     );
     _expandAnimation = CurvedAnimation(
       parent: _expandController,
@@ -51,7 +52,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
 
     _counterController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: MotionTokens.durationSheet,
     );
   }
 
@@ -242,7 +243,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                         ),
                         const SizedBox(height: kSpacing8),
                         AnimatedSize(
-                          duration: const Duration(milliseconds: 320),
+                          duration: MotionTokens.durationEntrance,
                           curve: Curves.easeOutCubic,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

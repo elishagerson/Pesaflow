@@ -198,7 +198,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
     if (!_formKey.currentState!.validate()) {
       setState(() => _shakeFields = true);
-      Future.delayed(const Duration(milliseconds: 500), () {
+      Future.delayed(MotionTokens.durationDelayedNav, () {
         if (mounted) setState(() => _shakeFields = false);
       });
       return;

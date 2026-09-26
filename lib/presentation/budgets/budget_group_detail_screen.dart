@@ -25,6 +25,7 @@ import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 /// Provider for loading a specific budget group's full data.
 final budgetGroupDetailProvider =
@@ -769,7 +770,7 @@ class _SubBudgetCard extends ConsumerWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   child: TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 800),
+                    duration: MotionTokens.durationProgress,
                     curve: Curves.easeOutCubic,
                     tween: Tween<double>(begin: 0, end: pct.clamp(0.0, 1.0)),
                     builder: (context, value, _) {

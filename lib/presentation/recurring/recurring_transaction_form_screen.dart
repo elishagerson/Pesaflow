@@ -299,7 +299,7 @@ class _RecurringTransactionFormScreenState
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
       setState(() => _shakeFields = true);
-      Future.delayed(const Duration(milliseconds: 500), () {
+      Future.delayed(MotionTokens.durationDelayedNav, () {
         if (mounted) setState(() => _shakeFields = false);
       });
       return;
@@ -1296,6 +1296,7 @@ class _RecurringTransactionFormScreenState
               ),
               if (_amountController.text.isNotEmpty)
                 IconButton(
+                  tooltip: 'Clear amount',
                   onPressed: _clearAmount,
                   icon: Icon(
                     PesaFlowIcons.close,
@@ -2135,6 +2136,7 @@ class _RecurringTransactionFormScreenState
               Row(
                 children: [
                   IconButton(
+                    tooltip: 'Decrease interval',
                     onPressed: () {
                       final val = (int.tryParse(_intervalController.text) ?? 1) - 1;
                       if (val >= 1) {
@@ -2165,6 +2167,7 @@ class _RecurringTransactionFormScreenState
                     ),
                   ),
                   IconButton(
+                    tooltip: 'Increase interval',
                     onPressed: () {
                       final val = (int.tryParse(_intervalController.text) ?? 1) + 1;
                       if (val <= 99) {

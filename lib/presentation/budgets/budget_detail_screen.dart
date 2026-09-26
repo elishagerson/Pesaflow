@@ -27,6 +27,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 /// Provider for loading a specific budget's full data.
 final budgetDetailProvider = FutureProvider.family<BudgetWithProgress?, String>(
@@ -1621,7 +1622,7 @@ class _PeriodRow extends StatelessWidget {
                       begin: 0,
                       end: pctUsed.clamp(0.0, 1.0),
                     ),
-                    duration: const Duration(milliseconds: 800),
+                    duration: MotionTokens.durationProgress,
                     curve: Curves.easeOutCubic,
                     builder: (context, value, _) => LinearProgressIndicator(
                       value: value,

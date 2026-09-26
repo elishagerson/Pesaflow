@@ -69,7 +69,7 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
 
     _circleController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: MotionTokens.durationSheet,
     );
 
     _checkController = AnimationController(

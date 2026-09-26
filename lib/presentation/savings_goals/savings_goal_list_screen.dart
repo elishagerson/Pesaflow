@@ -470,7 +470,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
           ),
           const SizedBox(height: kSpacing16),
           TweenAnimationBuilder<double>(
-            duration: const Duration(milliseconds: 1000),
+            duration: MotionTokens.durationLongProgress,
             curve: Curves.easeOutCubic,
             tween: Tween<double>(begin: 0, end: overallPct),
             builder: (context, value, child) {
@@ -682,7 +682,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  Icons.celebration_rounded,
+                                  PesaFlowIcons.celebration,
                                   size: 11,
                                   color: context.appColors.incomeColor,
                                 ),
