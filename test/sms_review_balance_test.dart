@@ -3,14 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 
-/// Regression coverage for the SMS review balance-deferral contract.
+/// Regression coverage for SMS-review balance handling.
 ///
-/// A transaction parked in the review queue (`source == 'sms_reviewed'`) must
-/// leave account balances completely untouched at insert time. The single
-/// balance adjustment is applied later by [TransactionDao
-/// .approveReviewedTransaction]. If the insert path also adjusts, approving
-/// double-counts the amount; if the delete path reverses a delta that was never
-/// applied, rejecting corrupts the balance in the other direction.
+/// Capturing an SMS moves money immediately, so the balance is adjusted at insert
+/// time for every source. Approval therefore must NOT apply a second delta — doing
+/// so double-counts the amount. The one thing approval still legitimately does is
+/// re-assert a carrier-reported `balanceAfter`, because that is an absolute
+/// ground-truth value rather than a delta.
 void main() {
   late AppDatabase db;
   late TransactionDao dao;
@@ -50,7 +49,11 @@ void main() {
 
   tearDown(() async => db.close());
 
-  Transaction expense({required String id, required String source}) => Transaction(
+  Transaction expense({
+    required String id,
+    required String source,
+    int? balanceAfter,
+  }) => Transaction(
     id: id,
     accountId: accountId,
     categoryId: categoryId,
@@ -61,6 +64,7 @@ void main() {
     reference: 'REF-$id',
     rawSms: 'raw body',
     smsTimestamp: DateTime(2026, 1, 2, 10),
+    balanceAfter: balanceAfter,
     source: source,
     createdAt: DateTime(2026, 1, 2, 10),
     updatedAt: DateTime(2026, 1, 2, 10),
@@ -73,7 +77,7 @@ void main() {
     return row.balance;
   }
 
-  test('inserting a pending review transaction does not touch the balance',
+  test('capturing a pending review transaction moves the balance immediately',
       () async {
     await dao.writeTransactionWithBalanceAdjustment(
       expense(id: 'pending-1', source: 'sms_reviewed'),
@@ -81,13 +85,12 @@ void main() {
 
     expect(
       await balance(),
-      100000,
-      reason: 'a transaction awaiting review must not move the balance',
+      75000,
+      reason: 'a captured SMS is real money movement and must show up at once',
     );
   });
 
-  test('inserting an auto-approved SMS transaction still adjusts the balance',
-      () async {
+  test('capturing an auto-approved SMS transaction moves the balance', () async {
     await dao.writeTransactionWithBalanceAdjustment(
       expense(id: 'auto-1', source: 'sms_auto'),
     );
@@ -95,18 +98,17 @@ void main() {
     expect(await balance(), 75000);
   });
 
-  test('approving a pending transaction applies the delta exactly once',
-      () async {
+  test('approving does not deduct a second time', () async {
     final tx = expense(id: 'pending-2', source: 'sms_reviewed');
     await dao.writeTransactionWithBalanceAdjustment(tx);
-    expect(await balance(), 100000, reason: 'deferred at insert');
+    expect(await balance(), 75000, reason: 'deducted once at capture');
 
     await dao.approveReviewedTransaction(tx.id);
 
     expect(
       await balance(),
       75000,
-      reason: '25000 must be deducted exactly once across insert + approve',
+      reason: 'approval must not apply the delta again',
     );
   });
 
@@ -120,38 +122,65 @@ void main() {
     expect(await balance(), 75000);
   });
 
-  test('rejecting a pending transaction leaves the balance untouched',
-      () async {
-    final tx = expense(id: 'pending-4', source: 'sms_reviewed');
+  test('approving re-asserts the carrier-reported balance', () async {
+    final tx = expense(
+      id: 'pending-4',
+      source: 'sms_reviewed',
+      balanceAfter: 42000,
+    );
     await dao.writeTransactionWithBalanceAdjustment(tx);
-    expect(await balance(), 100000);
+    expect(await balance(), 42000, reason: 'carrier ground truth wins');
+
+    await dao.approveReviewedTransaction(tx.id);
+
+    expect(
+      await balance(),
+      42000,
+      reason: 're-asserting an absolute balance is idempotent',
+    );
+  });
+
+  test('approving still applies a category change', () async {
+    const other = 'cat-transport';
+    await db.into(db.categories).insert(
+      Category(
+        id: other,
+        name: 'Transport',
+        type: 'expense',
+        color: '#2196F3',
+        icon: 'car',
+        isSystem: false,
+        sortOrder: 1,
+        createdAt: DateTime(2026, 1, 1),
+      ),
+    );
+    final tx = expense(id: 'pending-5', source: 'sms_reviewed');
+    await dao.writeTransactionWithBalanceAdjustment(tx);
+
+    await dao.approveReviewedTransaction(tx.id, newCategoryId: other);
+
+    final row = await (db.select(db.transactions)
+          ..where((t) => t.id.equals(tx.id)))
+        .getSingle();
+    expect(row.categoryId, other);
+    expect(row.source, 'sms_auto');
+  });
+
+  test('rejecting a captured transaction reverses the balance', () async {
+    final tx = expense(id: 'pending-6', source: 'sms_reviewed');
+    await dao.writeTransactionWithBalanceAdjustment(tx);
+    expect(await balance(), 75000);
 
     await dao.deleteTransactionWithBalanceAdjustment(tx.id);
 
     expect(
       await balance(),
       100000,
-      reason: 'no delta was applied at insert, so none may be reversed',
+      reason: 'reversing must undo the delta applied at capture',
     );
     final remaining = await (db.select(db.transactions)
           ..where((t) => t.id.equals(tx.id)))
         .get();
-    expect(remaining, isEmpty, reason: 'the row itself must still be removed');
-  });
-
-  test('editing a pending transaction does not invent a balance delta',
-      () async {
-    final tx = expense(id: 'pending-5', source: 'sms_reviewed');
-    await dao.writeTransactionWithBalanceAdjustment(tx);
-
-    await dao.updateTransactionWithBalanceAdjustment(
-      tx.copyWith(amount: 99000),
-    );
-
-    expect(
-      await balance(),
-      100000,
-      reason: 'editing an unadjusted row must not reverse or apply a delta',
-    );
+    expect(remaining, isEmpty);
   });
 }

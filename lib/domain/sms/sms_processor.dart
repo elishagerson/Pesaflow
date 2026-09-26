@@ -422,7 +422,6 @@ class SmsProcessor {
       }
 
       // 7.5 Repayment detection: match expense to existing active loan
-      var loanRepaymentApplied = false;
       if (loanId == null &&
           (finalType == 'expense' ||
               finalType == 'airtime' ||
@@ -448,7 +447,6 @@ class SmsProcessor {
             if (exact.isNotEmpty) {
               loanId = exact.first.id;
               await _loanRepo.applyPayment(exact.first.id, sms.amount);
-              loanRepaymentApplied = true;
               developer.log(
                 'Exact repayment match: loan ${exact.first.id} (remaining: ${exact.first.remaining}, paid: ${sms.amount})',
                 name: 'SmsProcessor',
@@ -467,7 +465,6 @@ class SmsProcessor {
                 );
                 loanId = matched.id;
                 await _loanRepo.applyPayment(matched.id, sms.amount);
-                loanRepaymentApplied = true;
                 developer.log(
                   'Approximate repayment match: loan ${matched.id} (remaining: ${matched.remaining}, paid: ${sms.amount})',
                   name: 'SmsProcessor',
@@ -486,13 +483,6 @@ class SmsProcessor {
       // 8. Persist Transaction
       if (usedGenericFallback && finalConfidence > 0.40) {
         finalConfidence = 0.40;
-      }
-      // The loan balance was already debited above, so the paired wallet movement
-      // has to be committed too. Parking it in the review queue would defer the
-      // wallet delta while the loan was already settled, and rejecting it would
-      // never unwind the loan payment.
-      if (loanRepaymentApplied) {
-        finalConfidence = 1.0;
       }
       final isAutoApproved = finalConfidence >= 0.90;
       final source = isAutoApproved ? 'sms_auto' : 'sms_reviewed';

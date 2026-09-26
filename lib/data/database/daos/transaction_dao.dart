@@ -178,26 +178,17 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
 
   /// Inserts a transaction and adjusts the linked account(s) balance inside a transaction.
   ///
-  /// A transaction still awaiting review (`source == 'sms_reviewed'`) is inserted
-  /// *without* a balance **delta** — the delta is applied exactly once, later, by
-  /// [approveReviewedTransaction]. Applying it here as well would double-count the
-  /// amount on approval.
-  ///
-  /// A carrier-reported [Transaction.balanceAfter] is a different case: it is an
-  /// absolute ground-truth balance rather than a delta, so it is authoritative and
-  /// idempotent. It is applied immediately (and re-applied on approval, which is a
-  /// no-op) so the account always reflects what the carrier reported.
+  /// NOTE: the balance is adjusted immediately for every source, including
+  /// `sms_reviewed` items awaiting review. This is deliberate — a captured SMS is
+  /// real money movement and the account must reflect it right away. Approval only
+  /// flips `source` and re-asserts the carrier-reported balance; it must never
+  /// apply a second delta (see [approveReviewedTransaction]).
   Future<void> writeTransactionWithBalanceAdjustment(
     Transaction transaction,
   ) async {
     await attachedDatabase.transaction(() async {
       // 1. Insert the transaction
       await into(transactions).insert(transaction);
-
-      // 1b. Defer the delta for transactions pending review. The carrier-reported
-      //     balanceAfter is still applied below — it is absolute, not a delta.
-      final deferDelta = transaction.source == 'sms_reviewed';
-      if (deferDelta && transaction.balanceAfter == null) return;
 
       // 2. Skip balance adjustment if no account is linked
       final acctId = transaction.accountId;
@@ -276,16 +267,6 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       final transactionObj = await transQuery.getSingleOrNull();
 
       if (transactionObj == null) return;
-
-      // 1b. A transaction still awaiting review was inserted WITHOUT a balance
-      //     adjustment (see [writeTransactionWithBalanceAdjustment]), so there is
-      //     nothing to reverse — only the row itself has to go.
-      if (transactionObj.source == 'sms_reviewed') {
-        await (delete(
-          transactions,
-        )..where((t) => t.id.equals(transactionId))).go();
-        return;
-      }
 
       final acctId = transactionObj.accountId;
       if (acctId != null) {
@@ -393,11 +374,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
         return;
       }
       final oldAcctId = old.accountId;
-      // A transaction still awaiting review never had its balance adjusted, so
-      // there is nothing to reverse and nothing to re-apply — just swap the row.
-      // (Both branches are skipped so editing a pending item cannot invent a delta.)
-      final wasPendingReview = old.source == 'sms_reviewed';
-      if (oldAcctId != null && !wasPendingReview) {
+      if (oldAcctId != null) {
         final acctQ = select(accounts)..where((t) => t.id.equals(oldAcctId));
         final acct = await acctQ.getSingleOrNull();
         if (acct != null) {
@@ -417,8 +394,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
           ).replace(acct.copyWith(balance: acct.balance + reverseDelta));
         }
       }
-      if (!wasPendingReview &&
-          old.type.toLowerCase() == 'transfer' &&
+      if (old.type.toLowerCase() == 'transfer' &&
           old.destinationAccountId != null) {
         final destQ = select(accounts)
           ..where((t) => t.id.equals(old.destinationAccountId!));
@@ -431,7 +407,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       }
       await update(transactions).replace(updated);
       final newAcctId = updated.accountId;
-      if (newAcctId == null || wasPendingReview) return;
+      if (newAcctId == null) return;
       final newAcctQ = select(accounts)..where((t) => t.id.equals(newAcctId));
       final newAcct = await newAcctQ.getSingleOrNull();
       if (newAcct == null) return;
@@ -501,39 +477,22 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       await update(transactions).replace(updated);
       final acctId = updated.accountId;
       if (acctId == null) return;
-      // Only the deferred delta is applied here. A carrier-reported balanceAfter
-      // was already applied (as an absolute value) at insert time, so re-applying
-      // it is unnecessary; an already-approved row has had its delta applied once.
-      if (!wasPendingReview || updated.balanceAfter != null) return;
+      // The insert path already moved the money, so approval must not move it a
+      // second time. Re-asserting the carrier-reported balance is still useful
+      // (it re-syncs the account to the authoritative value); a computed delta is
+      // not, and would double-count on a repeated approval.
+      if (!wasPendingReview && updated.balanceAfter == null) return;
       final acctQ = select(accounts)..where((t) => t.id.equals(acctId));
       final acct = await acctQ.getSingleOrNull();
       if (acct == null) return;
-      int newBalance;
-      final type = updated.type.toLowerCase();
-      if (updated.balanceAfter != null) {
-        newBalance = updated.balanceAfter!;
-      } else {
-        int delta = 0;
-        if (type == 'income' || type == 'loan') {
-          delta = updated.amount;
-        } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
-          delta = -updated.amount;
-        } else if (type == 'transfer') {
-          delta = -updated.amount;
-        }
-        newBalance = acct.balance + delta;
-      }
+
+      // The insert path already applied this transaction's balance movement, so a
+      // computed delta must NOT be applied again here — that is what double-counted
+      // the amount on approval. Only a carrier-reported balanceAfter is re-asserted,
+      // because that is an absolute ground-truth value rather than a delta.
+      if (updated.balanceAfter == null) return;
+      final newBalance = updated.balanceAfter!;
       await update(accounts).replace(acct.copyWith(balance: newBalance));
-      if (type == 'transfer' && updated.destinationAccountId != null) {
-        final destQ = select(accounts)
-          ..where((t) => t.id.equals(updated.destinationAccountId!));
-        final dest = await destQ.getSingleOrNull();
-        if (dest != null) {
-          await update(
-            accounts,
-          ).replace(dest.copyWith(balance: dest.balance + updated.amount));
-        }
-      }
     });
   }
 
