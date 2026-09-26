@@ -459,7 +459,6 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       final existing = await query.getSingleOrNull();
       if (existing == null) return;
 
-      final wasPendingReview = existing.source == 'sms_reviewed';
       String? trackerId = existing.trackerId;
       if (trackerId == null) {
         final settingsQuery = db.select(db.appSettings)
@@ -475,24 +474,19 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
         updatedAt: DateTime.now(),
       );
       await update(transactions).replace(updated);
-      final acctId = updated.accountId;
-      if (acctId == null) return;
-      // The insert path already moved the money, so approval must not move it a
-      // second time. Re-asserting the carrier-reported balance is still useful
-      // (it re-syncs the account to the authoritative value); a computed delta is
-      // not, and would double-count on a repeated approval.
-      if (!wasPendingReview && updated.balanceAfter == null) return;
-      final acctQ = select(accounts)..where((t) => t.id.equals(acctId));
-      final acct = await acctQ.getSingleOrNull();
-      if (acct == null) return;
 
       // The insert path already applied this transaction's balance movement, so a
       // computed delta must NOT be applied again here — that is what double-counted
-      // the amount on approval. Only a carrier-reported balanceAfter is re-asserted,
-      // because that is an absolute ground-truth value rather than a delta.
-      if (updated.balanceAfter == null) return;
-      final newBalance = updated.balanceAfter!;
-      await update(accounts).replace(acct.copyWith(balance: newBalance));
+      // the amount on approval. Only a carrier-reported `balanceAfter` is re-asserted,
+      // because that is an absolute ground-truth value rather than a delta, so
+      // re-applying it is idempotent and re-syncs the account to the carrier.
+      final balanceAfter = updated.balanceAfter;
+      final acctId = updated.accountId;
+      if (balanceAfter == null || acctId == null) return;
+      final acctQ = select(accounts)..where((t) => t.id.equals(acctId));
+      final acct = await acctQ.getSingleOrNull();
+      if (acct == null) return;
+      await update(accounts).replace(acct.copyWith(balance: balanceAfter));
     });
   }
 
