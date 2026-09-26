@@ -177,8 +177,16 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
   }
 
   /// Inserts a transaction and adjusts the linked account(s) balance inside a transaction.
-  /// Transactions pending user review (source == 'sms_reviewed') are inserted without
-  /// adjusting balances — the adjustment is deferred to [approveReviewedTransaction].
+  ///
+  /// A transaction still awaiting review (`source == 'sms_reviewed'`) is inserted
+  /// *without* a balance **delta** — the delta is applied exactly once, later, by
+  /// [approveReviewedTransaction]. Applying it here as well would double-count the
+  /// amount on approval.
+  ///
+  /// A carrier-reported [Transaction.balanceAfter] is a different case: it is an
+  /// absolute ground-truth balance rather than a delta, so it is authoritative and
+  /// idempotent. It is applied immediately (and re-applied on approval, which is a
+  /// no-op) so the account always reflects what the carrier reported.
   Future<void> writeTransactionWithBalanceAdjustment(
     Transaction transaction,
   ) async {
@@ -186,11 +194,10 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       // 1. Insert the transaction
       await into(transactions).insert(transaction);
 
-      // 1b. Transactions pending review must NOT touch balances here — the
-      //     adjustment is applied exactly once, later, in
-      //     [approveReviewedTransaction]. Applying it now as well would
-      //     double-count the amount on approval.
-      if (transaction.source == 'sms_reviewed') return;
+      // 1b. Defer the delta for transactions pending review. The carrier-reported
+      //     balanceAfter is still applied below — it is absolute, not a delta.
+      final deferDelta = transaction.source == 'sms_reviewed';
+      if (deferDelta && transaction.balanceAfter == null) return;
 
       // 2. Skip balance adjustment if no account is linked
       final acctId = transaction.accountId;
@@ -461,6 +468,11 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
 
   /// Approves a reviewed transaction by updating its source to 'sms_auto',
   /// optionally changing its category, and applying the deferred balance adjustment.
+  ///
+  /// Idempotent with respect to balances: the deferred adjustment is applied only
+  /// when the row was still awaiting review on entry. Re-approving an already
+  /// approved transaction (double tap, stale batch selection) still applies the
+  /// requested category change but does not move the balance again.
   Future<void> approveReviewedTransaction(
     String transactionId, {
     String? newCategoryId,
@@ -471,6 +483,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       final existing = await query.getSingleOrNull();
       if (existing == null) return;
 
+      final wasPendingReview = existing.source == 'sms_reviewed';
       String? trackerId = existing.trackerId;
       if (trackerId == null) {
         final settingsQuery = db.select(db.appSettings)
@@ -488,6 +501,10 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       await update(transactions).replace(updated);
       final acctId = updated.accountId;
       if (acctId == null) return;
+      // Only the deferred delta is applied here. A carrier-reported balanceAfter
+      // was already applied (as an absolute value) at insert time, so re-applying
+      // it is unnecessary; an already-approved row has had its delta applied once.
+      if (!wasPendingReview || updated.balanceAfter != null) return;
       final acctQ = select(accounts)..where((t) => t.id.equals(acctId));
       final acct = await acctQ.getSingleOrNull();
       if (acct == null) return;
