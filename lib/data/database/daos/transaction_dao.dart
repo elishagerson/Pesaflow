@@ -186,6 +186,12 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       // 1. Insert the transaction
       await into(transactions).insert(transaction);
 
+      // 1b. Transactions pending review must NOT touch balances here — the
+      //     adjustment is applied exactly once, later, in
+      //     [approveReviewedTransaction]. Applying it now as well would
+      //     double-count the amount on approval.
+      if (transaction.source == 'sms_reviewed') return;
+
       // 2. Skip balance adjustment if no account is linked
       final acctId = transaction.accountId;
       if (acctId == null) return;
@@ -263,6 +269,16 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       final transactionObj = await transQuery.getSingleOrNull();
 
       if (transactionObj == null) return;
+
+      // 1b. A transaction still awaiting review was inserted WITHOUT a balance
+      //     adjustment (see [writeTransactionWithBalanceAdjustment]), so there is
+      //     nothing to reverse — only the row itself has to go.
+      if (transactionObj.source == 'sms_reviewed') {
+        await (delete(
+          transactions,
+        )..where((t) => t.id.equals(transactionId))).go();
+        return;
+      }
 
       final acctId = transactionObj.accountId;
       if (acctId != null) {
@@ -370,7 +386,11 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
         return;
       }
       final oldAcctId = old.accountId;
-      if (oldAcctId != null) {
+      // A transaction still awaiting review never had its balance adjusted, so
+      // there is nothing to reverse and nothing to re-apply — just swap the row.
+      // (Both branches are skipped so editing a pending item cannot invent a delta.)
+      final wasPendingReview = old.source == 'sms_reviewed';
+      if (oldAcctId != null && !wasPendingReview) {
         final acctQ = select(accounts)..where((t) => t.id.equals(oldAcctId));
         final acct = await acctQ.getSingleOrNull();
         if (acct != null) {
@@ -390,7 +410,8 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
           ).replace(acct.copyWith(balance: acct.balance + reverseDelta));
         }
       }
-      if (old.type.toLowerCase() == 'transfer' &&
+      if (!wasPendingReview &&
+          old.type.toLowerCase() == 'transfer' &&
           old.destinationAccountId != null) {
         final destQ = select(accounts)
           ..where((t) => t.id.equals(old.destinationAccountId!));
@@ -403,7 +424,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       }
       await update(transactions).replace(updated);
       final newAcctId = updated.accountId;
-      if (newAcctId == null) return;
+      if (newAcctId == null || wasPendingReview) return;
       final newAcctQ = select(accounts)..where((t) => t.id.equals(newAcctId));
       final newAcct = await newAcctQ.getSingleOrNull();
       if (newAcct == null) return;
