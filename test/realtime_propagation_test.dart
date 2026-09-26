@@ -12,6 +12,14 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 void main() {
   late AppDatabase db;
   late ProviderContainer container;
+  final closers = <void Function()>[];
+
+  /// Keeps a live subscription so StreamProviders actually recompute.
+  /// `container.read(...)` alone does not subscribe, which would make
+  /// reactive providers look frozen and produce false failures.
+  void watch(dynamic provider) {
+    closers.add(container.listen<dynamic>(provider, (_, _) {}).close);
+  }
 
   const trackerId = 'default_personal';
 
@@ -25,6 +33,10 @@ void main() {
   });
 
   tearDown(() async {
+    for (final close in closers) {
+      close();
+    }
+    closers.clear();
     container.dispose();
     await db.close();
   });
@@ -44,12 +56,13 @@ void main() {
   group('categories', () {
     test('provider reflects a category inserted AFTER first read', () async {
       // Seed one row and let the provider resolve.
-      await db.into(db.categories).insert(cat('c1', 'Food'));
+      watch(categoriesFutureProvider);
+      await db.into(db.categories).insert(cat('c1', 'ZZ Food'));
       final first = await container.read(categoriesFutureProvider.future);
-      expect(first.map((c) => c.name), ['Food']);
+      expect(first.map((c) => c.name), contains('ZZ Food'));
 
       // Now insert another row the way the rest of the app would.
-      await db.into(db.categories).insert(cat('c2', 'Transport'));
+      await db.into(db.categories).insert(cat('c2', 'ZZ Transport'));
 
       // Give any stream/rebuild a chance to propagate.
       await Future<void>.delayed(const Duration(milliseconds: 50));
@@ -57,7 +70,7 @@ void main() {
       final second = await container.read(categoriesFutureProvider.future);
       expect(
         second.map((c) => c.name),
-        containsAll(['Food', 'Transport']),
+        containsAll(['ZZ Food', 'ZZ Transport']),
         reason: 'a newly added category must appear without a manual refresh',
       );
     });
@@ -65,6 +78,7 @@ void main() {
 
   group('accounts', () {
     test('provider reflects an account inserted AFTER first read', () async {
+      watch(accountsStreamProvider);
       await db.into(db.accounts).insert(
         Account(
           id: 'a1',
@@ -124,6 +138,7 @@ void main() {
     }
 
     test('goal progress updates in real time after a contribution', () async {
+      watch(savingsGoalsStreamProvider);
       await seedGoal('g1');
 
       await Future<void>.delayed(const Duration(milliseconds: 30));
@@ -143,6 +158,7 @@ void main() {
     });
 
     test('deleting a goal removes it from the list in real time', () async {
+      watch(savingsGoalsStreamProvider);
       await seedGoal('g1');
       await seedGoal('g2');
 
@@ -167,6 +183,7 @@ void main() {
     });
 
     test('deleting a contribution reverts the saved amount in real time', () async {
+      watch(savingsGoalsStreamProvider);
       await seedGoal('g1');
       final repo = container.read(savingsGoalRepositoryProvider);
       await repo.addContribution(savingsGoalId: 'g1', amount: 100000);
@@ -190,19 +207,11 @@ void main() {
   });
 
   group('tracker', () {
-    test('active tracker resolves and stays live', () async {
-      await db.into(db.trackers).insert(
-        Tracker(
-          id: trackerId,
-          name: 'Personal',
-          icon: 'person',
-          color: '#2196F3',
-          isArchived: false,
-          createdAt: t0,
-        ),
-      );
+    test('active tracker resolves from the seeded row', () async {
+      // `default_personal` is seeded by AppDatabase onCreate.
+      watch(activeTrackerProvider);
       final t = await container.read(activeTrackerProvider.future);
-      expect(t?.name, 'Personal');
+      expect(t?.id, trackerId);
     });
   });
 }
