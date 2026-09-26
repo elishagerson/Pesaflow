@@ -1,6 +1,9 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/data/database/daos/analytics_dao.dart';
+import 'package:pesaflow/data/database/daos/transaction_dao.dart';
+import 'package:pesaflow/data/repositories/analytics_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/domain/models/sms_parsed.dart';
 import 'package:pesaflow/domain/sms/deduplicator.dart';
@@ -43,7 +46,11 @@ void main() {
         createdAt: t0,
       ),
     );
-    repo = TransactionRepository(db);
+    repo = TransactionRepository(
+      TransactionDao(db),
+      null,
+      AnalyticsRepository(AnalyticsDao(db)),
+    );
     dedup = Deduplicator(repo);
   });
 
@@ -81,13 +88,11 @@ void main() {
   }) => SmsParsed(
     reference: reference,
     amount: amount,
-    type: SmsType.expense,
-    categoryId: categoryId,
-    accountId: accountId,
-    description: 'Transfer out',
+    type: 'expense',
+    senderOrRecipient: 'N/A',
     provider: 'M-Pesa_TZ',
     timestamp: timestamp,
-    isAutoApproved: true,
+    rawSmsBody: 'raw body',
   );
 
   group('reference check', () {
@@ -121,9 +126,9 @@ void main() {
     });
   });
 
-  group('fuzzy window false positives', () {
+  group('fuzzy window must not discard distinct payments', () {
     test(
-      'a second DISTINCT same-amount transfer 30s later is treated as a duplicate',
+      'a second DISTINCT same-amount transfer 30s later is admitted',
       () async {
         await insertExisting(
           id: 'a',
@@ -138,15 +143,16 @@ void main() {
 
         expect(
           isDup,
-          isTrue,
+          isFalse,
           reason:
-              'A real second payment of the same amount is silently discarded. '
-              'The unique reference MPX-999 is never consulted to admit it.',
+              'MPX-999 was never seen, so it is a genuinely new payment and must '
+              'not be discarded just because an unrelated same-amount transfer '
+              'happened to land 30s earlier.',
         );
       },
     );
 
-    test('two identical airtime top-ups 20s apart collide', () async {
+    test('two identical airtime top-ups 20s apart are both kept', () async {
       await insertExisting(
         id: 'a',
         reference: 'MPX-111',
@@ -161,8 +167,9 @@ void main() {
             timestamp: t0.add(const Duration(seconds: 20)),
           ),
         ),
-        isTrue,
-        reason: 'Buying two bundles back-to-back loses one of them.',
+        isFalse,
+        reason:
+            'Buying two bundles back-to-back must not silently lose one of them.',
       );
     });
 
