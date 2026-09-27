@@ -3,6 +3,7 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -487,7 +488,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
         border: Border.all(
           color: isOverBudget
               ? context.appColors.expenseColor.withValues(alpha: 0.35)
-              : theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
+              : context.appColors.hairline,
           width: 1,
         ),
         boxShadow: [
@@ -807,25 +808,17 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
             }).toList(),
           ),
           const SizedBox(height: kSpacing14),
-          TweenAnimationBuilder<double>(
-            duration: MotionTokens.durationLongProgress,
-            curve: Curves.easeOutCubic,
-            tween: Tween<double>(begin: 0, end: overallPct.clamp(0.0, 1.0)),
-            builder: (context, value, _) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                child: LinearProgressIndicator(
-                  value: value,
-                  backgroundColor: onSurface.withValues(alpha: 0.06),
-                  color: isOverBudget
-                      ? context.appColors.expenseColor
-                      : (overallPct > 0.85
-                            ? context.appColors.warningColor
-                            : theme.colorScheme.primary),
-                  minHeight: 6,
-                ),
-              );
-            },
+          PesaProgressBar(
+            value: overallPct,
+            color: isOverBudget
+                ? context.appColors.expenseColor
+                : (overallPct > 0.85
+                      ? context.appColors.warningColor
+                      : theme.colorScheme.primary),
+            trackColor: onSurface.withValues(alpha: 0.06),
+            height: 6,
+            growOnMount: true,
+            semanticsLabel: 'Overall budget used',
           ),
           const SizedBox(height: kSpacing6),
           Row(
@@ -1140,21 +1133,15 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   ],
                 ),
                 const SizedBox(height: kSpacing8),
-                TweenAnimationBuilder<double>(
-                  duration: MotionTokens.durationProgress,
-                  curve: Curves.easeOutCubic,
-                  tween: Tween<double>(begin: 0, end: pct.clamp(0.0, 1.0)),
-                  builder: (context, value, _) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                      child: LinearProgressIndicator(
-                        value: value,
-                        backgroundColor: onSurface.withValues(alpha: 0.05),
-                        color: progressColor,
-                        minHeight: 6,
-                      ),
-                    );
-                  },
+                PesaProgressBar(
+                  value: pct,
+                  color: progressColor,
+                  trackColor: onSurface.withValues(alpha: 0.05),
+                  height: 6,
+                  wave: false,
+                  showEndStop: false,
+                  growOnMount: true,
+                  semanticsLabel: '${g.group.name} budget used',
                 ),
                 if (g.subBudgets.isNotEmpty) ...[
                   const SizedBox(height: kSpacing10),
@@ -1450,24 +1437,13 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     ],
                   ),
                   const SizedBox(height: kSpacing12),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                    child: TweenAnimationBuilder<double>(
-                      duration: MotionTokens.durationSheet,
-                      curve: Curves.easeOutCubic,
-                      tween: Tween<double>(
-                        begin: 0,
-                        end: status.percentage.clamp(0.0, 1.0),
-                      ),
-                      builder: (context, value, _) {
-                        return LinearProgressIndicator(
-                          value: value,
-                          backgroundColor: onSurface.withValues(alpha: 0.05),
-                          color: paceColor,
-                          minHeight: 8,
-                        );
-                      },
-                    ),
+                  PesaProgressBar(
+                    value: status.percentage,
+                    color: paceColor,
+                    trackColor: onSurface.withValues(alpha: 0.05),
+                    height: 8,
+                    growOnMount: true,
+                    semanticsLabel: 'Spending pace against the month',
                   ),
                 ],
               ),
@@ -1881,25 +1857,12 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         ],
                       ),
                       const SizedBox(height: kSpacing16),
-                      TweenAnimationBuilder<double>(
-                        duration: MotionTokens.durationLongProgress,
-                        curve: Curves.easeOutCubic,
-                        tween: Tween<double>(begin: 0, end: overallPct),
-                        builder: (context, value, child) {
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                              AppTheme.radiusPill,
-                            ),
-                            child: LinearProgressIndicator(
-                              value: value,
-                              backgroundColor: onSurface.withValues(
-                                alpha: 0.06,
-                              ),
-                              color: context.appColors.incomeColor,
-                              minHeight: 8,
-                            ),
-                          );
-                        },
+                      PesaProgressBar(
+                        value: overallPct,
+                        color: context.appColors.incomeColor,
+                        trackColor: onSurface.withValues(alpha: 0.06),
+                        growOnMount: true,
+                        semanticsLabel: 'Overall savings progress',
                       ),
                       const SizedBox(height: kSpacing6),
                       Row(
@@ -2182,23 +2145,18 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                         borderRadius: BorderRadius.circular(
                                           AppTheme.radiusSmall,
                                         ),
-                                        child: TweenAnimationBuilder<double>(
-                                          tween: Tween<double>(
-                                            begin: 0,
-                                            end: goalPct,
+                                        child: PesaProgressBar(
+                                          value: goalPct,
+                                          color: goalColor,
+                                          trackColor: goalColor.withValues(
+                                            alpha: 0.12,
                                           ),
-                                          duration: const Duration(
-                                            milliseconds: 800,
-                                          ),
-                                          curve: Curves.easeOutCubic,
-                                          builder: (context, value, _) =>
-                                              LinearProgressIndicator(
-                                                value: value,
-                                                backgroundColor: goalColor
-                                                    .withValues(alpha: 0.12),
-                                                color: goalColor,
-                                                minHeight: 6,
-                                              ),
+                                          height: 6,
+                                          wave: false,
+                                          showEndStop: false,
+                                          growOnMount: true,
+                                          semanticsLabel:
+                                              '${goal.name} progress',
                                         ),
                                       ),
                                       const SizedBox(height: kSpacing4),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
@@ -25,7 +26,6 @@ import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/core/theme/motion_constants.dart';
 
 /// Provider for loading a specific budget group's full data.
 final budgetGroupDetailProvider =
@@ -769,21 +769,13 @@ class _SubBudgetCard extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: kSpacing10),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                  child: TweenAnimationBuilder<double>(
-                    duration: MotionTokens.durationProgress,
-                    curve: Curves.easeOutCubic,
-                    tween: Tween<double>(begin: 0, end: pct.clamp(0.0, 1.0)),
-                    builder: (context, value, _) {
-                      return LinearProgressIndicator(
-                        value: value,
-                        backgroundColor: onSurface.withValues(alpha: 0.05),
-                        color: paceColor,
-                        minHeight: 6,
-                      );
-                    },
-                  ),
+                PesaProgressBar(
+                  value: pct,
+                  color: paceColor,
+                  trackColor: onSurface.withValues(alpha: 0.05),
+                  height: 6,
+                  growOnMount: true,
+                  semanticsLabel: 'Spending pace',
                 ),
               ],
             ),

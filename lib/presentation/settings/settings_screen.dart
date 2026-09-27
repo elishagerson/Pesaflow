@@ -442,9 +442,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               alpha: 0.35,
             ),
             borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-            border: Border.all(
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.20),
-            ),
+            border: Border.all(color: context.appColors.hairline),
           ),
           child: Column(
             children: [

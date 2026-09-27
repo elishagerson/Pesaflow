@@ -1520,7 +1520,7 @@ class _SavingsGoalDetailScreenState
           border: Border.all(
             color: isCustomColor
                 ? accentColor.withValues(alpha: 0.5)
-                : theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                : context.appColors.hairline,
             width: isCustomColor ? 1.4 : 1,
           ),
         ),

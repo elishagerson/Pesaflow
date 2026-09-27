@@ -3,6 +3,7 @@ import 'package:pesaflow/core/theme/app_shapes.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/hairline_border.dart';
 import 'package:pesaflow/presentation/common/widgets/radial_glow.dart';
 
 /// The app's surface primitive: a shape-aware container that owns fill, the
@@ -252,13 +253,16 @@ class _PesaSurfacePainter extends CustomPainter {
     }
 
     if (stroke.a > 0) {
-      canvas.drawPath(
-        path,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1
-          ..color = stroke,
-      );
+      // Same gradient hairline as GlassCard, so a card and a chamfered hero
+      // have the same edge behaviour rather than two subtly different ones.
+      canvas.save();
+      canvas.translate(0.5, 0.5);
+      HairlineBorderPainter(
+        radius: 0,
+        hairline: stroke,
+        hairlineStrong: stroke,
+      ).paint(canvas, Size(size.width - 1, size.height - 1));
+      canvas.restore();
     }
   }
 

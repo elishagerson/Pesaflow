@@ -442,10 +442,7 @@ class _RecurringTransactionListScreenState
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
-          border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
-            width: 1,
-          ),
+          border: Border.all(color: context.appColors.hairline, width: 1),
           boxShadow: [
             BoxShadow(
               color: context.appColors.shadowMedium,

@@ -1,3 +1,4 @@
+import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
@@ -27,7 +28,6 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
-import 'package:pesaflow/core/theme/motion_constants.dart';
 
 /// Provider for loading a specific budget's full data.
 final budgetDetailProvider = FutureProvider.family<BudgetWithProgress?, String>(
@@ -1617,24 +1617,16 @@ class _PeriodRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(3),
-                  child: TweenAnimationBuilder<double>(
-                    tween: Tween<double>(
-                      begin: 0,
-                      end: pctUsed.clamp(0.0, 1.0),
-                    ),
-                    duration: MotionTokens.durationProgress,
-                    curve: Curves.easeOutCubic,
-                    builder: (context, value, _) => LinearProgressIndicator(
-                      value: value,
-                      minHeight: 4,
-                      backgroundColor: theme.colorScheme.onSurface.withValues(
-                        alpha: 0.06,
-                      ),
-                      valueColor: AlwaysStoppedAnimation<Color>(barColor),
-                    ),
+                PesaProgressBar(
+                  value: pctUsed,
+                  color: barColor,
+                  trackColor: theme.colorScheme.onSurface.withValues(
+                    alpha: 0.06,
                   ),
+                  height: 4,
+                  wave: false,
+                  showEndStop: false,
+                  semanticsLabel: 'Budget used',
                 ),
                 const SizedBox(height: kSpacing4),
                 Text(

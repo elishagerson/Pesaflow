@@ -18,8 +18,26 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 /// }
 /// ```
 mixin MotionAwareMixin<T extends StatefulWidget> on State<T> {
+  bool? _reducedMotion;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _reducedMotion = context.isReducedMotion;
+  }
+
   /// Whether the user prefers reduced motion.
-  bool get shouldAnimate => !context.isReducedMotion;
+  ///
+  /// Cached in [didChangeDependencies] rather than read on demand, because
+  /// `MediaQuery.maybeOf` still asserts when called from `initState` — a
+  /// widget that kicks off its first animation there would throw
+  /// *"dependOnInheritedWidgetOfExactType was called before
+  /// initState() completed"* and take its whole subtree with it.
+  ///
+  /// Before the first dependency resolution this reports `true` (animate),
+  /// which is the right default: a widget that starts work from a post-frame
+  /// callback is already past [didChangeDependencies] and gets the real value.
+  bool get shouldAnimate => !(_reducedMotion ?? true);
 
   /// Animates [controller] with spring physics if motion is allowed,
   /// otherwise jumps instantly to [target].

@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'widgets/quick_deposit_sheet.dart';
-import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/scroll_helpers.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
@@ -323,10 +323,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
-          width: 1,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1),
         boxShadow: [
           BoxShadow(
             color: context.appColors.shadowMedium,
@@ -469,21 +466,14 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
             ],
           ),
           const SizedBox(height: kSpacing16),
-          TweenAnimationBuilder<double>(
-            duration: MotionTokens.durationLongProgress,
-            curve: Curves.easeOutCubic,
-            tween: Tween<double>(begin: 0, end: overallPct),
-            builder: (context, value, child) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                child: LinearProgressIndicator(
-                  value: value,
-                  backgroundColor: onSurface.withValues(alpha: 0.06),
-                  color: context.appColors.incomeColor,
-                  minHeight: 8,
-                ),
-              );
-            },
+          // The one hero bar on this screen, so the one that gets the ripple.
+          // Per-goal rows further down stay static.
+          PesaProgressBar(
+            value: overallPct,
+            color: context.appColors.incomeColor,
+            trackColor: onSurface.withValues(alpha: 0.06),
+            growOnMount: true,
+            semanticsLabel: 'Overall savings progress',
           ),
           const SizedBox(height: kSpacing6),
           Row(
@@ -577,7 +567,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
         border: Border.all(
           color: isCompleted
               ? context.appColors.incomeColor.withValues(alpha: 0.35)
-              : theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
+              : context.appColors.hairline,
           width: 1,
         ),
         boxShadow: [
@@ -785,22 +775,18 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                 ),
                 const SizedBox(height: kSpacing12),
 
-                // ── Animated Progress Bar ──
-                TweenAnimationBuilder<double>(
-                  duration: MotionTokens.durationProgress,
-                  curve: Curves.easeOutCubic,
-                  tween: Tween<double>(begin: 0, end: goalPct),
-                  builder: (context, value, _) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                      child: LinearProgressIndicator(
-                        value: value,
-                        backgroundColor: goalColor.withValues(alpha: 0.12),
-                        color: goalColor,
-                        minHeight: 7,
-                      ),
-                    );
-                  },
+                // ── Progress Bar ──
+                // Static: a list of goal rows would otherwise mount one
+                // rippling ticker per visible row.
+                PesaProgressBar(
+                  value: goalPct,
+                  color: goalColor,
+                  trackColor: goalColor.withValues(alpha: 0.12),
+                  height: 7,
+                  wave: false,
+                  showEndStop: false,
+                  growOnMount: true,
+                  semanticsLabel: '${goal.name} progress',
                 ),
                 const SizedBox(height: kSpacing8),
 
@@ -989,10 +975,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
-          width: 1,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1),
         boxShadow: [
           BoxShadow(
             color: context.appColors.shadowMedium,

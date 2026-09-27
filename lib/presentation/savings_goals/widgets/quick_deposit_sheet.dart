@@ -784,7 +784,7 @@ class QuickDepositChip extends StatelessWidget {
           border: Border.all(
             color: accent
                 ? col.withValues(alpha: 0.3)
-                : theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
+                : context.appColors.hairline,
             width: 0.8,
           ),
         ),

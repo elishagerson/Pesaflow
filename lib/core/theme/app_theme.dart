@@ -27,34 +27,51 @@ class AppTheme {
   // on the wheel so a brand-coloured surface can never be misread as a
   // transaction. A screen may show the accent on at most one primary action.
 
-  // Light — deep electric indigo. White on it measures 7.1:1.
-  static const Color brandPrimaryLight = Color(0xFF5B2EE5);
+  // Light - the accent itself. `#3C4550` is a deep, desaturated slate: it
+  // carries the "one loud shape, quiet colour" weight without the colour
+  // itself shouting, which is what lets a single accent sit behind big
+  // typography. White on it measures 9.7:1.
+  static const Color brandPrimaryLight = Color(0xFF3C4550);
   static const Color brandOnPrimaryLight = Color(0xFFFFFFFF);
-  static const Color brandContainerLight = Color(0xFFEDE7FE);
-  static const Color brandOnContainerLight = Color(0xFF2E1065);
+  static const Color brandContainerLight = Color(0xFFE4E8ED);
+  static const Color brandOnContainerLight = Color(0xFF232A33);
 
-  // Dark — lifted violet. Ink on it measures 6.3:1, and on OLED black the
-  // accent itself measures 6.7:1, so it stays legible as text too.
-  static const Color brandPrimaryDark = Color(0xFF9D7BFF);
-  static const Color brandOnPrimaryDark = Color(0xFF0A0416);
-  static const Color brandContainerDark = Color(0xFF2A1B57);
-  static const Color brandOnContainerDark = Color(0xFFDCCCFF);
+  // Dark - the accent cannot stay at `#3C4550`: on a near-black canvas it
+  // measures ~1.6:1 and simply disappears. So dark mode lifts the *same* hue to
+  // `#9FABB8` (8.1:1) and promotes the original accent into the container role,
+  // which keeps the brand literally present in the dark palette rather than
+  // only in the light one.
+  static const Color brandPrimaryDark = Color(0xFF9FABB8);
+  static const Color brandOnPrimaryDark = Color(0xFF151A1F);
+  static const Color brandContainerDark = Color(0xFF3C4550);
+  static const Color brandOnContainerDark = Color(0xFFE4E8ED);
 
-  // Accent gradient — the only gradient allowed to carry brand meaning.
-  static const Color brandGradientFromLight = Color(0xFF5B2EE5);
-  static const Color brandGradientToLight = Color(0xFF9B5CFF);
-  static const Color brandGradientFromDark = Color(0xFF9D7BFF);
-  static const Color brandGradientToDark = Color(0xFFD3B8FF);
+  // Accent gradient - the only gradient allowed to carry brand meaning. Both
+  // stops stay inside the slate hue so the gradient reads as light falling
+  // across a surface, never as a colour change.
+  static const Color brandGradientFromLight = Color(0xFF3C4550);
+  static const Color brandGradientToLight = Color(0xFF5A6675);
+  static const Color brandGradientFromDark = Color(0xFF6E7B8A);
+  static const Color brandGradientToDark = Color(0xFFA9B4C0);
+
+  // Ambient glow - deliberately the accent at low alpha. A saturated accent at
+  // glow strength reads as a coloured card; a desaturated one reads as light.
+  static const Color brandGlowLight = Color(0xFF3C4550);
+  static const Color brandGlowDark = Color(0xFF8D99A6);
 
   // ── Calm & Clean — Budjetly-inspired palette ──
 
   // Light — airy blue-grey canvas
-  static const Color primaryLight = Color(0xFF3B82F6); // Clean blue
+  static const Color primaryLight = Color(
+    0xFF3C4550,
+  ); // Retired blue; now the accent
   static const Color onPrimaryLight = Color(0xFFFFFFFF);
-  static const Color primaryContainerLight = Color(0xFFDBEAFE);
-  static const Color onPrimaryContainerLight = Color(0xFF1E3A5F);
+  static const Color primaryContainerLight = Color(0xFFE4E8ED);
+  static const Color onPrimaryContainerLight = Color(0xFF232A33);
 
-  static const Color secondaryLight = Color(0xFF64748B); // Slate
+  static const Color secondaryLight = Color(
+    0xFF7C8896,
+  ); // Slate, 3 steps below primary
   static const Color onSecondaryLight = Color(0xFFFFFFFF);
   static const Color secondaryContainerLight = Color(0xFFE2E8F0);
   static const Color onSecondaryContainerLight = Color(0xFF1E293B);
@@ -73,14 +90,24 @@ class AppTheme {
     0xFFFFFFFF,
   ); // Pure white for elevated surfaces
 
-  // Dark — OLED black base
+  // Dark — OLED black base, on a *cool* slate ladder.
+  //
+  // These used to be Apple's system greys (`#0F0F0F` / `#1C1C1E`), which are
+  // very slightly warm. Against a cool accent the warmth reads as a different
+  // product showing through, so the whole ladder is now one step of the
+  // accent hue: cool, with pure black reserved for the canvas so OLED pixels
+  // stay off.
   static const Color bgDark = Color(0xFF000000); // Pure OLED black
-  static const Color onBgDark = Color(0xFFF8FAFC);
-  static const Color surfaceDark = Color(0xFF0F0F0F); // Very dark gray
-  static const Color onSurfaceDark = Color(0xFFF8FAFC);
-  static const Color surfaceHighDark = Color(
-    0xFF1C1C1E,
-  ); // Apple system dark gray
+  static const Color onBgDark = Color(0xFFF1F5F9);
+  static const Color surfaceDark = Color(0xFF11141A);
+  static const Color onSurfaceDark = Color(0xFFF1F5F9);
+  static const Color surfaceHighDark = Color(0xFF181C23);
+
+  // The dark ladder, top to bottom. Exposed so every dark surface in the app
+  // is drawn from one list instead of each file inventing its own grey.
+  static const Color surfaceRaisedDark = Color(0xFF1E232B);
+  static const Color surfaceOverlayDark = Color(0xFF252B34);
+  static const Color hairlineDark = Color(0x47FFFFFF); // White @ ~28%
 
   // Finance semantic colors — desaturated, premium tones.
   // Transfer is cyan, not indigo: the brand accent now owns the violet end of

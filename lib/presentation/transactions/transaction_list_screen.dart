@@ -544,7 +544,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
             Divider(
               height: 1,
               thickness: 0.5,
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
+              color: context.appColors.hairline,
             ),
 
             // ── SCROLLABLE LIST VIEW LAYER ──
@@ -1449,10 +1449,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
-              border: Border.all(
-                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
-                width: 1.0,
-              ),
+              border: Border.all(color: context.appColors.hairline, width: 1.0),
               boxShadow: [
                 BoxShadow(
                   color: context.appColors.shadowMedium.withValues(alpha: 0.05),

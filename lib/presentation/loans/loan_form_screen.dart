@@ -872,10 +872,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusHero),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
-          width: 1.0,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1.0),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -1019,11 +1016,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
             context,
           ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-          border: Border.all(
-            color: Theme.of(
-              context,
-            ).colorScheme.outlineVariant.withValues(alpha: 0.2),
-          ),
+          border: Border.all(color: context.appColors.hairline),
         ),
         child: Text(
           label,
@@ -1306,10 +1299,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusHero),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
-          width: 1.0,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1.0),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -1661,9 +1651,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
             alpha: 0.35,
           ),
           borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-          border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
-          ),
+          border: Border.all(color: context.appColors.hairline),
         ),
         child: Row(
           children: [

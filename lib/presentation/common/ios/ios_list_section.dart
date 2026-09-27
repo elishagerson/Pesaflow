@@ -245,9 +245,7 @@ class IosMetricCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
-        ),
+        border: Border.all(color: context.appColors.hairline),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(

@@ -398,8 +398,19 @@ class _WelcomePage extends StatelessWidget {
             ),
             const SizedBox(height: kSpacing32),
             Text(
-              'Welcome to PesaFlow',
-              style: context.ts(22, fontWeight: FontWeight.bold),
+              'WELCOME TO',
+              style: context.appTypography.eyebrow.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: kSpacing6),
+            Text(
+              'PESAFLOW',
+              style: context.appTypography.poster.copyWith(
+                fontSize: 48,
+                color: theme.colorScheme.onSurface,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: kSpacing16),
@@ -741,8 +752,19 @@ class _CompletePage extends StatelessWidget {
             ),
             const SizedBox(height: kSpacing32),
             Text(
-              'You\'re All Set!',
-              style: context.ts(22, fontWeight: FontWeight.bold),
+              'YOU\'RE',
+              style: context.appTypography.eyebrow.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: kSpacing6),
+            Text(
+              'ALL SET!',
+              style: context.appTypography.poster.copyWith(
+                fontSize: 48,
+                color: theme.colorScheme.onSurface,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: kSpacing16),

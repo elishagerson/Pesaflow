@@ -1152,9 +1152,7 @@ class _RecurringTransactionFormScreenState
                 color: Theme.of(context).colorScheme.surfaceContainerHigh,
                 borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                 border: Border.all(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.outlineVariant.withValues(alpha: 0.35),
+                  color: context.appColors.hairline,
                   width: 1.0,
                 ),
               ),
@@ -1241,10 +1239,7 @@ class _RecurringTransactionFormScreenState
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusHero),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
-          width: 1.0,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1412,10 +1407,7 @@ class _RecurringTransactionFormScreenState
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusHero),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
-          width: 1.0,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1553,7 +1545,7 @@ class _RecurringTransactionFormScreenState
               Container(
                 height: 36,
                 width: 1,
-                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                color: context.appColors.hairline,
               ),
               const SizedBox(width: kSpacing16),
               Expanded(
@@ -1640,10 +1632,7 @@ class _RecurringTransactionFormScreenState
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
-          width: 1.0,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1.0),
       ),
       child: Row(
         children: options.map((opt) {
@@ -1701,10 +1690,7 @@ class _RecurringTransactionFormScreenState
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
-          width: 1.0,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1845,10 +1831,7 @@ class _RecurringTransactionFormScreenState
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
-          width: 1.0,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2078,10 +2061,7 @@ class _RecurringTransactionFormScreenState
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
-          width: 1.0,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -983,10 +983,7 @@ class _KeyHint extends StatelessWidget {
                 alpha: 0.7,
               ),
               borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
-              border: Border.all(
-                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
-                width: 0.5,
-              ),
+              border: Border.all(color: context.appColors.hairline, width: 0.5),
             ),
             child: Text(
               k,

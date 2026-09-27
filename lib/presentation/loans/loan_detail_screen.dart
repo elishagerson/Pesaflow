@@ -3,13 +3,13 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
-import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
@@ -303,11 +303,22 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                 ),
               ),
               const SizedBox(height: kSpacing16),
-              Text(
-                CurrencyFormatter.formatCents(
-                  isActive ? loan.remaining : loan.amount,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  CurrencyFormatter.formatCents(
+                    isActive ? loan.remaining : loan.amount,
+                  ),
+                  // The optical display cut of Inter, not w900: at this size
+                  // the two differ by less than a pixel of weight but a lot of
+                  // colour, and this is the one number the screen is about.
+                  style: context.appTypography.numeral.copyWith(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    color: theme.colorScheme.onSurface,
+                  ),
                 ),
-                style: context.ts(28, fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: kSpacing4),
               Text(
@@ -324,19 +335,13 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
               ),
               if (isActive) ...[
                 const SizedBox(height: kSpacing16),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-                  child: TweenAnimationBuilder<double>(
-                    tween: Tween<double>(begin: 0, end: ratio.clamp(0.0, 1.0)),
-                    duration: MotionTokens.durationProgress,
-                    curve: Curves.easeOutCubic,
-                    builder: (context, value, _) => LinearProgressIndicator(
-                      value: value,
-                      backgroundColor: statusColor.withValues(alpha: 0.12),
-                      valueColor: AlwaysStoppedAnimation<Color>(statusColor),
-                      minHeight: 6,
-                    ),
-                  ),
+                PesaProgressBar(
+                  value: ratio,
+                  color: statusColor,
+                  trackColor: statusColor.withValues(alpha: 0.12),
+                  height: 6,
+                  growOnMount: true,
+                  semanticsLabel: 'Repayment progress',
                 ),
                 const SizedBox(height: kSpacing8),
                 Text(
@@ -590,23 +595,15 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                       const SizedBox(height: kSpacing6),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(kSpacing4),
-                        child: TweenAnimationBuilder<double>(
-                          tween: Tween<double>(
-                            begin: 0,
-                            end: ratio.clamp(0.0, 1.0),
+                        child: PesaProgressBar(
+                          value: ratio,
+                          color: context.appColors.incomeColor,
+                          trackColor: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.1,
                           ),
-                          duration: MotionTokens.durationProgress,
-                          curve: Curves.easeOutCubic,
-                          builder: (context, value, _) =>
-                              LinearProgressIndicator(
-                                value: value,
-                                backgroundColor: theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.1),
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  context.appColors.incomeColor,
-                                ),
-                                minHeight: 6,
-                              ),
+                          height: 6,
+                          growOnMount: true,
+                          semanticsLabel: 'Repayment progress',
                         ),
                       ),
                     ],

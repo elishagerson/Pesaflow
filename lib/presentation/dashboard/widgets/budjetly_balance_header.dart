@@ -213,12 +213,21 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                         ),
                       ),
                       const SizedBox(width: kSpacing8),
-                      Text(
-                        widget.label.toUpperCase(),
-                        style: context.appTypography.eyebrow.copyWith(
-                          color: isNegative
-                              ? theme.colorScheme.error
-                              : theme.colorScheme.onSurfaceVariant,
+                      // Flexible, not fixed: an account or workspace name can be
+                      // arbitrarily long, and an unbounded label pushes the
+                      // privacy toggle clean off the card's right edge. Flex
+                      // resolves the fixed InkWell first, so the label gets
+                      // exactly the width that is left over.
+                      Flexible(
+                        child: Text(
+                          widget.label.toUpperCase(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.appTypography.eyebrow.copyWith(
+                            color: isNegative
+                                ? theme.colorScheme.error
+                                : theme.colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       ),
                       if (isNegative) ...[

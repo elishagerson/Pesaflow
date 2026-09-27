@@ -4,6 +4,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
+import 'package:pesaflow/presentation/common/widgets/hairline_border.dart';
 
 enum CardElevation { none, low, medium, high }
 
@@ -108,6 +109,7 @@ class _GlassCardState extends State<GlassCard>
   @override
   Widget build(BuildContext context) {
     final appColors = context.appColors;
+    final theme = Theme.of(context);
 
     // Clean solid background — Budjetly style
     final Color cardColor;
@@ -163,6 +165,13 @@ class _GlassCardState extends State<GlassCard>
                   animation: _controller,
                   builder: (context, child) {
                     if (_controller.value == 0) return const SizedBox.shrink();
+                    // A press sheen has to *change* the card to be felt.
+                    // White-on-white was invisible in light mode, so the sheen
+                    // is now ink on a light card and light on a dark one — a
+                    // value shift either way, not a hue shift.
+                    final sheen = isDark
+                        ? Colors.white.withValues(alpha: 0.10)
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.055);
                     return FractionalTranslation(
                       translation: Offset((_controller.value * 1.8) - 0.9, 0),
                       child: Container(
@@ -171,11 +180,9 @@ class _GlassCardState extends State<GlassCard>
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Colors.white.withValues(alpha: 0.0),
-                              Colors.white.withValues(
-                                alpha: isDark ? 0.1 : 0.3,
-                              ),
-                              Colors.white.withValues(alpha: 0.0),
+                              Colors.transparent,
+                              sheen,
+                              Colors.transparent,
                             ],
                             stops: const [0.3, 0.5, 0.7],
                           ),
@@ -237,7 +244,7 @@ class _GlassCardState extends State<GlassCard>
         ),
         child: CustomPaint(
           foregroundPainter: widget.hasBorder
-              ? _GradientBorderPainter(widget.borderRadius, isDark)
+              ? HairlineBorderPainter.of(context, widget.borderRadius)
               : null,
           child: innerContent,
         ),
@@ -264,7 +271,7 @@ class _GlassCardState extends State<GlassCard>
         ),
         child: CustomPaint(
           foregroundPainter: widget.hasBorder
-              ? _GradientBorderPainter(widget.borderRadius, isDark)
+              ? HairlineBorderPainter.of(context, widget.borderRadius)
               : null,
           child: child,
         ),
@@ -305,36 +312,5 @@ class _ShadowParams {
     return [
       BoxShadow(color: color, blurRadius: blur, offset: Offset(0, offsetY)),
     ];
-  }
-}
-
-class _GradientBorderPainter extends CustomPainter {
-  final double radius;
-  final bool isDark;
-
-  _GradientBorderPainter(this.radius, this.isDark);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-    final rrect = RRect.fromRectAndRadius(rect, Radius.circular(radius));
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0
-      ..shader = LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Colors.white.withValues(alpha: isDark ? 0.35 : 0.8),
-          Colors.white.withValues(alpha: 0.0),
-        ],
-        stops: const [0.0, 0.55],
-      ).createShader(rect);
-    canvas.drawRRect(rrect, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant _GradientBorderPainter old) {
-    return old.isDark != isDark || old.radius != radius;
   }
 }

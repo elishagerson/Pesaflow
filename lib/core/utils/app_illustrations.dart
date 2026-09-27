@@ -26,14 +26,14 @@ class PesaFlowIllustration extends StatelessWidget {
     );
   }
 
-  static const Color _teal = AppTheme.brandPrimaryLight;
+  static const Color _accent = AppTheme.brandPrimaryLight;
   static const Color _gold = Color(0xFFD4942D);
 
   factory PesaFlowIllustration.emptyTransactions({
     double size = 120,
     Color? color,
   }) {
-    final p = color ?? _teal;
+    final p = color ?? _accent;
     return PesaFlowIllustration(
       size: size,
       color: color,
@@ -42,7 +42,7 @@ class PesaFlowIllustration extends StatelessWidget {
   }
 
   factory PesaFlowIllustration.emptyBudgets({double size = 120, Color? color}) {
-    final p = color ?? _teal;
+    final p = color ?? _accent;
     return PesaFlowIllustration(
       size: size,
       color: color,
@@ -51,7 +51,7 @@ class PesaFlowIllustration extends StatelessWidget {
   }
 
   factory PesaFlowIllustration.emptyGoals({double size = 120, Color? color}) {
-    final p = color ?? _teal;
+    final p = color ?? _accent;
     return PesaFlowIllustration(
       size: size,
       color: color,
@@ -60,7 +60,7 @@ class PesaFlowIllustration extends StatelessWidget {
   }
 
   factory PesaFlowIllustration.emptyLoans({double size = 120, Color? color}) {
-    final p = color ?? _teal;
+    final p = color ?? _accent;
     return PesaFlowIllustration(
       size: size,
       color: color,
@@ -72,7 +72,7 @@ class PesaFlowIllustration extends StatelessWidget {
     double size = 120,
     Color? color,
   }) {
-    final p = color ?? _teal;
+    final p = color ?? _accent;
     return PesaFlowIllustration(
       size: size,
       color: color,

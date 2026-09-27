@@ -211,10 +211,21 @@ class _NextUpCard extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: kSpacing10),
-            Text(
-              'All clear',
-              style: context.appTypography.posterLarge.copyWith(
-                color: theme.colorScheme.onSurface,
+            // `poster` (40), not `posterLarge` (64): a 64px condensed face
+            // wraps to three lines in a 300px card and the last line falls off
+            // the bottom of the 232px page. `posterLarge` belongs to the
+            // balance, the one number allowed to be the full-height moment.
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'All clear',
+                  maxLines: 1,
+                  style: context.appTypography.poster.copyWith(
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: kSpacing6),
@@ -263,13 +274,18 @@ class _NextUpCard extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: kSpacing10),
-          Text(
-            countdown,
-            style: context.appTypography.posterLarge.copyWith(
-              color: theme.colorScheme.onSurface,
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                countdown,
+                maxLines: 1,
+                style: context.appTypography.poster.copyWith(
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: kSpacing4),
           Text(

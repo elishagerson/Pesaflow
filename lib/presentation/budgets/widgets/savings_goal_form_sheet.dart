@@ -301,7 +301,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
               width: 36,
               height: 4,
               decoration: BoxDecoration(
-                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                color: context.appColors.hairlineStrong,
                 borderRadius: BorderRadius.circular(AppTheme.radiusPill),
               ),
             ),
@@ -1053,9 +1053,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-          border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: context.appColors.hairline),
         ),
         child: Text(
           label,
@@ -1094,7 +1092,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
           border: Border.all(
             color: isMatching
                 ? theme.colorScheme.primary
-                : theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                : context.appColors.hairline,
             width: isMatching ? 1.4 : 1,
           ),
         ),

@@ -69,7 +69,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         title: top.key,
         subtitle: 'Visited ${top.value} times this month',
         icon: PesaFlowIcons.transactions,
-        color: AppTheme.primaryLight,
+        color: AppTheme.brandPrimaryLight,
       ),
     );
   }
@@ -142,7 +142,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         title: CurrencyFormatter.formatCents(thisTotal),
         subtitle: 'Total spending this month',
         icon: PesaFlowIcons.expense,
-        color: AppTheme.primaryLight,
+        color: AppTheme.brandPrimaryLight,
       ),
     );
   }
@@ -171,7 +171,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         subtitle:
             '${CurrencyFormatter.formatCents(top.value)} \u2014 $pct% of spending',
         icon: PesaFlowIcons.target,
-        color: AppTheme.primaryLight,
+        color: AppTheme.brandPrimaryLight,
       ),
     );
   }

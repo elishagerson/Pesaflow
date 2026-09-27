@@ -963,10 +963,7 @@ class _QuickActionButton extends StatelessWidget {
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-            border: Border.all(
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
-              width: 1,
-            ),
+            border: Border.all(color: context.appColors.hairline, width: 1),
             boxShadow: [
               BoxShadow(
                 color: context.appColors.shadowSubtle,

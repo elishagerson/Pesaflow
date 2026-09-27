@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
-import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
@@ -44,10 +44,7 @@ class CategoryBudgetCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
-          border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
-            width: 1,
-          ),
+          border: Border.all(color: context.appColors.hairline, width: 1),
           boxShadow: [
             BoxShadow(
               color: appColors.shadowSubtle,
@@ -114,21 +111,16 @@ class CategoryBudgetCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: kSpacing10),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                  child: TweenAnimationBuilder<double>(
-                    tween: Tween<double>(begin: 0, end: pct.clamp(0.0, 1.0)),
-                    duration: MotionTokens.durationProgress,
-                    curve: Curves.easeOutCubic,
-                    builder: (context, value, _) => LinearProgressIndicator(
-                      value: value,
-                      minHeight: 4,
-                      backgroundColor: theme.colorScheme.onSurface.withValues(
-                        alpha: 0.05,
-                      ),
-                      valueColor: AlwaysStoppedAnimation<Color>(progressColor),
-                    ),
+                PesaProgressBar(
+                  value: pct,
+                  color: progressColor,
+                  trackColor: theme.colorScheme.onSurface.withValues(
+                    alpha: 0.05,
                   ),
+                  height: 4,
+                  wave: false,
+                  showEndStop: false,
+                  semanticsLabel: '${budgetProgress.category.name} budget used',
                 ),
               ],
             ),

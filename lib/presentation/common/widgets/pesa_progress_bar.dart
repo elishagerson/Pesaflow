@@ -52,6 +52,14 @@ class PesaProgressBar extends StatefulWidget {
   /// Semantic value announced by screen readers, e.g. `62% of budget used`.
   final String? semanticsLabel;
 
+  /// Grow from empty on first appearance, instead of opening at [value].
+  ///
+  /// This is what let the bar replace the `TweenAnimationBuilder(begin: 0)`
+  /// wrapper that every call site had been hand-rolling. Those wrappers were
+  /// double animation: the tween eased the value in *and* the bar sprang it in,
+  /// so the two fought each other for 1.2s on every mount.
+  final bool growOnMount;
+
   const PesaProgressBar({
     super.key,
     required this.value,
@@ -63,6 +71,7 @@ class PesaProgressBar extends StatefulWidget {
     this.wave = true,
     this.showEndStop = true,
     this.semanticsLabel,
+    this.growOnMount = false,
   });
 
   @override
@@ -83,16 +92,40 @@ class _PesaProgressBarState extends State<PesaProgressBar>
     super.initState();
 
     _wave = AnimationController(vsync: this, duration: const Duration(days: 1));
+    final target = widget.value.clamp(0.0, 1.0);
     _spring = AnimationController(
       vsync: this,
       duration: MotionTokens.durationLongProgress,
-      value: widget.value.clamp(0.0, 1.0),
+      value: widget.growOnMount ? 0 : target,
     );
-    _shown = widget.value.clamp(0.0, 1.0);
+    _shown = widget.growOnMount ? 0 : target;
+
+    if (widget.growOnMount) {
+      // Deferred: `springAnimate` needs a real frame before the controller has
+      // a duration, and animating inside initState would fire before the bar
+      // has ever been painted.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        if (shouldAnimate) {
+          springAnimate(_spring, MotionTokens.springSnappy, 0, target);
+        } else {
+          _spring.value = target;
+        }
+        setState(() => _shown = target);
+      });
+    }
 
     // Registered once, not per update: the wave has to park the instant the
     // spring settles, and a status listener is the only hook that fires then.
     _spring.addStatusListener((_) => _syncWave());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Not in `initState`: deciding whether to run the wave needs the
+    // reduced-motion setting, which is only readable once inherited
+    // dependencies have resolved.
     _syncWave();
   }
 

@@ -5,6 +5,7 @@ import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 /// A 2x2 executive financial hub grid replacing scattered carousels.
@@ -175,10 +176,7 @@ class _HubCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-          border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
-            width: 1,
-          ),
+          border: Border.all(color: context.appColors.hairline, width: 1),
           boxShadow: [
             BoxShadow(
               color: context.appColors.shadowSubtle,
@@ -268,16 +266,14 @@ class _HubCard extends StatelessWidget {
             ),
             if (progress != null) ...[
               const SizedBox(height: kSpacing8),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                child: LinearProgressIndicator(
-                  value: progress!.clamp(0.0, 1.0),
-                  minHeight: 4,
-                  backgroundColor: color.withValues(alpha: 0.12),
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    progress! > 1.0 ? theme.colorScheme.error : color,
-                  ),
-                ),
+              PesaProgressBar(
+                value: progress!,
+                color: progress! > 1.0 ? theme.colorScheme.error : color,
+                trackColor: color.withValues(alpha: 0.12),
+                height: 4,
+                wave: false,
+                showEndStop: false,
+                semanticsLabel: '$title progress',
               ),
             ],
           ],

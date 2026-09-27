@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/core/theme/app_shapes.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/hairline_border.dart';
 import 'package:pesaflow/presentation/common/widgets/morph_button.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
@@ -150,6 +152,94 @@ void main() {
       await tester.pumpWidget(_host(const TrackRing(value: 4.0)));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
+    });
+  });
+
+  group('GlassCard', () {
+    // Regression: the card border was a `Colors.white` gradient, which made
+    // `hasBorder: true` a no-op in light mode (a white 1px line on a white
+    // card) and gave the press sheen nothing to show against.
+    for (final brightness in Brightness.values) {
+      // Regression: the card border was a `Colors.white` gradient, so
+      // `hasBorder: true` was a no-op in light mode — a white 1px line on a
+      // white card. Read the painter straight off the CustomPaint rather than
+      // pixel-scraping, and assert the stroke is not the fill's twin.
+      testWidgets('strokes a visible border in \$brightness', (tester) async {
+        await tester.pumpWidget(
+          _host(
+            const GlassCard(hasBorder: true, child: SizedBox(height: 60)),
+            brightness: brightness,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final painter = tester
+            .widgetList<CustomPaint>(find.byType(CustomPaint))
+            .map((c) => c.foregroundPainter)
+            .whereType<HairlineBorderPainter>()
+            .first;
+
+        final fill = brightness == Brightness.light
+            ? AppTheme.lightTheme.colorScheme.surface
+            : AppTheme.darkTheme.colorScheme.surface;
+        expect(
+          painter.colors.first.computeLuminance(),
+          isNot(closeTo(fill.computeLuminance(), 0.02)),
+          reason: 'hairline is indistinguishable from the card fill',
+        );
+        expect(painter.colors.last.a, 0, reason: 'the stroke must fade out');
+      });
+    }
+
+    testWidgets('renders without an onTap', (tester) async {
+      await tester.pumpWidget(
+        _host(const GlassCard(child: SizedBox(height: 60))),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(find.byType(GlassCard), findsOneWidget);
+    });
+  });
+
+  group('reduced motion', () {
+    // Regression: MotionAwareMixin used to read MediaQuery on demand, so any
+    // widget that started its first animation from initState threw
+    // "dependOnInheritedWidgetOfExactType<MediaQuery>() was called before
+    // initState() completed" and took its whole subtree down with it. PesaProgress
+    // Bar's wave hit it the moment it grew on mount.
+    testWidgets('a grow-on-mount bar mounts under disableAnimations', (
+      tester,
+    ) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          FakeAccessibilityFeatures(disableAnimations: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+
+      await tester.pumpWidget(
+        _host(
+          const MediaQuery(
+            data: MediaQueryData(disableAnimations: true),
+            child: PesaProgressBar(value: 0.5, growOnMount: true),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(find.byType(PesaProgressBar), findsOneWidget);
+    });
+
+    testWidgets('a grow-on-mount bar ends at its value, not at zero', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _host(const PesaProgressBar(value: 0.75, growOnMount: true)),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        tester.getSemantics(find.byType(PesaProgressBar)).value,
+        contains('75'),
+      );
     });
   });
 

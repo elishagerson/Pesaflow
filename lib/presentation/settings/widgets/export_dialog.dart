@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,19 +39,11 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
       fillColor: Colors.transparent,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        borderSide: BorderSide(
-          color: Theme.of(
-            context,
-          ).colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
+        borderSide: BorderSide(color: context.appColors.hairlineStrong),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        borderSide: BorderSide(
-          color: Theme.of(
-            context,
-          ).colorScheme.outlineVariant.withValues(alpha: 0.3),
-        ),
+        borderSide: BorderSide(color: context.appColors.hairline),
       ),
       contentPadding: const EdgeInsets.symmetric(
         horizontal: kSpacing16,

@@ -9,6 +9,7 @@ import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -331,7 +332,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
         border: Border.all(
           color: isCritical
               ? context.appColors.expenseColor.withValues(alpha: 0.35)
-              : theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
+              : context.appColors.hairline,
           width: 1,
         ),
         boxShadow: [
@@ -439,18 +440,17 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
             ),
           ),
           const SizedBox(height: kSpacing14),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-            child: LinearProgressIndicator(
-              value: debtRatio.clamp(0.0, 1.0),
-              backgroundColor: onSurface.withValues(alpha: 0.06),
-              color: isCritical
-                  ? context.appColors.expenseColor
-                  : (debtRatio > 0.5
-                        ? context.appColors.warningColor
-                        : context.appColors.transferColor),
-              minHeight: 6,
-            ),
+          PesaProgressBar(
+            value: debtRatio,
+            color: isCritical
+                ? context.appColors.expenseColor
+                : (debtRatio > 0.5
+                      ? context.appColors.warningColor
+                      : context.appColors.transferColor),
+            trackColor: onSurface.withValues(alpha: 0.06),
+            height: 6,
+            growOnMount: true,
+            semanticsLabel: 'Total debt against net worth',
           ),
         ],
       ),
@@ -601,14 +601,14 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                     ],
                   ),
                   const SizedBox(height: kSpacing12),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
-                    child: LinearProgressIndicator(
-                      value: ratio.clamp(0.0, 1.0),
-                      backgroundColor: progressColor.withValues(alpha: 0.12),
-                      valueColor: AlwaysStoppedAnimation<Color>(progressColor),
-                      minHeight: 4,
-                    ),
+                  PesaProgressBar(
+                    value: ratio,
+                    color: progressColor,
+                    trackColor: progressColor.withValues(alpha: 0.12),
+                    height: 4,
+                    wave: false,
+                    showEndStop: false,
+                    semanticsLabel: '${loan.description} repaid',
                   ),
                 ],
               ),

@@ -107,7 +107,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     brandOnContainer: AppTheme.brandOnContainerLight,
     brandGradientFrom: AppTheme.brandGradientFromLight,
     brandGradientTo: AppTheme.brandGradientToLight,
-    brandGlow: AppTheme.brandPrimaryLight,
+    brandGlow: AppTheme.brandGlowLight,
     incomeColor: AppTheme.incomeColor,
     expenseColor: AppTheme.expenseColor,
     transferColor: AppTheme.transferColor,
@@ -121,10 +121,12 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     textMedium: Color(0xFF64748B), // Slate-500
     textLow: Color(0xFF94A3B8), // Slate-400
     scaffoldLine: Color(0x14000000),
-    hairline: Color(0x0F0F172A), // Slate-900 @ ~6%
-    hairlineStrong: Color(0x1A5B2EE5), // Brand @ ~10%
+    hairline: Color(
+      0x470F172A,
+    ), // Slate-900 @ ~28% — the value 25 files converged on
+    hairlineStrong: Color(0x243C4550), // Accent @ ~14%
     cardBackground: Color(0xFFFFFFFF), // Pure white
-    cardBorder: Color(0xFFE2E8F0), // Slate-200
+    cardBorder: Color(0xFFDDE3EA), // Slate-200, a touch cool
     sectionHeader: Color(0xFF475569), // Slate-600
     accentSubtle: AppTheme.brandContainerLight,
     warningColor: Color(0xFFF59E0B), // Amber-500
@@ -145,7 +147,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     brandOnContainer: AppTheme.brandOnContainerDark,
     brandGradientFrom: AppTheme.brandGradientFromDark,
     brandGradientTo: AppTheme.brandGradientToDark,
-    brandGlow: AppTheme.brandPrimaryDark,
+    brandGlow: AppTheme.brandGlowDark,
     incomeColor: AppTheme.incomeColorDark,
     expenseColor: AppTheme.expenseColorDark,
     transferColor: AppTheme.transferColorDark,
@@ -153,17 +155,17 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     surfaceLow: AppTheme.bgDark,
     surfaceHigh: AppTheme.surfaceHighDark,
     surfaceContainer: AppTheme.surfaceDark,
-    surfaceContainerHighest: Color(0xFF2C2C2E), // Dark gray
+    surfaceContainerHighest: AppTheme.surfaceOverlayDark,
     bgColor: AppTheme.bgDark,
     onBgColor: AppTheme.onBgDark,
-    textMedium: Color(0xFF8E8E93), // System gray
-    textLow: Color(0xFF636366), // System gray 2
-    scaffoldLine: Color(0x14FFFFFF),
-    hairline: Color(0x1FFFFFFF), // White @ ~12%
-    hairlineStrong: Color(0x4D9D7BFF), // Brand @ ~30%
-    cardBackground: Color(0xFF1C1C1E), // Apple secondary dark
-    cardBorder: Color(0xFF2C2C2E), // Apple tertiary dark
-    sectionHeader: Color(0xFF8E8E93), // System gray
+    textMedium: Color(0xFF94A3B8), // Slate-400
+    textLow: Color(0xFF64748B), // Slate-500
+    scaffoldLine: AppTheme.hairlineDark,
+    hairline: AppTheme.hairlineDark, // White @ ~10%
+    hairlineStrong: Color(0x57A9B4C0), // Accent lift @ ~34%
+    cardBackground: Color(0xFF151920), // One step above surfaceDark
+    cardBorder: AppTheme.surfaceOverlayDark,
+    sectionHeader: Color(0xFF94A3B8), // Slate-400
     accentSubtle: AppTheme.brandContainerDark,
     warningColor: Color(0xFFFBBF24), // Amber-400
     shadowSubtle: Color(0x0AFFFFFF),
