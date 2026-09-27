@@ -323,26 +323,9 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
     final debtRatio = netWorth > 0 ? total / netWorth : 999.0;
     final isCritical = debtRatio > 1.0;
 
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: kSpacing16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
-        border: Border.all(
-          color: isCritical
-              ? context.appColors.expenseColor.withValues(alpha: 0.35)
-              : context.appColors.hairline,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: context.appColors.shadowMedium,
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return PesaSurface.bleed(
+      fill: theme.colorScheme.surfaceContainerHigh,
+      radius: AppTheme.radiusDialog,
       padding: const EdgeInsets.all(kSpacing20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

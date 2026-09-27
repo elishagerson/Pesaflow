@@ -1445,19 +1445,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
 
         return Padding(
           padding: const EdgeInsets.fromLTRB(0, kSpacing20, 0, kSpacing24),
-          child: Container(
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHigh,
-              borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
-              border: Border.all(color: context.appColors.hairline, width: 1.0),
-              boxShadow: [
-                BoxShadow(
-                  color: context.appColors.shadowMedium.withValues(alpha: 0.05),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
+          child: PesaSurface.bleed(
+            fill: theme.colorScheme.surfaceContainerHigh,
+            radius: AppTheme.radiusDialog,
             padding: const EdgeInsets.all(kSpacing20),
             child: Row(
               children: [

@@ -318,20 +318,9 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
     double overallPct,
   ) {
     final onSurface = theme.colorScheme.onSurface;
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
-        border: Border.all(color: context.appColors.hairline, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: context.appColors.shadowMedium,
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return PesaSurface.bleed(
+      fill: theme.colorScheme.surfaceContainerHigh,
+      radius: AppTheme.radiusDialog,
       padding: const EdgeInsets.all(kSpacing20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

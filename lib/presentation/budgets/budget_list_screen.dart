@@ -4,6 +4,7 @@ import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -480,25 +481,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
       }
     }
 
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
-        border: Border.all(
-          color: isOverBudget
-              ? context.appColors.expenseColor.withValues(alpha: 0.35)
-              : context.appColors.hairline,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: context.appColors.shadowMedium,
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return PesaSurface.bleed(
+      fill: theme.colorScheme.surfaceContainerHigh,
+      radius: AppTheme.radiusDialog,
       padding: const EdgeInsets.all(kSpacing20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
