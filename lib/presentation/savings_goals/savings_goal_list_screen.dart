@@ -548,26 +548,12 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
       countdownLabel = months == 1 ? '~1 month left' : '~$months months left';
     }
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: kSpacing14),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppTheme.radiusHero),
-        border: Border.all(
-          color: isCompleted
-              ? context.appColors.incomeColor.withValues(alpha: 0.35)
-              : context.appColors.hairline,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: context.appColors.shadowMedium,
-            blurRadius: 14,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Material(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: kSpacing14),
+      child: PesaSurface.bleed(
+        fill: theme.colorScheme.surfaceContainerHigh,
+        radius: AppTheme.radiusHero,
+        child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
@@ -959,20 +945,9 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
     int shortestDays,
   ) {
     final onSurface = theme.colorScheme.onSurface;
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: context.appColors.hairline, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: context.appColors.shadowMedium,
-            blurRadius: 14,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return PesaSurface.bleed(
+      fill: theme.colorScheme.surfaceContainerHigh,
+      radius: AppTheme.radiusCard,
       padding: const EdgeInsets.all(kSpacing16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1240,18 +1215,10 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                 PesaHaptics.selection();
                 context.push('/savings-goals/add');
               },
-              child: Container(
+              child: PesaSurface.bleed(
+                fill: theme.colorScheme.surfaceContainerHigh,
+                radius: AppTheme.radiusCard,
                 padding: const EdgeInsets.all(kSpacing10),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHigh,
-                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  border: Border.all(
-                    color: theme.colorScheme.outlineVariant.withValues(
-                      alpha: 0.22,
-                    ),
-                    width: 1,
-                  ),
-                ),
                 child: Row(
                   children: [
                     Container(

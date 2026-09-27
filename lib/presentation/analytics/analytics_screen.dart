@@ -787,23 +787,10 @@ class _OverviewTab extends ConsumerWidget {
                     final expense = totals['expense'] ?? 0;
                     final netSavings = income - expense;
 
-                    return Container(
-                      width: double.infinity,
+                    return PesaSurface.bleed(
+                      fill: theme.colorScheme.onSurface.withValues(alpha: 0.03),
+                      radius: AppTheme.radiusCard,
                       padding: const EdgeInsets.all(kSpacing20),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.03,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusCard,
-                        ),
-                        border: Border.all(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.07,
-                          ),
-                          width: 0.5,
-                        ),
-                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -904,8 +891,9 @@ class _OverviewTab extends ConsumerWidget {
           const InsightsCarousel(),
           const SizedBox(height: kSpacing24),
 
-          // Category Donut inside a beautiful GlassCard
-          GlassCard(
+          PesaSurface.bleed(
+            fill: theme.colorScheme.surfaceContainerHigh,
+            radius: AppTheme.radiusCard,
             padding: const EdgeInsets.all(kSpacing20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1293,7 +1281,9 @@ class _TrendsTab extends ConsumerWidget {
 
               return StaggeredFadeSlide(
                 index: 1,
-                child: GlassCard(
+                child: PesaSurface.bleed(
+                  fill: theme.colorScheme.surfaceContainerHigh,
+                  radius: AppTheme.radiusCard,
                   padding: const EdgeInsets.all(kSpacing20),
                   child: Column(
                     children: [

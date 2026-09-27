@@ -1699,25 +1699,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Overall Savings Summary Box
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHigh,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
-                    border: Border.all(
-                      color: theme.colorScheme.outlineVariant.withValues(
-                        alpha: 0.28,
-                      ),
-                      width: 1,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: context.appColors.shadowMedium,
-                        blurRadius: 16,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
+                PesaSurface.bleed(
+                  fill: theme.colorScheme.surfaceContainerHigh,
+                  radius: AppTheme.radiusDialog,
                   padding: const EdgeInsets.all(kSpacing20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

@@ -22,6 +22,7 @@ import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 
 class LoanListScreen extends ConsumerStatefulWidget {
   const LoanListScreen({super.key});
