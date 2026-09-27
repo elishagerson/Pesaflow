@@ -19,11 +19,21 @@ class HairlineBorderPainter extends CustomPainter {
   /// How far across the card the visible portion of the stroke travels.
   final double fadeEnd;
 
+  /// Whether the stroke fades to nothing across [fadeEnd].
+  ///
+  /// `GlassCard` fades, which suits a flat card on an arbitrary background. A
+  /// surface with a deliberate silhouette cannot: the fade runs out partway
+  /// across, so the far corners of a cut plate ended up with a border at ~25%
+  /// opacity — the one edge the shape was built to show, and the one nobody
+  /// could see. Those surfaces pass `fade: false` for a uniformly defined edge.
+  final bool fade;
+
   const HairlineBorderPainter({
     this.radius = 0,
     required this.hairline,
     required this.hairlineStrong,
     this.fadeEnd = 0.6,
+    this.fade = true,
   });
 
   /// Reads the tokens from [context], so call sites never repeat them.
@@ -38,7 +48,9 @@ class HairlineBorderPainter extends CustomPainter {
 
   /// The two stroke colours, strongest first. Exposed so the pair can be
   /// asserted directly instead of by pixel-scraping a render.
-  List<Color> get colors => [hairlineStrong, hairline.withValues(alpha: 0)];
+  List<Color> get colors => fade
+      ? [hairlineStrong, hairline.withValues(alpha: 0)]
+      : [hairlineStrong, hairline];
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -79,5 +91,6 @@ class HairlineBorderPainter extends CustomPainter {
       old.radius != radius ||
       old.hairline != hairline ||
       old.hairlineStrong != hairlineStrong ||
-      old.fadeEnd != fadeEnd;
+      old.fadeEnd != fadeEnd ||
+      old.fade != fade;
 }

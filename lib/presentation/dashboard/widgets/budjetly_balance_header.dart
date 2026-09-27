@@ -39,7 +39,11 @@ class BudjetlyBalanceHeader extends StatefulWidget {
   /// The plate's cut, in one place. The shape and the padding that has to clear
   /// it are the same decision, so they read the same number rather than two
   /// literals that can drift apart and leave content tucked under the diagonal.
-  static const double chamfer = 24;
+  /// Corner radius. Deliberately small: the hero runs edge to edge, so the
+  /// rounding only shows at the screen's own corners, where a large radius
+  /// would carve visible bites out of the left and right edges instead of
+  /// softening them.
+  static const double radius = AppTheme.radiusHero;
 
   @override
   State<BudjetlyBalanceHeader> createState() => _BudjetlyBalanceHeaderState();
@@ -163,32 +167,36 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
         ? theme.colorScheme.error
         : theme.colorScheme.onSurface;
 
-    return PesaSurface.posterSurface(
-      chamfer: BudjetlyBalanceHeader.chamfer,
-      // A subtle two-stop gradient rather than a flat fill: the card reads as a
-      // lit surface instead of a coloured block, and it stays in the same hue
-      // family as the slate accent so it does not compete with the numbers.
+    return PesaSurface.bleed(
+      radius: BudjetlyBalanceHeader.radius,
+      // With the hairline and the shadow gone, the gradient is the only thing
+      // giving the surface a top and a bottom. It stays in the slate family so
+      // it does not compete with the numbers.
       background: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [
-          theme.colorScheme.surfaceContainerHighest,
-          theme.colorScheme.surfaceContainerHigh,
-          theme.colorScheme.surfaceContainer,
-        ],
-        stops: const [0.0, 0.55, 1.0],
+        colors: isNegative
+            ? [
+                theme.colorScheme.errorContainer.withValues(alpha: 0.55),
+                theme.colorScheme.surfaceContainerHigh,
+              ]
+            : [
+                theme.colorScheme.surfaceContainerHighest,
+                theme.colorScheme.surfaceContainer,
+              ],
+        stops: const [0.0, 1.0],
       ),
-      stroke: isNegative
-          ? theme.colorScheme.error.withValues(alpha: 0.35)
-          : context.appColors.hairlineStrong,
-      shadows: [
-        BoxShadow(
-          color: context.appColors.shadowMedium,
-          blurRadius: 22,
-          offset: const Offset(0, 10),
-        ),
-      ],
-      padding: heroPaddingFor(chamfer: BudjetlyBalanceHeader.chamfer),
+      // Uniform inset. There is no cut to clear any more, so the content does
+      // not have to lean away from one edge.
+      padding: const EdgeInsets.fromLTRB(
+        kSpacing20,
+        kSpacing20,
+        kSpacing20,
+        kSpacing20,
+      ),
+      // A screen reader should meet one labelled region rather than a pile of
+      // unrelated text nodes.
+      semanticLabel: 'Account balance and monthly cash flow',
       child: Stack(
         children: [
           // Ambient gradient shimmer sweep (neutral, non-distracting)
@@ -283,24 +291,40 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                       ),
                     ),
                   ],
-                  InkWell(
-                    onTap: () {
-                      PesaHaptics.light();
-                      setState(() {
-                        _isHidden = !_isHidden;
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                    child: Padding(
-                      padding: const EdgeInsets.all(kSpacing6),
-                      child: Icon(
-                        _isHidden
-                            ? PesaFlowIcons.visibilityOff
-                            : PesaFlowIcons.visibility,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.55,
+                  // The eye is the most-repeated control on this screen, and
+                  // an 18px icon in 6px of padding is a 30dp target — below the
+                  // 48dp minimum and below the WCAG 2.5.8 threshold. The mark
+                  // stays small on purpose; only the target grows.
+                  Semantics(
+                    button: true,
+                    label: _isHidden ? 'Show balance' : 'Hide balance',
+                    child: InkWell(
+                      onTap: () {
+                        PesaHaptics.light();
+                        setState(() {
+                          _isHidden = !_isHidden;
+                        });
+                      },
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: 48,
+                          minHeight: 48,
                         ),
-                        size: 18,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(kSpacing6),
+                            child: Icon(
+                              _isHidden
+                                  ? PesaFlowIcons.visibilityOff
+                                  : PesaFlowIcons.visibility,
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.55,
+                              ),
+                              size: 18,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),

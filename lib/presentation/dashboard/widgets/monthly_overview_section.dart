@@ -151,78 +151,18 @@ class MonthlyOverviewSection extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      color: appColors.incomeColor,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  const SizedBox(width: kSpacing8),
-                                  Text(
-                                    'Income',
-                                    style: context.ts(
-                                      13,
-                                      fontWeight: FontWeight.bold,
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              AmountText(
-                                amountInCents: income,
-                                type: AmountType.income,
-                                animate: true,
-                                useMonospace: true,
-                                style: context.ts(
-                                  13,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                          _CashflowRow(
+                            label: 'Income',
+                            dotColor: appColors.incomeColor,
+                            amount: income,
+                            amountType: AmountType.income,
                           ),
                           const SizedBox(height: kSpacing8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      color: appColors.expenseColor,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  const SizedBox(width: kSpacing8),
-                                  Text(
-                                    'Expense',
-                                    style: context.ts(
-                                      13,
-                                      fontWeight: FontWeight.bold,
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              AmountText(
-                                amountInCents: expense,
-                                type: AmountType.expense,
-                                animate: true,
-                                useMonospace: true,
-                                style: context.ts(
-                                  13,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                          _CashflowRow(
+                            label: 'Expense',
+                            dotColor: appColors.expenseColor,
+                            amount: expense,
+                            amountType: AmountType.expense,
                           ),
                           const SizedBox(height: kSpacing8),
                           Divider(
@@ -231,45 +171,15 @@ class MonthlyOverviewSection extends ConsumerWidget {
                             color: appColors.scaffoldLine,
                           ),
                           const SizedBox(height: kSpacing8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      color: netSavings >= 0
-                                          ? appColors.incomeColor
-                                          : appColors.expenseColor,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  const SizedBox(width: kSpacing8),
-                                  Text(
-                                    netSavings >= 0 ? 'Saved' : 'Deficit',
-                                    style: context.ts(
-                                      12,
-                                      fontWeight: FontWeight.bold,
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              AmountText(
-                                amountInCents: netSavings.abs(),
-                                type: netSavings >= 0
-                                    ? AmountType.income
-                                    : AmountType.expense,
-                                animate: true,
-                                useMonospace: true,
-                                style: context.ts(
-                                  13,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                          _CashflowRow(
+                            label: netSavings >= 0 ? 'Saved' : 'Deficit',
+                            dotColor: netSavings >= 0
+                                ? appColors.incomeColor
+                                : appColors.expenseColor,
+                            amount: netSavings,
+                            amountType: netSavings >= 0
+                                ? AmountType.income
+                                : AmountType.expense,
                           ),
                         ],
                       ),
@@ -434,6 +344,77 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
           child: child,
         );
       },
+    );
+  }
+}
+
+/// One line of the monthly cashflow block: a label on the left, an amount on
+/// the right, and both able to give way.
+///
+/// The label and the amount used to be non-flex children of a `spaceBetween`
+/// `Row`, so neither could shrink. A five-figure balance in the monospace
+/// amount style then ran straight past the card and overflowed — which is
+/// invisible until the numbers are large, and on a card this small "large" is
+/// an ordinary Tuesday for anyone tracking real money. The label truncates;
+/// the amount truncates only as a last resort, since it is the value being
+/// read.
+class _CashflowRow extends StatelessWidget {
+  const _CashflowRow({
+    required this.label,
+    required this.dotColor,
+    required this.amount,
+    required this.amountType,
+  });
+
+  final String label;
+  final Color dotColor;
+  final int amount;
+  final AmountType amountType;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        Flexible(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: dotColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: kSpacing8),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.ts(
+                    13,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: kSpacing8),
+        Flexible(
+          child: AmountText(
+            amountInCents: amount,
+            type: amountType,
+            animate: true,
+            useMonospace: true,
+            style: context.ts(13, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
     );
   }
 }

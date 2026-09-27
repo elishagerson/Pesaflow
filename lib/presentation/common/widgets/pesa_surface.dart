@@ -17,8 +17,8 @@ import 'package:pesaflow/presentation/common/widgets/radial_glow.dart';
 ///
 /// Use:
 ///  * [PesaSurface.card] — the default. Rounded, hairline, soft elevation.
-///  * [PesaSurface.chamfered] — the poster cut. **One per screen region**; the
-///    motif stops reading the moment it is everywhere.
+///  * [PesaSurface.bleed] — borderless and shadowless, for a surface that
+///    should read as part of the screen rather than an object on it.
 class PesaSurface extends StatelessWidget {
   final Widget child;
   final Color? fill;
@@ -34,15 +34,10 @@ class PesaSurface extends StatelessWidget {
   /// Corner radius at rest. Ignored for chamfered surfaces, which derive theirs.
   final double radius;
 
-  /// Extent of the 45° poster cut on the chamfered variant.
+  /// Extent of the 45° cut on the chamfered variant.
   final double chamfer;
 
   final bool chamfered;
-
-  /// The hard-cut racing-plate silhouette ([PosterBorder]). Wins over
-  /// [chamfered] when set. The loudest shape in the library; one surface per
-  /// screen.
-  final bool poster;
 
   /// Brand glow behind the fill, masked to this surface's own shape. `0`
   /// disables it. Keep it under `0.5` — above that it stops reading as light
@@ -74,7 +69,6 @@ class PesaSurface extends StatelessWidget {
     this.radius = AppTheme.radiusCard,
     this.chamfer = 18,
     this.chamfered = false,
-    this.poster = false,
     this.glow = 0,
     this.shadows = const [],
     this.padding = EdgeInsets.zero,
@@ -84,15 +78,22 @@ class PesaSurface extends StatelessWidget {
     this.semanticLabel,
   });
 
-  /// A standard card: rounded, hairline, soft elevation, no glow.
-  factory PesaSurface.card({
+  /// A borderless, shadowless surface that spans its parent edge to edge.
+  ///
+  /// A hairline plus an elevation shadow is what makes a card read as an object
+  /// *placed on* the screen. For something meant to read as part of the screen
+  /// itself — a hero the user is inside rather than looking at — both have to
+  /// go, and the fill has to carry the shape on its own. A subtle gradient and
+  /// slightly rounded corners are what define it instead.
+  ///
+  /// Pair with a parent that does not add horizontal padding, so "bleed" is
+  /// actually true; a bleed inside a gutter is just a card with extra steps.
+  factory PesaSurface.bleed({
     Key? key,
     required Widget child,
     Color? fill,
-    Color? stroke,
     Gradient? background,
-    double radius = AppTheme.radiusCard,
-    List<BoxShadow> shadows = const [],
+    double radius = AppTheme.radiusHero,
     EdgeInsetsGeometry padding = EdgeInsets.zero,
     bool clipContent = true,
     VoidCallback? onTap,
@@ -100,11 +101,14 @@ class PesaSurface extends StatelessWidget {
   }) {
     return PesaSurface(
       key: key,
+      // No stroke and no shadow: those are the bezel.
+      stroke: const Color(0x00000000),
+      shadows: const [],
+      glow: 0,
+      edgeLight: false,
       fill: fill,
-      stroke: stroke,
       background: background,
       radius: radius,
-      shadows: shadows,
       padding: padding,
       clipContent: clipContent,
       onTap: onTap,
@@ -113,7 +117,9 @@ class PesaSurface extends StatelessWidget {
     );
   }
 
-  /// The poster cut, with the brand glow behind it.
+  /// A card with two opposite corners cut at 45°. **One per screen region** —
+  /// the motif stops reading the moment it is everywhere, and the brief is
+  /// moving away from framed surfaces, so prefer [PesaSurface.bleed].
   factory PesaSurface.chamferSurface({
     Key? key,
     required Widget child,
@@ -145,27 +151,17 @@ class PesaSurface extends StatelessWidget {
     );
   }
 
-  /// The one outline every layer agrees on: the fill, the clip, the glow mask
-  /// and the painter all call this. Anything that re-derives the shape
-  /// separately is how a shadow ends up rounding a corner the fill cut.
-  ShapeBorder get _outline => poster
-      ? PosterBorder(chamfer: chamfer)
-      : chamfered
-      ? ChicaneBorder(borderRadius: AppTheme.radiusCard, chamfer: chamfer)
-      : RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius));
-
-  /// The loudest surface in the app: a hard-cut racing plate, a specular top
-  /// edge, and the brand glow behind it. One per screen — the hero.
-  factory PesaSurface.posterSurface({
+  /// A standard card: rounded, hairline, soft elevation, no glow.
+  factory PesaSurface.card({
     Key? key,
     required Widget child,
     Color? fill,
     Color? stroke,
     Gradient? background,
-    double chamfer = 24,
-    double glow = 0.34,
+    double radius = AppTheme.radiusCard,
     List<BoxShadow> shadows = const [],
     EdgeInsetsGeometry padding = EdgeInsets.zero,
+    bool clipContent = true,
     VoidCallback? onTap,
     String? semanticLabel,
   }) {
@@ -174,17 +170,22 @@ class PesaSurface extends StatelessWidget {
       fill: fill,
       stroke: stroke,
       background: background,
-      chamfer: chamfer,
-      poster: true,
-      edgeLight: true,
-      glow: glow,
+      radius: radius,
       shadows: shadows,
       padding: padding,
+      clipContent: clipContent,
       onTap: onTap,
       semanticLabel: semanticLabel,
       child: child,
     );
   }
+
+  /// The one outline every layer agrees on: the fill, the clip, the glow mask
+  /// and the painter all call this. Anything that re-derives the shape
+  /// separately is how a shadow ends up rounding a corner the fill cut.
+  ShapeBorder get _outline => chamfered
+      ? ChicaneBorder(borderRadius: AppTheme.radiusCard, chamfer: chamfer)
+      : RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius));
 
   @override
   Widget build(BuildContext context) {
@@ -300,6 +301,9 @@ class _PesaSurfacePainter extends CustomPainter {
       HairlineBorderPainter(
         hairline: stroke,
         hairlineStrong: stroke,
+        // Uniform, not faded: this surface's edge is a deliberate silhouette,
+        // so it has to stay defined all the way round — including the cuts.
+        fade: false,
       ).strokePath(canvas, outline.getOuterPath(inset), inset);
       canvas.restore();
     }

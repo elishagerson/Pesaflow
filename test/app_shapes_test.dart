@@ -155,69 +155,6 @@ void main() {
     });
   });
 
-  group('PosterBorder', () {
-    // The hero silhouette: a left-pointing chevron. Both left corners are cut
-    // and both right corners are square, so the diagonal reads as one continuous
-    // gesture down each side. Cutting opposite corners instead left a bare 90°
-    // spike at the other end of the same vertical edge, which reads as an
-    // accident rather than a decision.
-    test('cuts both left corners and squares both right corners', () {
-      final pts = _sample(
-        const PosterBorder(
-          chamfer: 24,
-        ).pathFor(const Rect.fromLTWH(0, 0, 300, 200)),
-      );
-      expect(
-        _hits(pts, Offset.zero),
-        isFalse,
-        reason: 'top-left should be cut',
-      );
-      expect(_hits(pts, const Offset(0, 200)), isFalse, reason: 'bottom-left');
-      expect(
-        _hits(pts, const Offset(300, 0)),
-        isTrue,
-        reason: 'top-right square',
-      );
-      expect(
-        _hits(pts, const Offset(300, 200)),
-        isTrue,
-        reason: 'bottom-right',
-      );
-    });
-
-    test('perimeter matches a left-chevron plate', () {
-      const w = 300.0, h = 200.0, c = 24.0;
-      final path = const PosterBorder(
-        chamfer: c,
-      ).pathFor(const Rect.fromLTWH(0, 0, w, h));
-      // Top and bottom lose `c` each; the left edge loses `2c` because both of
-      // its ends are diagonals; the right edge is untouched.
-      final expected =
-          (w - c) + h + (w - c) + (h - 2 * c) + 2 * (c * math.sqrt2);
-      expect(_perimeter(path), closeTo(expected, 0.01));
-    });
-
-    test('the left edge is shorter than the right by exactly two cuts', () {
-      const w = 300.0, h = 200.0, c = 24.0;
-      final pts = _sample(
-        const PosterBorder(chamfer: c).pathFor(const Rect.fromLTWH(0, 0, w, h)),
-        step: 0.05,
-      );
-      // The remaining vertical run of the left edge. The sample list wraps
-      // around the path, so dy is not monotonic — take the extremes.
-      final leftEdge = pts.where((p) => p.dx < 0.15).toList();
-      expect(leftEdge, isNotEmpty);
-      final top = leftEdge.map((p) => p.dy).reduce(math.min);
-      final bottom = leftEdge.map((p) => p.dy).reduce(math.max);
-      expect(bottom - top, closeTo(h - 2 * c, 0.6));
-    });
-
-    test('scales without collapsing', () {
-      final scaled = const PosterBorder(chamfer: 20).scale(0.5) as PosterBorder;
-      expect(scaled.chamfer, 10);
-    });
-  });
-
   group('ChicaneBorder', () {
     test('cuts opposite corners and leaves the other two rounded', () {
       final pts = _sample(

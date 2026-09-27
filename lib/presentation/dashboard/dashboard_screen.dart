@@ -223,142 +223,177 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     bottom: IosTabBar.navBarHeight + kSpacing32,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                    padding: EdgeInsets.zero,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ── 1. Top Bar: Greeting & Quick Tools ──
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _getGreeting(),
-                                  style: context.ts(
-                                    12,
-                                    fontWeight: FontWeight.w500,
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  cardholderName.isNotEmpty &&
-                                          cardholderName != 'TOTAL NET WORTH'
-                                      ? cardholderName
-                                      : 'PesaFlow',
-                                  style: context.ts(
-                                    20,
-                                    fontWeight: FontWeight.w800,
-                                    color: theme.colorScheme.onSurface,
-                                    letterSpacing: -0.4,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                TactileSpringContainer(
-                                  onTap: () => ref
-                                      .read(paletteVisibilityProvider.notifier)
-                                      .toggle(),
-                                  selectedColor: theme.colorScheme.onSurface,
-                                  child: Container(
-                                    width: 42,
-                                    height: 42,
-                                    decoration: BoxDecoration(
-                                      color: theme
-                                          .colorScheme
-                                          .surfaceContainerHigh,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: theme.colorScheme.outlineVariant
-                                            .withValues(alpha: 0.35),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Icon(
-                                      PesaFlowIcons.search,
-                                      color: theme.colorScheme.onSurface,
-                                      size: 18,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: kSpacing8),
-                                TactileSpringContainer(
-                                  onTap: () => context.push('/sms-review'),
-                                  selectedColor: theme.colorScheme.onSurface,
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      Container(
-                                        width: 42,
-                                        height: 42,
-                                        decoration: BoxDecoration(
-                                          color: theme
-                                              .colorScheme
-                                              .surfaceContainerHigh,
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
+                        _Inset(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // ── 1. Top Bar: Greeting & Quick Tools ──
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  // Takes the space the actions do not. A
+                                  // workspace name is user-supplied, so it
+                                  // truncates rather than shoving the search
+                                  // and review buttons off the bar.
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          _getGreeting(),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: context.ts(
+                                            12,
+                                            fontWeight: FontWeight.w500,
                                             color: theme
                                                 .colorScheme
-                                                .outlineVariant
-                                                .withValues(alpha: 0.35),
-                                            width: 1,
+                                                .onSurfaceVariant,
                                           ),
                                         ),
-                                        alignment: Alignment.center,
-                                        child: Icon(
-                                          PesaFlowIcons.sms,
-                                          size: 18,
-                                          color: theme.colorScheme.onSurface,
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          cardholderName.isNotEmpty &&
+                                                  cardholderName !=
+                                                      'TOTAL NET WORTH'
+                                              ? cardholderName
+                                              : 'PesaFlow',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: context.ts(
+                                            20,
+                                            fontWeight: FontWeight.w800,
+                                            color: theme.colorScheme.onSurface,
+                                            letterSpacing: -0.4,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      TactileSpringContainer(
+                                        onTap: () => ref
+                                            .read(
+                                              paletteVisibilityProvider
+                                                  .notifier,
+                                            )
+                                            .toggle(),
+                                        selectedColor:
+                                            theme.colorScheme.onSurface,
+                                        child: Container(
+                                          width: 42,
+                                          height: 42,
+                                          decoration: BoxDecoration(
+                                            color: theme
+                                                .colorScheme
+                                                .surfaceContainerHigh,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: theme
+                                                  .colorScheme
+                                                  .outlineVariant
+                                                  .withValues(alpha: 0.35),
+                                              width: 1,
+                                            ),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Icon(
+                                            PesaFlowIcons.search,
+                                            color: theme.colorScheme.onSurface,
+                                            size: 18,
+                                          ),
                                         ),
                                       ),
-                                      if (pendingReviewCount > 0)
-                                        Positioned(
-                                          right: -2,
-                                          top: -2,
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: kSpacing6,
-                                              vertical: kSpacing2,
+                                      const SizedBox(width: kSpacing8),
+                                      TactileSpringContainer(
+                                        onTap: () =>
+                                            context.push('/sms-review'),
+                                        selectedColor:
+                                            theme.colorScheme.onSurface,
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                            Container(
+                                              width: 42,
+                                              height: 42,
+                                              decoration: BoxDecoration(
+                                                color: theme
+                                                    .colorScheme
+                                                    .surfaceContainerHigh,
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: theme
+                                                      .colorScheme
+                                                      .outlineVariant
+                                                      .withValues(alpha: 0.35),
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: Icon(
+                                                PesaFlowIcons.sms,
+                                                size: 18,
+                                                color:
+                                                    theme.colorScheme.onSurface,
+                                              ),
                                             ),
-                                            decoration: BoxDecoration(
-                                              color: context
-                                                  .appColors
-                                                  .expenseColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                    AppTheme.radiusPill,
+                                            if (pendingReviewCount > 0)
+                                              Positioned(
+                                                right: -2,
+                                                top: -2,
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: kSpacing6,
+                                                        vertical: kSpacing2,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    color: context
+                                                        .appColors
+                                                        .expenseColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          AppTheme.radiusPill,
+                                                        ),
+                                                    border: Border.all(
+                                                      color: theme
+                                                          .colorScheme
+                                                          .surface,
+                                                      width: 1.5,
+                                                    ),
                                                   ),
-                                              border: Border.all(
-                                                color:
-                                                    theme.colorScheme.surface,
-                                                width: 1.5,
+                                                  child: Text(
+                                                    '$pendingReviewCount',
+                                                    style: context.ts(
+                                                      9,
+                                                      color: theme
+                                                          .colorScheme
+                                                          .onPrimary,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                            child: Text(
-                                              '$pendingReviewCount',
-                                              style: context.ts(
-                                                9,
-                                                color:
-                                                    theme.colorScheme.onPrimary,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                          ),
+                                          ],
                                         ),
+                                      ),
                                     ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                              const SizedBox(height: kSpacing18),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: kSpacing18),
 
                         // ── 2. Hero Balance & Cash Flow Card ──
                         Consumer(
@@ -398,186 +433,228 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                         const SizedBox(height: kSpacing14),
 
-                        // ── 2b. Account Filter Selector ──
-                        if (accounts.isNotEmpty) ...[
-                          SizedBox(
-                            height: 34,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: accounts.length + 1,
-                              itemBuilder: (context, index) {
-                                if (index == 0) {
-                                  final isSelected = _selectedAccountId == null;
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                      right: kSpacing8,
-                                    ),
-                                    child: TactileSpringContainer(
-                                      onTap: () {
-                                        setState(() {
-                                          _selectedAccountId = null;
-                                        });
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: kSpacing12,
-                                          vertical: kSpacing6,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: isSelected
-                                              ? theme.colorScheme.primary
-                                                    .withValues(alpha: 0.16)
-                                              : theme
-                                                    .colorScheme
-                                                    .surfaceContainerHigh,
-                                          borderRadius: BorderRadius.circular(
-                                            AppTheme.radiusPill,
+                        _Inset(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // ── 2b. Account Filter Selector ──
+                              if (accounts.isNotEmpty) ...[
+                                SizedBox(
+                                  height: 34,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: accounts.length + 1,
+                                    itemBuilder: (context, index) {
+                                      if (index == 0) {
+                                        final isSelected =
+                                            _selectedAccountId == null;
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: kSpacing8,
                                           ),
-                                          border: Border.all(
-                                            color: isSelected
-                                                ? theme.colorScheme.primary
-                                                : theme
-                                                      .colorScheme
-                                                      .outlineVariant
-                                                      .withValues(alpha: 0.35),
-                                            width: isSelected ? 1.2 : 0.8,
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            'All Accounts',
-                                            style: context.ts(
-                                              11,
-                                              fontWeight: FontWeight.w700,
-                                              color: isSelected
-                                                  ? theme.colorScheme.primary
-                                                  : theme.colorScheme.onSurface,
+                                          child: TactileSpringContainer(
+                                            onTap: () {
+                                              setState(() {
+                                                _selectedAccountId = null;
+                                              });
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: kSpacing12,
+                                                    vertical: kSpacing6,
+                                                  ),
+                                              decoration: BoxDecoration(
+                                                color: isSelected
+                                                    ? theme.colorScheme.primary
+                                                          .withValues(
+                                                            alpha: 0.16,
+                                                          )
+                                                    : theme
+                                                          .colorScheme
+                                                          .surfaceContainerHigh,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      AppTheme.radiusPill,
+                                                    ),
+                                                border: Border.all(
+                                                  color: isSelected
+                                                      ? theme
+                                                            .colorScheme
+                                                            .primary
+                                                      : theme
+                                                            .colorScheme
+                                                            .outlineVariant
+                                                            .withValues(
+                                                              alpha: 0.35,
+                                                            ),
+                                                  width: isSelected ? 1.2 : 0.8,
+                                                ),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  'All Accounts',
+                                                  style: context.ts(
+                                                    11,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: isSelected
+                                                        ? theme
+                                                              .colorScheme
+                                                              .primary
+                                                        : theme
+                                                              .colorScheme
+                                                              .onSurface,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }
+                                        );
+                                      }
 
-                                final account = accounts[index - 1];
-                                final isSelected =
-                                    _selectedAccountId == account.id;
+                                      final account = accounts[index - 1];
+                                      final isSelected =
+                                          _selectedAccountId == account.id;
 
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                    right: kSpacing8,
-                                  ),
-                                  child: TactileSpringContainer(
-                                    onTap: () {
-                                      setState(() {
-                                        _selectedAccountId = isSelected
-                                            ? null
-                                            : account.id;
-                                      });
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: kSpacing10,
-                                        vertical: kSpacing6,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? theme.colorScheme.primary
-                                                  .withValues(alpha: 0.16)
-                                            : theme
-                                                  .colorScheme
-                                                  .surfaceContainerHigh,
-                                        borderRadius: BorderRadius.circular(
-                                          AppTheme.radiusPill,
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: kSpacing8,
                                         ),
-                                        border: Border.all(
-                                          color: isSelected
-                                              ? theme.colorScheme.primary
-                                              : theme.colorScheme.outlineVariant
-                                                    .withValues(alpha: 0.35),
-                                          width: isSelected ? 1.2 : 0.8,
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            getAccountIcon(account.icon),
-                                            size: 13,
-                                            color: isSelected
-                                                ? theme.colorScheme.primary
-                                                : theme.colorScheme.onSurface,
-                                          ),
-                                          const SizedBox(width: kSpacing6),
-                                          Text(
-                                            account.name,
-                                            style: context.ts(
-                                              11,
-                                              fontWeight: FontWeight.w600,
-                                              color: isSelected
-                                                  ? theme.colorScheme.primary
-                                                  : theme.colorScheme.onSurface,
+                                        child: TactileSpringContainer(
+                                          onTap: () {
+                                            setState(() {
+                                              _selectedAccountId = isSelected
+                                                  ? null
+                                                  : account.id;
+                                            });
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: kSpacing10,
+                                              vertical: kSpacing6,
                                             ),
-                                          ),
-                                          const SizedBox(width: kSpacing6),
-                                          Text(
-                                            _formatCompact(account.balance),
-                                            style: context.ts(
-                                              10,
-                                              fontWeight: FontWeight.w700,
+                                            decoration: BoxDecoration(
                                               color: isSelected
                                                   ? theme.colorScheme.primary
+                                                        .withValues(alpha: 0.16)
                                                   : theme
                                                         .colorScheme
-                                                        .onSurfaceVariant,
+                                                        .surfaceContainerHigh,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                    AppTheme.radiusPill,
+                                                  ),
+                                              border: Border.all(
+                                                color: isSelected
+                                                    ? theme.colorScheme.primary
+                                                    : theme
+                                                          .colorScheme
+                                                          .outlineVariant
+                                                          .withValues(
+                                                            alpha: 0.35,
+                                                          ),
+                                                width: isSelected ? 1.2 : 0.8,
+                                              ),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  getAccountIcon(account.icon),
+                                                  size: 13,
+                                                  color: isSelected
+                                                      ? theme
+                                                            .colorScheme
+                                                            .primary
+                                                      : theme
+                                                            .colorScheme
+                                                            .onSurface,
+                                                ),
+                                                const SizedBox(
+                                                  width: kSpacing6,
+                                                ),
+                                                Text(
+                                                  account.name,
+                                                  style: context.ts(
+                                                    11,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: isSelected
+                                                        ? theme
+                                                              .colorScheme
+                                                              .primary
+                                                        : theme
+                                                              .colorScheme
+                                                              .onSurface,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: kSpacing6,
+                                                ),
+                                                Text(
+                                                  _formatCompact(
+                                                    account.balance,
+                                                  ),
+                                                  style: context.ts(
+                                                    10,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: isSelected
+                                                        ? theme
+                                                              .colorScheme
+                                                              .primary
+                                                        : theme
+                                                              .colorScheme
+                                                              .onSurfaceVariant,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: kSpacing16),
+                              ] else ...[
+                                const SizedBox(height: kSpacing8),
+                              ],
+
+                              // ── 3. Quick Action Row ──
+                              Row(
+                                children: [
+                                  _QuickActionButton(
+                                    icon: PesaFlowIcons.expense,
+                                    label: 'Expense',
+                                    color: context.appColors.expenseColor,
+                                    onTap: () => context.push(
+                                      '/transactions/add?type=Expense',
                                     ),
                                   ),
-                                );
-                              },
-                            ),
+                                  const SizedBox(width: kSpacing10),
+                                  _QuickActionButton(
+                                    icon: PesaFlowIcons.income,
+                                    label: 'Income',
+                                    color: context.appColors.incomeColor,
+                                    onTap: () => context.push(
+                                      '/transactions/add?type=Income',
+                                    ),
+                                  ),
+                                  const SizedBox(width: kSpacing10),
+                                  _QuickActionButton(
+                                    icon: PesaFlowIcons.transfer,
+                                    label: 'Transfer',
+                                    color: context.appColors.transferColor,
+                                    onTap: () => context.push(
+                                      '/transactions/add?type=Transfer',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: kSpacing20),
+                            ],
                           ),
-                          const SizedBox(height: kSpacing16),
-                        ] else ...[
-                          const SizedBox(height: kSpacing8),
-                        ],
-
-                        // ── 3. Quick Action Row ──
-                        Row(
-                          children: [
-                            _QuickActionButton(
-                              icon: PesaFlowIcons.expense,
-                              label: 'Expense',
-                              color: context.appColors.expenseColor,
-                              onTap: () => context.push(
-                                '/transactions/add?type=Expense',
-                              ),
-                            ),
-                            const SizedBox(width: kSpacing10),
-                            _QuickActionButton(
-                              icon: PesaFlowIcons.income,
-                              label: 'Income',
-                              color: context.appColors.incomeColor,
-                              onTap: () =>
-                                  context.push('/transactions/add?type=Income'),
-                            ),
-                            const SizedBox(width: kSpacing10),
-                            _QuickActionButton(
-                              icon: PesaFlowIcons.transfer,
-                              label: 'Transfer',
-                              color: context.appColors.transferColor,
-                              onTap: () => context.push(
-                                '/transactions/add?type=Transfer',
-                              ),
-                            ),
-                          ],
                         ),
-                        const SizedBox(height: kSpacing20),
 
                         // ── 4. Actionable Alerts (Only if items exist) ──
                         const RightNowCard(),
@@ -610,16 +687,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
                         // ── 6. Recent Activity Preview ──
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'Recent Activity',
-                              style: context.ts(
-                                15,
-                                fontWeight: FontWeight.w700,
-                                color: onSurface,
+                            // The section title yields; the "See All"
+                            // affordance is the thing being aimed at.
+                            Expanded(
+                              child: Text(
+                                'Recent Activity',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: context.ts(
+                                  15,
+                                  fontWeight: FontWeight.w700,
+                                  color: onSurface,
+                                ),
                               ),
                             ),
+                            const SizedBox(width: kSpacing8),
                             TactileSpringContainer(
                               onTap: () => context.push('/transactions'),
                               child: Row(
@@ -898,37 +981,51 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         Positioned(
           left: -9999,
           top: -9999,
-          child: Column(
-            children: [
-              if (heatmapAsync.value != null)
+          // These four are not part of the dashboard. They are stand-ins for
+          // surfaces the launcher draws at a fixed size, with their own
+          // typography, and they are only ever read as pixels for the capture.
+          //
+          // Inheriting the app's text scale is therefore wrong twice over: the
+          // text does not represent the real widget, and a user running a
+          // larger-type setting overflows these fixed 180x180 boxes — which
+          // threw layout errors on every dashboard frame at 1.3x, for a
+          // surface nobody can see.
+          child: MediaQuery.withNoTextScaling(
+            child: Column(
+              children: [
+                if (heatmapAsync.value != null)
+                  RepaintBoundary(
+                    key: HomeWidgetsRenderer.heatmapKey,
+                    child: WidgetHeatmap(
+                      data: heatmapAsync.value!,
+                      theme: theme,
+                    ),
+                  ),
                 RepaintBoundary(
-                  key: HomeWidgetsRenderer.heatmapKey,
-                  child: WidgetHeatmap(data: heatmapAsync.value!, theme: theme),
+                  key: HomeWidgetsRenderer.safeToSpendKey,
+                  child: WidgetSafeToSpend(
+                    remainingCents: (remainingBudget * 100).toInt(),
+                    limitCents: (budgetTotal * 100).toInt(),
+                    percentage: overallPct,
+                    theme: theme,
+                  ),
                 ),
-              RepaintBoundary(
-                key: HomeWidgetsRenderer.safeToSpendKey,
-                child: WidgetSafeToSpend(
-                  remainingCents: (remainingBudget * 100).toInt(),
-                  limitCents: (budgetTotal * 100).toInt(),
-                  percentage: overallPct,
-                  theme: theme,
+                RepaintBoundary(
+                  key: HomeWidgetsRenderer.quickTemplatesKey,
+                  child: WidgetQuickTemplates(
+                    templates: templatesAsync.value ?? [],
+                    theme: theme,
+                  ),
                 ),
-              ),
-              RepaintBoundary(
-                key: HomeWidgetsRenderer.quickTemplatesKey,
-                child: WidgetQuickTemplates(
-                  templates: templatesAsync.value ?? [],
-                  theme: theme,
+                RepaintBoundary(
+                  key: HomeWidgetsRenderer.recentTransactionsKey,
+                  child: WidgetRecentTransactions(
+                    transactions: recentTransAsync.value ?? [],
+                    theme: theme,
+                  ),
                 ),
-              ),
-              RepaintBoundary(
-                key: HomeWidgetsRenderer.recentTransactionsKey,
-                child: WidgetRecentTransactions(
-                  transactions: recentTransAsync.value ?? [],
-                  theme: theme,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -1002,6 +1099,25 @@ class _QuickActionButton extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// The dashboard's standard horizontal inset.
+///
+/// The hero runs edge to edge, so the inset is not applied once around the
+/// whole scroll view — that would be a gutter around the hero too, which is the
+/// one thing it must not have. Everything else opts back in through this.
+class _Inset extends StatelessWidget {
+  const _Inset({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+      child: child,
     );
   }
 }

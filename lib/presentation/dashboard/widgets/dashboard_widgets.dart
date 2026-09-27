@@ -191,31 +191,45 @@ class _HubCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 28,
-                      height: 28,
-                      decoration: BoxDecoration(
-                        color: color.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusSmall,
+                // The title gives way, the icon and the affordance do not.
+                //
+                // `mainAxisSize: MainAxisSize.min` is not a constraint: a
+                // non-flex child of a Row is still handed an unbounded max
+                // width, so a long title simply runs past the card edge. At
+                // two-per-row that is a 159px card, which 28px of icon, 8px
+                // of gap, a 12px title and a 14px chevron clears only just —
+                // and not at all at a larger text scale.
+                Flexible(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusSmall,
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                        child: Icon(icon, size: 14, color: color),
+                      ),
+                      const SizedBox(width: kSpacing8),
+                      Flexible(
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.ts(
+                            12,
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       ),
-                      alignment: Alignment.center,
-                      child: Icon(icon, size: 14, color: color),
-                    ),
-                    const SizedBox(width: kSpacing8),
-                    Text(
-                      title,
-                      style: context.ts(
-                        12,
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 if (badgeCount != null && badgeCount! > 0)
                   Container(

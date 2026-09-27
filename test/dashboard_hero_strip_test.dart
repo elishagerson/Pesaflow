@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pesaflow/core/theme/app_shapes.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
@@ -272,39 +272,106 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    group('boldness and definition', () {
-      // "Bolder" is only meaningful if it is measurable, so these assert the
-      // specific decisions rather than a vibe.
-      testWidgets('the hero uses the hard-cut poster silhouette', (
+    group('full bleed, no bezel', () {
+      // The hero is meant to be something the user is *inside*, not an object
+      // sitting on the screen. That means no bezel around it: no hairline, no
+      // elevation shadow, no specular edge, and no gutter down either side. The
+      // shape carries a gradient and slight rounding instead.
+      testWidgets('the hero spans the full width of its parent', (
         tester,
       ) async {
         await tester.pumpWidget(_host());
         await tester.pumpAndSettle();
 
-        final outlines = tester
-            .widgetList<DecoratedBox>(find.byType(DecoratedBox))
-            .map((d) => d.decoration)
-            .whereType<ShapeDecoration>()
-            .map((d) => d.shape);
-
+        final screen = tester.getRect(find.byType(DashboardHeroStrip).first);
+        final surface = tester.getRect(find.byType(PesaSurface).first);
         expect(
-          outlines.whereType<PosterBorder>(),
-          isNotEmpty,
-          reason: 'the hero fell back to a rounded or chamfered outline',
+          surface.left,
+          screen.left,
+          reason: 'a gutter on the left is a bezel',
+        );
+        expect(
+          surface.right,
+          screen.right,
+          reason: 'a gutter on the right is a bezel',
         );
       });
 
-      testWidgets('the hero has a specular top edge', (tester) async {
+      testWidgets('the hero draws no border', (tester) async {
         await tester.pumpWidget(_host());
         await tester.pumpAndSettle();
 
-        // `edgeLight` is a public field on the surface, so this reads the real
-        // configuration rather than a proxy for it.
         final surface = tester.widget<PesaSurface>(find.byType(PesaSurface));
         expect(
-          surface.edgeLight,
-          isTrue,
-          reason: 'a defined edge needs the specular line',
+          ((surface.stroke ?? const Color(0x00000000)).a * 255).round(),
+          0,
+          reason: 'a hairline turns the hero into a framed card',
+        );
+      });
+
+      testWidgets('the hero casts no elevation shadow', (tester) async {
+        await tester.pumpWidget(_host());
+        await tester.pumpAndSettle();
+
+        final surface = tester.widget<PesaSurface>(find.byType(PesaSurface));
+        expect(
+          surface.shadows,
+          isEmpty,
+          reason:
+              'a shadow lifts the hero off the screen, the opposite of '
+              'the brief',
+        );
+      });
+
+      testWidgets('the hero has no specular edge line', (tester) async {
+        await tester.pumpWidget(_host());
+        await tester.pumpAndSettle();
+
+        final surface = tester.widget<PesaSurface>(find.byType(PesaSurface));
+        expect(surface.edgeLight, isFalse, reason: 'another kind of bezel');
+      });
+
+      testWidgets('the corners are rounded, and only slightly', (tester) async {
+        await tester.pumpWidget(_host());
+        await tester.pumpAndSettle();
+
+        final surface = tester.widget<PesaSurface>(find.byType(PesaSurface));
+        expect(
+          surface.chamfered,
+          isFalse,
+          reason: 'the hero is cut, not rounded',
+        );
+        expect(
+          surface.radius,
+          AppTheme.radiusHero,
+          reason: 'the hero keeps the shared hero radius',
+        );
+        // "Slight" is a real constraint: a radius anywhere near half the
+        // surface's height would carve visible bites out of the left and right
+        // screen edges instead of softening them.
+        expect(surface.radius, lessThanOrEqualTo(24));
+      });
+
+      testWidgets('content is inset off the edges, not the card', (
+        tester,
+      ) async {
+        await tester.pumpWidget(_host());
+        await tester.pumpAndSettle();
+
+        // With the card on the edge of the screen, the only thing keeping text
+        // off the bezel is the surface's own padding.
+        final surface = tester.widget<PesaSurface>(find.byType(PesaSurface));
+        expect(
+          surface.padding.resolve(TextDirection.ltr).left,
+          greaterThanOrEqualTo(kSpacing16),
+        );
+
+        final label = tester.getRect(find.textContaining('M-PESA').first);
+        final bounds = tester.getRect(find.byType(PesaSurface).first);
+        expect(
+          label.left,
+          greaterThanOrEqualTo(bounds.left + kSpacing16 - 0.5),
+          reason: 'content is flush against the screen edge',
         );
       });
 
