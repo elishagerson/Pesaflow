@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_hero_carousel.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -117,6 +118,69 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Over budget by this much'), findsOneWidget);
+      },
+    );
+
+    // Regression: the 'All clear' / countdown headlines used `posterLarge`
+    // (64px condensed) inside a 232px card. A 64px face wraps to three lines
+    // in a 300px card and the last line fell off the bottom of the screen.
+    testWidgets('no page overflows its 232px card with a long balance', (
+      tester,
+    ) async {
+      for (final page in [0, 1, 2]) {
+        await tester.pumpWidget(_host());
+        await tester.pumpAndSettle();
+        for (var i = 0; i < page; i++) {
+          await tester.drag(find.byType(PageView), const Offset(-500, 0));
+          await tester.pumpAndSettle();
+        }
+        expect(tester.takeException(), isNull, reason: 'page $page overflowed');
+      }
+    });
+
+    // Regression: the account label sat inside a `MainAxisSize.min` Row, which
+    // hands its child an unbounded width, so a long workspace name pushed the
+    // privacy toggle off the right edge of the card.
+    testWidgets(
+      'a long account name truncates instead of pushing the toggle off',
+      (tester) async {
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              recurringTransactionsStreamProvider.overrideWith(
+                (ref) => Stream.value(const <RecurringTransaction>[]),
+              ),
+            ],
+            child: MaterialApp(
+              theme: AppTheme.lightTheme,
+              home: Scaffold(
+                body: SizedBox(
+                  width: 320,
+                  child: const BudjetlyBalanceHeader(
+                    balance: 2500000,
+                    label: 'A workspace name that is far too long for the card',
+                    income: 4000000,
+                    expense: 1500000,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+
+        final toggle = find.byType(InkWell);
+        expect(toggle, findsWidgets);
+        final header = tester.renderObject<RenderBox>(
+          find.byType(BudjetlyBalanceHeader),
+        );
+        final toggleBox = tester.renderObject<RenderBox>(toggle.first);
+        expect(
+          toggleBox.size.width,
+          lessThan(header.size.width),
+          reason: 'the toggle must still be on the card',
+        );
       },
     );
 
