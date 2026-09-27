@@ -195,66 +195,61 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Top row: Label + Status (if negative) + Eye toggle
+              //
+              // Flat on purpose: the account label is `Expanded` and every
+              // other child is fixed width, so the row provably divides the
+              // space it was given. Nesting the label inside a
+              // `MainAxisSize.min` Row looks equivalent and is not — the inner
+              // row hands its child an unbounded width, so a long workspace
+              // name shoves the privacy toggle clean off the card.
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: isNegative
-                              ? theme.colorScheme.error
-                              : context.appColors.brandColor,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: kSpacing8),
-                      // Flexible, not fixed: an account or workspace name can be
-                      // arbitrarily long, and an unbounded label pushes the
-                      // privacy toggle clean off the card's right edge. Flex
-                      // resolves the fixed InkWell first, so the label gets
-                      // exactly the width that is left over.
-                      Flexible(
-                        child: Text(
-                          widget.label.toUpperCase(),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.appTypography.eyebrow.copyWith(
-                            color: isNegative
-                                ? theme.colorScheme.error
-                                : theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ),
-                      if (isNegative) ...[
-                        const SizedBox(width: kSpacing8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.error.withValues(
-                              alpha: 0.12,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              AppTheme.radiusPill,
-                            ),
-                          ),
-                          child: Text(
-                            'DEFICIT',
-                            style: context.appTypography.labelMicro.copyWith(
-                              color: theme.colorScheme.error,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: isNegative
+                          ? theme.colorScheme.error
+                          : context.appColors.brandColor,
+                      shape: BoxShape.circle,
+                    ),
                   ),
+                  const SizedBox(width: kSpacing8),
+                  Expanded(
+                    child: Text(
+                      widget.label.toUpperCase(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.appTypography.eyebrow.copyWith(
+                        color: isNegative
+                            ? theme.colorScheme.error
+                            : theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  if (isNegative) ...[
+                    const SizedBox(width: kSpacing8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.error.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusPill,
+                        ),
+                      ),
+                      child: Text(
+                        'DEFICIT',
+                        style: context.appTypography.labelMicro.copyWith(
+                          color: theme.colorScheme.error,
+                        ),
+                      ),
+                    ),
+                  ],
                   InkWell(
                     onTap: () {
                       PesaHaptics.light();
