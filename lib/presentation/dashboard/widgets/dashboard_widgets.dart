@@ -6,6 +6,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 /// A 2x2 executive financial hub grid replacing scattered carousels.
@@ -171,20 +172,10 @@ class _HubCard extends StatelessWidget {
 
     return TactileSpringContainer(
       onTap: onTap,
-      child: Container(
+      child: PesaSurface.bleed(
+        fill: theme.colorScheme.surfaceContainerHigh,
+        radius: AppTheme.radiusCard,
         padding: const EdgeInsets.all(kSpacing14),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-          border: Border.all(color: context.appColors.hairline, width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: context.appColors.shadowSubtle,
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

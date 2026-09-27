@@ -12,7 +12,6 @@ import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
@@ -670,7 +669,9 @@ class _OverviewTab extends ConsumerWidget {
                               },
                               child: SizedBox(
                                 width: 250,
-                                child: GlassCard(
+                                child: PesaSurface.bleed(
+                                  fill: theme.colorScheme.surfaceContainerHigh,
+                                  radius: AppTheme.radiusCard,
                                   padding: const EdgeInsets.all(kSpacing16),
                                   child: Row(
                                     children: [

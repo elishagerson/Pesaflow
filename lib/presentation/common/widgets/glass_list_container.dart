@@ -20,7 +20,6 @@ class GlassListContainer extends StatelessWidget {
       decoration: BoxDecoration(
         color: appColors.surfaceContainer,
         borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
-        border: Border.all(color: appColors.scaffoldLine, width: 0.5),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppTheme.radiusDialog),

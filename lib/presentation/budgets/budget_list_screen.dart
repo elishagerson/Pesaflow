@@ -20,7 +20,6 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_entrance.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
@@ -979,12 +978,13 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
             color: context.appColors.expenseColor,
           ),
         ),
-        child: TactileSpringContainer(
-          onTap: () => context.push('/budgets/groups/${g.group.id}'),
-          selectedColor: theme.colorScheme.onSurface,
-          child: GlassCard(
-            padding: const EdgeInsets.all(kSpacing16),
-            borderRadius: AppTheme.radiusCard,
+child: TactileSpringContainer(
+            onTap: () => context.push('/budgets/groups/${g.group.id}'),
+            selectedColor: theme.colorScheme.onSurface,
+            child: PesaSurface.bleed(
+              fill: theme.colorScheme.surfaceContainerHigh,
+              radius: AppTheme.radiusCard,
+              padding: const EdgeInsets.all(kSpacing16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1308,9 +1308,10 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               'budget_${bp.budget.id}',
             ),
             selectedColor: theme.colorScheme.onSurface,
-            child: GlassCard(
+            child: PesaSurface.bleed(
+              fill: theme.colorScheme.surfaceContainerHigh,
+              radius: AppTheme.radiusCard,
               padding: const EdgeInsets.all(kSpacing16),
-              borderRadius: AppTheme.radiusCard,
               child: Column(
                 children: [
                   Row(
@@ -1441,9 +1442,10 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
 
   Widget _buildUpgradeBanner(BuildContext context, ThemeData theme) {
     final onSurface = theme.colorScheme.onSurface;
-    return GlassCard(
+    return PesaSurface.bleed(
+      fill: theme.colorScheme.surfaceContainerHigh,
+      radius: AppTheme.radiusCard,
       padding: const EdgeInsets.all(kSpacing16),
-      borderRadius: AppTheme.radiusCard,
       child: Row(
         children: [
           Container(
