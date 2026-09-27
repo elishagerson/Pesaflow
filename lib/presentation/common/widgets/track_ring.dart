@@ -65,8 +65,14 @@ class TrackRing extends StatefulWidget {
 }
 
 class _TrackRingState extends State<TrackRing>
-    with SingleTickerProviderStateMixin, MotionAwareMixin {
+    with TickerProviderStateMixin, MotionAwareMixin {
   late final AnimationController _spring;
+
+  /// The announced target, tracked separately from [_spring] because the
+  /// Semantics wrapper sits *outside* the AnimatedBuilder that reads
+  /// `_spring.value` — without this, a screen reader hears the pre-animation
+  /// value until the next unrelated rebuild.
+  double _announced = 0;
 
   @override
   void initState() {
@@ -76,6 +82,7 @@ class _TrackRingState extends State<TrackRing>
       duration: MotionTokens.durationLongProgress,
       value: widget.value.clamp(0.0, 1.0),
     );
+    _announced = _spring.value;
   }
 
   @override
@@ -90,6 +97,7 @@ class _TrackRingState extends State<TrackRing>
       } else {
         _spring.value = next;
       }
+      if (mounted) setState(() => _announced = next);
     }
   }
 
@@ -108,7 +116,7 @@ class _TrackRingState extends State<TrackRing>
 
     return Semantics(
       label: widget.semanticsLabel,
-      value: '${(_spring.value * 100).round()}%',
+      value: '${(_announced * 100).round()}%',
       child: ExcludeSemantics(
         child: SizedBox(
           width: diameter,
