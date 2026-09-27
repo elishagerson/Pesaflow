@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'app_colors_theme.dart';
 import 'app_typography_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
@@ -9,6 +8,44 @@ export 'app_typography_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
 class AppTheme {
+  // ── Bundled typefaces ──
+  //
+  // Fonts ship in the binary. Nothing is fetched at runtime, so an offline
+  // cold start renders identical type to a warm start. Three cuts:
+  //   Inter         — text workhorse, 5 static weights
+  //   InterDisplay  — optical display cut of Inter, correct fit at >= 24px
+  //   BebasNeue     — condensed poster display, all-caps, reserved for the
+  //                   biggest moment on a screen and nothing else
+  static const String fontText = 'Inter';
+  static const String fontDisplay = 'InterDisplay';
+  static const String fontPoster = 'BebasNeue';
+
+  // ── Brand identity ──
+  //
+  // Exactly one loud accent in the entire app. The four financial semantics
+  // (income / expense / transfer / warning) are deliberately far away from it
+  // on the wheel so a brand-coloured surface can never be misread as a
+  // transaction. A screen may show the accent on at most one primary action.
+
+  // Light — deep electric indigo. White on it measures 7.1:1.
+  static const Color brandPrimaryLight = Color(0xFF5B2EE5);
+  static const Color brandOnPrimaryLight = Color(0xFFFFFFFF);
+  static const Color brandContainerLight = Color(0xFFEDE7FE);
+  static const Color brandOnContainerLight = Color(0xFF2E1065);
+
+  // Dark — lifted violet. Ink on it measures 6.3:1, and on OLED black the
+  // accent itself measures 6.7:1, so it stays legible as text too.
+  static const Color brandPrimaryDark = Color(0xFF9D7BFF);
+  static const Color brandOnPrimaryDark = Color(0xFF0A0416);
+  static const Color brandContainerDark = Color(0xFF2A1B57);
+  static const Color brandOnContainerDark = Color(0xFFDCCCFF);
+
+  // Accent gradient — the only gradient allowed to carry brand meaning.
+  static const Color brandGradientFromLight = Color(0xFF5B2EE5);
+  static const Color brandGradientToLight = Color(0xFF9B5CFF);
+  static const Color brandGradientFromDark = Color(0xFF9D7BFF);
+  static const Color brandGradientToDark = Color(0xFFD3B8FF);
+
   // ── Calm & Clean — Budjetly-inspired palette ──
 
   // Light — airy blue-grey canvas
@@ -45,16 +82,16 @@ class AppTheme {
     0xFF1C1C1E,
   ); // Apple system dark gray
 
-  // Finance semantic colors — desaturated, premium tones
+  // Finance semantic colors — desaturated, premium tones.
+  // Transfer is cyan, not indigo: the brand accent now owns the violet end of
+  // the wheel, and a transfer pill must never be mistaken for a brand surface.
   static const Color incomeColor = Color(0xFF16A34A); // Muted green, not neon
   static const Color expenseColor = Color(0xFFDC2626); // Softer red, not fire
-  static const Color transferColor = Color(
-    0xFF4F46E5,
-  ); // Deep indigo, not electric
+  static const Color transferColor = Color(0xFF0891B2); // Deep cyan
 
   static const Color incomeColorDark = Color(0xFF4ADE80); // Softer light green
   static const Color expenseColorDark = Color(0xFFF87171); // Pastel red
-  static const Color transferColorDark = Color(0xFF818CF8); // Soft periwinkle
+  static const Color transferColorDark = Color(0xFF38BDF8); // Sky
 
   static const Color errorLight = Color(0xFFDC2626);
   static const Color onErrorLight = Color(0xFFFFFFFF);
@@ -88,110 +125,65 @@ class AppTheme {
   }
 
   static TextTheme _buildTextTheme(Color textColor) {
-    final base = GoogleFonts.interTextTheme();
-    return base.copyWith(
-      displayLarge: base.displayLarge?.copyWith(
-        fontSize: 57,
-        fontWeight: FontWeight.w800,
-        letterSpacing: -2.0,
-        height: 1.1,
-        color: textColor,
-      ),
-      displayMedium: base.displayMedium?.copyWith(
-        fontSize: 45,
-        fontWeight: FontWeight.w800,
-        letterSpacing: -1.5,
-        height: 1.15,
-        color: textColor,
-      ),
-      displaySmall: base.displaySmall?.copyWith(
-        fontSize: 36,
-        fontWeight: FontWeight.w700,
-        letterSpacing: -1.0,
-        height: 1.2,
-        color: textColor,
-      ),
-      headlineLarge: base.headlineLarge?.copyWith(
-        fontSize: 32,
-        fontWeight: FontWeight.w700,
-        letterSpacing: -0.8,
-        height: 1.25,
-        color: textColor,
-      ),
-      headlineMedium: base.headlineMedium?.copyWith(
-        fontSize: 28,
-        fontWeight: FontWeight.w700,
-        letterSpacing: -0.6,
-        height: 1.3,
-        color: textColor,
-      ),
-      headlineSmall: base.headlineSmall?.copyWith(
-        fontSize: 24,
-        fontWeight: FontWeight.w700,
-        letterSpacing: -0.4,
-        height: 1.35,
-        color: textColor,
-      ),
-      titleLarge: base.titleLarge?.copyWith(
-        fontSize: 22,
-        fontWeight: FontWeight.w700,
-        letterSpacing: -0.4,
-        height: 1.4,
-        color: textColor,
-      ),
-      titleMedium: base.titleMedium?.copyWith(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        letterSpacing: -0.2,
-        height: 1.45,
-        color: textColor,
-      ),
-      titleSmall: base.titleSmall?.copyWith(
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        letterSpacing: -0.1,
-        height: 1.5,
-        color: textColor,
-      ),
-      bodyLarge: base.bodyLarge?.copyWith(
-        fontSize: 17,
-        fontWeight: FontWeight.w400,
-        letterSpacing: 0.1,
-        height: 1.5,
-        color: textColor,
-      ),
-      bodyMedium: base.bodyMedium?.copyWith(
-        fontSize: 15,
-        fontWeight: FontWeight.w400,
-        letterSpacing: 0.0,
-        height: 1.55,
-        color: textColor,
-      ),
-      bodySmall: base.bodySmall?.copyWith(
-        fontSize: 13,
-        fontWeight: FontWeight.w400,
-        letterSpacing: 0.05,
-        height: 1.55,
-        color: textColor,
-      ),
-      labelLarge: base.labelLarge?.copyWith(
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.1,
-        color: textColor,
-      ),
-      labelMedium: base.labelMedium?.copyWith(
-        fontSize: 12,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.2,
-        color: textColor,
-      ),
-      labelSmall: base.labelSmall?.copyWith(
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.3,
-        color: textColor,
-      ),
+    // The poster cut. Bebas Neue is a single-weight all-caps face; it is used
+    // for the single largest element on a screen and nowhere else. Line height
+    // is pulled below 1.0 because the glyphs already fill the em box.
+    TextStyle poster(double size, {double tracking = 0.0}) => TextStyle(
+      fontFamily: fontPoster,
+      fontSize: size,
+      fontWeight: FontWeight.w400,
+      letterSpacing: tracking,
+      height: 0.92,
+      color: textColor,
+    );
+
+    // The optical display cut of Inter. Correct aperture for type >= 24px.
+    TextStyle interDisplay(
+      double size,
+      FontWeight weight,
+      double tracking,
+      double height,
+    ) => TextStyle(
+      fontFamily: fontDisplay,
+      fontSize: size,
+      fontWeight: weight,
+      letterSpacing: tracking,
+      height: height,
+      color: textColor,
+    );
+
+    TextStyle inter(
+      double size,
+      FontWeight weight,
+      double tracking,
+      double height,
+    ) => TextStyle(
+      fontFamily: fontText,
+      fontSize: size,
+      fontWeight: weight,
+      letterSpacing: tracking,
+      height: height,
+      color: textColor,
+    );
+
+    // Line heights are inherited unchanged from the previous scale so the
+    // vertical rhythm of every existing screen stays exactly where it was.
+    return TextTheme(
+      displayLarge: poster(72),
+      displayMedium: poster(52),
+      displaySmall: poster(40),
+      headlineLarge: interDisplay(32, FontWeight.w800, -0.8, 1.25),
+      headlineMedium: interDisplay(28, FontWeight.w800, -0.6, 1.3),
+      headlineSmall: interDisplay(24, FontWeight.w700, -0.4, 1.35),
+      titleLarge: interDisplay(22, FontWeight.w700, -0.4, 1.4),
+      titleMedium: inter(16, FontWeight.w600, -0.2, 1.45),
+      titleSmall: inter(14, FontWeight.w600, -0.1, 1.5),
+      bodyLarge: inter(17, FontWeight.w400, 0.1, 1.5),
+      bodyMedium: inter(15, FontWeight.w400, 0.0, 1.55),
+      bodySmall: inter(13, FontWeight.w400, 0.05, 1.55),
+      labelLarge: inter(14, FontWeight.w700, 0.1, 1.2),
+      labelMedium: inter(12, FontWeight.w700, 0.2, 1.2),
+      labelSmall: inter(11, FontWeight.w600, 0.3, 1.2),
     );
   }
 
@@ -407,14 +399,14 @@ class AppTheme {
     final isLight = brightness == Brightness.light;
     return ColorScheme(
       brightness: brightness,
-      primary: isLight ? primaryLight : const Color(0xFF60A5FA), // Blue-400
-      onPrimary: isLight ? onPrimaryLight : const Color(0xFF0F172A),
+      primary: isLight ? brandPrimaryLight : brandPrimaryDark,
+      onPrimary: isLight ? brandOnPrimaryLight : brandOnPrimaryDark,
       primaryContainer: isLight
-          ? primaryContainerLight
-          : const Color(0xFF1E3A5F),
+          ? brandContainerLight
+          : brandContainerDark,
       onPrimaryContainer: isLight
-          ? onPrimaryContainerLight
-          : const Color(0xFFDBEAFE),
+          ? brandOnContainerLight
+          : brandOnContainerDark,
       secondary: isLight
           ? secondaryLight
           : const Color(0xFF94A3B8), // Slate-400
@@ -445,4 +437,10 @@ class AppTheme {
       onError: isLight ? onErrorLight : onErrorDark,
     );
   }
+
+  /// Light theme. Built once — never call this from a `build` method.
+  static final ThemeData lightTheme = fromColorScheme(null, Brightness.light);
+
+  /// Dark theme. Built once — never call this from a `build` method.
+  static final ThemeData darkTheme = fromColorScheme(null, Brightness.dark);
 }

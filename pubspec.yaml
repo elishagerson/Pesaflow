@@ -61,7 +61,6 @@ dependencies:
   home_widget: ^0.9.3
   share_plus: ^13.1.0
   file_picker: ^12.0.0
-  google_fonts: ^8.1.0
   local_auth: ^3.0.1
   shared_preferences: ^2.2.2
 
@@ -92,11 +91,38 @@ flutter:
     - assets/images/emerald_crystal.png
     - assets/icon/app_icon.png
 
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/to/resolution-aware-images
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/to/asset-from-package
+  # Typography is bundled, never fetched at runtime — this app is offline-first
+  # and must render its type identically on a cold start with no network.
+  fonts:
+    # Text face — the workhorse. 5 static weights, no runtime resolution.
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter-ExtraBold.ttf
+          weight: 800
+    # Optical display cut of Inter — tighter apertures, for type >= 24px.
+    # Same design language as Inter but the right fit for hero numerals.
+    - family: InterDisplay
+      fonts:
+        - asset: assets/fonts/InterDisplay-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/InterDisplay-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/InterDisplay-ExtraBold.ttf
+          weight: 800
+    # Poster display face — condensed, all-caps, single weight.
+    # Reserved for hero numerals, countdowns and wordmarks. Never for body copy.
+    - family: BebasNeue
+      fonts:
+        - asset: assets/fonts/BebasNeue-Regular.ttf
+          weight: 400
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
