@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 
 class PesaFlowIllustration extends StatelessWidget {
   final double size;
@@ -13,7 +14,7 @@ class PesaFlowIllustration extends StatelessWidget {
     Color? color,
     Color? accentColor,
     required this.painter,
-  }) : primaryColor = color ?? const Color(0xFF0F4C5C),
+  }) : primaryColor = color ?? AppTheme.brandPrimaryLight,
        accentColor = accentColor ?? const Color(0xFFD4942D);
 
   @override
@@ -25,7 +26,7 @@ class PesaFlowIllustration extends StatelessWidget {
     );
   }
 
-  static const Color _teal = Color(0xFF0F4C5C);
+  static const Color _teal = AppTheme.brandPrimaryLight;
   static const Color _gold = Color(0xFFD4942D);
 
   factory PesaFlowIllustration.emptyTransactions({

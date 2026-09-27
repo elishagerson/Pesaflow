@@ -22,7 +22,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/services/home_widgets_renderer.dart';
 import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/dashboard_hero_carousel.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/right_now_card.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -384,11 +384,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
                             return StaggeredFadeSlide(
                               index: 0,
-                              child: BudjetlyBalanceHeader(
+                              child: DashboardHeroCarousel(
                                 balance: displayBalance,
                                 label: activeAccountName,
                                 income: totalsAsync.value?['income'] ?? 0,
                                 expense: totalsAsync.value?['expense'] ?? 0,
+                                remainingBudget: remainingBudget,
+                                budgetPct: overallPct,
+                                budgetTotal: budgetTotal,
                               ),
                             );
                           },

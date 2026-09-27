@@ -32,6 +32,7 @@ import 'package:pesaflow/services/background_scheduler_service.dart';
 import 'package:pesaflow/services/daily_summary_service.dart';
 import 'package:pesaflow/data/seed/default_data.dart';
 import 'package:pesaflow/presentation/common/widgets/onboarding_overlay.dart';
+import 'package:pesaflow/presentation/splash/pesa_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -56,11 +57,20 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
   bool _isAuthenticated = false;
   bool _showOnboarding = false;
 
+  /// Flips once the database is seeded and the entry route is decided. Drives
+  /// the branded splash. A watchdog guarantees it can never trap the user if
+  /// boot stalls on a platform channel.
+  bool _booted = false;
+  Timer? _bootWatchdog;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     HardwareKeyboard.instance.addHandler(_handleKeyEvent);
+    _bootWatchdog = Timer(const Duration(seconds: 5), () {
+      if (mounted && !_booted) setState(() => _booted = true);
+    });
 
     // Register notification listener method channel handler
     _notificationChannel.setMethodCallHandler((call) async {
@@ -112,19 +122,25 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
         developer.log('Onboarding overlay check failed: $e', name: 'AppLaunch');
       }
 
+      // Check DB-based onboarding status only if overlay wasn't shown
+      var needsOnboarding = false;
       if (!overlaySeen) {
-        // Check DB-based onboarding status only if overlay wasn't shown
         try {
-          final completed = await ref
+          needsOnboarding = !await ref
               .read(settingsRepositoryProvider)
               .isOnboardingComplete();
-          if (!completed) {
-            appRouter.go('/onboarding');
-            return;
-          }
         } catch (e) {
           developer.log('Onboarding check failed: $e', name: 'AppLaunch');
         }
+      }
+
+      // Database is seeded and the entry route is decided — the branded
+      // splash has done its job. Everything below this point (permission
+      // prompts, service init) is non-blocking and must not hold the splash.
+      if (mounted) setState(() => _booted = true);
+      if (needsOnboarding) {
+        appRouter.go('/onboarding');
+        return;
       }
 
       // Request POST_NOTIFICATIONS permission (Android 13+)
@@ -377,6 +393,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
 
   @override
   void dispose() {
+    _bootWatchdog?.cancel();
     HardwareKeyboard.instance.removeHandler(_handleKeyEvent);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -433,17 +450,10 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
 
   @override
   Widget build(BuildContext context) {
-    const accentColor = Color(0xFF0F4C5C);
-
-    final lightCs = ColorScheme.fromSeed(
-      seedColor: accentColor,
-      brightness: Brightness.light,
-    ).copyWith(primary: accentColor);
-    final darkCs = ColorScheme.fromSeed(
-      seedColor: accentColor,
-      brightness: Brightness.dark,
-    ).copyWith(primary: accentColor);
-
+    // Themes are built once and cached on AppTheme. Nothing is derived from a
+    // seed here — the hand-picked palette in AppTheme is the only source, so
+    // the brand accent, the finance semantics and the surface ladder are
+    // guaranteed to be the values the design system actually specifies.
     final lockEnabled = ref.watch(appLockEnabledProvider).value ?? false;
     final showLockOverlay = lockEnabled && !_isAuthenticated;
     final mode = ref.watch(themeModeProvider);
@@ -464,8 +474,8 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
     return MaterialApp.router(
       title: 'PesaFlow',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.fromColorScheme(lightCs, Brightness.light),
-      darkTheme: AppTheme.fromColorScheme(darkCs, Brightness.dark),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       themeMode: mode,
       routerConfig: appRouter,
       scrollBehavior: const AppScrollBehavior(),
@@ -634,6 +644,30 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                     ),
                     if (_showOnboarding)
                       OnboardingOverlay(onComplete: _onOnboardingComplete),
+                    // The branded splash lives outside `builder` so it covers
+                    // the router itself — including the first frame of the
+                    // dashboard, which would otherwise flash on a cold start.
+                    IgnorePointer(
+                      ignoring: _booted,
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 420),
+                        switchOutCurve: Curves.easeInCubic,
+                        transitionBuilder: (child, animation) =>
+                            FadeTransition(opacity: animation, child: child),
+                        child: _booted
+                            ? const SizedBox.shrink(
+                                key: ValueKey('splash_gone'),
+                              )
+                            : PesaSplash(
+                                key: const ValueKey('splash'),
+                                onComplete: () {
+                                  if (mounted) {
+                                    setState(() => _booted = true);
+                                  }
+                                },
+                              ),
+                      ),
+                    ),
                   ],
                 ),
               ),

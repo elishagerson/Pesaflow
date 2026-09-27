@@ -3,6 +3,24 @@ import 'app_theme.dart';
 
 @immutable
 class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
+  // ── Brand ──
+  // The single loud accent. `colorScheme.primary` mirrors `brandColor`; this
+  // token exists so widgets can reach the brand without importing Material's
+  // scheme, and so the glow/gradient stops have one home.
+  final Color brandColor;
+  final Color brandOnColor;
+  final Color brandContainer;
+  final Color brandOnContainer;
+
+  /// Accent gradient stops. The only gradient allowed to carry brand meaning.
+  final Color brandGradientFrom;
+  final Color brandGradientTo;
+
+  /// Brand-tinted ambient. Use for radial glows behind hero surfaces and for
+  /// the coloured half of a two-layer elevation shadow. Never for text.
+  final Color brandGlow;
+
+  // ── Semantics ──
   final Color incomeColor;
   final Color expenseColor;
   final Color transferColor;
@@ -18,6 +36,15 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
   final Color textMedium;
   final Color textLow;
   final Color scaffoldLine;
+
+  /// The 1px border on cards, pills and inputs. Replaces the
+  /// `outlineVariant.withValues(alpha: 0.28)` expression that was repeated
+  /// across every screen — one token, one place to change the hairline.
+  final Color hairline;
+
+  /// Border for a selected or focused surface. Reads as "armed", not "quiet".
+  final Color hairlineStrong;
+
   // Budjetly-inspired tokens
   final Color cardBackground;
   final Color cardBorder;
@@ -36,6 +63,13 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
   final Color neutralColor;
 
   const AppColorsTheme({
+    required this.brandColor,
+    required this.brandOnColor,
+    required this.brandContainer,
+    required this.brandOnContainer,
+    required this.brandGradientFrom,
+    required this.brandGradientTo,
+    required this.brandGlow,
     required this.incomeColor,
     required this.expenseColor,
     required this.transferColor,
@@ -49,6 +83,8 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     required this.textMedium,
     required this.textLow,
     required this.scaffoldLine,
+    required this.hairline,
+    required this.hairlineStrong,
     required this.cardBackground,
     required this.cardBorder,
     required this.sectionHeader,
@@ -65,6 +101,13 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
   });
 
   factory AppColorsTheme.light() => const AppColorsTheme(
+    brandColor: AppTheme.brandPrimaryLight,
+    brandOnColor: AppTheme.brandOnPrimaryLight,
+    brandContainer: AppTheme.brandContainerLight,
+    brandOnContainer: AppTheme.brandOnContainerLight,
+    brandGradientFrom: AppTheme.brandGradientFromLight,
+    brandGradientTo: AppTheme.brandGradientToLight,
+    brandGlow: AppTheme.brandPrimaryLight,
     incomeColor: AppTheme.incomeColor,
     expenseColor: AppTheme.expenseColor,
     transferColor: AppTheme.transferColor,
@@ -78,22 +121,31 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     textMedium: Color(0xFF64748B), // Slate-500
     textLow: Color(0xFF94A3B8), // Slate-400
     scaffoldLine: Color(0x14000000),
+    hairline: Color(0x0F0F172A), // Slate-900 @ ~6%
+    hairlineStrong: Color(0x1A5B2EE5), // Brand @ ~10%
     cardBackground: Color(0xFFFFFFFF), // Pure white
     cardBorder: Color(0xFFE2E8F0), // Slate-200
     sectionHeader: Color(0xFF475569), // Slate-600
-    accentSubtle: Color(0xFFEFF6FF), // Blue-50
+    accentSubtle: AppTheme.brandContainerLight,
     warningColor: Color(0xFFF59E0B), // Amber-500
     shadowSubtle: Color(0x0A000000),
     shadowMedium: Color(0x14000000),
     shadowStrong: Color(0x24000000),
-    needsColor: Color(0xFF2196F3), // Blue
-    wantsColor: Color(0xFFFF9800), // Orange
-    investColor: Color(0xFF4CAF50), // Green
-    dangerColor: Color(0xFFE11D48), // Rose-600
+    needsColor: Color(0xFF2563EB), // Blue-600
+    wantsColor: Color(0xFFEA580C), // Orange-600
+    investColor: AppTheme.incomeColor, // == income, don't ship two greens
+    dangerColor: AppTheme.expenseColor, // == expense, don't ship two reds
     neutralColor: Color(0xFF6B7280), // Gray-500
   );
 
   factory AppColorsTheme.dark() => const AppColorsTheme(
+    brandColor: AppTheme.brandPrimaryDark,
+    brandOnColor: AppTheme.brandOnPrimaryDark,
+    brandContainer: AppTheme.brandContainerDark,
+    brandOnContainer: AppTheme.brandOnContainerDark,
+    brandGradientFrom: AppTheme.brandGradientFromDark,
+    brandGradientTo: AppTheme.brandGradientToDark,
+    brandGlow: AppTheme.brandPrimaryDark,
     incomeColor: AppTheme.incomeColorDark,
     expenseColor: AppTheme.expenseColorDark,
     transferColor: AppTheme.transferColorDark,
@@ -107,23 +159,32 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     textMedium: Color(0xFF8E8E93), // System gray
     textLow: Color(0xFF636366), // System gray 2
     scaffoldLine: Color(0x14FFFFFF),
+    hairline: Color(0x1FFFFFFF), // White @ ~12%
+    hairlineStrong: Color(0x4D9D7BFF), // Brand @ ~30%
     cardBackground: Color(0xFF1C1C1E), // Apple secondary dark
     cardBorder: Color(0xFF2C2C2E), // Apple tertiary dark
     sectionHeader: Color(0xFF8E8E93), // System gray
-    accentSubtle: Color(0xFF2C2C2E), // Subtle gray
+    accentSubtle: AppTheme.brandContainerDark,
     warningColor: Color(0xFFFBBF24), // Amber-400
     shadowSubtle: Color(0x0AFFFFFF),
     shadowMedium: Color(0x14FFFFFF),
     shadowStrong: Color(0x24FFFFFF),
     needsColor: Color(0xFF60A5FA), // Blue-400
-    wantsColor: Color(0xFFFBBF24), // Amber-400
-    investColor: Color(0xFF4ADE80), // Green-400
-    dangerColor: Color(0xFFF87171), // Rose-400
+    wantsColor: Color(0xFFFB923C), // Orange-400
+    investColor: AppTheme.incomeColorDark, // == income
+    dangerColor: AppTheme.expenseColorDark, // == expense
     neutralColor: Color(0xFF9CA3AF), // Gray-400
   );
 
   @override
   AppColorsTheme copyWith({
+    Color? brandColor,
+    Color? brandOnColor,
+    Color? brandContainer,
+    Color? brandOnContainer,
+    Color? brandGradientFrom,
+    Color? brandGradientTo,
+    Color? brandGlow,
     Color? incomeColor,
     Color? expenseColor,
     Color? transferColor,
@@ -137,6 +198,8 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     Color? textMedium,
     Color? textLow,
     Color? scaffoldLine,
+    Color? hairline,
+    Color? hairlineStrong,
     Color? cardBackground,
     Color? cardBorder,
     Color? sectionHeader,
@@ -152,6 +215,13 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     Color? neutralColor,
   }) {
     return AppColorsTheme(
+      brandColor: brandColor ?? this.brandColor,
+      brandOnColor: brandOnColor ?? this.brandOnColor,
+      brandContainer: brandContainer ?? this.brandContainer,
+      brandOnContainer: brandOnContainer ?? this.brandOnContainer,
+      brandGradientFrom: brandGradientFrom ?? this.brandGradientFrom,
+      brandGradientTo: brandGradientTo ?? this.brandGradientTo,
+      brandGlow: brandGlow ?? this.brandGlow,
       incomeColor: incomeColor ?? this.incomeColor,
       expenseColor: expenseColor ?? this.expenseColor,
       transferColor: transferColor ?? this.transferColor,
@@ -166,6 +236,8 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       textMedium: textMedium ?? this.textMedium,
       textLow: textLow ?? this.textLow,
       scaffoldLine: scaffoldLine ?? this.scaffoldLine,
+      hairline: hairline ?? this.hairline,
+      hairlineStrong: hairlineStrong ?? this.hairlineStrong,
       cardBackground: cardBackground ?? this.cardBackground,
       cardBorder: cardBorder ?? this.cardBorder,
       sectionHeader: sectionHeader ?? this.sectionHeader,
@@ -186,6 +258,21 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
   AppColorsTheme lerp(ThemeExtension<AppColorsTheme>? other, double t) {
     if (other is! AppColorsTheme) return this;
     return AppColorsTheme(
+      brandColor: Color.lerp(brandColor, other.brandColor, t)!,
+      brandOnColor: Color.lerp(brandOnColor, other.brandOnColor, t)!,
+      brandContainer: Color.lerp(brandContainer, other.brandContainer, t)!,
+      brandOnContainer: Color.lerp(
+        brandOnContainer,
+        other.brandOnContainer,
+        t,
+      )!,
+      brandGradientFrom: Color.lerp(
+        brandGradientFrom,
+        other.brandGradientFrom,
+        t,
+      )!,
+      brandGradientTo: Color.lerp(brandGradientTo, other.brandGradientTo, t)!,
+      brandGlow: Color.lerp(brandGlow, other.brandGlow, t)!,
       incomeColor: Color.lerp(incomeColor, other.incomeColor, t)!,
       expenseColor: Color.lerp(expenseColor, other.expenseColor, t)!,
       transferColor: Color.lerp(transferColor, other.transferColor, t)!,
@@ -207,6 +294,8 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       textMedium: Color.lerp(textMedium, other.textMedium, t)!,
       textLow: Color.lerp(textLow, other.textLow, t)!,
       scaffoldLine: Color.lerp(scaffoldLine, other.scaffoldLine, t)!,
+      hairline: Color.lerp(hairline, other.hairline, t)!,
+      hairlineStrong: Color.lerp(hairlineStrong, other.hairlineStrong, t)!,
       cardBackground: Color.lerp(cardBackground, other.cardBackground, t)!,
       cardBorder: Color.lerp(cardBorder, other.cardBorder, t)!,
       sectionHeader: Color.lerp(sectionHeader, other.sectionHeader, t)!,

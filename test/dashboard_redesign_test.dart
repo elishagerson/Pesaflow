@@ -30,8 +30,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('TOTAL NET WORTH'), findsOneWidget);
-      expect(find.text('Income'), findsOneWidget);
-      expect(find.text('Spent'), findsOneWidget);
+      // These render as tracked uppercase micro-labels (the eyebrow role).
+      expect(find.text('INCOME'), findsOneWidget);
+      expect(find.text('SPENT'), findsOneWidget);
     });
 
     testWidgets('toggles privacy visibility when eye button is tapped', (

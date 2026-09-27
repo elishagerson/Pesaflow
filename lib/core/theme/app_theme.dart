@@ -187,10 +187,6 @@ class AppTheme {
     );
   }
 
-  static ThemeData get lightTheme => fromColorScheme(null, Brightness.light);
-
-  static ThemeData get darkTheme => fromColorScheme(null, Brightness.dark);
-
   static ThemeData fromColorScheme(ColorScheme? cs, Brightness brightness) {
     final isLight = brightness == Brightness.light;
     final scheme = cs ?? _defaultColorScheme(brightness);
@@ -199,7 +195,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
-      fontFamily: GoogleFonts.inter().fontFamily,
+      fontFamily: fontText,
       textTheme: txtTheme,
       colorScheme: scheme,
       extensions: [
@@ -234,7 +230,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isLight ? const Color(0xFFFFFFFF) : const Color(0xFF1E293B),
+        fillColor: isLight ? const Color(0xFFFFFFFF) : surfaceHighDark,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
           borderSide: BorderSide.none,
@@ -337,9 +333,7 @@ class AppTheme {
       datePickerTheme: DatePickerThemeData(
         backgroundColor: isLight ? bgLight : surfaceHighDark,
         elevation: 0,
-        headerBackgroundColor: isLight
-            ? const Color(0xFFF1F5F9)
-            : const Color(0xFF1E293B),
+        headerBackgroundColor: isLight ? bgLight : surfaceDark,
         headerForegroundColor: isLight ? onBgLight : Colors.white,
         headerHeadlineStyle: txtTheme.headlineSmall!.copyWith(
           fontWeight: FontWeight.bold,
@@ -347,7 +341,9 @@ class AppTheme {
         dayStyle: txtTheme.titleMedium!.copyWith(fontWeight: FontWeight.w500),
         weekdayStyle: txtTheme.titleSmall!.copyWith(
           fontWeight: FontWeight.bold,
-          color: isLight ? Colors.grey[700] : Colors.grey[400],
+          color: isLight
+              ? onBgLight.withValues(alpha: 0.6)
+              : const Color(0xFF8E8E93),
         ),
         shape: SquircleBorder(
           borderRadius: 24.0,
@@ -369,16 +365,16 @@ class AppTheme {
             return Colors.white;
           }
           if (states.contains(WidgetState.disabled)) {
-            return isLight ? Colors.grey[300] : Colors.grey[700];
+            return isLight ? const Color(0xFFCBD5E1) : const Color(0xFF4B4B50);
           }
-          return isLight ? Colors.black : Colors.white;
+          return isLight ? onBgLight : Colors.white;
         }),
         todayBackgroundColor: WidgetStateProperty.all(Colors.transparent),
         todayForegroundColor: WidgetStateProperty.all(scheme.primary),
         todayBorder: BorderSide(color: scheme.primary, width: 1.5),
         cancelButtonStyle: ButtonStyle(
           foregroundColor: WidgetStateProperty.all(
-            isLight ? Colors.grey[700] : Colors.grey[400],
+            isLight ? const Color(0xFF475569) : const Color(0xFF8E8E93),
           ),
         ),
         confirmButtonStyle: ButtonStyle(
@@ -401,9 +397,7 @@ class AppTheme {
       brightness: brightness,
       primary: isLight ? brandPrimaryLight : brandPrimaryDark,
       onPrimary: isLight ? brandOnPrimaryLight : brandOnPrimaryDark,
-      primaryContainer: isLight
-          ? brandContainerLight
-          : brandContainerDark,
+      primaryContainer: isLight ? brandContainerLight : brandContainerDark,
       onPrimaryContainer: isLight
           ? brandOnContainerLight
           : brandOnContainerDark,

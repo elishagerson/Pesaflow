@@ -5,6 +5,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 
 class BudjetlyBalanceHeader extends StatefulWidget {
   final int balance;
@@ -144,25 +145,23 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
         ? theme.colorScheme.error
         : theme.colorScheme.onSurface;
 
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
-        border: Border.all(
-          color: isNegative
-              ? theme.colorScheme.error.withValues(alpha: 0.35)
-              : theme.colorScheme.outlineVariant.withValues(alpha: 0.28),
-          width: 1,
+    return PesaSurface.chamferSurface(
+      chamfer: kSpacing20,
+      glow: 0.32,
+      fill: isNegative
+          ? theme.colorScheme.surfaceContainerHigh
+          : theme.colorScheme.surfaceContainerHigh,
+      stroke: isNegative
+          ? theme.colorScheme.error.withValues(alpha: 0.35)
+          : context.appColors.hairlineStrong,
+      shadows: [
+        BoxShadow(
+          color: context.appColors.shadowMedium,
+          blurRadius: 22,
+          offset: const Offset(0, 10),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: context.appColors.shadowMedium,
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+      ],
+      padding: const EdgeInsets.all(kSpacing20),
       child: Stack(
         children: [
           // Ambient gradient shimmer sweep (neutral, non-distracting)
@@ -173,24 +172,17 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                 final t = _shimmerAnimation.value;
                 return Positioned.fill(
                   child: IgnorePointer(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        AppTheme.radiusDialog,
-                      ),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment(-1.0 + t * 2, -0.6),
-                            end: Alignment(-0.2 + t * 2, 0.6),
-                            colors: [
-                              Colors.transparent,
-                              context.appColors.textLow.withValues(
-                                alpha: 0.035,
-                              ),
-                              Colors.transparent,
-                            ],
-                            stops: const [0.0, 0.5, 1.0],
-                          ),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment(-1.0 + t * 2, -0.6),
+                          end: Alignment(-0.2 + t * 2, 0.6),
+                          colors: [
+                            Colors.transparent,
+                            context.appColors.textLow.withValues(alpha: 0.035),
+                            Colors.transparent,
+                          ],
+                          stops: const [0.0, 0.5, 1.0],
                         ),
                       ),
                     ),
@@ -199,263 +191,213 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
               },
             ),
           // Card content
-          Padding(
-            padding: const EdgeInsets.all(kSpacing20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Top row: Label + Status (if negative) + Eye toggle
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: isNegative
-                                ? theme.colorScheme.error
-                                : theme.colorScheme.primary,
-                            shape: BoxShape.circle,
-                          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Top row: Label + Status (if negative) + Eye toggle
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: isNegative
+                              ? theme.colorScheme.error
+                              : context.appColors.brandColor,
+                          shape: BoxShape.circle,
                         ),
+                      ),
+                      const SizedBox(width: kSpacing8),
+                      Text(
+                        widget.label.toUpperCase(),
+                        style: context.appTypography.eyebrow.copyWith(
+                          color: isNegative
+                              ? theme.colorScheme.error
+                              : theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      if (isNegative) ...[
                         const SizedBox(width: kSpacing8),
-                        Text(
-                          widget.label.toUpperCase(),
-                          style: context.ts(
-                            11,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 1.1,
-                            color: isNegative
-                                ? theme.colorScheme.error
-                                : theme.colorScheme.onSurfaceVariant,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.error.withValues(
+                              alpha: 0.12,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusPill,
+                            ),
+                          ),
+                          child: Text(
+                            'DEFICIT',
+                            style: context.appTypography.labelMicro.copyWith(
+                              color: theme.colorScheme.error,
+                            ),
                           ),
                         ),
-                        if (isNegative) ...[
-                          const SizedBox(width: kSpacing8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.error.withValues(
-                                alpha: 0.12,
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusPill,
-                              ),
-                            ),
-                            child: Text(
-                              'DEFICIT',
-                              style: context.ts(
-                                9,
-                                fontWeight: FontWeight.w800,
-                                color: theme.colorScheme.error,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                          ),
-                        ],
                       ],
-                    ),
-                    InkWell(
-                      onTap: () {
-                        PesaHaptics.light();
-                        setState(() {
-                          _isHidden = !_isHidden;
-                        });
-                      },
-                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                      child: Padding(
-                        padding: const EdgeInsets.all(kSpacing6),
-                        child: Icon(
-                          _isHidden
-                              ? PesaFlowIcons.visibilityOff
-                              : PesaFlowIcons.visibility,
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.55,
-                          ),
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing12),
-
-                // Center: Balance reflecting reality
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: _isHidden
-                      ? Text(
-                          '••••••',
-                          style: context.ts(
-                            34,
-                            fontWeight: FontWeight.w900,
-                            color: textColor,
-                            letterSpacing: -0.8,
-                          ),
-                        )
-                      : context.isReducedMotion
-                      ? Text(
-                          isNegative
-                              ? '- ${CurrencyFormatter.formatCents(widget.balance.abs())}'
-                              : CurrencyFormatter.formatCents(widget.balance),
-                          style: context.ts(
-                            34,
-                            fontWeight: FontWeight.w900,
-                            color: textColor,
-                            letterSpacing: -0.8,
-                          ),
-                        )
-                      : _buildAnimatedDigits(theme, textColor),
-                ),
-                const SizedBox(height: kSpacing18),
-
-                // Divider
-                Divider(
-                  height: 1,
-                  thickness: 0.8,
-                  color: theme.colorScheme.outlineVariant.withValues(
-                    alpha: 0.22,
+                    ],
                   ),
-                ),
-                const SizedBox(height: kSpacing14),
+                  InkWell(
+                    onTap: () {
+                      PesaHaptics.light();
+                      setState(() {
+                        _isHidden = !_isHidden;
+                      });
+                    },
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                    child: Padding(
+                      padding: const EdgeInsets.all(kSpacing6),
+                      child: Icon(
+                        _isHidden
+                            ? PesaFlowIcons.visibilityOff
+                            : PesaFlowIcons.visibility,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.55,
+                        ),
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: kSpacing12),
 
-                // Bottom: Monthly Cash Flow (Income vs Spent)
-                Row(
-                  children: [
-                    // Total In
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 28,
-                            height: 28,
-                            decoration: BoxDecoration(
-                              color: context.appColors.incomeColor.withValues(
-                                alpha: 0.12,
-                              ),
-                              shape: BoxShape.circle,
-                            ),
-                            alignment: Alignment.center,
-                            child: Icon(
-                              PesaFlowIcons.arrowDown,
-                              size: 14,
-                              color: context.appColors.incomeColor,
-                            ),
-                          ),
-                          const SizedBox(width: kSpacing10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Income',
-                                  style: context.ts(
-                                    11,
-                                    fontWeight: FontWeight.w600,
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                                const SizedBox(height: 1),
-                                Text(
-                                  _isHidden
-                                      ? '••••'
-                                      : CurrencyFormatter.formatCents(
-                                          widget.income,
-                                        ),
-                                  style: context.ts(
-                                    13,
-                                    fontWeight: FontWeight.w700,
-                                    color: theme.colorScheme.onSurface,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+              // Center: Balance reflecting reality
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: _isHidden
+                    ? Text(
+                        '••••••',
+                        style: context.appTypography.posterLarge.copyWith(
+                          color: textColor,
+                        ),
+                      )
+                    : context.isReducedMotion
+                    ? Text(
+                        isNegative
+                            ? '- ${CurrencyFormatter.formatCents(widget.balance.abs())}'
+                            : CurrencyFormatter.formatCents(widget.balance),
+                        style: context.appTypography.posterLarge.copyWith(
+                          color: textColor,
+                        ),
+                      )
+                    : _buildAnimatedDigits(theme, textColor),
+              ),
+              const SizedBox(height: kSpacing18),
+
+              Divider(
+                height: 1,
+                thickness: 0.8,
+                color: context.appColors.hairline,
+              ),
+              const SizedBox(height: kSpacing14),
+
+              // Bottom: Monthly Cash Flow (Income vs Spent)
+              Row(
+                children: [
+                  // Total In
+                  Expanded(
+                    child: _buildCashFlowLeg(
+                      label: 'INCOME',
+                      value: _isHidden
+                          ? '••••'
+                          : CurrencyFormatter.formatCents(widget.income),
+                      accent: context.appColors.incomeColor,
+                      icon: PesaFlowIcons.arrowDown,
+                      isNegative: false,
                     ),
-                    // Vertical divider
-                    Container(
-                      width: 1,
-                      height: 28,
-                      color: theme.colorScheme.outlineVariant.withValues(
-                        alpha: 0.22,
-                      ),
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: kSpacing12,
-                      ),
+                  ),
+                  // Vertical divider
+                  Container(
+                    width: 1,
+                    height: 28,
+                    color: context.appColors.hairline,
+                    margin: const EdgeInsets.symmetric(horizontal: kSpacing12),
+                  ),
+                  // Total Out
+                  Expanded(
+                    child: _buildCashFlowLeg(
+                      label: 'SPENT',
+                      value: _isHidden
+                          ? '••••'
+                          : CurrencyFormatter.formatCents(widget.expense),
+                      accent: context.appColors.expenseColor,
+                      icon: PesaFlowIcons.arrowUp,
+                      isNegative: isNegative,
                     ),
-                    // Total Out
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 28,
-                            height: 28,
-                            decoration: BoxDecoration(
-                              color: context.appColors.expenseColor.withValues(
-                                alpha: 0.12,
-                              ),
-                              shape: BoxShape.circle,
-                            ),
-                            alignment: Alignment.center,
-                            child: Icon(
-                              PesaFlowIcons.arrowUp,
-                              size: 14,
-                              color: context.appColors.expenseColor,
-                            ),
-                          ),
-                          const SizedBox(width: kSpacing10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Spent',
-                                  style: context.ts(
-                                    11,
-                                    fontWeight: FontWeight.w600,
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                                const SizedBox(height: 1),
-                                Text(
-                                  _isHidden
-                                      ? '••••'
-                                      : CurrencyFormatter.formatCents(
-                                          widget.expense,
-                                        ),
-                                  style: context.ts(
-                                    13,
-                                    fontWeight: FontWeight.w700,
-                                    color: theme.colorScheme.onSurface,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
+    );
+  }
+
+  /// One leg of the cash-flow split. Extracted because both legs were
+  /// byte-identical apart from three values, and the duplicated copy is what
+  /// let the two drift apart in the first place.
+  Widget _buildCashFlowLeg({
+    required String label,
+    required String value,
+    required Color accent,
+    required IconData icon,
+    required bool isNegative,
+  }) {
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        Container(
+          width: 28,
+          height: 28,
+          decoration: BoxDecoration(
+            color: accent.withValues(alpha: 0.12),
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: Icon(icon, size: 14, color: accent),
+        ),
+        const SizedBox(width: kSpacing10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: context.appTypography.labelMicro.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 1),
+              Text(
+                value,
+                style: context.ts(
+                  13,
+                  fontWeight: FontWeight.w700,
+                  color: isNegative
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.onSurface,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -465,11 +407,8 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
       builder: (context, _) {
         final chars = _formatBalanceDigits(widget.balance);
         int digitIdx = 0;
-        final baseStyle = context.ts(
-          34,
-          fontWeight: FontWeight.w900,
+        final baseStyle = context.appTypography.posterLarge.copyWith(
           color: textColor,
-          letterSpacing: -0.8,
         );
 
         return Row(
