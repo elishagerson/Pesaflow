@@ -24,6 +24,13 @@ class PesaSurface extends StatelessWidget {
   final Color? fill;
   final Color? stroke;
 
+  /// Optional subtle gradient over [fill]. `ShapeDecoration` has no gradient
+  /// slot, so it is applied as a second layer clipped to this same path — the
+  /// gradient can never escape the outline the way an unclipped `BoxDecoration`
+  /// would. Keep it to two or three near-surface stops; this is depth, not
+  /// colour.
+  final Gradient? background;
+
   /// Corner radius at rest. Ignored for chamfered surfaces, which derive theirs.
   final double radius;
 
@@ -32,6 +39,11 @@ class PesaSurface extends StatelessWidget {
 
   final bool chamfered;
 
+  /// The hard-cut racing-plate silhouette ([PosterBorder]). Wins over
+  /// [chamfered] when set. The loudest shape in the library; one surface per
+  /// screen.
+  final bool poster;
+
   /// Brand glow behind the fill, masked to this surface's own shape. `0`
   /// disables it. Keep it under `0.5` — above that it stops reading as light
   /// and starts reading as a coloured card.
@@ -39,6 +51,13 @@ class PesaSurface extends StatelessWidget {
 
   final List<BoxShadow> shadows;
   final EdgeInsetsGeometry padding;
+
+  /// Draws a 1px specular line just inside the top edge and the top chamfer.
+  ///
+  /// A hairline alone defines the *outside* of a surface; this defines its
+  /// thickness. It is most of the difference between a flat rectangle with a
+  /// border and an object with an edge.
+  final bool edgeLight;
 
   /// Whether content (and the glow) is clipped to the surface outline. Only
   /// turn this off for content that must bleed past the shape deliberately.
@@ -51,12 +70,15 @@ class PesaSurface extends StatelessWidget {
     required this.child,
     this.fill,
     this.stroke,
+    this.background,
     this.radius = AppTheme.radiusCard,
     this.chamfer = 18,
     this.chamfered = false,
+    this.poster = false,
     this.glow = 0,
     this.shadows = const [],
     this.padding = EdgeInsets.zero,
+    this.edgeLight = false,
     this.clipContent = true,
     this.onTap,
     this.semanticLabel,
@@ -68,6 +90,7 @@ class PesaSurface extends StatelessWidget {
     required Widget child,
     Color? fill,
     Color? stroke,
+    Gradient? background,
     double radius = AppTheme.radiusCard,
     List<BoxShadow> shadows = const [],
     EdgeInsetsGeometry padding = EdgeInsets.zero,
@@ -79,6 +102,7 @@ class PesaSurface extends StatelessWidget {
       key: key,
       fill: fill,
       stroke: stroke,
+      background: background,
       radius: radius,
       shadows: shadows,
       padding: padding,
@@ -95,6 +119,7 @@ class PesaSurface extends StatelessWidget {
     required Widget child,
     Color? fill,
     Color? stroke,
+    Gradient? background,
     double chamfer = 18,
     double glow = 0.28,
     List<BoxShadow> shadows = const [],
@@ -107,6 +132,7 @@ class PesaSurface extends StatelessWidget {
       key: key,
       fill: fill,
       stroke: stroke,
+      background: background,
       chamfer: chamfer,
       chamfered: true,
       glow: glow,
@@ -119,36 +145,77 @@ class PesaSurface extends StatelessWidget {
     );
   }
 
+  /// The one outline every layer agrees on: the fill, the clip, the glow mask
+  /// and the painter all call this. Anything that re-derives the shape
+  /// separately is how a shadow ends up rounding a corner the fill cut.
+  ShapeBorder get _outline => poster
+      ? PosterBorder(chamfer: chamfer)
+      : chamfered
+      ? ChicaneBorder(borderRadius: AppTheme.radiusCard, chamfer: chamfer)
+      : RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius));
+
+  /// The loudest surface in the app: a hard-cut racing plate, a specular top
+  /// edge, and the brand glow behind it. One per screen — the hero.
+  factory PesaSurface.posterSurface({
+    Key? key,
+    required Widget child,
+    Color? fill,
+    Color? stroke,
+    Gradient? background,
+    double chamfer = 24,
+    double glow = 0.34,
+    List<BoxShadow> shadows = const [],
+    EdgeInsetsGeometry padding = EdgeInsets.zero,
+    VoidCallback? onTap,
+    String? semanticLabel,
+  }) {
+    return PesaSurface(
+      key: key,
+      fill: fill,
+      stroke: stroke,
+      background: background,
+      chamfer: chamfer,
+      poster: true,
+      edgeLight: true,
+      glow: glow,
+      shadows: shadows,
+      padding: padding,
+      onTap: onTap,
+      semanticLabel: semanticLabel,
+      child: child,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final appColors = context.appColors;
+    final theme = Theme.of(context);
+    // Specular line: a light edge on a dark surface, an ink edge on a light one.
+    // Hardcoding white here would be invisible in light mode, the same bug the
+    // GlassCard hairline had.
+    final edgeColor = theme.colorScheme.onSurface.withValues(
+      alpha: theme.brightness == Brightness.dark ? 0.13 : 0.10,
+    );
     final body = DecoratedBox(
       decoration: ShapeDecoration(
-        shape: chamfered
-            ? ChicaneBorder(borderRadius: AppTheme.radiusCard, chamfer: chamfer)
-            : RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(radius),
-              ),
+        shape: _outline,
         color: fill ?? appColors.cardBackground,
       ),
       child: Stack(
         fit: StackFit.passthrough,
         children: [
+          if (background != null)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(gradient: background),
+                ),
+              ),
+            ),
           if (glow > 0)
             Positioned.fill(
               child: IgnorePointer(
-                child: RadialGlow(
-                  size: 260,
-                  intensity: glow,
-                  shape: chamfered
-                      ? ChicaneBorder(
-                          borderRadius: AppTheme.radiusCard,
-                          chamfer: chamfer,
-                        )
-                      : RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(radius),
-                        ),
-                ),
+                child: RadialGlow(size: 260, intensity: glow, shape: _outline),
               ),
             ),
           Padding(padding: padding, child: child),
@@ -158,21 +225,14 @@ class PesaSurface extends StatelessWidget {
 
     final content = CustomPaint(
       painter: _PesaSurfacePainter(
-        chamfered: chamfered,
-        radius: radius,
-        chamfer: chamfer,
+        outline: _outline,
+        edgeLight: edgeLight,
+        edgeLightColor: edgeColor,
         stroke: stroke ?? appColors.hairline,
         shadows: shadows,
       ),
       child: clipContent
-          ? ClipPath(
-              clipper: _SurfaceClipper(
-                chamfered: chamfered,
-                radius: radius,
-                chamfer: chamfer,
-              ),
-              child: body,
-            )
+          ? ClipPath(clipper: _ShapeOutlineClipper(_outline), child: body)
           : body,
     );
 
@@ -185,63 +245,40 @@ class PesaSurface extends StatelessWidget {
   }
 }
 
-class _SurfaceClipper extends CustomClipper<Path> {
-  final bool chamfered;
-  final double radius;
-  final double chamfer;
+/// Clips to whatever outline the surface resolved, so there is no second
+/// implementation of the shape to drift out of sync.
+class _ShapeOutlineClipper extends CustomClipper<Path> {
+  final ShapeBorder outline;
 
-  const _SurfaceClipper({
-    required this.chamfered,
-    required this.radius,
-    required this.chamfer,
-  });
+  const _ShapeOutlineClipper(this.outline);
 
   @override
-  Path getClip(Size size) => _pathFor(size);
+  Path getClip(Size size) => outline.getOuterPath(Offset.zero & size);
 
   @override
-  bool shouldReclip(covariant _SurfaceClipper old) =>
-      old.chamfered != chamfered ||
-      old.radius != radius ||
-      old.chamfer != chamfer;
-
-  Path _pathFor(Size size) => chamfered
-      ? appShapePath(
-          rect: Offset.zero & size,
-          radius: radius,
-          topLeft: AppCorner.chamfer,
-          bottomRight: AppCorner.chamfer,
-          chamfer: chamfer,
-        )
-      : appShapePath(rect: Offset.zero & size, radius: radius);
+  bool shouldReclip(covariant _ShapeOutlineClipper old) =>
+      old.outline != outline;
 }
 
 class _PesaSurfacePainter extends CustomPainter {
-  final bool chamfered;
-  final double radius;
-  final double chamfer;
+  final ShapeBorder outline;
   final Color stroke;
   final List<BoxShadow> shadows;
+  final bool edgeLight;
+  final Color edgeLightColor;
 
   const _PesaSurfacePainter({
-    required this.chamfered,
-    required this.radius,
-    required this.chamfer,
+    required this.outline,
     required this.stroke,
     required this.shadows,
+    required this.edgeLight,
+    required this.edgeLightColor,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final path = chamfered
-        ? appShapePath(
-            rect: Offset.zero & size,
-            radius: radius,
-            topLeft: AppCorner.chamfer,
-            bottomRight: AppCorner.chamfer,
-            chamfer: chamfer,
-          )
-        : appShapePath(rect: Offset.zero & size, radius: radius);
+    final rect = Offset.zero & size;
+    final path = outline.getOuterPath(rect);
 
     // Painted first so the fill (this CustomPaint's child) covers the shadow's
     // solid core and only the soft halo survives.
@@ -253,8 +290,8 @@ class _PesaSurfacePainter extends CustomPainter {
     }
 
     if (stroke.a > 0) {
-      // Same gradient hairline as GlassCard, so a card and a chamfered hero
-      // have the same edge behaviour rather than two subtly different ones.
+      // Same gradient hairline as GlassCard, so a card and a hero have the same
+      // edge behaviour rather than two subtly different ones.
       canvas.save();
       canvas.translate(0.5, 0.5);
       HairlineBorderPainter(
@@ -264,14 +301,40 @@ class _PesaSurfacePainter extends CustomPainter {
       ).paint(canvas, Size(size.width - 1, size.height - 1));
       canvas.restore();
     }
+
+    if (edgeLight) _paintEdgeLight(canvas, size, path);
+  }
+
+  /// A specular line inset from the top edge, clipped to the surface's own
+  /// outline so it follows the chamfer instead of running straight across it.
+  void _paintEdgeLight(Canvas canvas, Size size, Path path) {
+    if (size.isEmpty) return;
+    canvas.save();
+    canvas.clipPath(path);
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.4
+      ..shader = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.topRight,
+        colors: [edgeLightColor, edgeLightColor.withValues(alpha: 0)],
+      ).createShader(Offset.zero & size);
+    // Inset by half a pixel so the line lands inside the outline rather than
+    // straddling it.
+    canvas.drawLine(
+      const Offset(0.5, 0.7),
+      Offset(size.width - 0.5, 0.7),
+      paint,
+    );
+    canvas.restore();
   }
 
   @override
   bool shouldRepaint(covariant _PesaSurfacePainter old) =>
-      old.chamfered != chamfered ||
-      old.radius != radius ||
-      old.chamfer != chamfer ||
+      old.outline != outline ||
       old.stroke != stroke ||
+      old.edgeLight != edgeLight ||
+      old.edgeLightColor != edgeLightColor ||
       !identical(old.shadows, shadows);
 }
 

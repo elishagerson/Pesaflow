@@ -21,6 +21,12 @@ class AppTypographyTheme extends ThemeExtension<AppTypographyTheme> {
   /// Condensed poster face at headline size, for the biggest moment on screen.
   final TextStyle posterLarge;
 
+  /// The single largest type in the app. Tighter leading and a shorter cap
+  /// height than [posterLarge] so it can be set much bigger without the line
+  /// box swallowing the card around it. One per screen: the number the whole
+  /// hero exists to show.
+  final TextStyle posterHero;
+
   /// Optical display cut of Inter — money and counts at >= 24px.
   final TextStyle numeral;
 
@@ -33,6 +39,7 @@ class AppTypographyTheme extends ThemeExtension<AppTypographyTheme> {
     required this.labelMicro,
     required this.poster,
     required this.posterLarge,
+    required this.posterHero,
     required this.numeral,
     required this.eyebrow,
   });
@@ -61,6 +68,12 @@ class AppTypographyTheme extends ThemeExtension<AppTypographyTheme> {
       fontWeight: FontWeight.w400,
       height: 0.92,
     ),
+    posterHero: const TextStyle(
+      fontFamily: AppTheme.fontPoster,
+      fontSize: 76,
+      fontWeight: FontWeight.w400,
+      height: 0.84,
+    ),
     posterLarge: const TextStyle(
       fontFamily: AppTheme.fontPoster,
       fontSize: 64,
@@ -76,8 +89,8 @@ class AppTypographyTheme extends ThemeExtension<AppTypographyTheme> {
     eyebrow: const TextStyle(
       fontFamily: AppTheme.fontText,
       fontSize: 11,
-      fontWeight: FontWeight.w700,
-      letterSpacing: 1.1,
+      fontWeight: FontWeight.w800,
+      letterSpacing: 1.4,
       height: 1.2,
     ),
   );
@@ -88,6 +101,7 @@ class AppTypographyTheme extends ThemeExtension<AppTypographyTheme> {
     TextStyle? labelMicro,
     TextStyle? poster,
     TextStyle? posterLarge,
+    TextStyle? posterHero,
     TextStyle? numeral,
     TextStyle? eyebrow,
   }) {
@@ -96,6 +110,7 @@ class AppTypographyTheme extends ThemeExtension<AppTypographyTheme> {
       labelMicro: labelMicro ?? this.labelMicro,
       poster: poster ?? this.poster,
       posterLarge: posterLarge ?? this.posterLarge,
+      posterHero: posterHero ?? this.posterHero,
       numeral: numeral ?? this.numeral,
       eyebrow: eyebrow ?? this.eyebrow,
     );
@@ -109,6 +124,7 @@ class AppTypographyTheme extends ThemeExtension<AppTypographyTheme> {
       labelMicro: TextStyle.lerp(labelMicro, other.labelMicro, t)!,
       poster: TextStyle.lerp(poster, other.poster, t)!,
       posterLarge: TextStyle.lerp(posterLarge, other.posterLarge, t)!,
+      posterHero: TextStyle.lerp(posterHero, other.posterHero, t)!,
       numeral: TextStyle.lerp(numeral, other.numeral, t)!,
       eyebrow: TextStyle.lerp(eyebrow, other.eyebrow, t)!,
     );

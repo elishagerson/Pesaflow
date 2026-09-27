@@ -14,6 +14,17 @@ class BudjetlyBalanceHeader extends StatefulWidget {
   final int expense;
   final VoidCallback? onAccountTap;
 
+  /// Optional block rendered under the cash-flow row, inside the same card.
+  ///
+  /// The hero strip uses this to hang its side-by-side cells off the balance
+  /// card rather than laying a second card next to it. Putting them in separate
+  /// cards is what made the dashboard read as a carousel of competing widgets;
+  /// one card with hairline-divided cells reads as a single instrument.
+  final Widget? footer;
+
+  /// Extra height reserved for [footer] when the card needs to grow for it.
+  final double footerHeight;
+
   const BudjetlyBalanceHeader({
     super.key,
     required this.balance,
@@ -21,6 +32,8 @@ class BudjetlyBalanceHeader extends StatefulWidget {
     required this.income,
     required this.expense,
     this.onAccountTap,
+    this.footer,
+    this.footerHeight = 0,
   });
 
   @override
@@ -145,12 +158,21 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
         ? theme.colorScheme.error
         : theme.colorScheme.onSurface;
 
-    return PesaSurface.chamferSurface(
-      chamfer: kSpacing20,
-      glow: 0.32,
-      fill: isNegative
-          ? theme.colorScheme.surfaceContainerHigh
-          : theme.colorScheme.surfaceContainerHigh,
+    return PesaSurface.posterSurface(
+      chamfer: kSpacing28,
+      // A subtle two-stop gradient rather than a flat fill: the card reads as a
+      // lit surface instead of a coloured block, and it stays in the same hue
+      // family as the slate accent so it does not compete with the numbers.
+      background: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.surfaceContainerHighest,
+          theme.colorScheme.surfaceContainerHigh,
+          theme.colorScheme.surfaceContainer,
+        ],
+        stops: const [0.0, 0.55, 1.0],
+      ),
       stroke: isNegative
           ? theme.colorScheme.error.withValues(alpha: 0.35)
           : context.appColors.hairlineStrong,
@@ -238,8 +260,14 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                       ),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.error.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusPill,
+                        // A 4px plate rather than a pill: the poster language
+                        // in this app is all straight edges, and a fully round
+                        // chip is the one shape that reads as soft.
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(
+                          color: theme.colorScheme.error.withValues(
+                            alpha: 0.35,
+                          ),
                         ),
                       ),
                       child: Text(
@@ -282,7 +310,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                 child: _isHidden
                     ? Text(
                         '••••••',
-                        style: context.appTypography.posterLarge.copyWith(
+                        style: context.appTypography.posterHero.copyWith(
                           color: textColor,
                         ),
                       )
@@ -291,7 +319,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                         isNegative
                             ? '- ${CurrencyFormatter.formatCents(widget.balance.abs())}'
                             : CurrencyFormatter.formatCents(widget.balance),
-                        style: context.appTypography.posterLarge.copyWith(
+                        style: context.appTypography.posterHero.copyWith(
                           color: textColor,
                         ),
                       )
@@ -342,6 +370,16 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                   ),
                 ],
               ),
+              if (widget.footer != null) ...[
+                const SizedBox(height: kSpacing14),
+                Divider(
+                  height: 1,
+                  thickness: 0.8,
+                  color: context.appColors.hairline,
+                ),
+                SizedBox(height: kSpacing14),
+                SizedBox(height: widget.footerHeight, child: widget.footer),
+              ],
             ],
           ),
         ],
@@ -411,7 +449,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
       builder: (context, _) {
         final chars = _formatBalanceDigits(widget.balance);
         int digitIdx = 0;
-        final baseStyle = context.appTypography.posterLarge.copyWith(
+        final baseStyle = context.appTypography.posterHero.copyWith(
           color: textColor,
         );
 

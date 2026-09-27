@@ -328,3 +328,60 @@ class ChicaneBorder extends ShapeBorder {
   @override
   int get hashCode => Object.hash(borderRadius, chamfer, side);
 }
+
+/// The boldest cut in the library: two 45° chamfers on opposite corners and
+/// hard 90° corners on the other two — a racing number plate, not a rounded
+/// rectangle with two nicks taken out of it.
+///
+/// [ChicaneBorder] keeps curves on its uncut corners, so a large card still
+/// reads as a softened rectangle. This one does not: the silhouette is entirely
+/// straight edges, which is what gives it the authority to carry a number big
+/// enough to dominate a screen. Reserve it for the single hero surface of a
+/// screen — using it on a list row would flatten the hierarchy it exists to
+/// create.
+class PosterBorder extends ShapeBorder {
+  /// Extent of the two 45° cuts.
+  final double chamfer;
+
+  final BorderSide side;
+
+  const PosterBorder({this.chamfer = 22, this.side = BorderSide.none});
+
+  @override
+  EdgeInsetsGeometry get dimensions => EdgeInsets.all(side.width);
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
+      pathFor(rect.deflate(side.width));
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) => pathFor(rect);
+
+  Path pathFor(Rect rect) => appShapePath(
+    rect: rect,
+    topLeft: AppCorner.chamfer,
+    topRight: AppCorner.square,
+    bottomRight: AppCorner.chamfer,
+    bottomLeft: AppCorner.square,
+    chamfer: chamfer,
+  );
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
+    if (side.style != BorderStyle.none) {
+      canvas.drawPath(pathFor(rect), side.toPaint());
+    }
+  }
+
+  @override
+  ShapeBorder scale(double t) =>
+      PosterBorder(chamfer: chamfer * t, side: side.scale(t));
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PosterBorder && other.chamfer == chamfer && other.side == side;
+
+  @override
+  int get hashCode => Object.hash(chamfer, side);
+}
