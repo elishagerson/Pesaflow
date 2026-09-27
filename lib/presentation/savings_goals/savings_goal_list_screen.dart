@@ -1140,7 +1140,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildStarterSuggestions(BuildContext context, ThemeData theme) {
