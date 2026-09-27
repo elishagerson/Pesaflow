@@ -94,14 +94,18 @@ Path appShapePath({
       case AppCorner.square:
         break;
       case AppCorner.chamfer:
-        lineTo(
-          entryX + (cornerX - entryX) * _chamferRatio(c, r),
-          entryY + (cornerY - entryY) * _chamferRatio(c, r),
-        );
-        lineTo(
-          exitX + (cornerX - exitX) * _chamferRatio(c, r),
-          exitY + (cornerY - exitY) * _chamferRatio(c, r),
-        );
+        // Exactly one point: the waypoint where the *next* edge begins. The
+        // straight line from the previous edge's waypoint to this one is the
+        // 45° cut, so that line is the corner. The cut is the absence of a
+        // corner, not a detour through one.
+        //
+        // This used to emit two points pulled toward the corner, which made
+        // the diagonal land at half the requested extent and left a doubled
+        // edge segment behind — a malformed notch rather than a cut. At
+        // `radius: 0` it was worse: both points landed exactly on the corner,
+        // so the chamfer silently did nothing and the shape stayed a plain
+        // rectangle.
+        lineTo(exitX, exitY);
       case AppCorner.rounded:
         curveTo(entryX, entryY, exitX, exitY, cornerX, cornerY);
     }
@@ -118,13 +122,6 @@ Path appShapePath({
   corner(topLeft, l, t, l, t + tl, l + tl, t);
   path.close();
   return path;
-}
-
-double _chamferRatio(double chamfer, double radius) {
-  if (radius <= 0) return 1;
-  // When the chamfer and the corner radius want the same edge length, take
-  // the midpoint so a morph between the two states has no visible jump.
-  return 0.5;
 }
 
 /// Arc-length-parameterised blend of two paths.
@@ -329,16 +326,20 @@ class ChicaneBorder extends ShapeBorder {
   int get hashCode => Object.hash(borderRadius, chamfer, side);
 }
 
-/// The boldest cut in the library: two 45° chamfers on opposite corners and
-/// hard 90° corners on the other two — a racing number plate, not a rounded
-/// rectangle with two nicks taken out of it.
+/// The boldest cut in the library: a **left-pointing chevron** — both left
+/// corners 45°-cut, both right corners hard 90° — a racing number plate rather
+/// than a rounded rectangle with two nicks taken out of it.
 ///
-/// [ChicaneBorder] keeps curves on its uncut corners, so a large card still
-/// reads as a softened rectangle. This one does not: the silhouette is entirely
-/// straight edges, which is what gives it the authority to carry a number big
-/// enough to dominate a screen. Reserve it for the single hero surface of a
-/// screen — using it on a list row would flatten the hierarchy it exists to
-/// create.
+/// [ChicaneBorder] cuts opposite corners, which leaves a cut at one end of each
+/// vertical edge and a bare right angle at the other. That reads as an
+/// accident: the eye pairs the two cut corners across the diagonal and then
+/// finds two unexplained spikes. Cutting both corners of the *same* edge makes
+/// the diagonal a single continuous gesture — one line of intent down each side
+/// — and squaring the opposite edge is what gives the plate its authority to
+/// carry a number big enough to dominate a screen.
+///
+/// Reserve it for the single hero surface of a screen. Using it on a list row
+/// would flatten the hierarchy it exists to create.
 class PosterBorder extends ShapeBorder {
   /// Extent of the two 45° cuts.
   final double chamfer;
@@ -361,8 +362,8 @@ class PosterBorder extends ShapeBorder {
     rect: rect,
     topLeft: AppCorner.chamfer,
     topRight: AppCorner.square,
-    bottomRight: AppCorner.chamfer,
-    bottomLeft: AppCorner.square,
+    bottomRight: AppCorner.square,
+    bottomLeft: AppCorner.chamfer,
     chamfer: chamfer,
   );
 

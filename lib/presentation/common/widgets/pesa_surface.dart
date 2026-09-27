@@ -291,14 +291,16 @@ class _PesaSurfacePainter extends CustomPainter {
 
     if (stroke.a > 0) {
       // Same gradient hairline as GlassCard, so a card and a hero have the same
-      // edge behaviour rather than two subtly different ones.
+      // edge behaviour rather than two subtly different ones — but stroked
+      // along this surface's own outline, not a rectangle, so the border
+      // follows the cut instead of stopping at it.
       canvas.save();
       canvas.translate(0.5, 0.5);
+      final inset = Rect.fromLTWH(0, 0, size.width - 1, size.height - 1);
       HairlineBorderPainter(
-        radius: 0,
         hairline: stroke,
         hairlineStrong: stroke,
-      ).paint(canvas, Size(size.width - 1, size.height - 1));
+      ).strokePath(canvas, outline.getOuterPath(inset), inset);
       canvas.restore();
     }
 
@@ -338,6 +340,19 @@ class _PesaSurfacePainter extends CustomPainter {
       !identical(old.shadows, shadows);
 }
 
-/// Vertical rhythm helper for hero padding, so every chamfered surface in the
-/// app insets its content by the same amount regardless of its cut size.
+/// Vertical rhythm helper for hero padding, so every cut surface in the app
+/// insets its content by the same amount regardless of its cut size.
 const EdgeInsets kHeroPadding = EdgeInsets.all(kSpacing20);
+
+/// Padding for a surface whose content must stay clear of a 45° cut.
+///
+/// A uniform inset is not enough. The cut removes the triangle outside the
+/// diagonal, so content that respects only a flat inset still ends up with its
+/// top-left corner sitting a few pixels under the cut — which reads as the
+/// content being clipped rather than the shape being deliberate. Insetting the
+/// cut sides by the chamfer itself, plus the normal rhythm gap, guarantees
+/// clearance instead of luck.
+EdgeInsets heroPaddingFor({required double chamfer, double gap = kSpacing20}) {
+  final inset = chamfer + gap;
+  return EdgeInsets.fromLTRB(inset, inset, gap, gap);
+}

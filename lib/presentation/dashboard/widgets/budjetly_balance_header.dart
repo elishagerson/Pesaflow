@@ -36,6 +36,11 @@ class BudjetlyBalanceHeader extends StatefulWidget {
     this.footerHeight = 0,
   });
 
+  /// The plate's cut, in one place. The shape and the padding that has to clear
+  /// it are the same decision, so they read the same number rather than two
+  /// literals that can drift apart and leave content tucked under the diagonal.
+  static const double chamfer = 24;
+
   @override
   State<BudjetlyBalanceHeader> createState() => _BudjetlyBalanceHeaderState();
 }
@@ -159,7 +164,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
         : theme.colorScheme.onSurface;
 
     return PesaSurface.posterSurface(
-      chamfer: kSpacing28,
+      chamfer: BudjetlyBalanceHeader.chamfer,
       // A subtle two-stop gradient rather than a flat fill: the card reads as a
       // lit surface instead of a coloured block, and it stays in the same hue
       // family as the slate accent so it does not compete with the numbers.
@@ -183,7 +188,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
           offset: const Offset(0, 10),
         ),
       ],
-      padding: const EdgeInsets.all(kSpacing20),
+      padding: heroPaddingFor(chamfer: BudjetlyBalanceHeader.chamfer),
       child: Stack(
         children: [
           // Ambient gradient shimmer sweep (neutral, non-distracting)

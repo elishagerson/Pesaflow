@@ -10,6 +10,8 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 /// lives here, on the tokens, so every card edge in the app reads the same in
 /// both modes.
 class HairlineBorderPainter extends CustomPainter {
+  /// Corner radius of the rectangle `paint` strokes. Unused by [strokePath],
+  /// which takes the shape to follow instead.
   final double radius;
   final Color hairline;
   final Color hairlineStrong;
@@ -18,7 +20,7 @@ class HairlineBorderPainter extends CustomPainter {
   final double fadeEnd;
 
   const HairlineBorderPainter({
-    required this.radius,
+    this.radius = 0,
     required this.hairline,
     required this.hairlineStrong,
     this.fadeEnd = 0.6,
@@ -42,9 +44,24 @@ class HairlineBorderPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (size.isEmpty) return;
     final rect = Offset.zero & size;
-    final rrect = RRect.fromRectAndRadius(rect, Radius.circular(radius));
-    canvas.drawRRect(
-      rrect,
+    strokePath(
+      canvas,
+      Path()..addRRect(RRect.fromRectAndRadius(rect, Radius.circular(radius))),
+      rect,
+    );
+  }
+
+  /// Strokes an arbitrary shape with the same gradient, for surfaces whose
+  /// outline is not a rectangle.
+  ///
+  /// `PesaSurface` resolves cut outlines (`PosterBorder`, `ChicaneBorder`) to a
+  /// custom path. Stroking an `RRect` over it traced a plain rectangle: the
+  /// diagonals were left with no border at all and the square corners bled
+  /// past the cut into empty space, so the chamfer the rest of the surface
+  /// agreed on was the one thing you could not see.
+  void strokePath(Canvas canvas, Path path, Rect rect) {
+    canvas.drawPath(
+      path,
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.0
