@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/presentation/sms_review/sms_review_screen.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -142,5 +144,85 @@ void main() {
         expect(find.text('Select All'), findsOneWidget);
       },
     );
+  });
+
+  group('the review card is not framed', () {
+    testWidgets(
+      'the row is a bleed surface: no hairline, no shadow, no edge light',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(items: [testItem]));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 350));
+
+        final rows = tester.widgetList<PesaSurface>(
+          find.descendant(
+            of: find.byType(SwipeableCard),
+            matching: find.byType(PesaSurface),
+          ),
+        );
+        expect(rows, isNotEmpty);
+
+        for (final row in rows) {
+          expect(((row.stroke ?? const Color(0x00000000)).a * 255).round(), 0);
+          expect(row.shadows, isEmpty);
+          expect(row.edgeLight, isFalse);
+          expect(row.radius, AppTheme.radiusCard);
+          expect(
+            row.padding.resolve(TextDirection.ltr),
+            const EdgeInsets.all(kSpacing14),
+          );
+        }
+      },
+    );
+
+    testWidgets(
+      'selecting a row keeps only the fill tint — the border does not come back',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(items: [testItem]));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 350));
+
+        await tester.tap(find.text('Sporty Bet PUSH'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 350));
+
+        final row = tester.widget<PesaSurface>(
+          find.descendant(
+            of: find.byType(SwipeableCard),
+            matching: find.byType(PesaSurface),
+          ),
+        );
+        expect(row.stroke?.a ?? 0, 0);
+        expect(row.shadows, isEmpty);
+        // Selected state is carried by the fill alone.
+        final theme = Theme.of(tester.element(find.text('Sporty Bet PUSH')));
+        expect(row.fill, theme.colorScheme.primary.withValues(alpha: 0.06));
+      },
+    );
+
+    testWidgets('the floating dock keeps the elevation an overlay needs', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(createTestWidget(items: [testItem]));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+
+      await tester.tap(find.text('Select All'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+
+      final dock = tester.widget<PesaSurface>(
+        find.ancestor(
+          of: find.text('Cancel'),
+          matching: find.byType(PesaSurface),
+        ),
+      );
+      expect(dock.shadows, isNotEmpty);
+      expect(dock.radius, AppTheme.radiusDialog);
+      // A card, not a bleed: `.bleed` pins stroke to a transparent colour,
+      // which is how the borderless variant marks itself.
+      expect(dock.stroke, isNull);
+      expect(dock.edgeLight, isFalse);
+    });
   });
 }

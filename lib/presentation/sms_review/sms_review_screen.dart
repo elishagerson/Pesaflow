@@ -17,6 +17,7 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
@@ -356,17 +357,6 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                     alpha: 0.35,
                                   ),
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(
-                                alpha: theme.brightness == Brightness.dark
-                                    ? 0.2
-                                    : 0.04,
-                              ),
-                              blurRadius: 6,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -522,6 +512,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 final isSelected = _selectedIds.contains(
                                   trans.id,
                                 );
+                                final cardFill = isSelected
+                                    ? theme.colorScheme.primary.withValues(
+                                        alpha: 0.06,
+                                      )
+                                    : theme.colorScheme.surfaceContainerHigh;
 
                                 AmountType amtType = AmountType.neutral;
                                 if (trans.type.toLowerCase() == 'income') {
@@ -590,510 +585,526 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                           _selectAll = false;
                                         });
                                       },
-                                      child: AnimatedContainer(
-                                        duration: MotionTokens.durationFast,
-                                        curve: Curves.easeOutCubic,
-                                        margin: const EdgeInsets.only(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
                                           bottom: kSpacing12,
                                         ),
-                                        decoration: BoxDecoration(
-                                          color: isSelected
-                                              ? theme.colorScheme.primary
-                                                    .withValues(alpha: 0.06)
-                                              : theme
-                                                    .colorScheme
-                                                    .surfaceContainerHigh,
-                                          borderRadius: BorderRadius.circular(
-                                            AppTheme.radiusCard,
+                                        // The row fill is the only thing that
+                                        // changes on select: no border, no
+                                        // shadow — those are the bezel the
+                                        // surface primitive owns.
+                                        child: TweenAnimationBuilder<Color?>(
+                                          duration: MotionTokens.durationFast,
+                                          curve: Curves.easeOutCubic,
+                                          tween: ColorTween(
+                                            begin: cardFill,
+                                            end: cardFill,
                                           ),
-                                          border: Border.all(
-                                            color: isSelected
-                                                ? theme.colorScheme.primary
-                                                      .withValues(alpha: 0.38)
-                                                : theme
-                                                      .colorScheme
-                                                      .outlineVariant
-                                                      .withValues(alpha: 0.28),
-                                            width: isSelected ? 1.5 : 1.0,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: context
-                                                  .appColors
-                                                  .shadowMedium
-                                                  .withValues(alpha: 0.04),
-                                              blurRadius: 10,
-                                              offset: const Offset(0, 3),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(
-                                            kSpacing14,
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              // Top row: checkbox + icon + main info + amount
-                                              Row(
+                                          builder: (context, fill, _) {
+                                            return PesaSurface.bleed(
+                                              fill: fill,
+                                              radius: AppTheme.radiusCard,
+                                              padding: const EdgeInsets.all(
+                                                kSpacing14,
+                                              ),
+                                              child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  // Selection checkbox
-                                                  AnimatedContainer(
-                                                    duration: MotionTokens
-                                                        .durationFast,
-                                                    curve: Curves.easeOutCubic,
-                                                    width: 22,
-                                                    height: 22,
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                          top: 2,
-                                                          right: kSpacing10,
-                                                        ),
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: isSelected
-                                                          ? theme
-                                                                .colorScheme
-                                                                .primary
-                                                          : Colors.transparent,
-                                                      border: Border.all(
-                                                        color: isSelected
-                                                            ? theme
-                                                                  .colorScheme
-                                                                  .primary
-                                                            : theme
-                                                                  .colorScheme
-                                                                  .outlineVariant,
-                                                        width: 1.5,
-                                                      ),
-                                                    ),
-                                                    child: isSelected
-                                                        ? Icon(
-                                                            PesaFlowIcons.check,
-                                                            size: 13,
-                                                            color: theme
-                                                                .colorScheme
-                                                                .onPrimary,
-                                                          )
-                                                        : null,
-                                                  ),
-                                                  // Category icon (38x38 squircle)
-                                                  Container(
-                                                    width: 38,
-                                                    height: 38,
-                                                    decoration: BoxDecoration(
-                                                      color: hexToColor(
-                                                        item.category.color,
-                                                      ).withValues(alpha: 0.14),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            AppTheme
-                                                                .radiusSmall,
+                                                  // Top row: checkbox + icon + main info + amount
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      // Selection checkbox
+                                                      AnimatedContainer(
+                                                        duration: MotionTokens
+                                                            .durationFast,
+                                                        curve:
+                                                            Curves.easeOutCubic,
+                                                        width: 22,
+                                                        height: 22,
+                                                        margin:
+                                                            const EdgeInsets.only(
+                                                              top: 2,
+                                                              right: kSpacing10,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: isSelected
+                                                              ? theme
+                                                                    .colorScheme
+                                                                    .primary
+                                                              : Colors
+                                                                    .transparent,
+                                                          border: Border.all(
+                                                            color: isSelected
+                                                                ? theme
+                                                                      .colorScheme
+                                                                      .primary
+                                                                : theme
+                                                                      .colorScheme
+                                                                      .outlineVariant,
+                                                            width: 1.5,
                                                           ),
-                                                    ),
-                                                    child: Center(
-                                                      child: Icon(
-                                                        getCategoryIcon(
-                                                          item.category.icon,
                                                         ),
-                                                        color: hexToColor(
-                                                          item.category.color,
-                                                        ),
-                                                        size: 18,
+                                                        child: isSelected
+                                                            ? Icon(
+                                                                PesaFlowIcons
+                                                                    .check,
+                                                                size: 13,
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .onPrimary,
+                                                              )
+                                                            : null,
                                                       ),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: kSpacing10,
-                                                  ),
-                                                  // Text content
-                                                  Expanded(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          trans
-                                                                  .description
-                                                                  .isNotEmpty
-                                                              ? trans
-                                                                    .description
-                                                              : item
+                                                      // Category icon (38x38 squircle)
+                                                      Container(
+                                                        width: 38,
+                                                        height: 38,
+                                                        decoration: BoxDecoration(
+                                                          color:
+                                                              hexToColor(
+                                                                item
                                                                     .category
-                                                                    .name,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: context.ts(
-                                                            14,
-                                                            fontWeight:
-                                                                FontWeight.w600,
+                                                                    .color,
+                                                              ).withValues(
+                                                                alpha: 0.14,
+                                                              ),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                AppTheme
+                                                                    .radiusSmall,
+                                                              ),
+                                                        ),
+                                                        child: Center(
+                                                          child: Icon(
+                                                            getCategoryIcon(
+                                                              item
+                                                                  .category
+                                                                  .icon,
+                                                            ),
+                                                            color: hexToColor(
+                                                              item
+                                                                  .category
+                                                                  .color,
+                                                            ),
+                                                            size: 18,
                                                           ),
                                                         ),
-                                                        const SizedBox(
-                                                          height: kSpacing4,
-                                                        ),
-                                                        Row(
+                                                      ),
+                                                      const SizedBox(
+                                                        width: kSpacing10,
+                                                      ),
+                                                      // Text content
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                           children: [
-                                                            // Type badge
-                                                            Container(
-                                                              padding:
-                                                                  const EdgeInsets.symmetric(
+                                                            Text(
+                                                              trans
+                                                                      .description
+                                                                      .isNotEmpty
+                                                                  ? trans
+                                                                        .description
+                                                                  : item
+                                                                        .category
+                                                                        .name,
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: context.ts(
+                                                                14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: kSpacing4,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                // Type badge
+                                                                Container(
+                                                                  padding: const EdgeInsets.symmetric(
                                                                     horizontal:
                                                                         kSpacing6,
                                                                     vertical: 1,
                                                                   ),
-                                                              decoration: BoxDecoration(
-                                                                color:
-                                                                    _typeColor(
+                                                                  decoration: BoxDecoration(
+                                                                    color:
+                                                                        _typeColor(
+                                                                          trans
+                                                                              .type,
+                                                                        ).withValues(
+                                                                          alpha:
+                                                                              0.1,
+                                                                        ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          4,
+                                                                        ),
+                                                                  ),
+                                                                  child: Text(
+                                                                    _typeLabel(
                                                                       trans
                                                                           .type,
-                                                                    ).withValues(
-                                                                      alpha:
-                                                                          0.1,
                                                                     ),
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                      4,
-                                                                    ),
-                                                              ),
-                                                              child: Text(
-                                                                _typeLabel(
-                                                                  trans.type,
-                                                                ),
-                                                                style: context.ts(
-                                                                  10,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  color:
-                                                                      _typeColor(
+                                                                    style: context.ts(
+                                                                      10,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      color: _typeColor(
                                                                         trans
                                                                             .type,
                                                                       ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            if (trans.provider !=
-                                                                    null &&
-                                                                trans
-                                                                    .provider!
-                                                                    .isNotEmpty) ...[
-                                                              const SizedBox(
-                                                                width:
-                                                                    kSpacing4,
-                                                              ),
-                                                              // Provider badge
-                                                              Container(
-                                                                padding: const EdgeInsets.symmetric(
-                                                                  horizontal:
-                                                                      kSpacing6,
-                                                                  vertical: 1,
-                                                                ),
-                                                                decoration: BoxDecoration(
-                                                                  color:
-                                                                      _providerColor(
-                                                                        trans
-                                                                            .provider,
-                                                                      ).withValues(
-                                                                        alpha:
-                                                                            0.1,
-                                                                      ),
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                        4,
-                                                                      ),
-                                                                ),
-                                                                child: Text(
-                                                                  _formatProvider(
-                                                                    trans
-                                                                        .provider,
-                                                                  ),
-                                                                  style: context.ts(
-                                                                    10,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    color: _providerColor(
-                                                                      trans
-                                                                          .provider,
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ],
+                                                                if (trans.provider !=
+                                                                        null &&
+                                                                    trans
+                                                                        .provider!
+                                                                        .isNotEmpty) ...[
+                                                                  const SizedBox(
+                                                                    width:
+                                                                        kSpacing4,
+                                                                  ),
+                                                                  // Provider badge
+                                                                  Container(
+                                                                    padding: const EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          kSpacing6,
+                                                                      vertical:
+                                                                          1,
+                                                                    ),
+                                                                    decoration: BoxDecoration(
+                                                                      color:
+                                                                          _providerColor(
+                                                                            trans.provider,
+                                                                          ).withValues(
+                                                                            alpha:
+                                                                                0.1,
+                                                                          ),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                            4,
+                                                                          ),
+                                                                    ),
+                                                                    child: Text(
+                                                                      _formatProvider(
+                                                                        trans
+                                                                            .provider,
+                                                                      ),
+                                                                      style: context.ts(
+                                                                        10,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        color: _providerColor(
+                                                                          trans
+                                                                              .provider,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ],
+                                                            ),
                                                           ],
                                                         ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: kSpacing8,
-                                                  ),
-                                                  // Amount + timestamp column
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    children: [
-                                                      AmountText(
-                                                        amountInCents:
-                                                            trans.amount,
-                                                        type: amtType,
-                                                        style: context.ts(
-                                                          15,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                        ),
                                                       ),
-                                                      if (trans.smsTimestamp !=
-                                                          null) ...[
-                                                        const SizedBox(
-                                                          height: kSpacing2,
-                                                        ),
-                                                        Text(
-                                                          _formatTimestamp(
-                                                            trans.smsTimestamp,
+                                                      const SizedBox(
+                                                        width: kSpacing8,
+                                                      ),
+                                                      // Amount + timestamp column
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          AmountText(
+                                                            amountInCents:
+                                                                trans.amount,
+                                                            type: amtType,
+                                                            style: context.ts(
+                                                              15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
                                                           ),
-                                                          style: context.ts(
-                                                            10,
-                                                            color: theme
-                                                                .colorScheme
-                                                                .onSurfaceVariant,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                          if (trans
+                                                                  .smsTimestamp !=
+                                                              null) ...[
+                                                            const SizedBox(
+                                                              height: kSpacing2,
+                                                            ),
+                                                            Text(
+                                                              _formatTimestamp(
+                                                                trans
+                                                                    .smsTimestamp,
+                                                              ),
+                                                              style: context.ts(
+                                                                10,
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .onSurfaceVariant,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ],
+                                                      ),
                                                     ],
                                                   ),
-                                                ],
-                                              ),
 
-                                              // Reference + account row
-                                              if ((trans.reference != null &&
-                                                      trans
-                                                          .reference!
-                                                          .isNotEmpty) ||
-                                                  item.account != null) ...[
-                                                const SizedBox(
-                                                  height: kSpacing8,
-                                                ),
-                                                Container(
-                                                  width: double.infinity,
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: kSpacing10,
-                                                        vertical: kSpacing6,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color: theme
-                                                        .colorScheme
-                                                        .surfaceContainerHighest
-                                                        .withValues(
-                                                          alpha: 0.25,
-                                                        ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          kSpacing6,
-                                                        ),
-                                                  ),
-                                                  child: Row(
-                                                    children: [
-                                                      if (trans.reference !=
+                                                  // Reference + account row
+                                                  if ((trans.reference !=
                                                               null &&
                                                           trans
                                                               .reference!
-                                                              .isNotEmpty) ...[
-                                                        Icon(
-                                                          PesaFlowIcons.tag,
-                                                          size: 12,
-                                                          color: theme
-                                                              .colorScheme
-                                                              .onSurfaceVariant,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: kSpacing4,
-                                                        ),
-                                                        Flexible(
-                                                          child: Text(
-                                                            trans.reference!,
-                                                            style: context.ts(
-                                                              10,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
+                                                              .isNotEmpty) ||
+                                                      item.account != null) ...[
+                                                    const SizedBox(
+                                                      height: kSpacing8,
+                                                    ),
+                                                    Container(
+                                                      width: double.infinity,
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal:
+                                                                kSpacing10,
+                                                            vertical: kSpacing6,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color: theme
+                                                            .colorScheme
+                                                            .surfaceContainerHighest
+                                                            .withValues(
+                                                              alpha: 0.25,
+                                                            ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              kSpacing6,
+                                                            ),
+                                                      ),
+                                                      child: Row(
+                                                        children: [
+                                                          if (trans.reference !=
+                                                                  null &&
+                                                              trans
+                                                                  .reference!
+                                                                  .isNotEmpty) ...[
+                                                            Icon(
+                                                              PesaFlowIcons.tag,
+                                                              size: 12,
                                                               color: theme
                                                                   .colorScheme
                                                                   .onSurfaceVariant,
                                                             ),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                      if (trans.reference !=
-                                                              null &&
-                                                          trans
-                                                              .reference!
-                                                              .isNotEmpty &&
-                                                          item.account != null)
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets.symmetric(
-                                                                horizontal:
-                                                                    kSpacing6,
-                                                              ),
-                                                          child: Container(
-                                                            width: 1,
-                                                            height: 12,
-                                                            color: theme
-                                                                .colorScheme
-                                                                .onSurfaceVariant
-                                                                .withValues(
-                                                                  alpha: 0.3,
+                                                            const SizedBox(
+                                                              width: kSpacing4,
+                                                            ),
+                                                            Flexible(
+                                                              child: Text(
+                                                                trans
+                                                                    .reference!,
+                                                                style: context.ts(
+                                                                  10,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: theme
+                                                                      .colorScheme
+                                                                      .onSurfaceVariant,
                                                                 ),
-                                                          ),
-                                                        ),
-                                                      if (item.account !=
-                                                          null) ...[
-                                                        Icon(
-                                                          PesaFlowIcons.wallet,
-                                                          size: 12,
-                                                          color: theme
-                                                              .colorScheme
-                                                              .onSurfaceVariant,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: kSpacing4,
-                                                        ),
-                                                        Text(
-                                                          item.account!.name,
-                                                          style: context.ts(
-                                                            10,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: theme
-                                                                .colorScheme
-                                                                .onSurfaceVariant,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                          if (trans.reference !=
+                                                                  null &&
+                                                              trans
+                                                                  .reference!
+                                                                  .isNotEmpty &&
+                                                              item.account !=
+                                                                  null)
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        kSpacing6,
+                                                                  ),
+                                                              child: Container(
+                                                                width: 1,
+                                                                height: 12,
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .onSurfaceVariant
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.3,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          if (item.account !=
+                                                              null) ...[
+                                                            Icon(
+                                                              PesaFlowIcons
+                                                                  .wallet,
+                                                              size: 12,
+                                                              color: theme
+                                                                  .colorScheme
+                                                                  .onSurfaceVariant,
+                                                            ),
+                                                            const SizedBox(
+                                                              width: kSpacing4,
+                                                            ),
+                                                            Text(
+                                                              item
+                                                                  .account!
+                                                                  .name,
+                                                              style: context.ts(
+                                                                10,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .onSurfaceVariant,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
 
-                                              // Raw SMS preview
-                                              if (trans.rawSms != null &&
-                                                  trans.rawSms!.isNotEmpty) ...[
-                                                const SizedBox(
-                                                  height: kSpacing8,
-                                                ),
-                                                _RawSmsPreview(
-                                                  rawSms: trans.rawSms!,
-                                                ),
-                                              ],
+                                                  // Raw SMS preview
+                                                  if (trans.rawSms != null &&
+                                                      trans
+                                                          .rawSms!
+                                                          .isNotEmpty) ...[
+                                                    const SizedBox(
+                                                      height: kSpacing8,
+                                                    ),
+                                                    _RawSmsPreview(
+                                                      rawSms: trans.rawSms!,
+                                                    ),
+                                                  ],
 
-                                              // Action buttons
-                                              const SizedBox(
-                                                height: kSpacing10,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  _ActionPill(
-                                                    icon:
-                                                        PesaFlowIcons.category,
-                                                    label: 'Category',
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onSurfaceVariant,
-                                                    haptic:
-                                                        HapticType.selection,
-                                                    onTap: () =>
-                                                        _showCategoryPicker(
-                                                          item,
-                                                        ),
-                                                  ),
+                                                  // Action buttons
                                                   const SizedBox(
-                                                    width: kSpacing8,
+                                                    height: kSpacing10,
                                                   ),
-                                                  _ActionPill(
-                                                    icon: PesaFlowIcons.check,
-                                                    label: 'Approve',
-                                                    color: context
-                                                        .appColors
-                                                        .incomeColor,
-                                                    haptic: HapticType.success,
-                                                    onTap: () async {
-                                                      await ref
-                                                          .read(
-                                                            transactionRepositoryProvider,
-                                                          )
-                                                          .approveReviewedTransaction(
-                                                            trans.id,
-                                                          );
-                                                      ref.invalidate(
-                                                        reviewQueueStreamProvider,
-                                                      );
-                                                      ref.invalidate(
-                                                        recentTransactionsStreamProvider,
-                                                      );
-                                                      if (context.mounted) {
-                                                        CustomToast.show(
-                                                          context,
-                                                          message:
-                                                              'Transaction approved',
-                                                          type:
-                                                              ToastType.success,
-                                                        );
-                                                      }
-                                                    },
-                                                  ),
-                                                  const Spacer(),
-                                                  _ActionPill(
-                                                    icon: PesaFlowIcons.close,
-                                                    label: 'Reject',
-                                                    color: context
-                                                        .appColors
-                                                        .expenseColor,
-                                                    haptic: HapticType.error,
-                                                    onTap: () async {
-                                                      final txData = item;
-                                                      UndoDelete.show(
-                                                        context: context,
-                                                        entityName:
-                                                            'Transaction',
-                                                        message:
-                                                            'Transaction rejected',
-                                                        onUndo: () async {
+                                                  Row(
+                                                    children: [
+                                                      _ActionPill(
+                                                        icon: PesaFlowIcons
+                                                            .category,
+                                                        label: 'Category',
+                                                        color: theme
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                        haptic: HapticType
+                                                            .selection,
+                                                        onTap: () =>
+                                                            _showCategoryPicker(
+                                                              item,
+                                                            ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: kSpacing8,
+                                                      ),
+                                                      _ActionPill(
+                                                        icon:
+                                                            PesaFlowIcons.check,
+                                                        label: 'Approve',
+                                                        color: context
+                                                            .appColors
+                                                            .incomeColor,
+                                                        haptic:
+                                                            HapticType.success,
+                                                        onTap: () async {
                                                           await ref
                                                               .read(
                                                                 transactionRepositoryProvider,
                                                               )
-                                                              .createTransaction(
-                                                                txData
-                                                                    .transaction,
-                                                              );
-                                                        },
-                                                        onDelete: () async {
-                                                          await ref
-                                                              .read(
-                                                                transactionRepositoryProvider,
-                                                              )
-                                                              .deleteTransaction(
+                                                              .approveReviewedTransaction(
                                                                 trans.id,
                                                               );
+                                                          ref.invalidate(
+                                                            reviewQueueStreamProvider,
+                                                          );
+                                                          ref.invalidate(
+                                                            recentTransactionsStreamProvider,
+                                                          );
+                                                          if (context.mounted) {
+                                                            CustomToast.show(
+                                                              context,
+                                                              message:
+                                                                  'Transaction approved',
+                                                              type: ToastType
+                                                                  .success,
+                                                            );
+                                                          }
                                                         },
-                                                      );
-                                                    },
+                                                      ),
+                                                      const Spacer(),
+                                                      _ActionPill(
+                                                        icon:
+                                                            PesaFlowIcons.close,
+                                                        label: 'Reject',
+                                                        color: context
+                                                            .appColors
+                                                            .expenseColor,
+                                                        haptic:
+                                                            HapticType.error,
+                                                        onTap: () async {
+                                                          final txData = item;
+                                                          UndoDelete.show(
+                                                            context: context,
+                                                            entityName:
+                                                                'Transaction',
+                                                            message:
+                                                                'Transaction rejected',
+                                                            onUndo: () async {
+                                                              await ref
+                                                                  .read(
+                                                                    transactionRepositoryProvider,
+                                                                  )
+                                                                  .createTransaction(
+                                                                    txData
+                                                                        .transaction,
+                                                                  );
+                                                            },
+                                                            onDelete: () async {
+                                                              await ref
+                                                                  .read(
+                                                                    transactionRepositoryProvider,
+                                                                  )
+                                                                  .deleteTransaction(
+                                                                    trans.id,
+                                                                  );
+                                                            },
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ),
@@ -1112,26 +1123,22 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           right: kSpacing16,
                           bottom:
                               MediaQuery.paddingOf(context).bottom + kSpacing12,
-                          child: Container(
+                          child: PesaSurface.card(
+                            fill: theme.colorScheme.surfaceContainerHighest,
+                            radius: AppTheme.radiusDialog,
                             padding: const EdgeInsets.all(kSpacing8),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusDialog,
+                            // An overlay floating above content keeps its
+                            // elevation; only the outline moves onto the
+                            // primitive, so the dock and the cards under it
+                            // agree on one shape.
+                            shadows: [
+                              BoxShadow(
+                                color: context.appColors.shadowMedium
+                                    .withValues(alpha: 0.16),
+                                blurRadius: 18,
+                                offset: const Offset(0, 6),
                               ),
-                              border: Border.all(
-                                color: theme.colorScheme.outlineVariant
-                                    .withValues(alpha: 0.28),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: context.appColors.shadowMedium
-                                      .withValues(alpha: 0.16),
-                                  blurRadius: 18,
-                                  offset: const Offset(0, 6),
-                                ),
-                              ],
-                            ),
+                            ],
                             child: Row(
                               children: [
                                 // Cancel
