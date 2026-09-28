@@ -13,7 +13,7 @@ class PesaFlowIcons {
   static const IconData loans = Icons.account_balance_outlined;
   static const IconData subscriptions = Icons.repeat_outlined;
   static const IconData settings = Icons.tune_outlined;
-  static const IconData analytics = Icons.insights_outlined;
+  static const IconData analytics = Icons.leaderboard_outlined;
 
   // Actions
   static const IconData add = Icons.add_circle_outline;

@@ -139,7 +139,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
       (Icons.home_rounded, 'Home', 0),
       (Icons.swap_horiz_rounded, 'Transactions', 1),
       (Icons.donut_large_rounded, 'Budgets', 2),
-      (Icons.analytics_rounded, 'Analytics', 3),
+      (Icons.leaderboard_rounded, 'Analytics', 3),
       (Icons.settings_rounded, 'Settings', 4),
     ];
 
@@ -195,7 +195,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
       (Icons.home_rounded, 'Dashboard', 0),
       (Icons.swap_horiz_rounded, 'Transactions', 1),
       (Icons.donut_large_rounded, 'Budgets', 2),
-      (Icons.analytics_rounded, 'Analytics', 3),
+      (Icons.leaderboard_rounded, 'Analytics', 3),
       (Icons.settings_rounded, 'Settings', 4),
     ];
 
