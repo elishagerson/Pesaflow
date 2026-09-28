@@ -29,7 +29,7 @@ class BudgetEngine {
 
     // Use largest-remainder to avoid rounding errors
     final percentages = [needsPct, wantsPct, investPct];
-    final amounts = _distributeAmount(monthlyIncome, percentages);
+    final amounts = distributeAmount(monthlyIncome, percentages);
 
     return [
       (type: BudgetGroupType.needs, percentage: needsPct, amount: amounts[0]),
@@ -44,7 +44,7 @@ class BudgetEngine {
 
   /// Distributes [total] across [percentages] using largest-remainder method
   /// so rounding errors never lose or over-allocate money.
-  static List<int> _distributeAmount(int total, List<double> percentages) {
+  static List<int> distributeAmount(int total, List<double> percentages) {
     if (percentages.isEmpty) return [];
     final n = percentages.length;
     final raw = <int>[];

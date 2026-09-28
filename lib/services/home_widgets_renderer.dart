@@ -204,14 +204,18 @@ class WidgetSafeToSpend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = theme.extension<AppColorsTheme>()!;
+    final bool hasLimit = limitCents > 0;
+    final double fill = hasLimit ? percentage.clamp(0.0, 1.0) : 0.0;
     final remainingStr = NumberFormat.simpleCurrency(
       name: 'Tsh ',
       decimalDigits: 0,
     ).format(remainingCents / 100);
-    final limitStr = NumberFormat.simpleCurrency(
-      name: 'Limit: Tsh ',
-      decimalDigits: 0,
-    ).format(limitCents / 100);
+    final limitStr = hasLimit
+        ? NumberFormat.simpleCurrency(
+            name: 'Limit: Tsh ',
+            decimalDigits: 0,
+          ).format(limitCents / 100)
+        : 'No budget set';
 
     return Theme(
       data: theme,
@@ -257,13 +261,15 @@ class WidgetSafeToSpend extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(100),
               child: LinearProgressIndicator(
-                value: percentage.clamp(0.0, 1.0),
+                value: fill,
                 minHeight: 8,
                 backgroundColor: theme.colorScheme.onSurface.withValues(
                   alpha: 0.08,
                 ),
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  percentage >= 1.0
+                  !hasLimit
+                      ? theme.colorScheme.onSurface.withValues(alpha: 0.2)
+                      : fill >= 1.0
                       ? appColors.expenseColor
                       : theme.colorScheme.primary,
                 ),

@@ -39,6 +39,30 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
 
   static const _totalSteps = 3;
 
+  String _incomeInputText(int cents) {
+    if (cents <= 0) return '';
+    return CurrencyFormatter.formatCents(
+      cents,
+    ).replaceFirst(CurrencyFormatter.currencyPrefix, '').trim();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _prefillSavedIncome();
+  }
+
+  Future<void> _prefillSavedIncome() async {
+    int saved = 0;
+    try {
+      saved = await ref.read(monthlyIncomeProvider.future);
+    } catch (_) {
+      return;
+    }
+    if (!mounted || saved <= 0 || _incomeController.text.isNotEmpty) return;
+    setState(() => _incomeController.text = _incomeInputText(saved));
+  }
+
   @override
   void dispose() {
     _pageController.dispose();
@@ -128,6 +152,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
+    final lastMonthIncomeCents = ref.watch(lastMonthIncomeProvider).value ?? 0;
 
     return Scaffold(
       body: SafeArea(
@@ -178,7 +203,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (i) => setState(() => _currentStep = i),
                 children: [
-                  _buildIncomeStep(theme, onSurface),
+                  _buildIncomeStep(theme, onSurface, lastMonthIncomeCents),
                   _buildRuleStep(theme, onSurface),
                   _buildReviewStep(theme, onSurface),
                 ],
@@ -299,7 +324,11 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
   // ════════════════════════════════════════════════════════════════════════════
   // STEP 1: Set Monthly Income
   // ════════════════════════════════════════════════════════════════════════════
-  Widget _buildIncomeStep(ThemeData theme, Color onSurface) {
+  Widget _buildIncomeStep(
+    ThemeData theme,
+    Color onSurface,
+    int lastMonthIncomeCents,
+  ) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.all(kSpacing20),
@@ -398,6 +427,83 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
               ),
             ),
           ),
+
+          // Last-month income suggestion
+          if (lastMonthIncomeCents > 0 &&
+              lastMonthIncomeCents != _incomeCents) ...[
+            const SizedBox(height: kSpacing16),
+            StaggeredFadeSlide(
+              index: 2,
+              child: TactileSpringContainer(
+                haptic: HapticType.soft,
+                selectedColor: theme.colorScheme.primary,
+                onTap: () {
+                  setState(
+                    () => _incomeController.text = _incomeInputText(
+                      lastMonthIncomeCents,
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kSpacing16,
+                    vertical: kSpacing12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.appColors.incomeColor.withValues(
+                      alpha: 0.08,
+                    ),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                    border: Border.all(
+                      color: context.appColors.incomeColor.withValues(
+                        alpha: 0.25,
+                      ),
+                      width: 0.8,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        PesaFlowIcons.income,
+                        size: 18,
+                        color: context.appColors.incomeColor,
+                      ),
+                      const SizedBox(width: kSpacing12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Last month you earned',
+                              style: context.ts(
+                                12,
+                                color: onSurface.withValues(alpha: 0.5),
+                              ),
+                            ),
+                            Text(
+                              CurrencyFormatter.formatCents(
+                                lastMonthIncomeCents,
+                              ),
+                              style: context.ts(
+                                15,
+                                fontWeight: FontWeight.w700,
+                                color: onSurface,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        PesaFlowIcons.edit,
+                        size: 16,
+                        color: context.appColors.incomeColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

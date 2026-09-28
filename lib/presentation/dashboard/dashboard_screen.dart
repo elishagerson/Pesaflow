@@ -154,9 +154,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         remainingBudget = income - expense;
         if (income > 0) {
           overallPct = (expense / income).clamp(0.0, 1.0);
-        } else if (expense > 0) {
-          overallPct = 1.0;
         } else {
+          // No budget and no income recorded: nothing to measure a spend
+          // percentage against. Consumers treat this as "not set" rather
+          // than as 100% spent.
           overallPct = 0.0;
         }
       } else {

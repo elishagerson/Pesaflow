@@ -361,6 +361,16 @@ final monthlyTotalsProvider = FutureProvider<Map<String, int>>((ref) {
   return repo.getMonthTotals(DateTime.now());
 });
 
+/// Previous calendar month's recorded income (TZS cents).
+final lastMonthIncomeProvider = FutureProvider<int>((ref) {
+  ref.watch(dataChangesStreamProvider);
+  final repo = ref.watch(analyticsRepositoryProvider);
+  final now = DateTime.now();
+  final prev = DateTime(now.year, now.month - 1, 1);
+  final totals = repo.getMonthTotals(prev);
+  return totals.then((t) => t['income'] ?? 0);
+});
+
 final topCategoriesProvider = FutureProvider<List<CategorySpending>>((ref) {
   ref.watch(dataChangesStreamProvider);
   final repo = ref.watch(analyticsRepositoryProvider);

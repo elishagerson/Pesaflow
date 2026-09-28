@@ -475,6 +475,55 @@ void main() {
         final total = allocations.fold<int>(0, (sum, a) => sum + a.amount);
         expect(total, equals(income));
       });
+
+      test('returns zero allocations when income is zero', () {
+        final allocations = BudgetEngine.computeGroupAllocations(
+          monthlyIncome: 0,
+          rule: BudgetRuleType.rule503020,
+        );
+
+        expect(allocations.length, equals(3));
+        expect(allocations.map((a) => a.type), [
+          BudgetGroupType.needs,
+          BudgetGroupType.wants,
+          BudgetGroupType.investments,
+        ]);
+        expect(allocations.map((a) => a.amount), [0, 0, 0]);
+        expect(allocations.fold<int>(0, (sum, a) => sum + a.amount), equals(0));
+      });
+
+      test('returns zero allocations for every rule when income is zero', () {
+        for (final rule in BudgetRuleType.values) {
+          final allocations = BudgetEngine.computeGroupAllocations(
+            monthlyIncome: 0,
+            rule: rule,
+            customNeeds: 0.40,
+            customWants: 0.35,
+            customInvestments: 0.25,
+          );
+
+          expect(allocations.length, equals(3), reason: rule.name);
+          expect(
+            allocations.every((a) => a.amount == 0),
+            isTrue,
+            reason: rule.name,
+          );
+        }
+      });
+
+      test('distributeAmount sums to exactly the total for any split', () {
+        const total = 100000003;
+        final shares = BudgetEngine.distributeAmount(total, [0.50, 0.30, 0.20]);
+
+        expect(shares.length, equals(3));
+        expect(shares.fold<int>(0, (sum, s) => sum + s), equals(total));
+        expect(shares.every((s) => s >= 0), isTrue);
+      });
+
+      test('distributeAmount with zero total gives all zeros', () {
+        final shares = BudgetEngine.distributeAmount(0, [0.50, 0.30, 0.20]);
+        expect(shares, [0, 0, 0]);
+      });
     });
   });
 }

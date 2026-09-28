@@ -205,6 +205,87 @@ void main() {
       expect(investments.allocatedAmount, equals(20000000));
     });
 
+    test('updateGroupAllocations re-sizes groups to the new income', () async {
+      await groupRepo.createBudgetPlan(
+        rule: BudgetRuleType.rule503020,
+        monthlyIncomeCents: 100000000,
+      );
+
+      await groupRepo.updateGroupAllocations(45000000);
+
+      final allGroups = await groupRepo.getAllActiveGroups();
+      expect(allGroups.length, equals(3));
+
+      final needs = allGroups.firstWhere((g) => g.groupType == 'needs');
+      final wants = allGroups.firstWhere((g) => g.groupType == 'wants');
+      final investments = allGroups.firstWhere(
+        (g) => g.groupType == 'investments',
+      );
+
+      expect(needs.allocatedAmount, equals(22500000));
+      expect(wants.allocatedAmount, equals(13500000));
+      expect(investments.allocatedAmount, equals(9000000));
+      expect(
+        allGroups.fold<int>(0, (sum, g) => sum + g.allocatedAmount),
+        equals(45000000),
+      );
+
+      // Percentages describe the plan, not the money — they do not move.
+      expect(needs.percentage, equals(0.50));
+      expect(wants.percentage, equals(0.30));
+      expect(investments.percentage, equals(0.20));
+    });
+
+    test(
+      'updateGroupAllocations leaves user-entered sub-budgets untouched',
+      () async {
+        final categories = await categoryDao.getAllCategories();
+        final cat = categories.first;
+
+        final groupIds = await groupRepo.createBudgetPlan(
+          rule: BudgetRuleType.rule503020,
+          monthlyIncomeCents: 100000000,
+        );
+
+        await budgetRepo.createBudget(
+          name: 'Rice & Beans',
+          categoryId: cat.id,
+          groupId: groupIds.first,
+          period: 'monthly',
+          amount: 123450,
+          rollover: false,
+          rolloverType: 'none',
+          startDate: DateTime.now(),
+        );
+
+        await groupRepo.updateGroupAllocations(45000000);
+
+        final groups = await groupRepo.getGroupsWithProgress();
+        final needs = groups.firstWhere((g) => g.group.groupType == 'needs');
+        expect(needs.subBudgets.length, equals(1));
+        expect(needs.subBudgets.first.budget.amount, equals(123450));
+      },
+    );
+
+    test('updateGroupAllocations with zero income zeroes the groups', () async {
+      await groupRepo.createBudgetPlan(
+        rule: BudgetRuleType.rule503020,
+        monthlyIncomeCents: 100000000,
+      );
+
+      await groupRepo.updateGroupAllocations(0);
+
+      final allGroups = await groupRepo.getAllActiveGroups();
+      expect(allGroups.length, equals(3));
+      expect(allGroups.every((g) => g.allocatedAmount == 0), isTrue);
+    });
+
+    test('updateGroupAllocations is a no-op with no groups', () async {
+      expect(await groupRepo.getAllActiveGroups(), isEmpty);
+      await expectLater(groupRepo.updateGroupAllocations(45000000), completes);
+      expect(await groupRepo.getAllActiveGroups(), isEmpty);
+    });
+
     test(
       'getStandaloneBudgetsWithProgress returns only ungrouped budgets',
       () async {

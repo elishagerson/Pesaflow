@@ -555,293 +555,335 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
         fill: theme.colorScheme.surfaceContainerHigh,
         radius: AppTheme.radiusHero,
         child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            PesaHaptics.light();
-            pushHeroCard(
-              context,
-              SavingsGoalDetailScreen(goalId: goal.id),
-              'goal_${goal.id}',
-            );
-          },
-          borderRadius: BorderRadius.circular(AppTheme.radiusHero),
-          child: Padding(
-            padding: const EdgeInsets.all(kSpacing16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // ── Header: Squircle Icon, Title + Deadline, Status Pill ──
-                Row(
-                  children: [
-                    Container(
-                      width: 42,
-                      height: 42,
-                      decoration: BoxDecoration(
-                        color: goalColor.withValues(alpha: 0.14),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusInput,
-                        ),
-                        border: Border.all(
-                          color: goalColor.withValues(alpha: 0.28),
-                          width: 1,
-                        ),
-                      ),
-                      alignment: Alignment.center,
-                      child: Icon(
-                        getGoalIcon(goal.icon),
-                        color: goalColor,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            goal.name,
-                            style: context.ts(
-                              16,
-                              fontWeight: FontWeight.w700,
-                              color: onSurface,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              PesaHaptics.light();
+              pushHeroCard(
+                context,
+                SavingsGoalDetailScreen(goalId: goal.id),
+                'goal_${goal.id}',
+              );
+            },
+            borderRadius: BorderRadius.circular(AppTheme.radiusHero),
+            child: Padding(
+              padding: const EdgeInsets.all(kSpacing16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ── Header: Squircle Icon, Title + Deadline, Status Pill ──
+                  Row(
+                    children: [
+                      Container(
+                        width: 42,
+                        height: 42,
+                        decoration: BoxDecoration(
+                          color: goalColor.withValues(alpha: 0.14),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusInput,
                           ),
-                          const SizedBox(height: 2),
-                          Text(
-                            '$countdownLabel • by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
-                            style: context.ts(
-                              11,
-                              color: onSurface.withValues(alpha: 0.55),
-                              fontWeight: FontWeight.w500,
-                            ),
+                          border: Border.all(
+                            color: goalColor.withValues(alpha: 0.28),
+                            width: 1,
                           ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: kSpacing8,
-                        vertical: kSpacing4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isCompleted
-                            ? context.appColors.incomeColor.withValues(
-                                alpha: 0.12,
-                              )
-                            : goalColor.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusPill,
                         ),
-                        border: Border.all(
-                          color: isCompleted
-                              ? context.appColors.incomeColor.withValues(
-                                  alpha: 0.25,
-                                )
-                              : goalColor.withValues(alpha: 0.25),
-                          width: 0.8,
+                        alignment: Alignment.center,
+                        child: Icon(
+                          getGoalIcon(goal.icon),
+                          color: goalColor,
+                          size: 20,
                         ),
                       ),
-                      child: isCompleted
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  PesaFlowIcons.celebration,
-                                  size: 11,
-                                  color: context.appColors.incomeColor,
-                                ),
-                                const SizedBox(width: kSpacing4),
-                                Text(
-                                  'COMPLETED',
-                                  style: context.ts(
-                                    10,
-                                    fontWeight: FontWeight.w800,
-                                    color: context.appColors.incomeColor,
-                                    letterSpacing: 0.4,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Text(
-                              '${(goalPct * 100).round()}% FUNDED',
+                      const SizedBox(width: kSpacing12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              goal.name,
                               style: context.ts(
-                                10,
-                                fontWeight: FontWeight.w800,
-                                color: goalColor,
-                                letterSpacing: 0.4,
-                              ),
-                            ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing16),
-
-                // ── Financial Amounts ──
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'CURRENTLY SAVED',
-                            style: context.ts(
-                              10,
-                              fontWeight: FontWeight.w700,
-                              color: onSurface.withValues(alpha: 0.5),
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: AmountText(
-                              amountInCents: goal.currentAmount,
-                              animate: true,
-                              style: context.ts(
-                                20,
-                                fontWeight: FontWeight.w800,
-                                color: onSurface,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'TARGET',
-                            style: context.ts(
-                              10,
-                              fontWeight: FontWeight.w700,
-                              color: onSurface.withValues(alpha: 0.5),
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerRight,
-                            child: AmountText(
-                              amountInCents: goal.targetAmount,
-                              animate: true,
-                              style: context.ts(
-                                15,
+                                16,
                                 fontWeight: FontWeight.w700,
-                                color: onSurface.withValues(alpha: 0.75),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing12),
-
-                // ── Progress Bar ──
-                // Static: a list of goal rows would otherwise mount one
-                // rippling ticker per visible row.
-                PesaProgressBar(
-                  value: goalPct,
-                  color: goalColor,
-                  trackColor: goalColor.withValues(alpha: 0.12),
-                  height: 7,
-                  wave: false,
-                  showEndStop: false,
-                  growOnMount: true,
-                  semanticsLabel: '${goal.name} progress',
-                ),
-                const SizedBox(height: kSpacing8),
-
-                // ── Remaining & Smart Pace ──
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        remainingCents > 0
-                            ? '${CurrencyFormatter.formatCents(remainingCents)} to go'
-                            : 'Target reached',
-                        style: context.ts(
-                          11,
-                          fontWeight: FontWeight.w600,
-                          color: isCompleted
-                              ? context.appColors.incomeColor
-                              : onSurface.withValues(alpha: 0.6),
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing8),
-                    Flexible(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            PesaFlowIcons.lightbulb,
-                            size: 12,
-                            color: goalColor,
-                          ),
-                          const SizedBox(width: kSpacing4),
-                          Flexible(
-                            child: Text(
-                              paceInsight,
-                              style: context.ts(
-                                11,
-                                fontWeight: FontWeight.w600,
-                                color: goalColor,
+                                color: onSurface,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 2),
+                            Text(
+                              '$countdownLabel • by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
+                              style: context.ts(
+                                11,
+                                color: onSurface.withValues(alpha: 0.55),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing12),
-                Divider(
-                  height: 1,
-                  thickness: 0.6,
-                  color: theme.colorScheme.outlineVariant.withValues(
-                    alpha: 0.20,
+                      const SizedBox(width: kSpacing8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing8,
+                          vertical: kSpacing4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isCompleted
+                              ? context.appColors.incomeColor.withValues(
+                                  alpha: 0.12,
+                                )
+                              : goalColor.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
+                          border: Border.all(
+                            color: isCompleted
+                                ? context.appColors.incomeColor.withValues(
+                                    alpha: 0.25,
+                                  )
+                                : goalColor.withValues(alpha: 0.25),
+                            width: 0.8,
+                          ),
+                        ),
+                        child: isCompleted
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    PesaFlowIcons.celebration,
+                                    size: 11,
+                                    color: context.appColors.incomeColor,
+                                  ),
+                                  const SizedBox(width: kSpacing4),
+                                  Text(
+                                    'COMPLETED',
+                                    style: context.ts(
+                                      10,
+                                      fontWeight: FontWeight.w800,
+                                      color: context.appColors.incomeColor,
+                                      letterSpacing: 0.4,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                '${(goalPct * 100).round()}% FUNDED',
+                                style: context.ts(
+                                  10,
+                                  fontWeight: FontWeight.w800,
+                                  color: goalColor,
+                                  letterSpacing: 0.4,
+                                ),
+                              ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: kSpacing10),
+                  const SizedBox(height: kSpacing16),
 
-                // ── Actions: Quick Deposit, Edit, Details ──
-                Row(
-                  children: [
-                    if (!isCompleted) ...[
+                  // ── Financial Amounts ──
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'CURRENTLY SAVED',
+                              style: context.ts(
+                                10,
+                                fontWeight: FontWeight.w700,
+                                color: onSurface.withValues(alpha: 0.5),
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const SizedBox(height: 3),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: AmountText(
+                                amountInCents: goal.currentAmount,
+                                animate: true,
+                                style: context.ts(
+                                  20,
+                                  fontWeight: FontWeight.w800,
+                                  color: onSurface,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: kSpacing12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'TARGET',
+                              style: context.ts(
+                                10,
+                                fontWeight: FontWeight.w700,
+                                color: onSurface.withValues(alpha: 0.5),
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const SizedBox(height: 3),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerRight,
+                              child: AmountText(
+                                amountInCents: goal.targetAmount,
+                                animate: true,
+                                style: context.ts(
+                                  15,
+                                  fontWeight: FontWeight.w700,
+                                  color: onSurface.withValues(alpha: 0.75),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: kSpacing12),
+
+                  // ── Progress Bar ──
+                  // Static: a list of goal rows would otherwise mount one
+                  // rippling ticker per visible row.
+                  PesaProgressBar(
+                    value: goalPct,
+                    color: goalColor,
+                    trackColor: goalColor.withValues(alpha: 0.12),
+                    height: 7,
+                    wave: false,
+                    showEndStop: false,
+                    growOnMount: true,
+                    semanticsLabel: '${goal.name} progress',
+                  ),
+                  const SizedBox(height: kSpacing8),
+
+                  // ── Remaining & Smart Pace ──
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          remainingCents > 0
+                              ? '${CurrencyFormatter.formatCents(remainingCents)} to go'
+                              : 'Target reached',
+                          style: context.ts(
+                            11,
+                            fontWeight: FontWeight.w600,
+                            color: isCompleted
+                                ? context.appColors.incomeColor
+                                : onSurface.withValues(alpha: 0.6),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: kSpacing8),
+                      Flexible(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              PesaFlowIcons.lightbulb,
+                              size: 12,
+                              color: goalColor,
+                            ),
+                            const SizedBox(width: kSpacing4),
+                            Flexible(
+                              child: Text(
+                                paceInsight,
+                                style: context.ts(
+                                  11,
+                                  fontWeight: FontWeight.w600,
+                                  color: goalColor,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: kSpacing12),
+                  Divider(
+                    height: 1,
+                    thickness: 0.6,
+                    color: theme.colorScheme.outlineVariant.withValues(
+                      alpha: 0.20,
+                    ),
+                  ),
+                  const SizedBox(height: kSpacing10),
+
+                  // ── Actions: Quick Deposit, Edit, Details ──
+                  Row(
+                    children: [
+                      if (!isCompleted) ...[
+                        TactileSpringContainer(
+                          onTap: () =>
+                              showQuickDepositSheet(context, ref, goal),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing12,
+                              vertical: kSpacing6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: goalColor.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusPill,
+                              ),
+                              border: Border.all(
+                                color: goalColor.withValues(alpha: 0.25),
+                                width: 0.8,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  PesaFlowIcons.add,
+                                  size: 13,
+                                  color: goalColor,
+                                ),
+                                const SizedBox(width: kSpacing4),
+                                Text(
+                                  'Deposit',
+                                  style: context.ts(
+                                    12,
+                                    fontWeight: FontWeight.w700,
+                                    color: goalColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: kSpacing8),
+                      ],
                       TactileSpringContainer(
-                        onTap: () => showQuickDepositSheet(context, ref, goal),
+                        onTap: () =>
+                            context.push('/savings-goals/${goal.id}/edit'),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: kSpacing12,
                             vertical: kSpacing6,
                           ),
                           decoration: BoxDecoration(
-                            color: goalColor.withValues(alpha: 0.12),
+                            color: onSurface.withValues(alpha: 0.06),
                             borderRadius: BorderRadius.circular(
                               AppTheme.radiusPill,
                             ),
                             border: Border.all(
-                              color: goalColor.withValues(alpha: 0.25),
+                              color: onSurface.withValues(alpha: 0.12),
                               width: 0.8,
                             ),
                           ),
@@ -849,92 +891,52 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                PesaFlowIcons.add,
-                                size: 13,
-                                color: goalColor,
+                                PesaFlowIcons.edit,
+                                size: 12,
+                                color: onSurface.withValues(alpha: 0.75),
                               ),
                               const SizedBox(width: kSpacing4),
                               Text(
-                                'Deposit',
+                                'Edit',
                                 style: context.ts(
                                   12,
-                                  fontWeight: FontWeight.w700,
-                                  color: goalColor,
+                                  fontWeight: FontWeight.w600,
+                                  color: onSurface.withValues(alpha: 0.75),
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      const SizedBox(width: kSpacing8),
-                    ],
-                    TactileSpringContainer(
-                      onTap: () =>
-                          context.push('/savings-goals/${goal.id}/edit'),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing12,
-                          vertical: kSpacing6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: onSurface.withValues(alpha: 0.06),
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusPill,
-                          ),
-                          border: Border.all(
-                            color: onSurface.withValues(alpha: 0.12),
-                            width: 0.8,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              PesaFlowIcons.edit,
-                              size: 12,
-                              color: onSurface.withValues(alpha: 0.75),
+                      const Spacer(),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'View Details',
+                            style: context.ts(
+                              11,
+                              fontWeight: FontWeight.w600,
+                              color: onSurface.withValues(alpha: 0.45),
                             ),
-                            const SizedBox(width: kSpacing4),
-                            Text(
-                              'Edit',
-                              style: context.ts(
-                                12,
-                                fontWeight: FontWeight.w600,
-                                color: onSurface.withValues(alpha: 0.75),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'View Details',
-                          style: context.ts(
-                            11,
-                            fontWeight: FontWeight.w600,
+                          ),
+                          const SizedBox(width: 2),
+                          Icon(
+                            PesaFlowIcons.chevronRight,
+                            size: 13,
                             color: onSurface.withValues(alpha: 0.45),
                           ),
-                        ),
-                        const SizedBox(width: 2),
-                        Icon(
-                          PesaFlowIcons.chevronRight,
-                          size: 13,
-                          color: onSurface.withValues(alpha: 0.45),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ));
+    );
   }
 
   Widget _buildStrategyInsightCard(

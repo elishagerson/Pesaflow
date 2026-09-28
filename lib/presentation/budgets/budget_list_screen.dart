@@ -724,17 +724,50 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       color: onSurface.withValues(alpha: 0.8),
                     ),
                   ),
-                  if (monthlyIncome > 0) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      'Income: ${CurrencyFormatter.formatCents(monthlyIncome)}',
-                      style: context.ts(
-                        11,
-                        fontWeight: FontWeight.w500,
-                        color: onSurface.withValues(alpha: 0.5),
+                  const SizedBox(height: 2),
+                  TactileSpringContainer(
+                    haptic: HapticType.soft,
+                    selectedColor: onSurface,
+                    onTap: () =>
+                        _editMonthlyIncome(context, ref, monthlyIncome),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: onSurface.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusPill,
+                        ),
+                        border: Border.all(
+                          color: onSurface.withValues(alpha: 0.1),
+                          width: 0.8,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            PesaFlowIcons.edit,
+                            size: 11,
+                            color: onSurface.withValues(alpha: 0.5),
+                          ),
+                          const SizedBox(width: kSpacing4),
+                          Text(
+                            monthlyIncome > 0
+                                ? 'Income: ${CurrencyFormatter.formatCents(monthlyIncome)}'
+                                : 'Set income',
+                            style: context.ts(
+                              11,
+                              fontWeight: FontWeight.w500,
+                              color: onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ],
               ),
             ],
@@ -833,6 +866,119 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
     );
   }
 
+  Future<void> _editMonthlyIncome(
+    BuildContext context,
+    WidgetRef ref,
+    int currentIncome,
+  ) async {
+    final controller = TextEditingController(
+      text: currentIncome > 0
+          ? CurrencyFormatter.formatCents(
+              currentIncome,
+            ).replaceFirst(CurrencyFormatter.currencyPrefix, '').trim()
+          : '',
+    );
+    final brandColor = context.appColors.brandColor;
+
+    final saved = await ModernDialog.show<bool>(
+      context: context,
+      title: const Text('Monthly Income'),
+      titleIcon: PesaFlowIcons.income,
+      iconColor: context.appColors.incomeColor,
+      content: Builder(
+        builder: (context) {
+          final theme = Theme.of(context);
+          final onSurface = theme.colorScheme.onSurface;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Group allocations are re-sized from this amount. Category budgets you set by hand are left untouched.',
+                style: context.ts(
+                  12,
+                  color: onSurface.withValues(alpha: 0.6),
+                  height: 1.35,
+                ),
+              ),
+              const SizedBox(height: kSpacing16),
+              TextField(
+                controller: controller,
+                autofocus: true,
+                keyboardType: TextInputType.number,
+                decoration: context.inputDecoration(
+                  labelText: 'Monthly take-home pay',
+                  hintText: 'e.g. 450,000',
+                  prefixIcon: const Icon(PesaFlowIcons.income, size: 18),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: () =>
+              Navigator.of(context, rootNavigator: true).pop(false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
+          child: Text('Save', style: TextStyle(color: brandColor)),
+        ),
+      ],
+    );
+
+    if (saved != true || !context.mounted) {
+      controller.dispose();
+      return;
+    }
+
+    final newIncome = CurrencyFormatter.parseToCents(controller.text);
+    controller.dispose();
+    if (newIncome <= 0) {
+      if (context.mounted) {
+        CustomToast.show(
+          context,
+          message: 'Enter an amount above zero',
+          type: ToastType.error,
+        );
+      }
+      return;
+    }
+
+    try {
+      await ref
+          .read(settingsRepositoryProvider)
+          .setSetting('monthly_income', newIncome.toString());
+      await ref
+          .read(budgetGroupRepositoryProvider)
+          .updateGroupAllocations(newIncome);
+
+      ref.invalidate(monthlyIncomeProvider);
+      ref.invalidate(budgetGroupsProvider);
+      ref.invalidate(budgetProgressProvider);
+      ref.invalidate(standaloneBudgetsProvider);
+      ref.invalidate(activeBudgetsStreamProvider);
+
+      if (context.mounted) {
+        CustomToast.show(
+          context,
+          message: 'Income updated — allocations re-sized',
+          type: ToastType.success,
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        CustomToast.show(
+          context,
+          message: 'Error updating income: $e',
+          type: ToastType.error,
+        );
+      }
+    }
+  }
+
   Future<void> _showPlanOptions(
     BuildContext context,
     WidgetRef ref,
@@ -869,6 +1015,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
       final settingsRepo = ref.read(settingsRepositoryProvider);
 
       await groupRepo.deleteAllGroups(keepSubBudgets: true);
+      // `budget_rule` is plan state, so it goes. `monthly_income` is the
+      // user's income profile, not plan state — it stays, because the setup
+      // wizard prefills from it on the next plan.
       await settingsRepo.setSetting('budget_rule', '');
 
       ref.invalidate(budgetGroupsProvider);
@@ -978,13 +1127,13 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
             color: context.appColors.expenseColor,
           ),
         ),
-child: TactileSpringContainer(
-            onTap: () => context.push('/budgets/groups/${g.group.id}'),
-            selectedColor: theme.colorScheme.onSurface,
-            child: PesaSurface.bleed(
-              fill: theme.colorScheme.surfaceContainerHigh,
-              radius: AppTheme.radiusCard,
-              padding: const EdgeInsets.all(kSpacing16),
+        child: TactileSpringContainer(
+          onTap: () => context.push('/budgets/groups/${g.group.id}'),
+          selectedColor: theme.colorScheme.onSurface,
+          child: PesaSurface.bleed(
+            fill: theme.colorScheme.surfaceContainerHigh,
+            radius: AppTheme.radiusCard,
+            padding: const EdgeInsets.all(kSpacing16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

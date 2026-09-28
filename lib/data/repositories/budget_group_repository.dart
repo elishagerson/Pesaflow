@@ -172,11 +172,22 @@ class BudgetGroupRepository {
   }
 
   /// Recalculates group allocated amounts when income changes.
+  ///
+  /// Percentages are preserved; only the money behind them moves. Uses
+  /// largest-remainder distribution so the groups sum to exactly the new
+  /// income. Sub-budgets (category envelopes) are untouched — they are
+  /// user-entered, not income-derived.
   Future<void> updateGroupAllocations(int newMonthlyIncomeCents) async {
     final groups = await _groupDao.getAllActiveGroups();
-    for (final group in groups) {
-      final newAmount = (newMonthlyIncomeCents * group.percentage).round();
-      await _groupDao.updateGroup(group.copyWith(allocatedAmount: newAmount));
+    if (groups.isEmpty) return;
+    final shares = BudgetEngine.distributeAmount(
+      newMonthlyIncomeCents,
+      groups.map((g) => g.percentage).toList(),
+    );
+    for (var i = 0; i < groups.length; i++) {
+      await _groupDao.updateGroup(
+        groups[i].copyWith(allocatedAmount: shares[i]),
+      );
     }
   }
 
