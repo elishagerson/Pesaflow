@@ -42,17 +42,6 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   bool _isLoading = false;
   bool _shakeFields = false;
 
-  static const List<String> _curatedColors = [
-    '#30D158', // Emerald
-    '#0A84FF', // Electric Blue
-    '#5E5CE6', // Indigo
-    '#BF5AF2', // Purple
-    '#FF375F', // Rose / Crimson
-    '#FF9F0A', // Amber
-    '#FFD60A', // Gold
-    '#64D2FF', // Sky
-  ];
-
   static final List<Map<String, dynamic>> _curatedIcons = [
     {'name': 'savings', 'icon': PesaFlowIcons.savings, 'label': 'Savings'},
     {'name': 'home', 'icon': PesaFlowIcons.home, 'label': 'Home'},
@@ -72,49 +61,49 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
     {
       'title': 'Emergency Fund',
       'icon': 'savings',
-      'color': '#30D158',
+      'color': AppTheme.goalPalette[0],
       'amount': '1500000',
       'days': 180,
     },
     {
       'title': 'Land & Construction',
       'icon': 'home',
-      'color': '#FF9F0A',
+      'color': AppTheme.goalPalette[6],
       'amount': '10000000',
       'days': 365,
     },
     {
       'title': 'Business Capital',
       'icon': 'business',
-      'color': '#0A84FF',
+      'color': AppTheme.goalPalette[1],
       'amount': '5000000',
       'days': 180,
     },
     {
       'title': 'Education Tuition',
       'icon': 'school',
-      'color': '#BF5AF2',
+      'color': AppTheme.goalPalette[3],
       'amount': '3000000',
       'days': 240,
     },
     {
       'title': 'Vacation Trip',
       'icon': 'flight',
-      'color': '#64D2FF',
+      'color': AppTheme.goalPalette[7],
       'amount': '2000000',
       'days': 120,
     },
     {
       'title': 'Tech Upgrade',
       'icon': 'laptop',
-      'color': '#5E5CE6',
+      'color': AppTheme.goalPalette[2],
       'amount': '2500000',
       'days': 90,
     },
     {
       'title': 'New Vehicle',
       'icon': 'car',
-      'color': '#FF375F',
+      'color': AppTheme.goalPalette[4],
       'amount': '8000000',
       'days': 365,
     },
@@ -131,7 +120,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
     super.initState();
     _nameController.addListener(_onFieldChanged);
     _amountController.addListener(_onFieldChanged);
-    _selectedColor = '#30D158';
+    _selectedColor = AppTheme.goalPalette[0];
     _selectedIcon = 'savings';
     _selectedDate = DateTime.now().add(const Duration(days: 90));
     if (widget.goalId != null) _loadGoal();
@@ -374,27 +363,13 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                               AppTheme.radiusDialog,
                             ),
                             border: Border.all(
-                              color: themeCol.withValues(alpha: 0.35),
-                              width: 1.5,
+                              color: context.appColors.hairline,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: themeCol.withValues(
-                                  alpha: theme.brightness == Brightness.dark
-                                      ? 0.22
-                                      : 0.08,
-                                ),
-                                blurRadius: 16,
-                                offset: const Offset(0, 6),
-                              ),
-                              BoxShadow(
-                                color: Colors.black.withValues(
-                                  alpha: theme.brightness == Brightness.dark
-                                      ? 0.20
-                                      : 0.03,
-                                ),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
+                                color: context.appColors.shadowSubtle,
+                                blurRadius: 10,
+                                offset: const Offset(0, 3),
                               ),
                             ],
                           ),
@@ -407,12 +382,12 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                     width: 44,
                                     height: 44,
                                     decoration: BoxDecoration(
-                                      color: themeCol.withValues(alpha: 0.16),
+                                      color: themeCol.withValues(alpha: 0.12),
                                       borderRadius: BorderRadius.circular(
                                         AppTheme.radiusCard,
                                       ),
                                       border: Border.all(
-                                        color: themeCol.withValues(alpha: 0.30),
+                                        color: themeCol.withValues(alpha: 0.18),
                                       ),
                                     ),
                                     child: Center(
@@ -458,12 +433,14 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                       vertical: kSpacing4,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: themeCol.withValues(alpha: 0.12),
+                                      color: theme
+                                          .colorScheme
+                                          .surfaceContainerHighest,
                                       borderRadius: BorderRadius.circular(
                                         AppTheme.radiusPill,
                                       ),
                                       border: Border.all(
-                                        color: themeCol.withValues(alpha: 0.25),
+                                        color: context.appColors.hairline,
                                       ),
                                     ),
                                     child: Text(
@@ -471,7 +448,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                       style: context.ts(
                                         11,
                                         fontWeight: FontWeight.w600,
-                                        color: themeCol,
+                                        color: context.appColors.textMedium,
                                       ),
                                     ),
                                   ),
@@ -514,7 +491,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                       style: context.ts(
                                         12,
                                         fontWeight: FontWeight.w600,
-                                        color: themeCol,
+                                        color: context.appColors.textMedium,
                                       ),
                                     ),
                                   ],
@@ -535,9 +512,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                               style: context.ts(
                                 12,
                                 fontWeight: FontWeight.w600,
-                                color: theme.colorScheme.primary.withValues(
-                                  alpha: 0.85,
-                                ),
+                                color: context.appColors.sectionHeader,
                                 letterSpacing: 0.6,
                               ),
                             ),
@@ -571,8 +546,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         AppTheme.radiusPill,
                                       ),
                                       border: Border.all(
-                                        color: theme.colorScheme.outlineVariant
-                                            .withValues(alpha: 0.28),
+                                        color: context.appColors.hairline,
                                       ),
                                     ),
                                     child: Row(
@@ -611,9 +585,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                             style: context.ts(
                               12,
                               fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.primary.withValues(
-                                alpha: 0.85,
-                              ),
+                              color: context.appColors.sectionHeader,
                               letterSpacing: 0.6,
                             ),
                           ),
@@ -627,16 +599,11 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                               AppTheme.radiusCard,
                             ),
                             border: Border.all(
-                              color: theme.colorScheme.outlineVariant
-                                  .withValues(alpha: 0.28),
+                              color: context.appColors.hairline,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(
-                                  alpha: theme.brightness == Brightness.dark
-                                      ? 0.20
-                                      : 0.03,
-                                ),
+                                color: context.appColors.shadowSubtle,
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -760,10 +727,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                             AppTheme.radiusPill,
                                           ),
                                           border: Border.all(
-                                            color: theme
-                                                .colorScheme
-                                                .outlineVariant
-                                                .withValues(alpha: 0.20),
+                                            color: context.appColors.hairline,
                                           ),
                                         ),
                                         child: Text(
@@ -862,7 +826,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: isSelected
-                                              ? themeCol.withValues(alpha: 0.15)
+                                              ? themeCol.withValues(alpha: 0.14)
                                               : theme
                                                     .colorScheme
                                                     .surfaceContainerHighest
@@ -873,22 +837,19 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                           border: Border.all(
                                             color: isSelected
                                                 ? themeCol.withValues(
-                                                    alpha: 0.5,
+                                                    alpha: 0.35,
                                                   )
-                                                : theme
-                                                      .colorScheme
-                                                      .outlineVariant
-                                                      .withValues(alpha: 0.20),
+                                                : context.appColors.hairline,
                                           ),
                                         ),
                                         child: Text(
                                           label,
                                           style: context.ts(
                                             11,
-                                            fontWeight: FontWeight.w600,
-                                            color: isSelected
-                                                ? themeCol
-                                                : theme.colorScheme.onSurface,
+                                            fontWeight: isSelected
+                                                ? FontWeight.w700
+                                                : FontWeight.w600,
+                                            color: theme.colorScheme.onSurface,
                                           ),
                                         ),
                                       ),
@@ -910,9 +871,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                             style: context.ts(
                               12,
                               fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.primary.withValues(
-                                alpha: 0.85,
-                              ),
+                              color: context.appColors.sectionHeader,
                               letterSpacing: 0.6,
                             ),
                           ),
@@ -926,16 +885,11 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                               AppTheme.radiusCard,
                             ),
                             border: Border.all(
-                              color: theme.colorScheme.outlineVariant
-                                  .withValues(alpha: 0.28),
+                              color: context.appColors.hairline,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(
-                                  alpha: theme.brightness == Brightness.dark
-                                      ? 0.20
-                                      : 0.03,
-                                ),
+                                color: context.appColors.shadowSubtle,
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -957,7 +911,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: _curatedColors.map((hex) {
+                                children: AppTheme.goalPalette.map((hex) {
                                   final col = hexToColor(hex);
                                   final isSelected = _selectedColor == hex;
                                   return GestureDetector(
@@ -966,9 +920,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                       setState(() => _selectedColor = hex);
                                     },
                                     child: AnimatedContainer(
-                                      duration: const Duration(
-                                        milliseconds: 200,
-                                      ),
+                                      duration: MotionTokens.durationNormal,
                                       width: isSelected ? 36 : 30,
                                       height: isSelected ? 36 : 30,
                                       decoration: BoxDecoration(
@@ -977,17 +929,9 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         border: Border.all(
                                           color: isSelected
                                               ? theme.colorScheme.onSurface
-                                              : Colors.transparent,
-                                          width: 2.5,
+                                              : context.appColors.hairline,
+                                          width: isSelected ? 2 : 1,
                                         ),
-                                        boxShadow: [
-                                          if (isSelected)
-                                            BoxShadow(
-                                              color: col.withValues(alpha: 0.4),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                        ],
                                       ),
                                       child: isSelected
                                           ? Icon(
@@ -1011,8 +955,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                               Divider(
                                 height: 1,
                                 thickness: 0.5,
-                                color: theme.colorScheme.outlineVariant
-                                    .withValues(alpha: 0.20),
+                                color: context.appColors.hairline,
                               ),
                               const SizedBox(height: kSpacing16),
 
@@ -1048,12 +991,10 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                       setState(() => _selectedIcon = name);
                                     },
                                     child: AnimatedContainer(
-                                      duration: const Duration(
-                                        milliseconds: 200,
-                                      ),
+                                      duration: MotionTokens.durationNormal,
                                       decoration: BoxDecoration(
                                         color: isSelected
-                                            ? themeCol.withValues(alpha: 0.16)
+                                            ? themeCol.withValues(alpha: 0.10)
                                             : theme
                                                   .colorScheme
                                                   .surfaceContainerHighest
@@ -1064,9 +1005,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         border: Border.all(
                                           color: isSelected
                                               ? themeCol
-                                              : theme.colorScheme.outlineVariant
-                                                    .withValues(alpha: 0.20),
-                                          width: isSelected ? 2 : 1,
+                                              : context.appColors.hairline,
+                                          width: isSelected ? 1.5 : 1,
                                         ),
                                       ),
                                       child: Icon(

@@ -125,6 +125,17 @@ class AppTheme {
   static const Color errorDark = Color(0xFFF87171);
   static const Color onErrorDark = Color(0xFF000000);
 
+  static const List<String> goalPalette = [
+    '#518A69',
+    '#657FA4',
+    '#7E75AE',
+    '#9C6EA6',
+    '#A66E80',
+    '#A56F5F',
+    '#917C4B',
+    '#53848D',
+  ];
+
   // Backward compat aliases
   static Color get surfaceContainerDark => surfaceHighDark;
 

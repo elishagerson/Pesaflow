@@ -589,10 +589,6 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                         padding: const EdgeInsets.only(
                                           bottom: kSpacing12,
                                         ),
-                                        // The row fill is the only thing that
-                                        // changes on select: no border, no
-                                        // shadow — those are the bezel the
-                                        // surface primitive owns.
                                         child: TweenAnimationBuilder<Color?>(
                                           duration: MotionTokens.durationFast,
                                           curve: Curves.easeOutCubic,
@@ -1127,10 +1123,6 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                             fill: theme.colorScheme.surfaceContainerHighest,
                             radius: AppTheme.radiusDialog,
                             padding: const EdgeInsets.all(kSpacing8),
-                            // An overlay floating above content keeps its
-                            // elevation; only the outline moves onto the
-                            // primitive, so the dock and the cards under it
-                            // agree on one shape.
                             shadows: [
                               BoxShadow(
                                 color: context.appColors.shadowMedium
