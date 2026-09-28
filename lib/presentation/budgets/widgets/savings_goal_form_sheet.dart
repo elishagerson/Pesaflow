@@ -38,18 +38,6 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
   late DateTime _selectedDate;
   bool _isLoading = false;
 
-  // Curated 8-color palette swatches
-  static const List<String> _curatedColors = [
-    '#30D158', // Vibrant emerald
-    '#0A84FF', // Electric blue
-    '#5E5CE6', // Royal indigo
-    '#BF5AF2', // Neon orchid
-    '#FF375F', // Punch rose
-    '#FF9F0A', // Warm amber
-    '#FFD60A', // Gold canary
-    '#64D2FF', // Ice cyan
-  ];
-
   // Curated 12-icon squircle grid
   static const List<Map<String, dynamic>> _iconChoices = [
     {'name': 'savings', 'icon': PesaFlowIcons.savings, 'label': 'Savings'},
@@ -67,47 +55,47 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
   ];
 
   // Goal starter templates
-  static const List<Map<String, dynamic>> _goalTemplates = [
+  static final List<Map<String, dynamic>> _goalTemplates = [
     {
       'title': 'Emergency Fund',
       'amount': 2000000,
       'months': 6,
-      'color': '#30D158',
+      'color': AppTheme.goalPalette[0],
       'icon': 'savings',
     },
     {
       'title': 'Vacation Trip',
       'amount': 1500000,
       'months': 3,
-      'color': '#0A84FF',
+      'color': AppTheme.goalPalette[7],
       'icon': 'flight',
     },
     {
       'title': 'New Vehicle',
       'amount': 8000000,
       'months': 12,
-      'color': '#FF9F0A',
+      'color': AppTheme.goalPalette[4],
       'icon': 'car',
     },
     {
       'title': 'Tech Upgrade',
       'amount': 3000000,
       'months': 4,
-      'color': '#64D2FF',
+      'color': AppTheme.goalPalette[2],
       'icon': 'laptop',
     },
     {
       'title': 'Education',
       'amount': 2500000,
       'months': 8,
-      'color': '#5E5CE6',
+      'color': AppTheme.goalPalette[3],
       'icon': 'school',
     },
     {
       'title': 'Special Event',
       'amount': 1000000,
       'months': 2,
-      'color': '#FF375F',
+      'color': AppTheme.goalPalette[4],
       'icon': 'gift',
     },
   ];
@@ -123,7 +111,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
       _selectedIcon = widget.existingGoal!.icon;
       _selectedDate = widget.existingGoal!.targetDate;
     } else {
-      _selectedColor = '#30D158';
+      _selectedColor = AppTheme.goalPalette[0];
       _selectedIcon = 'savings';
       _selectedDate = DateTime.now().add(const Duration(days: 90));
     }
@@ -382,15 +370,12 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         borderRadius: BorderRadius.circular(
                           AppTheme.radiusCard,
                         ),
-                        border: Border.all(
-                          color: themeCol.withValues(alpha: 0.35),
-                          width: 1.5,
-                        ),
+                        border: Border.all(color: context.appColors.hairline),
                         boxShadow: [
                           BoxShadow(
-                            color: themeCol.withValues(alpha: 0.08),
-                            blurRadius: 16,
-                            offset: const Offset(0, 4),
+                            color: context.appColors.shadowSubtle,
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
@@ -404,12 +389,12 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                 width: 44,
                                 height: 44,
                                 decoration: BoxDecoration(
-                                  color: themeCol.withValues(alpha: 0.16),
+                                  color: themeCol.withValues(alpha: 0.12),
                                   borderRadius: BorderRadius.circular(
                                     AppTheme.radiusInput,
                                   ),
                                   border: Border.all(
-                                    color: themeCol.withValues(alpha: 0.35),
+                                    color: themeCol.withValues(alpha: 0.18),
                                   ),
                                 ),
                                 child: Icon(
@@ -439,7 +424,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                       style: context.ts(
                                         12,
                                         fontWeight: FontWeight.w600,
-                                        color: themeCol,
+                                        color: context.appColors.textMedium,
                                       ),
                                     ),
                                   ],
@@ -456,8 +441,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                     AppTheme.radiusPill,
                                   ),
                                   border: Border.all(
-                                    color: theme.colorScheme.outlineVariant
-                                        .withValues(alpha: 0.3),
+                                    color: context.appColors.hairline,
                                   ),
                                 ),
                                 child: Row(
@@ -512,7 +496,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                       style: context.ts(
                                         11,
                                         fontWeight: FontWeight.w600,
-                                        color: themeCol,
+                                        color: context.appColors.textMedium,
                                       ),
                                     ),
                                   ),
@@ -533,9 +517,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           Icon(
                             PesaFlowIcons.bolt,
                             size: 13,
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.45,
-                            ),
+                            color: context.appColors.sectionHeader,
                           ),
                           const SizedBox(width: kSpacing5),
                           Text(
@@ -543,9 +525,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             style: context.ts(
                               11,
                               fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.45,
-                              ),
+                              color: context.appColors.sectionHeader,
                               letterSpacing: 0.6,
                             ),
                           ),
@@ -576,7 +556,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                     AppTheme.radiusPill,
                                   ),
                                   border: Border.all(
-                                    color: tmplCol.withValues(alpha: 0.4),
+                                    color: context.appColors.hairline,
                                   ),
                                 ),
                                 child: Row(
@@ -612,9 +592,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       style: context.ts(
                         11,
                         fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.45,
-                        ),
+                        color: context.appColors.sectionHeader,
                         letterSpacing: 0.6,
                       ),
                     ),
@@ -653,9 +631,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           style: context.ts(
                             11,
                             fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.45,
-                            ),
+                            color: context.appColors.sectionHeader,
                             letterSpacing: 0.6,
                           ),
                         ),
@@ -665,7 +641,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             style: context.ts(
                               12,
                               fontWeight: FontWeight.w700,
-                              color: themeCol,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                       ],
@@ -771,9 +747,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           style: context.ts(
                             11,
                             fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.45,
-                            ),
+                            color: context.appColors.sectionHeader,
                             letterSpacing: 0.6,
                           ),
                         ),
@@ -782,7 +756,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           style: context.ts(
                             11,
                             fontWeight: FontWeight.w600,
-                            color: themeCol,
+                            color: context.appColors.textMedium,
                           ),
                         ),
                       ],
@@ -846,16 +820,14 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       style: context.ts(
                         11,
                         fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.45,
-                        ),
+                        color: context.appColors.sectionHeader,
                         letterSpacing: 0.6,
                       ),
                     ),
                     const SizedBox(height: kSpacing8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: _curatedColors.map((hex) {
+                      children: AppTheme.goalPalette.map((hex) {
                         final col = hexToColor(hex);
                         final isSel =
                             _selectedColor.toUpperCase() == hex.toUpperCase();
@@ -872,18 +844,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               border: Border.all(
                                 color: isSel
                                     ? theme.colorScheme.onSurface
-                                    : Colors.transparent,
-                                width: isSel ? 2.5 : 1,
+                                    : context.appColors.hairline,
+                                width: isSel ? 2 : 1,
                               ),
-                              boxShadow: isSel
-                                  ? [
-                                      BoxShadow(
-                                        color: col.withValues(alpha: 0.4),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ]
-                                  : null,
                             ),
                             child: isSel
                                 ? Icon(
@@ -911,9 +874,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       style: context.ts(
                         11,
                         fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.45,
-                        ),
+                        color: context.appColors.sectionHeader,
                         letterSpacing: 0.6,
                       ),
                     ),
@@ -941,7 +902,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             duration: MotionTokens.durationExit,
                             decoration: BoxDecoration(
                               color: isSel
-                                  ? themeCol.withValues(alpha: 0.16)
+                                  ? themeCol.withValues(alpha: 0.10)
                                   : theme.colorScheme.surfaceContainerHigh,
                               borderRadius: BorderRadius.circular(
                                 AppTheme.radiusCompact,
@@ -949,9 +910,8 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               border: Border.all(
                                 color: isSel
                                     ? themeCol
-                                    : theme.colorScheme.outlineVariant
-                                          .withValues(alpha: 0.2),
-                                width: isSel ? 1.8 : 1,
+                                    : context.appColors.hairline,
+                                width: isSel ? 1.5 : 1,
                               ),
                             ),
                             child: Icon(
@@ -986,8 +946,8 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: themeCol.withValues(alpha: 0.3),
-                                blurRadius: 12,
+                                color: context.appColors.shadowMedium,
+                                blurRadius: 14,
                                 offset: const Offset(0, 4),
                               ),
                             ],

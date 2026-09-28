@@ -155,4 +155,92 @@ void main() {
       );
     });
   });
+
+  group('goal identity palette', () {
+    Color parse(String hex) =>
+        Color(int.parse('FF${hex.substring(1)}', radix: 16));
+
+    (double, double, double) labOf(Color c) {
+      double channel(double v) => v <= 0.03928
+          ? v / 12.92
+          : math.pow((v + 0.055) / 1.055, 2.4).toDouble();
+      final r = channel(c.r);
+      final g = channel(c.g);
+      final b = channel(c.b);
+      final x = (0.4124 * r + 0.3576 * g + 0.1805 * b) / 0.95047;
+      final y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      final z = (0.0193 * r + 0.1192 * g + 0.9505 * b) / 1.08883;
+      double f(double t) =>
+          t > 0.008856 ? math.pow(t, 1 / 3).toDouble() : 7.787 * t + 16 / 116;
+      final fx = f(x);
+      final fy = f(y);
+      final fz = f(z);
+      return (116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz));
+    }
+
+    double deltaE(Color a, Color b) {
+      final la = labOf(a);
+      final lb = labOf(b);
+      return math.sqrt(
+        math.pow(la.$1 - lb.$1, 2) +
+            math.pow(la.$2 - lb.$2, 2) +
+            math.pow(la.$3 - lb.$3, 2),
+      );
+    }
+
+    test('the palette holds eight swatches', () {
+      expect(AppTheme.goalPalette, hasLength(8));
+      expect(AppTheme.goalPalette.toSet(), hasLength(8));
+    });
+
+    test('every goal colour is a muted mid-tone, not a neon', () {
+      for (final hex in AppTheme.goalPalette) {
+        final c = parse(hex);
+        expect(
+          _luminance(c),
+          inInclusiveRange(0.16, 0.26),
+          reason: '$hex sits outside the muted luminance band',
+        );
+        expect(
+          HSLColor.fromColor(c).saturation,
+          lessThan(0.40),
+          reason: '$hex is too saturated to read as muted',
+        );
+      }
+    });
+
+    test(
+      'every goal colour stays readable on both the light and dark card',
+      () {
+        for (final hex in AppTheme.goalPalette) {
+          final c = parse(hex);
+          expect(
+            _contrast(c, AppTheme.surfaceLight),
+            greaterThanOrEqualTo(3.5),
+            reason: '$hex fails on the light card',
+          );
+          expect(
+            _contrast(c, AppTheme.surfaceHighDark),
+            greaterThanOrEqualTo(3.5),
+            reason: '$hex fails on the dark card',
+          );
+        }
+      },
+    );
+
+    test('no two swatches are too close to tell apart', () {
+      final colours = AppTheme.goalPalette.map(parse).toList();
+      for (var i = 0; i < colours.length; i++) {
+        for (var j = i + 1; j < colours.length; j++) {
+          expect(
+            deltaE(colours[i], colours[j]),
+            greaterThanOrEqualTo(10),
+            reason:
+                '${AppTheme.goalPalette[i]} and ${AppTheme.goalPalette[j]} are '
+                'indistinguishable as adjacent swatches',
+          );
+        }
+      }
+    });
+  });
 }

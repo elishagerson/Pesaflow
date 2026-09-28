@@ -1045,8 +1045,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: themeCol.withValues(alpha: 0.35),
-                                      blurRadius: 12,
+                                      color: context.appColors.shadowMedium,
+                                      blurRadius: 14,
                                       offset: const Offset(0, 4),
                                     ),
                                   ],
