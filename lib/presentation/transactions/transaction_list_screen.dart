@@ -1656,7 +1656,9 @@ class _FilterButton extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary,
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(
+                      AppTheme.squircleRadius(14),
+                    ),
                   ),
                   child: Text(
                     '$activeCount',

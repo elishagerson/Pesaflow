@@ -338,7 +338,9 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                       color: context.appColors.incomeColor.withValues(
                         alpha: 0.12,
                       ),
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(28),
+                      ),
                     ),
                     child: Icon(
                       PesaFlowIcons.savings,

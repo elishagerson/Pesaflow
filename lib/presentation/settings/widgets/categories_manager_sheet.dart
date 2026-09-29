@@ -62,7 +62,9 @@ void showCategoriesManager(BuildContext context, WidgetRef ref) {
                 padding: const EdgeInsets.all(kSpacing8),
                 decoration: BoxDecoration(
                   color: hexToColor(cat.color).withValues(alpha: 0.15),
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.squircleRadius(40),
+                  ),
                 ),
                 child: Icon(
                   getCategoryIcon(cat.icon),

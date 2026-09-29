@@ -342,7 +342,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           color: theme.colorScheme.primary.withValues(
                             alpha: 0.1,
                           ),
-                          shape: BoxShape.circle,
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.squircleRadius(34),
+                          ),
                         ),
                         child: Icon(
                           PesaFlowIcons.wallet,
@@ -428,7 +430,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                 .withValues(alpha: 0.15)
                                           : theme.colorScheme.onSurface
                                                 .withValues(alpha: 0.05),
-                                      shape: BoxShape.circle,
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.squircleRadius(36),
+                                      ),
                                     ),
                                     child: Icon(
                                       isSelected
@@ -504,7 +508,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       decoration: BoxDecoration(
                                         color: theme.colorScheme.primary
                                             .withValues(alpha: 0.15),
-                                        shape: BoxShape.circle,
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.squircleRadius(24),
+                                        ),
                                       ),
                                       child: Icon(
                                         PesaFlowIcons.check,
@@ -627,7 +633,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 color: theme.colorScheme.onSurface.withValues(
                                   alpha: 0.05,
                                 ),
-                                shape: BoxShape.circle,
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.squircleRadius(56),
+                                ),
                               ),
                               child: Icon(
                                 PesaFlowIcons.add,
@@ -673,7 +681,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   : theme.colorScheme.onSurface.withValues(
                                       alpha: 0.03,
                                     ),
-                              shape: BoxShape.circle,
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.squircleRadius(56),
+                              ),
                               border: isSelected
                                   ? Border.all(color: color, width: 2)
                                   : null,

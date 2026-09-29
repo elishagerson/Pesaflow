@@ -158,7 +158,9 @@ void showAccountsManager(BuildContext context, WidgetRef ref) {
                                   color: theme.colorScheme.primary.withValues(
                                     alpha: 0.1,
                                   ),
-                                  shape: BoxShape.circle,
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.squircleRadius(28),
+                                  ),
                                 ),
                                 child: Icon(
                                   PesaFlowIcons.edit,
@@ -178,7 +180,9 @@ void showAccountsManager(BuildContext context, WidgetRef ref) {
                                   color: theme.colorScheme.error.withValues(
                                     alpha: 0.1,
                                   ),
-                                  shape: BoxShape.circle,
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.squircleRadius(28),
+                                  ),
                                 ),
                                 child: Icon(
                                   PesaFlowIcons.delete,

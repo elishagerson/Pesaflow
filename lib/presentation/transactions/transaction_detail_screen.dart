@@ -53,7 +53,9 @@ class TransactionDetailScreen extends ConsumerWidget {
                     padding: const EdgeInsets.all(kSpacing10),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(38),
+                      ),
                     ),
                     child: Icon(
                       PesaFlowIcons.copy,
@@ -71,7 +73,9 @@ class TransactionDetailScreen extends ConsumerWidget {
                     padding: const EdgeInsets.all(kSpacing10),
                     decoration: BoxDecoration(
                       color: onSurface.withValues(alpha: 0.06),
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(38),
+                      ),
                     ),
                     child: Icon(PesaFlowIcons.edit, size: 18, color: onSurface),
                   ),
@@ -86,7 +90,9 @@ class TransactionDetailScreen extends ConsumerWidget {
                       color: context.appColors.expenseColor.withValues(
                         alpha: 0.12,
                       ),
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(38),
+                      ),
                     ),
                     child: Icon(
                       PesaFlowIcons.delete,
@@ -216,7 +222,9 @@ class TransactionDetailScreen extends ConsumerWidget {
                           padding: const EdgeInsets.all(kSpacing18),
                           decoration: BoxDecoration(
                             color: mutedCatColor.withValues(alpha: 0.14),
-                            shape: BoxShape.circle,
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.squircleRadius(70),
+                            ),
                             border: Border.all(
                               color: mutedCatColor.withValues(alpha: 0.35),
                               width: 1.5,
@@ -707,7 +715,9 @@ class TransactionDetailScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(kSpacing8),
                   decoration: BoxDecoration(
                     color: onSurface.withValues(alpha: 0.04),
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(
+                      AppTheme.squircleRadius(32),
+                    ),
                   ),
                   child: Icon(
                     icon,
@@ -785,7 +795,7 @@ class TransactionDetailScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(kSpacing8),
             decoration: BoxDecoration(
               color: onSurface.withValues(alpha: 0.04),
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(32)),
             ),
             child: Icon(
               icon,

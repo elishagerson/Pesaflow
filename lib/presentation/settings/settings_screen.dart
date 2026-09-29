@@ -346,7 +346,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   color: isSelected
                       ? theme.colorScheme.primary.withValues(alpha: 0.12)
                       : ctx.appColors.textMedium.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.squircleRadius(40),
+                  ),
                 ),
                 child: Icon(
                   icon,
@@ -616,7 +618,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                         height: 6,
                                         decoration: BoxDecoration(
                                           color: context.appColors.incomeColor,
-                                          shape: BoxShape.circle,
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.squircleRadius(6),
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(width: kSpacing4),

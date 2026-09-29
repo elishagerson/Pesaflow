@@ -98,7 +98,9 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                   padding: const EdgeInsets.all(kSpacing8),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(
+                      AppTheme.squircleRadius(34),
+                    ),
                   ),
                   child: Icon(
                     PesaFlowIcons.filterAlt,
