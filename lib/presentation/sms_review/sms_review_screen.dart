@@ -627,8 +627,12 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                               right: kSpacing10,
                                                             ),
                                                         decoration: BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                AppTheme.squircleRadius(
+                                                                  22,
+                                                                ),
+                                                              ),
                                                           color: isSelected
                                                               ? theme
                                                                     .colorScheme
