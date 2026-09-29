@@ -969,7 +969,7 @@ class _RecurringTransactionFormScreenState
                           padding: const EdgeInsets.all(kSpacing10),
                           decoration: BoxDecoration(
                             color: colors.expenseColor.withValues(alpha: 0.12),
-                            shape: BoxShape.circle,
+                            borderRadius: BorderRadius.circular(AppTheme.squircleRadius(38)),
                           ),
                           child: Icon(
                             PesaFlowIcons.delete,

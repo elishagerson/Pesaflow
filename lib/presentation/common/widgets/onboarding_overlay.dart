@@ -96,7 +96,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                               width: 120,
                               height: 120,
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
+                                borderRadius: BorderRadius.circular(AppTheme.squircleRadius(120)),
                                 gradient: LinearGradient(
                                   colors: [
                                     accentColor.withValues(alpha: 0.2),

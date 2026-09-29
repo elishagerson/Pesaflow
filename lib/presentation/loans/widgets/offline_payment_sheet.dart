@@ -77,7 +77,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   decoration: BoxDecoration(
                                     color: context.appColors.incomeColor
                                         .withValues(alpha: 0.12),
-                                    shape: BoxShape.circle,
+                                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(42)),
                                   ),
                                   child: Icon(
                                     PesaFlowIcons.transactions,
@@ -156,7 +156,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             color: onSurface.withValues(
                                               alpha: 0.07,
                                             ),
-                                            shape: BoxShape.circle,
+                                            borderRadius: BorderRadius.circular(AppTheme.squircleRadius(26)),
                                           ),
                                           child: Icon(
                                             PesaFlowIcons.close,

@@ -388,7 +388,7 @@ class _WelcomePage extends StatelessWidget {
                     theme.colorScheme.primary.withValues(alpha: 0.7),
                   ],
                 ),
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(AppTheme.squircleRadius(120)),
               ),
               child: const Icon(
                 PesaFlowIcons.wallet,
@@ -452,7 +452,7 @@ class _SmsPermissionPage extends StatelessWidget {
                   padding: const EdgeInsets.all(kSpacing24),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(104)),
                   ),
                   child: Icon(
                     PesaFlowIcons.sms,
@@ -468,7 +468,7 @@ class _SmsPermissionPage extends StatelessWidget {
                       padding: const EdgeInsets.all(kSpacing4),
                       decoration: BoxDecoration(
                         color: context.appColors.incomeColor,
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(AppTheme.squircleRadius(24)),
                         border: Border.all(
                           color: theme.scaffoldBackgroundColor,
                           width: 2,
@@ -663,7 +663,7 @@ class _AccountsPage extends StatelessWidget {
                                   : (theme.brightness == Brightness.dark
                                         ? Colors.white.withValues(alpha: 0.05)
                                         : Colors.black.withValues(alpha: 0.05)),
-                              shape: BoxShape.circle,
+                              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(44)),
                             ),
                             child: Icon(
                               icons[e.key],
@@ -696,7 +696,7 @@ class _AccountsPage extends StatelessWidget {
                               color: isSelected
                                   ? theme.colorScheme.primary
                                   : Colors.transparent,
-                              shape: BoxShape.circle,
+                              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(18)),
                               border: Border.all(
                                 color: isSelected
                                     ? theme.colorScheme.primary
@@ -742,7 +742,7 @@ class _CompletePage extends StatelessWidget {
               padding: const EdgeInsets.all(kSpacing24),
               decoration: BoxDecoration(
                 color: context.appColors.incomeColor.withValues(alpha: 0.15),
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(AppTheme.squircleRadius(112)),
               ),
               child: Icon(
                 PesaFlowIcons.success,

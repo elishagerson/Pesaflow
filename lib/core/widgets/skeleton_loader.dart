@@ -87,7 +87,7 @@ class SkeletonRing extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
+          borderRadius: BorderRadius.circular(AppTheme.squircleRadius(size)),
           color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.55),
         ),
       ),

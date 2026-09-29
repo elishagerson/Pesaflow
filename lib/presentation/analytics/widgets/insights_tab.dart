@@ -110,7 +110,7 @@ class InsightsTab extends ConsumerWidget {
                                 padding: const EdgeInsets.all(kSpacing10),
                                 decoration: BoxDecoration(
                                   color: color.withValues(alpha: 0.12),
-                                  shape: BoxShape.circle,
+                                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(40)),
                                 ),
                                 child: Icon(
                                   _getInsightIcon(insight.icon),

@@ -143,7 +143,7 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                   height: 36,
                   decoration: BoxDecoration(
                     color: color,
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
@@ -187,7 +187,7 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                   color: isSelectedCustom
                       ? hexToColor(widget.selectedColorHex)
                       : Colors.transparent,
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
                   border: Border.all(
                     color: isSelectedCustom
                         ? (theme.brightness == Brightness.dark

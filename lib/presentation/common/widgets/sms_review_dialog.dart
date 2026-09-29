@@ -257,7 +257,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                             color: hexToColor(
                               cat.color,
                             ).withValues(alpha: 0.15),
-                            shape: BoxShape.circle,
+                            borderRadius: BorderRadius.circular(AppTheme.squircleRadius(30)),
                           ),
                           child: Icon(
                             getCategoryIcon(cat.icon),

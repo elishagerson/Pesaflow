@@ -554,7 +554,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                               color: const Color(
                                                 0xFF609F8A,
                                               ).withValues(alpha: 0.15),
-                                              shape: BoxShape.circle,
+                                              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(80)),
                                             ),
                                             child: const Icon(
                                               Icons.lock_outline_rounded,

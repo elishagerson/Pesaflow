@@ -37,7 +37,7 @@ class TransactionTile extends StatelessWidget {
             padding: const EdgeInsets.all(kSpacing8),
             decoration: BoxDecoration(
               color: amountColor.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(32)),
             ),
             child: Icon(
               isCredit ? PesaFlowIcons.arrowDown : PesaFlowIcons.arrowUp,

@@ -206,7 +206,7 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
                                   width: 120,
                                   height: 120,
                                   decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
+                                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(120)),
                                     border: Border.all(
                                       color: successColor.withValues(
                                         alpha: ringOpacity,
@@ -235,7 +235,7 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
                               width: 96,
                               height: 96,
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
+                                borderRadius: BorderRadius.circular(AppTheme.squircleRadius(96)),
                                 color: successColor.withValues(alpha: 0.12),
                                 boxShadow: [
                                   BoxShadow(

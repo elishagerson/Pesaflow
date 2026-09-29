@@ -337,7 +337,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHighest
                           .withValues(alpha: 0.4),
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(32)),
                     ),
                     child: Icon(
                       PesaFlowIcons.close,
@@ -840,7 +840,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             height: isSel ? 36 : 30,
                             decoration: BoxDecoration(
                               color: col,
-                              shape: BoxShape.circle,
+                              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(isSel ? 36 : 30)),
                               border: Border.all(
                                 color: isSel
                                     ? theme.colorScheme.onSurface

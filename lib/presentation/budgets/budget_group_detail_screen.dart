@@ -100,7 +100,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                                 color: theme.colorScheme.onSurface.withValues(
                                   alpha: 0.08,
                                 ),
-                                shape: BoxShape.circle,
+                                borderRadius: BorderRadius.circular(AppTheme.squircleRadius(38)),
                               ),
                               child: Icon(
                                 PesaFlowIcons.delete,
@@ -122,7 +122,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                                 color: context.appColors.onBgColor.withValues(
                                   alpha: 0.06,
                                 ),
-                                shape: BoxShape.circle,
+                                borderRadius: BorderRadius.circular(AppTheme.squircleRadius(38)),
                               ),
                               child: Icon(
                                 PesaFlowIcons.add,

@@ -248,7 +248,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                       color: isNegative
                           ? theme.colorScheme.error
                           : context.appColors.brandColor,
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(8)),
                     ),
                   ),
                   const SizedBox(width: kSpacing8),
@@ -434,7 +434,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
           height: 28,
           decoration: BoxDecoration(
             color: accent.withValues(alpha: 0.12),
-            shape: BoxShape.circle,
+            borderRadius: BorderRadius.circular(AppTheme.squircleRadius(28)),
           ),
           alignment: Alignment.center,
           child: Icon(icon, size: 14, color: accent),

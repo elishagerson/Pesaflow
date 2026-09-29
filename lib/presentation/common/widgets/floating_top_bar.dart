@@ -60,7 +60,7 @@ class FloatingTopBar extends StatelessWidget {
                       padding: const EdgeInsets.all(kSpacing10),
                       decoration: BoxDecoration(
                         color: effectiveColor.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(AppTheme.squircleRadius(38)),
                       ),
                       child: Icon(
                         PesaFlowIcons.back,

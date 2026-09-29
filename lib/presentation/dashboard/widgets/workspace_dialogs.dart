@@ -126,7 +126,7 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                                     color: mutedItemColor.withValues(
                                       alpha: 0.12,
                                     ),
-                                    shape: BoxShape.circle,
+                                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(40)),
                                   ),
                                   child: Icon(
                                     getTrackerIcon(item.icon),
@@ -270,7 +270,7 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
                       color: isSel
                           ? theme.colorScheme.primary.withValues(alpha: 0.12)
                           : Colors.transparent,
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
                       border: Border.all(
                         color: isSel
                             ? theme.colorScheme.primary
@@ -309,7 +309,7 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
                     height: 28,
                     decoration: BoxDecoration(
                       color: c,
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(28)),
                       border: Border.all(
                         color: isSel
                             ? theme.colorScheme.onSurface
@@ -447,7 +447,7 @@ void showManageTrackerDialog(
                       color: isSel
                           ? theme.colorScheme.primary.withValues(alpha: 0.12)
                           : Colors.transparent,
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
                       border: Border.all(
                         color: isSel
                             ? theme.colorScheme.primary
@@ -486,7 +486,7 @@ void showManageTrackerDialog(
                     height: 28,
                     decoration: BoxDecoration(
                       color: c,
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(28)),
                       border: Border.all(
                         color: isSel
                             ? theme.colorScheme.onSurface

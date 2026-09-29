@@ -470,7 +470,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   decoration: BoxDecoration(
                                     color: context.appColors.incomeColor
                                         .withValues(alpha: 0.12),
-                                    shape: BoxShape.circle,
+                                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(42)),
                                   ),
                                   child: Icon(
                                     PesaFlowIcons.cash,
@@ -842,7 +842,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                       : onSurface.withValues(
                                                           alpha: 0.05,
                                                         ),
-                                                  shape: BoxShape.circle,
+                                                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
                                                 ),
                                                 child: Icon(
                                                   isSelected
@@ -954,7 +954,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                         .withValues(
                                                           alpha: 0.15,
                                                         ),
-                                                    shape: BoxShape.circle,
+                                                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(24)),
                                                   ),
                                                   child: Icon(
                                                     PesaFlowIcons.check,
@@ -1177,7 +1177,7 @@ Widget _buildAmountField({
               padding: const EdgeInsets.all(kSpacing4),
               decoration: BoxDecoration(
                 color: onSurface.withValues(alpha: 0.07),
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(AppTheme.squircleRadius(26)),
               ),
               child: Icon(
                 PesaFlowIcons.close,

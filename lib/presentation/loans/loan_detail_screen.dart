@@ -98,7 +98,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.08,
                           ),
-                          shape: BoxShape.circle,
+                          borderRadius: BorderRadius.circular(AppTheme.squircleRadius(38)),
                         ),
                         child: Icon(
                           PesaFlowIcons.edit,
@@ -119,7 +119,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                           color: context.appColors.expenseColor.withValues(
                             alpha: 0.12,
                           ),
-                          shape: BoxShape.circle,
+                          borderRadius: BorderRadius.circular(AppTheme.squircleRadius(38)),
                         ),
                         child: Icon(
                           PesaFlowIcons.delete,
@@ -294,7 +294,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                 padding: const EdgeInsets.all(kSpacing16),
                 decoration: BoxDecoration(
                   color: statusColor.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(64)),
                 ),
                 child: Icon(
                   isPaid ? PesaFlowIcons.success : PesaFlowIcons.loans,
@@ -499,7 +499,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                         : event.isCompleted
                         ? context.appColors.incomeColor
                         : theme.colorScheme.onSurfaceVariant,
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(12)),
                   ),
                 ),
                 if (!event.isLast)
@@ -642,7 +642,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                             : theme.colorScheme.onSurface.withValues(
                                 alpha: 0.05,
                               ),
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(AppTheme.squircleRadius(20)),
                       ),
                       child: Icon(
                         isPaid ? PesaFlowIcons.check : PesaFlowIcons.schedule,
@@ -742,7 +742,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                 padding: const EdgeInsets.all(kSpacing10),
                 decoration: BoxDecoration(
                   color: AppTheme.tertiaryLight.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(40)),
                 ),
                 child: const Icon(
                   PesaFlowIcons.calendar,
@@ -814,7 +814,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                     color: context.appColors.incomeColor.withValues(
                       alpha: 0.12,
                     ),
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
                   ),
                   child: Icon(
                     PesaFlowIcons.cash,

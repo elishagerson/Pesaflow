@@ -342,7 +342,7 @@ class _TimerRingIcon extends StatelessWidget {
             padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
               color: brandColor.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(20)),
             ),
             child: Icon(icon, color: brandColor, size: 14),
           ),

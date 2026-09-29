@@ -339,7 +339,7 @@ class _OverviewTab extends ConsumerWidget {
                                 padding: const EdgeInsets.all(kSpacing6),
                                 decoration: BoxDecoration(
                                   color: onSurface.withValues(alpha: 0.08),
-                                  shape: BoxShape.circle,
+                                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(27)),
                                 ),
                                 child: Icon(
                                   PesaFlowIcons.analytics,
@@ -803,7 +803,7 @@ class _OverviewTab extends ConsumerWidget {
                                   color: AppTheme.transferColorDark.withValues(
                                     alpha: 0.12,
                                   ),
-                                  shape: BoxShape.circle,
+                                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
                                 ),
                                 child: Icon(
                                   PesaFlowIcons.savings,
@@ -1492,7 +1492,7 @@ class _TrendsTab extends ConsumerWidget {
                   height: 8,
                   decoration: BoxDecoration(
                     color: context.appColors.incomeColor,
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(8)),
                   ),
                 ),
                 const SizedBox(width: kSpacing6),
@@ -1510,7 +1510,7 @@ class _TrendsTab extends ConsumerWidget {
                   height: 8,
                   decoration: BoxDecoration(
                     color: context.appColors.expenseColor,
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(8)),
                   ),
                 ),
                 const SizedBox(width: kSpacing6),

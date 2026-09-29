@@ -150,6 +150,9 @@ class AppTheme {
   static const double radiusButton = 28.0;
   static const double radiusPill = 100.0;
 
+  static double squircleRadius(double side) =>
+      (side * 0.28).clamp(1.0, radiusButton).toDouble();
+
   static TextStyle getMonospaceStyle(TextStyle baseStyle) {
     return baseStyle.copyWith(
       fontFamilyFallback: const [

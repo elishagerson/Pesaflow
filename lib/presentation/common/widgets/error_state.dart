@@ -34,7 +34,7 @@ class ErrorState extends StatelessWidget {
                 padding: const EdgeInsets.all(kSpacing16),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.error.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(72)),
                 ),
                 child: Icon(
                   PesaFlowIcons.error,
