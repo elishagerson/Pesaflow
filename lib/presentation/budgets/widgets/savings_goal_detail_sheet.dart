@@ -203,7 +203,9 @@ class _SavingsGoalDetailSheetState
                                         color: accentColor.withValues(
                                           alpha: 0.12,
                                         ),
-                                        borderRadius: BorderRadius.circular(AppTheme.squircleRadius(42)),
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.squircleRadius(42),
+                                        ),
                                       ),
                                       child: Icon(
                                         isDeposit
@@ -324,7 +326,10 @@ class _SavingsGoalDetailSheetState
                                               color: onSurface.withValues(
                                                 alpha: 0.07,
                                               ),
-                                              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(26)),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                    AppTheme.squircleRadius(26),
+                                                  ),
                                             ),
                                             child: Icon(
                                               PesaFlowIcons.close,
@@ -755,7 +760,9 @@ class _SavingsGoalDetailSheetState
                   height: 56,
                   decoration: BoxDecoration(
                     color: goalColor.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(56)),
+                    borderRadius: BorderRadius.circular(
+                      AppTheme.squircleRadius(56),
+                    ),
                     border: Border.all(
                       color: goalColor.withValues(alpha: 0.3),
                       width: 1.5,
@@ -1040,7 +1047,9 @@ class _SavingsGoalDetailSheetState
                                       color: isPos
                                           ? context.appColors.incomeColor
                                           : context.appColors.expenseColor,
-                                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(8)),
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.squircleRadius(8),
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: kSpacing14),

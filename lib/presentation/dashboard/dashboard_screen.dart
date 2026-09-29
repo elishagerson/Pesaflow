@@ -296,7 +296,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             color: theme
                                                 .colorScheme
                                                 .surfaceContainerHigh,
-                                            borderRadius: BorderRadius.circular(AppTheme.squircleRadius(42)),
+                                            borderRadius: BorderRadius.circular(
+                                              AppTheme.squircleRadius(42),
+                                            ),
                                             border: Border.all(
                                               color: theme
                                                   .colorScheme
@@ -329,7 +331,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 color: theme
                                                     .colorScheme
                                                     .surfaceContainerHigh,
-                                                borderRadius: BorderRadius.circular(AppTheme.squircleRadius(42)),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      AppTheme.squircleRadius(
+                                                        42,
+                                                      ),
+                                                    ),
                                                 border: Border.all(
                                                   color: theme
                                                       .colorScheme

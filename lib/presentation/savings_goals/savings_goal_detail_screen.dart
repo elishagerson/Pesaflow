@@ -252,7 +252,9 @@ class _SavingsGoalDetailScreenState
                                           color: accentColor.withValues(
                                             alpha: 0.12,
                                           ),
-                                          shape: BoxShape.circle,
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.squircleRadius(42),
+                                          ),
                                         ),
                                         child: Icon(
                                           isDeposit
@@ -362,7 +364,12 @@ class _SavingsGoalDetailScreenState
                                                 color: onSurface.withValues(
                                                   alpha: 0.07,
                                                 ),
-                                                shape: BoxShape.circle,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      AppTheme.squircleRadius(
+                                                        26,
+                                                      ),
+                                                    ),
                                               ),
                                               child: Icon(
                                                 PesaFlowIcons.close,
@@ -918,7 +925,9 @@ class _SavingsGoalDetailScreenState
                                 color: theme.colorScheme.onSurface.withValues(
                                   alpha: 0.08,
                                 ),
-                                shape: BoxShape.circle,
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.squircleRadius(38),
+                                ),
                               ),
                               child: Icon(
                                 PesaFlowIcons.edit,
@@ -936,7 +945,9 @@ class _SavingsGoalDetailScreenState
                               decoration: BoxDecoration(
                                 color: context.appColors.expenseColor
                                     .withValues(alpha: 0.12),
-                                shape: BoxShape.circle,
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.squircleRadius(38),
+                                ),
                               ),
                               child: Icon(
                                 PesaFlowIcons.delete,
@@ -1056,7 +1067,9 @@ class _SavingsGoalDetailScreenState
                                             color: goalColor.withValues(
                                               alpha: 0.1,
                                             ),
-                                            shape: BoxShape.circle,
+                                            borderRadius: BorderRadius.circular(
+                                              AppTheme.squircleRadius(80),
+                                            ),
                                           ),
                                           child: Icon(
                                             getGoalIcon(goal.icon),
@@ -1281,7 +1294,9 @@ class _SavingsGoalDetailScreenState
                                                               .appColors
                                                               .expenseColor)
                                                     .withValues(alpha: 0.1),
-                                            shape: BoxShape.circle,
+                                            borderRadius: BorderRadius.circular(
+                                              AppTheme.squircleRadius(36),
+                                            ),
                                           ),
                                           child: Icon(
                                             isPos

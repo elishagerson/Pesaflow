@@ -287,7 +287,9 @@ Future<void> showMarkRecurringPaymentSheet({
                                         decoration: BoxDecoration(
                                           color: theme.colorScheme.primary
                                               .withValues(alpha: 0.12),
-                                          shape: BoxShape.circle,
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.squircleRadius(22),
+                                          ),
                                         ),
                                         child: Icon(
                                           PesaFlowIcons.chevronRight,
@@ -456,7 +458,9 @@ Future<void> showMarkRecurringPaymentSheet({
                                                 ? context.appColors.incomeColor
                                                 : theme.colorScheme.onSurface)
                                             .withValues(alpha: 0.12),
-                                    shape: BoxShape.circle,
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.squircleRadius(34),
+                                    ),
                                   ),
                                   child: Icon(
                                     PesaFlowIcons.wallet,

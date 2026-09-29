@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -60,7 +61,9 @@ class FloatingTopBar extends StatelessWidget {
                       padding: const EdgeInsets.all(kSpacing10),
                       decoration: BoxDecoration(
                         color: effectiveColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(AppTheme.squircleRadius(38)),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.squircleRadius(38),
+                        ),
                       ),
                       child: Icon(
                         PesaFlowIcons.back,

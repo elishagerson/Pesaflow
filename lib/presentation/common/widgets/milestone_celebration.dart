@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
@@ -206,7 +207,9 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
                                   width: 120,
                                   height: 120,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(120)),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.squircleRadius(120),
+                                    ),
                                     border: Border.all(
                                       color: successColor.withValues(
                                         alpha: ringOpacity,
@@ -235,7 +238,9 @@ class _MilestoneCelebrationState extends State<MilestoneCelebration>
                               width: 96,
                               height: 96,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(AppTheme.squircleRadius(96)),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.squircleRadius(96),
+                                ),
                                 color: successColor.withValues(alpha: 0.12),
                                 boxShadow: [
                                   BoxShadow(

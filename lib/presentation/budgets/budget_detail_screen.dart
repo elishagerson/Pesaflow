@@ -158,7 +158,9 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                   color: theme.colorScheme.onSurface.withValues(
                                     alpha: 0.08,
                                   ),
-                                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(38)),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.squircleRadius(38),
+                                  ),
                                 ),
                                 child: Icon(
                                   PesaFlowIcons.edit,
@@ -271,7 +273,9 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                 decoration: BoxDecoration(
                                   color: context.appColors.expenseColor
                                       .withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(38)),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.squircleRadius(38),
+                                  ),
                                 ),
                                 child: Icon(
                                   PesaFlowIcons.delete,
@@ -497,7 +501,9 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                                 ? theme.colorScheme.error
                                                 : context.appColors.incomeColor)
                                             .withValues(alpha: 0.15),
-                                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(32)),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.squircleRadius(32),
+                                    ),
                                   ),
                                   child: Icon(
                                     status.remaining <= 0
@@ -580,7 +586,9 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                         decoration: BoxDecoration(
                                           color: context.appColors.dangerColor
                                               .withValues(alpha: 0.15),
-                                          borderRadius: BorderRadius.circular(AppTheme.squircleRadius(34)),
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.squircleRadius(34),
+                                          ),
                                         ),
                                         child: Icon(
                                           PesaFlowIcons.emergency,

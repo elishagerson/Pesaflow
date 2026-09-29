@@ -274,7 +274,9 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                         color: isSelected
                                             ? itemColor.withValues(alpha: 0.15)
                                             : onSurface.withValues(alpha: 0.11),
-                                        borderRadius: BorderRadius.circular(AppTheme.squircleRadius(40)),
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.squircleRadius(40),
+                                        ),
                                       ),
                                       child: Icon(
                                         item.icon,

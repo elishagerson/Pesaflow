@@ -143,7 +143,9 @@ class ModernDialog extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: (iconColor ?? theme.colorScheme.primary)
                               .withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(AppTheme.squircleRadius(42)),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.squircleRadius(42),
+                          ),
                         ),
                         child: Icon(
                           titleIcon,

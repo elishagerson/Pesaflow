@@ -595,7 +595,9 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                               width: 22,
                               height: 22,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(AppTheme.squircleRadius(22)),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.squircleRadius(22),
+                                ),
                                 color: isSelected
                                     ? theme.colorScheme.primary
                                     : Colors.transparent,
@@ -844,7 +846,9 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                       color: context.appColors.incomeColor.withValues(
                         alpha: 0.12,
                       ),
-                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(40)),
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(40),
+                      ),
                     ),
                     child: Icon(
                       PesaFlowIcons.income,

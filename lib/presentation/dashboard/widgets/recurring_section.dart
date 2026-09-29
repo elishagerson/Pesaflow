@@ -69,7 +69,9 @@ class RecurringSection extends ConsumerWidget {
                     padding: const EdgeInsets.all(kSpacing12),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(48)),
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(48),
+                      ),
                     ),
                     child: Icon(
                       PesaFlowIcons.subscriptions,
@@ -205,7 +207,9 @@ class RecurringSection extends ConsumerWidget {
                                     ? context.appColors.transferColor
                                     : (catColor(sub.categoryId) ??
                                           context.appColors.incomeColor),
-                                borderRadius: BorderRadius.circular(AppTheme.squircleRadius(6)),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.squircleRadius(6),
+                                ),
                               ),
                             ),
                             const SizedBox(width: kSpacing10),
@@ -267,7 +271,9 @@ class RecurringSection extends ConsumerWidget {
                                 catColor(sub.categoryId) ??
                                     context.appColors.incomeColor,
                               ).withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(30)),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.squircleRadius(30),
+                              ),
                             ),
                             child: Icon(
                               PesaFlowIcons.subscriptions,
@@ -290,7 +296,9 @@ class RecurringSection extends ConsumerWidget {
                                         height: 6,
                                         decoration: BoxDecoration(
                                           color: catColor(sub.categoryId),
-                                          borderRadius: BorderRadius.circular(AppTheme.squircleRadius(6)),
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.squircleRadius(6),
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(width: kSpacing6),

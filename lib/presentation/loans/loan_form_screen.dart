@@ -1069,7 +1069,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     height: 7,
                     decoration: BoxDecoration(
                       color: hasAmount ? primaryColor : Colors.grey,
-                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(7)),
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(7),
+                      ),
                     ),
                   ),
                   const SizedBox(width: kSpacing8),
@@ -1452,7 +1454,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       height: 6,
                       decoration: BoxDecoration(
                         color: brandColor,
-                        borderRadius: BorderRadius.circular(AppTheme.squircleRadius(6)),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.squircleRadius(6),
+                        ),
                       ),
                     ),
                     const SizedBox(width: kSpacing6),

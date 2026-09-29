@@ -39,7 +39,9 @@ class LoanOverviewSection extends ConsumerWidget {
                           color: context.appColors.incomeColor.withValues(
                             alpha: 0.12,
                           ),
-                          borderRadius: BorderRadius.circular(AppTheme.squircleRadius(42)),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.squircleRadius(42),
+                          ),
                         ),
                         child: Icon(
                           PesaFlowIcons.success,
@@ -159,7 +161,9 @@ class LoanOverviewSection extends ConsumerWidget {
                         padding: const EdgeInsets.all(kSpacing10),
                         decoration: BoxDecoration(
                           color: severityColor.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(AppTheme.squircleRadius(42)),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.squircleRadius(42),
+                          ),
                         ),
                         child: Icon(
                           debtRatio > 0.5
@@ -322,7 +326,9 @@ class LoanOverviewSection extends ConsumerWidget {
                               decoration: BoxDecoration(
                                 color: context.appColors.transferColor
                                     .withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(AppTheme.squircleRadius(28)),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.squircleRadius(28),
+                                ),
                               ),
                               child: Icon(
                                 PesaFlowIcons.speed,
@@ -374,7 +380,9 @@ class LoanOverviewSection extends ConsumerWidget {
                             padding: const EdgeInsets.all(kSpacing6),
                             decoration: BoxDecoration(
                               color: loanSeverity.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(26)),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.squircleRadius(26),
+                              ),
                             ),
                             child: Icon(
                               ratio > 0.5

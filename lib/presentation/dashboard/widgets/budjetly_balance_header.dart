@@ -248,7 +248,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                       color: isNegative
                           ? theme.colorScheme.error
                           : context.appColors.brandColor,
-                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(8)),
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(8),
+                      ),
                     ),
                   ),
                   const SizedBox(width: kSpacing8),

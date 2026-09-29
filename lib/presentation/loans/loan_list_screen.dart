@@ -343,7 +343,9 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                       color: context.appColors.expenseColor.withValues(
                         alpha: 0.12,
                       ),
-                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(27)),
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(27),
+                      ),
                     ),
                     child: Icon(
                       PesaFlowIcons.loans,
@@ -485,7 +487,9 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                         padding: const EdgeInsets.all(kSpacing8),
                         decoration: BoxDecoration(
                           color: progressColor.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(AppTheme.squircleRadius(34)),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.squircleRadius(34),
+                          ),
                         ),
                         child: Icon(
                           PesaFlowIcons.income,
@@ -637,7 +641,9 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                       color: context.appColors.incomeColor.withValues(
                         alpha: 0.12,
                       ),
-                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(34)),
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(34),
+                      ),
                     ),
                     child: Icon(
                       PesaFlowIcons.success,

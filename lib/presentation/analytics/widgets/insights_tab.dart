@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -110,7 +111,9 @@ class InsightsTab extends ConsumerWidget {
                                 padding: const EdgeInsets.all(kSpacing10),
                                 decoration: BoxDecoration(
                                   color: color.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(40)),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.squircleRadius(40),
+                                  ),
                                 ),
                                 child: Icon(
                                   _getInsightIcon(insight.icon),

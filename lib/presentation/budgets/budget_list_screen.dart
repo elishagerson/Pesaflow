@@ -109,7 +109,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         color: context.appColors.onBgColor.withValues(
                           alpha: 0.1,
                         ),
-                        borderRadius: BorderRadius.circular(AppTheme.squircleRadius(40)),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.squircleRadius(40),
+                        ),
                       ),
                       child: Icon(
                         PesaFlowIcons.settings,
@@ -137,7 +139,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     padding: const EdgeInsets.all(kSpacing10),
                     decoration: BoxDecoration(
                       color: context.appColors.onBgColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(42)),
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(42),
+                      ),
                     ),
                     child: Icon(
                       PesaFlowIcons.add,
@@ -644,7 +648,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   padding: const EdgeInsets.all(kSpacing4),
                   decoration: BoxDecoration(
                     color: onSurface.withValues(alpha: 0.06),
-                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(24)),
+                    borderRadius: BorderRadius.circular(
+                      AppTheme.squircleRadius(24),
+                    ),
                   ),
                   child: Icon(
                     PesaFlowIcons.more,
@@ -808,7 +814,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     height: 8,
                     decoration: BoxDecoration(
                       color: color,
-                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(8)),
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(8),
+                      ),
                     ),
                   ),
                   const SizedBox(width: kSpacing4),
@@ -1210,7 +1218,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         padding: const EdgeInsets.all(kSpacing8),
                         decoration: BoxDecoration(
                           color: onSurface.withValues(alpha: 0.06),
-                          borderRadius: BorderRadius.circular(AppTheme.squircleRadius(32)),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.squircleRadius(32),
+                          ),
                         ),
                         child: Icon(
                           PesaFlowIcons.add,
@@ -1868,7 +1878,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                 decoration: BoxDecoration(
                                   color: context.appColors.incomeColor
                                       .withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(28)),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.squircleRadius(28),
+                                  ),
                                 ),
                                 child: Icon(
                                   PesaFlowIcons.savings,

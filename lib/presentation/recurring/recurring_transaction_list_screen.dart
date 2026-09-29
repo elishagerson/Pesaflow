@@ -454,7 +454,9 @@ class _RecurringTransactionListScreenState
                       padding: const EdgeInsets.all(kSpacing6),
                       decoration: BoxDecoration(
                         color: onSurface.withValues(alpha: 0.08),
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.squircleRadius(27),
+                        ),
                       ),
                       child: Icon(
                         PesaFlowIcons.subscriptions,
@@ -929,7 +931,9 @@ class _RecurringTransactionListScreenState
                                   color: theme.colorScheme.onSurface.withValues(
                                     alpha: 0.2,
                                   ),
-                                  shape: BoxShape.circle,
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.squircleRadius(3),
+                                  ),
                                 ),
                               ),
                               Icon(
@@ -1009,7 +1013,9 @@ class _RecurringTransactionListScreenState
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.2,
                           ),
-                          shape: BoxShape.circle,
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.squircleRadius(3),
+                          ),
                         ),
                       ),
                       Text(

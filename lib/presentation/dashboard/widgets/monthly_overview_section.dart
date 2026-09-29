@@ -44,7 +44,9 @@ class MonthlyOverviewSection extends ConsumerWidget {
                     padding: const EdgeInsets.all(kSpacing16),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(AppTheme.squircleRadius(64)),
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(64),
+                      ),
                     ),
                     child: Icon(
                       PesaFlowIcons.analytics,
@@ -385,7 +387,9 @@ class _CashflowRow extends StatelessWidget {
                 height: 8,
                 decoration: BoxDecoration(
                   color: dotColor,
-                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(8)),
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.squircleRadius(8),
+                  ),
                 ),
               ),
               const SizedBox(width: kSpacing8),

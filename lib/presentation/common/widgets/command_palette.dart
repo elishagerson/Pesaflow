@@ -469,7 +469,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                         .colorScheme
                                         .surfaceContainerHighest
                                         .withValues(alpha: 0.6),
-                                    borderRadius: BorderRadius.circular(AppTheme.squircleRadius(22)),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.squircleRadius(22),
+                                    ),
                                   ),
                                   child: Icon(
                                     PesaFlowIcons.close,
@@ -536,7 +538,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                   color: theme.colorScheme.primary.withValues(
                                     alpha: 0.10,
                                   ),
-                                  borderRadius: BorderRadius.circular(AppTheme.squircleRadius(44)),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.squircleRadius(44),
+                                  ),
                                 ),
                                 child: Icon(
                                   PesaFlowIcons.search,
