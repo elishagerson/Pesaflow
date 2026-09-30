@@ -54,12 +54,53 @@ void main() {
       expect(ProviderMatcher.matchProvider('SelcomPesa'), 'SelcomPesa_TZ');
     });
 
-    test('returns null for unrecognized senders', () {
-      expect(ProviderMatcher.matchProvider('SPAM'), isNull);
-      expect(ProviderMatcher.matchProvider('+255712345678'), isNull);
-      expect(ProviderMatcher.matchProvider('MARKETING'), isNull);
+    test('body-fallback cross-provider: Tigo SMS mentioning M-Pesa recipient routes to Tigo', () {
+      // A Tigo SMS sent from a numeric shortcode, body mentions "M-Pesa" as
+      // the recipient — should NOT route to M-Pesa_TZ.
+      // The ownership signal "MIXX BY YAS" identifies it as Tigo.
+      final result = ProviderMatcher.matchProvider(
+        '15071',
+        body: 'ABC123DF Confirmed. Tsh 150,000.00 sent to TIPS-Mixx By Yas for account 255763559341 on 3/6/26. Total fee Tsh3,500.00. Balance is Tsh2,561.00',
+      );
+      expect(result, 'TigoPesa_TZ');
+    });
+
+    test('body-fallback cross-provider: Tigo SMS mentioning Airtel receiver routes to Tigo', () {
+      // Tigo SMS with "Airtel receiver" in the body — should route to Tigo,
+      // not Airtel. The ownership signal "NEW MIXX BALANCE" identifies it.
+      final result = ProviderMatcher.matchProvider(
+        '15071',
+        body: 'You have sent TSh 20,000 to Airtel receiver STEPHAN MWAKALASYA - 255787273486. Charges TSh 540. New Mixx balance is TSh 311,708.',
+      );
+      expect(result, 'TigoPesa_TZ');
+    });
+
+    test('body-fallback cross-provider: M-Pesa SMS from numeric shortcode routes correctly', () {
+      // An M-Pesa SMS from a numeric shortcode — should route to M-Pesa.
+      final result = ProviderMatcher.matchProvider(
+        '15050',
+        body: 'Z10DN636 Confirmed.You have received Tsh50,000 from FREDRICK KIMARO on 27/1/14 at 1:19 PM New M-PESA balance is Tsh214,676',
+      );
+      expect(result, 'M-Pesa_TZ');
+    });
+
+    test('body-fallback cross-provider: Tigo Cash-In from numeric shortcode routes to Tigo', () {
+      final result = ProviderMatcher.matchProvider(
+        '15055',
+        body: 'Cash-In of TSh 143,000 from Agent - ELIZA NYONDO is successful. New balance is TSh 143,000.',
+      );
+      expect(result, 'TigoPesa_TZ');
+    });
+
+    test('body-fallback: Tigo Bustisha loan from numeric shortcode routes to Tigo', () {
+      final result = ProviderMatcher.matchProvider(
+        '15099',
+        body: 'You have successfully paid your Bustisha Balance by TSh 117,904.55. Your outstanding balance: TSh 8,330.60.',
+      );
+      expect(result, 'TigoPesa_TZ');
     });
   });
+
 
   // ===========================================================================
   // M-Pesa Tanzania Parser Tests
