@@ -241,6 +241,22 @@ class SmsProcessor {
       }
       final sms = smsParsed;
 
+      // 3.5 Provider reconciliation — trust the parser's provider
+      // The parser hardcodes the correct provider string for every pattern it
+      // matches (e.g. MixxParser always returns 'TigoPesa_TZ').  If the
+      // initial ProviderMatcher guess disagrees (common when the body-fallback
+      // scans for provider names that appear as *recipients* rather than
+      // *senders* — e.g. a Tigo SMS saying "sent to M-Pesa agent"), the
+      // parser is authoritative.
+      final effectiveProvider = sms.provider;
+      if (effectiveProvider != provider) {
+        developer.log(
+          'Provider mismatch: ProviderMatcher resolved "$provider" but parser '
+          'returned "$effectiveProvider" — using parser provider for account matching',
+          name: 'SmsProcessor',
+        );
+      }
+
       // 4. Check for duplicate logs
       final isDeduplicationEnabled =
           await _settingsRepo.getSetting('sms_auto_deduplication') != 'false';
@@ -263,9 +279,12 @@ class SmsProcessor {
       );
 
       // 6. Find or auto-create account with provider + phone matching
+      // Use the parser's authoritative provider (effectiveProvider) instead of
+      // the ProviderMatcher's initial guess to prevent cross-provider account
+      // contamination.
       final accounts = await _accountRepo.getAllAccounts();
       final providerAccounts = accounts
-          .where((a) => a.provider == provider)
+          .where((a) => a.provider == effectiveProvider)
           .toList();
 
       Account? targetAccount;
@@ -286,7 +305,7 @@ class SmsProcessor {
         if (targetAccount == null) {
           targetAccount = providerAccounts.first;
           developer.log(
-            'Multiple accounts for provider $provider — using ${targetAccount.name} '
+            'Multiple accounts for provider $effectiveProvider — using ${targetAccount.name} '
             '(phone: $phoneInSms vs accounts: ${providerAccounts.map((a) => '${a.name}:${a.phoneNumber}').join(', ')})',
             name: 'SmsProcessor',
           );
@@ -295,7 +314,7 @@ class SmsProcessor {
 
       if (targetAccount == null) {
         // Auto-create account
-        final meta = ProviderRegistry.accountMetaFor(provider);
+        final meta = ProviderRegistry.accountMetaFor(effectiveProvider);
         final friendlyName = meta?.friendlyName ?? 'Carrier Account';
         final type = meta?.type ?? 'mobile_money';
 
@@ -304,7 +323,7 @@ class SmsProcessor {
           name: friendlyName,
           type: type,
           balance: 0,
-          provider: provider,
+          provider: effectiveProvider,
           icon: type == 'bank' ? 'bank' : 'wallet',
           sortOrder: accounts.length + 1,
           isArchived: false,
@@ -314,7 +333,7 @@ class SmsProcessor {
         await _accountRepo.createAccount(newAccount);
         targetAccount = newAccount;
         developer.log(
-          'Auto-created account $friendlyName for provider $provider',
+          'Auto-created account $friendlyName for provider $effectiveProvider',
           name: 'SmsProcessor',
         );
       }
