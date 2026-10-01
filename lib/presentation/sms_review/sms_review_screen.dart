@@ -187,7 +187,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                     cat.color,
                                   ).withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(
-                                    AppTheme.radiusSmall,
+                                    AppTheme.squircleRadius(36),
                                   ),
                                 ),
                                 child: Icon(

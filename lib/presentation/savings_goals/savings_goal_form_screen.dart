@@ -972,7 +972,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                 ),
                               ),
                               const SizedBox(height: kSpacing12),
-                              // 12-Icon Grid
+                              // 12-Icon Labeled Squircle Grid
                               GridView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -980,47 +980,111 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                 gridDelegate:
                                     const SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 6,
-                                      mainAxisSpacing: 10,
-                                      crossAxisSpacing: 10,
-                                      childAspectRatio: 1.0,
+                                      mainAxisSpacing: kSpacing10,
+                                      crossAxisSpacing: kSpacing8,
+                                      childAspectRatio: 0.75,
                                     ),
                                 itemBuilder: (context, i) {
                                   final item = _curatedIcons[i];
                                   final name = item['name'] as String;
                                   final icon = item['icon'] as IconData;
+                                  final label = item['label'] as String;
                                   final isSelected = _selectedIcon == name;
                                   return GestureDetector(
                                     onTap: () {
                                       PesaHaptics.selection();
                                       setState(() => _selectedIcon = name);
                                     },
-                                    child: AnimatedContainer(
-                                      duration: MotionTokens.durationNormal,
-                                      decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? themeCol.withValues(alpha: 0.10)
-                                            : theme
-                                                  .colorScheme
-                                                  .surfaceContainerHighest
-                                                  .withValues(alpha: 0.35),
-                                        borderRadius: BorderRadius.circular(
-                                          AppTheme.radiusCompact,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        AnimatedContainer(
+                                          duration: MotionTokens.durationNormal,
+                                          curve: Curves.easeOutCubic,
+                                          width: 44,
+                                          height: 44,
+                                          decoration: BoxDecoration(
+                                            color: isSelected
+                                                ? themeCol.withValues(
+                                                    alpha: 0.18,
+                                                  )
+                                                : theme
+                                                      .colorScheme
+                                                      .surfaceContainerHighest
+                                                      .withValues(alpha: 0.55),
+                                            borderRadius:
+                                                BorderRadius.circular(
+                                              AppTheme.squircleRadius(44),
+                                            ),
+                                            border: Border.all(
+                                              color: isSelected
+                                                  ? themeCol.withValues(
+                                                      alpha: 0.7,
+                                                    )
+                                                  : context.appColors.hairline,
+                                              width: isSelected ? 1.5 : 1,
+                                            ),
+                                          ),
+                                          child: Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              Icon(
+                                                icon,
+                                                size: 20,
+                                                color: isSelected
+                                                    ? themeCol
+                                                    : theme
+                                                          .colorScheme
+                                                          .onSurface
+                                                          .withValues(
+                                                            alpha: 0.7,
+                                                          ),
+                                              ),
+                                              if (isSelected)
+                                                Positioned(
+                                                  right: 1,
+                                                  bottom: 1,
+                                                  child: Container(
+                                                    width: 13,
+                                                    height: 13,
+                                                    decoration: BoxDecoration(
+                                                      color: themeCol,
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: theme
+                                                            .colorScheme
+                                                            .surfaceContainerHighest,
+                                                        width: 1.5,
+                                                      ),
+                                                    ),
+                                                    child: const Icon(
+                                                      PesaFlowIcons.check,
+                                                      size: 7,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
                                         ),
-                                        border: Border.all(
-                                          color: isSelected
-                                              ? themeCol
-                                              : context.appColors.hairline,
-                                          width: isSelected ? 1.5 : 1,
+                                        const SizedBox(height: kSpacing2),
+                                        Text(
+                                          label,
+                                          style: context.ts(
+                                            9,
+                                            fontWeight: isSelected
+                                                ? FontWeight.w700
+                                                : FontWeight.w500,
+                                            color: isSelected
+                                                ? theme.colorScheme.onSurface
+                                                : theme.colorScheme.onSurface
+                                                      .withValues(alpha: 0.55),
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.center,
                                         ),
-                                      ),
-                                      child: Icon(
-                                        icon,
-                                        size: 20,
-                                        color: isSelected
-                                            ? themeCol
-                                            : theme.colorScheme.onSurface
-                                                  .withValues(alpha: 0.65),
-                                      ),
+                                      ],
                                     ),
                                   );
                                 },
