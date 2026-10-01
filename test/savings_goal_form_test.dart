@@ -119,5 +119,60 @@ void main() {
 
       expect(find.text('Please enter a goal title'), findsOneWidget);
     });
+
+    testWidgets('goal icons render with squircle border radius and larger icon size', (
+      WidgetTester tester,
+    ) async {
+      tester.view.physicalSize = const Size(1080, 2400);
+      tester.view.devicePixelRatio = 2.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
+
+      await tester.pumpWidget(
+        createTestWidget(child: const SavingsGoalFormSheet()),
+      );
+      await tester.pumpAndSettle();
+
+      // Scroll to Goal Icon section
+      await tester.drag(
+        find.byType(SingleChildScrollView).first,
+        const Offset(0, -600),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('GOAL ICON'), findsOneWidget);
+
+      // Verify AnimatedContainer squircle decoration in goal icon grid
+      final animatedContainers = tester.widgetList<AnimatedContainer>(
+        find.descendant(
+          of: find.byType(GridView),
+          matching: find.byType(AnimatedContainer),
+        ),
+      );
+      expect(animatedContainers.isNotEmpty, isTrue);
+
+      for (final container in animatedContainers) {
+        final boxDeco = container.decoration as BoxDecoration?;
+        expect(boxDeco, isNotNull);
+        final borderRadius = boxDeco!.borderRadius as BorderRadius?;
+        expect(borderRadius, isNotNull);
+        // Squircle radius should be strictly less than half size (never circular)
+        expect(borderRadius!.topLeft.x, greaterThan(1.0));
+        expect(borderRadius.topLeft.x, lessThan(28.0));
+      }
+
+      // Check that icons in the grid have size >= 22 (larger icons)
+      final icons = tester.widgetList<Icon>(
+        find.descendant(
+          of: find.byType(GridView),
+          matching: find.byType(Icon),
+        ),
+      );
+      expect(icons.isNotEmpty, isTrue);
+      for (final icon in icons) {
+        // Exclude the checkmark icon if any
+        if (icon.icon == Icons.check_rounded) continue;
+        expect(icon.size, greaterThanOrEqualTo(22));
+      }
+    });
   });
 }

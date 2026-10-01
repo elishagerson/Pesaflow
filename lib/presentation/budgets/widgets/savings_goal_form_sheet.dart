@@ -897,37 +897,71 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       itemBuilder: (context, idx) {
                         final itm = _iconChoices[idx];
                         final isSel = _selectedIcon == itm['name'];
-                        return TactileSpringContainer(
-                          haptic: HapticType.selection,
-                          onTap: () => setState(
-                            () => _selectedIcon = itm['name'] as String,
-                          ),
-                          child: AnimatedContainer(
-                            duration: MotionTokens.durationExit,
-                            decoration: BoxDecoration(
-                              color: isSel
-                                  ? themeCol.withValues(alpha: 0.10)
-                                  : theme.colorScheme.surfaceContainerHigh,
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusCompact,
+                        return LayoutBuilder(
+                          builder: (context, constraints) {
+                            final size = constraints.maxWidth;
+                            return TactileSpringContainer(
+                              haptic: HapticType.selection,
+                              onTap: () => setState(
+                                () => _selectedIcon = itm['name'] as String,
                               ),
-                              border: Border.all(
-                                color: isSel
-                                    ? themeCol
-                                    : context.appColors.hairline,
-                                width: isSel ? 1.5 : 1,
-                              ),
-                            ),
-                            child: Icon(
-                              itm['icon'] as IconData,
-                              size: 19,
-                              color: isSel
-                                  ? themeCol
-                                  : theme.colorScheme.onSurface.withValues(
-                                      alpha: 0.6,
+                              child: AnimatedContainer(
+                                duration: MotionTokens.durationNormal,
+                                curve: Curves.easeOutCubic,
+                                decoration: BoxDecoration(
+                                  color: isSel
+                                      ? themeCol.withValues(alpha: 0.22)
+                                      : theme.colorScheme.surfaceContainerHigh,
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.squircleRadius(size),
+                                  ),
+                                  border: Border.all(
+                                    color: isSel
+                                        ? themeCol
+                                        : context.appColors.hairlineStrong,
+                                    width: isSel ? 2 : 1.2,
+                                  ),
+                                ),
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Icon(
+                                      itm['icon'] as IconData,
+                                      size: isSel ? 24 : 22,
+                                      color: isSel
+                                          ? themeCol
+                                          : theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.85),
                                     ),
-                            ),
-                          ),
+                                    if (isSel)
+                                      Positioned(
+                                        right: 2,
+                                        bottom: 2,
+                                        child: Container(
+                                          width: 13,
+                                          height: 13,
+                                          decoration: BoxDecoration(
+                                            color: themeCol,
+                                            borderRadius: BorderRadius.circular(
+                                              AppTheme.squircleRadius(13),
+                                            ),
+                                            border: Border.all(
+                                              color: theme.colorScheme.surface,
+                                              width: 1.5,
+                                            ),
+                                          ),
+                                          child: const Icon(
+                                            PesaFlowIcons.check,
+                                            size: 7.5,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
