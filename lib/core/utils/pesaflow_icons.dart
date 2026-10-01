@@ -2,81 +2,86 @@ import 'package:flutter/material.dart';
 
 /// Branded icon set for PesaFlow.
 /// Single source of truth — never use raw `Icons.xxx` in screens.
+///
+/// All icons use `_rounded` (filled) variants for maximum visibility at small
+/// sizes on both light and dark backgrounds. Outlined/stroked variants are
+/// intentionally avoided — they render as thin 1px paths that disappear on
+/// dark surfaces.
 class PesaFlowIcons {
   PesaFlowIcons._();
 
   // Navigation
-  static const IconData dashboard = Icons.dashboard_outlined;
-  static const IconData transactions = Icons.receipt_long_outlined;
-  static const IconData budgets = Icons.pie_chart_outline;
-  static const IconData savings = Icons.savings_outlined;
-  static const IconData loans = Icons.account_balance_outlined;
-  static const IconData subscriptions = Icons.repeat_outlined;
-  static const IconData settings = Icons.tune_outlined;
-  static const IconData analytics = Icons.leaderboard_outlined;
+  static const IconData dashboard = Icons.dashboard_rounded;
+  static const IconData transactions = Icons.receipt_long_rounded;
+  static const IconData budgets = Icons.pie_chart_rounded;
+  static const IconData savings = Icons.savings_rounded;
+  static const IconData loans = Icons.account_balance_rounded;
+  static const IconData subscriptions = Icons.repeat_rounded;
+  static const IconData settings = Icons.tune_rounded;
+  static const IconData analytics = Icons.leaderboard_rounded;
 
   // Actions
-  static const IconData add = Icons.add_circle_outline;
-  static const IconData edit = Icons.edit_outlined;
-  static const IconData delete = Icons.delete_outline;
+  static const IconData add = Icons.add_circle_rounded;
+  static const IconData edit = Icons.edit_rounded;
+  static const IconData delete = Icons.delete_rounded;
   static const IconData close = Icons.close;
-  static const IconData back = Icons.arrow_back_ios_new_outlined;
-  static const IconData more = Icons.more_horiz_outlined;
-  static const IconData search = Icons.search_outlined;
+  static const IconData back = Icons.arrow_back_ios_new_rounded;
+  static const IconData more = Icons.more_horiz_rounded;
+  static const IconData search = Icons.search_rounded;
   static const IconData menu = Icons.menu_rounded;
-  static const IconData filter = Icons.tune_outlined;
-  static const IconData visibility = Icons.visibility_outlined;
-  static const IconData visibilityOff = Icons.visibility_off_outlined;
-  static const IconData share = Icons.ios_share_outlined;
-  static const IconData upload = Icons.cloud_upload_outlined;
-  static const IconData download = Icons.cloud_download_outlined;
+  static const IconData filter = Icons.tune_rounded;
+  static const IconData visibility = Icons.visibility_rounded;
+  static const IconData visibilityOff = Icons.visibility_off_rounded;
+  static const IconData share = Icons.ios_share_rounded;
+  static const IconData upload = Icons.cloud_upload_rounded;
+  static const IconData download = Icons.cloud_download_rounded;
 
   // Finance
   static const IconData income = Icons.trending_up_rounded;
   static const IconData expense = Icons.trending_down_rounded;
   static const IconData transfer = Icons.swap_horiz_rounded;
-  static const IconData wallet = Icons.account_balance_wallet_outlined;
-  static const IconData cash = Icons.monetization_on_outlined;
-  static const IconData card = Icons.credit_card_outlined;
-  static const IconData percent = Icons.percent_outlined;
+  static const IconData wallet = Icons.account_balance_wallet_rounded;
+  static const IconData cash = Icons.monetization_on_rounded;
+  static const IconData card = Icons.credit_card_rounded;
+  static const IconData percent = Icons.percent_rounded;
   static const IconData chart = Icons.bar_chart_rounded;
-  static const IconData goal = Icons.flag_outlined;
+  static const IconData goal = Icons.flag_rounded;
   static const IconData celebration = Icons.celebration_rounded;
-  static const IconData target = Icons.track_changes_outlined;
+  static const IconData target = Icons.track_changes_rounded;
 
   // Status
   static const IconData success = Icons.check_circle_rounded;
-  static const IconData error = Icons.error_outline_rounded;
+  static const IconData error = Icons.error_rounded;
   static const IconData warning = Icons.warning_amber_rounded;
-  static const IconData info = Icons.info_outline_rounded;
-  static const IconData empty = Icons.inbox_outlined;
+  static const IconData info = Icons.info_rounded;
+  static const IconData empty = Icons.inbox_rounded;
 
   // Communication
-  static const IconData notification = Icons.notifications_outlined;
-  static const IconData lock = Icons.lock_outlined;
-  static const IconData biometric = Icons.fingerprint_outlined;
-  static const IconData sync = Icons.sync_outlined;
-  static const IconData offline = Icons.wifi_off_outlined;
+  static const IconData notification = Icons.notifications_rounded;
+  static const IconData lock = Icons.lock_rounded;
+  static const IconData biometric = Icons.fingerprint_rounded;
+  static const IconData sync = Icons.sync_rounded;
+  static const IconData offline = Icons.wifi_off_rounded;
 
   // Misc
-  static const IconData calendar = Icons.calendar_month_outlined;
-  static const IconData sort = Icons.sort_outlined;
-  static const IconData pdf = Icons.picture_as_pdf_outlined;
-  static const IconData csv = Icons.table_chart_outlined;
-  static const IconData backup = Icons.backup_outlined;
-  static const IconData lightbulb = Icons.lightbulb_outline_rounded;
-  static const IconData lightMode = Icons.light_mode_outlined;
-  static const IconData darkMode = Icons.dark_mode_outlined;
-  static const IconData phone = Icons.phone_outlined;
-  static const IconData category = Icons.category_outlined;
-  static const IconData security = Icons.shield_outlined;
-  static const IconData unlock = Icons.lock_open_outlined;
-  static const IconData pin = Icons.password_outlined;
-  static const IconData sms = Icons.sms_outlined;
-  static const IconData themeMode = Icons.brightness_medium_outlined;
-  static const IconData file = Icons.insert_drive_file_outlined;
+  static const IconData calendar = Icons.calendar_month_rounded;
+  static const IconData sort = Icons.sort_rounded;
+  static const IconData pdf = Icons.picture_as_pdf_rounded;
+  static const IconData csv = Icons.table_chart_rounded;
+  static const IconData backup = Icons.backup_rounded;
+  static const IconData lightbulb = Icons.lightbulb_rounded;
+  static const IconData lightMode = Icons.light_mode_rounded;
+  static const IconData darkMode = Icons.dark_mode_rounded;
+  static const IconData phone = Icons.phone_rounded;
+  static const IconData category = Icons.category_rounded;
+  static const IconData security = Icons.shield_rounded;
+  static const IconData unlock = Icons.lock_open_rounded;
+  static const IconData pin = Icons.password_rounded;
+  static const IconData sms = Icons.sms_rounded;
+  static const IconData themeMode = Icons.brightness_medium_rounded;
+  static const IconData file = Icons.insert_drive_file_rounded;
   static const IconData chevronRight = Icons.chevron_right_rounded;
-  static const IconData restore = Icons.history_outlined;
+  static const IconData restore = Icons.history_rounded;
 
   // Directions / Arrows
   static const IconData arrowUp = Icons.arrow_upward_rounded;
@@ -137,11 +142,11 @@ class PesaFlowIcons {
   static const IconData bolt = Icons.bolt_rounded;
   static const IconData key = Icons.key_rounded;
   static const IconData linkOff = Icons.link_off_rounded;
-  static const IconData palette = Icons.palette_outlined;
+  static const IconData palette = Icons.palette_rounded;
   static const IconData replay = Icons.replay_rounded;
   static const IconData upcoming = Icons.upcoming_rounded;
   static const IconData wifi = Icons.wifi_rounded;
-  static const IconData backspace = Icons.backspace_outlined;
+  static const IconData backspace = Icons.backspace_rounded;
 
   // Icon helpers / categories
   static const IconData work = Icons.work_rounded;

@@ -1049,7 +1049,12 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                                     height: 13,
                                                     decoration: BoxDecoration(
                                                       color: themeCol,
-                                                      shape: BoxShape.circle,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        AppTheme.squircleRadius(
+                                                          13,
+                                                        ),
+                                                      ),
                                                       border: Border.all(
                                                         color: theme
                                                             .colorScheme

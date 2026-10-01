@@ -216,7 +216,9 @@ Future<Category?> showAddCategoryDialog(
                                   height: 14,
                                   decoration: BoxDecoration(
                                     color: accentColor,
-                                    shape: BoxShape.circle,
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.squircleRadius(14),
+                                    ),
                                     border: Border.all(
                                       color: theme
                                           .colorScheme
