@@ -982,7 +982,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                       crossAxisCount: 6,
                                       mainAxisSpacing: kSpacing10,
                                       crossAxisSpacing: kSpacing8,
-                                      childAspectRatio: 0.75,
+                                      childAspectRatio: 0.72,
                                     ),
                                 itemBuilder: (context, i) {
                                   final item = _curatedIcons[i];
@@ -1001,28 +1001,28 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                         AnimatedContainer(
                                           duration: MotionTokens.durationNormal,
                                           curve: Curves.easeOutCubic,
-                                          width: 44,
-                                          height: 44,
+                                          width: isSelected ? 52 : 48,
+                                          height: isSelected ? 52 : 48,
                                           decoration: BoxDecoration(
                                             color: isSelected
                                                 ? themeCol.withValues(
-                                                    alpha: 0.18,
+                                                    alpha: 0.25,
                                                   )
-                                                : theme
-                                                      .colorScheme
-                                                      .surfaceContainerHighest
-                                                      .withValues(alpha: 0.55),
+                                                : theme.colorScheme
+                                                      .surfaceContainerHigh,
                                             borderRadius:
                                                 BorderRadius.circular(
-                                              AppTheme.squircleRadius(44),
+                                              AppTheme.squircleRadius(
+                                                isSelected ? 52 : 48,
+                                              ),
                                             ),
                                             border: Border.all(
                                               color: isSelected
-                                                  ? themeCol.withValues(
-                                                      alpha: 0.7,
-                                                    )
-                                                  : context.appColors.hairline,
-                                              width: isSelected ? 1.5 : 1,
+                                                  ? themeCol
+                                                  : context
+                                                        .appColors
+                                                        .hairlineStrong,
+                                              width: isSelected ? 2 : 1.5,
                                             ),
                                           ),
                                           child: Stack(
@@ -1030,29 +1030,29 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                             children: [
                                               Icon(
                                                 icon,
-                                                size: 20,
+                                                size: isSelected ? 24 : 22,
                                                 color: isSelected
                                                     ? themeCol
                                                     : theme
                                                           .colorScheme
                                                           .onSurface
                                                           .withValues(
-                                                            alpha: 0.7,
+                                                            alpha: 0.75,
                                                           ),
                                               ),
                                               if (isSelected)
                                                 Positioned(
-                                                  right: 1,
-                                                  bottom: 1,
+                                                  right: 2,
+                                                  bottom: 2,
                                                   child: Container(
-                                                    width: 13,
-                                                    height: 13,
+                                                    width: 14,
+                                                    height: 14,
                                                     decoration: BoxDecoration(
                                                       color: themeCol,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                         AppTheme.squircleRadius(
-                                                          13,
+                                                          14,
                                                         ),
                                                       ),
                                                       border: Border.all(
@@ -1064,7 +1064,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                                     ),
                                                     child: const Icon(
                                                       PesaFlowIcons.check,
-                                                      size: 7,
+                                                      size: 8,
                                                       color: Colors.white,
                                                     ),
                                                   ),
