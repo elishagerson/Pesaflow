@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
-import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
-import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
-import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
-import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
-import 'package:pesaflow/core/utils/spacing.dart';
-import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class SavingsGoalFormSheet extends ConsumerStatefulWidget {
   final SavingsGoal? existingGoal;
@@ -38,23 +38,23 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
   late DateTime _selectedDate;
   bool _isLoading = false;
 
-  // Curated 12-icon squircle grid
+  // Curated 12-icon squircle grid with labels
   static const List<Map<String, dynamic>> _iconChoices = [
     {'name': 'savings', 'icon': PesaFlowIcons.savings, 'label': 'Savings'},
-    {'name': 'target', 'icon': PesaFlowIcons.target, 'label': 'Target'},
-    {'name': 'wallet', 'icon': PesaFlowIcons.wallet, 'label': 'Wallet'},
+    {'name': 'target', 'icon': PesaFlowIcons.target, 'label': 'Milestone'},
+    {'name': 'wallet', 'icon': PesaFlowIcons.wallet, 'label': 'Reserve'},
     {'name': 'home', 'icon': PesaFlowIcons.home, 'label': 'Home'},
-    {'name': 'car', 'icon': PesaFlowIcons.car, 'label': 'Car'},
+    {'name': 'car', 'icon': PesaFlowIcons.car, 'label': 'Vehicle'},
     {'name': 'flight', 'icon': PesaFlowIcons.flight, 'label': 'Travel'},
     {'name': 'laptop', 'icon': PesaFlowIcons.laptop, 'label': 'Tech'},
-    {'name': 'phone', 'icon': PesaFlowIcons.phone, 'label': 'Phone'},
-    {'name': 'school', 'icon': PesaFlowIcons.school, 'label': 'Education'},
+    {'name': 'phone', 'icon': PesaFlowIcons.phone, 'label': 'Device'},
+    {'name': 'school', 'icon': PesaFlowIcons.school, 'label': 'Study'},
     {'name': 'business', 'icon': PesaFlowIcons.business, 'label': 'Business'},
     {'name': 'heart', 'icon': PesaFlowIcons.heart, 'label': 'Health'},
     {'name': 'gift', 'icon': PesaFlowIcons.gift, 'label': 'Gift'},
   ];
 
-  // Goal starter templates
+  // Tanzanian milestone starter templates
   static final List<Map<String, dynamic>> _goalTemplates = [
     {
       'title': 'Emergency Fund',
@@ -71,6 +71,27 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
       'icon': 'flight',
     },
     {
+      'title': 'Land & Construction',
+      'amount': 10000000,
+      'months': 12,
+      'color': AppTheme.goalPalette[6],
+      'icon': 'home',
+    },
+    {
+      'title': 'Business Capital',
+      'amount': 5000000,
+      'months': 6,
+      'color': AppTheme.goalPalette[1],
+      'icon': 'business',
+    },
+    {
+      'title': 'Education Tuition',
+      'amount': 2500000,
+      'months': 8,
+      'color': AppTheme.goalPalette[3],
+      'icon': 'school',
+    },
+    {
       'title': 'New Vehicle',
       'amount': 8000000,
       'months': 12,
@@ -79,23 +100,16 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
     },
     {
       'title': 'Tech Upgrade',
-      'amount': 3000000,
+      'amount': 2500000,
       'months': 4,
       'color': AppTheme.goalPalette[2],
       'icon': 'laptop',
     },
     {
-      'title': 'Education',
-      'amount': 2500000,
-      'months': 8,
-      'color': AppTheme.goalPalette[3],
-      'icon': 'school',
-    },
-    {
       'title': 'Special Event',
-      'amount': 1000000,
+      'amount': 1200000,
       'months': 2,
-      'color': AppTheme.goalPalette[4],
+      'color': AppTheme.goalPalette[5],
       'icon': 'gift',
     },
   ];
@@ -277,7 +291,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom + kSpacing20,
       ),
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.9,
+        maxHeight: MediaQuery.of(context).size.height * 0.92,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -363,7 +377,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── Live Goal Card Preview ──
+                    // ── Executive Live Milestone Projection Card ──
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(kSpacing16),
@@ -372,7 +386,10 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         borderRadius: BorderRadius.circular(
                           AppTheme.radiusCard,
                         ),
-                        border: Border.all(color: context.appColors.hairline),
+                        border: Border.all(
+                          color: context.appColors.hairlineStrong,
+                          width: 1.2,
+                        ),
                         boxShadow: [
                           BoxShadow(
                             color: context.appColors.shadowSubtle,
@@ -388,21 +405,25 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             children: [
                               AnimatedContainer(
                                 duration: MotionTokens.durationNormal,
-                                width: 44,
-                                height: 44,
+                                curve: Curves.easeOutCubic,
+                                width: 50,
+                                height: 50,
                                 decoration: BoxDecoration(
-                                  color: themeCol.withValues(alpha: 0.12),
+                                  color: themeCol.withValues(alpha: 0.16),
                                   borderRadius: BorderRadius.circular(
-                                    AppTheme.radiusInput,
+                                    AppTheme.squircleRadius(50),
                                   ),
                                   border: Border.all(
-                                    color: themeCol.withValues(alpha: 0.18),
+                                    color: themeCol.withValues(alpha: 0.35),
+                                    width: 1.5,
                                   ),
                                 ),
-                                child: Icon(
-                                  getGoalIcon(_selectedIcon),
-                                  color: themeCol,
-                                  size: 22,
+                                child: Center(
+                                  child: Icon(
+                                    getGoalIcon(_selectedIcon),
+                                    color: themeCol,
+                                    size: 24,
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: kSpacing12),
@@ -415,7 +436,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: context.ts(
-                                        15,
+                                        16,
                                         fontWeight: FontWeight.w700,
                                         color: theme.colorScheme.onSurface,
                                       ),
@@ -423,10 +444,12 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                     const SizedBox(height: 2),
                                     Text(
                                       'Target: $_targetAmountFormatted',
-                                      style: context.ts(
-                                        12,
-                                        fontWeight: FontWeight.w600,
-                                        color: context.appColors.textMedium,
+                                      style: AppTheme.getMonospaceStyle(
+                                        context.ts(
+                                          13,
+                                          fontWeight: FontWeight.w700,
+                                          color: themeCol,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -443,7 +466,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                     AppTheme.radiusPill,
                                   ),
                                   border: Border.all(
-                                    color: context.appColors.hairline,
+                                    color: context.appColors.hairlineStrong,
                                   ),
                                 ),
                                 child: Row(
@@ -471,24 +494,27 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             ],
                           ),
                           if (paceInsight.isNotEmpty) ...[
-                            const SizedBox(height: kSpacing10),
+                            const SizedBox(height: kSpacing12),
                             Container(
                               width: double.infinity,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 10,
-                                vertical: 6,
+                                vertical: 7,
                               ),
                               decoration: BoxDecoration(
                                 color: themeCol.withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(
-                                  AppTheme.radiusSmall,
+                                  AppTheme.radiusCompact,
+                                ),
+                                border: Border.all(
+                                  color: themeCol.withValues(alpha: 0.15),
                                 ),
                               ),
                               child: Row(
                                 children: [
                                   Icon(
                                     PesaFlowIcons.income,
-                                    size: 12,
+                                    size: 13,
                                     color: themeCol,
                                   ),
                                   const SizedBox(width: kSpacing6),
@@ -498,7 +524,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                       style: context.ts(
                                         11,
                                         fontWeight: FontWeight.w600,
-                                        color: context.appColors.textMedium,
+                                        color: theme.colorScheme.onSurface,
                                       ),
                                     ),
                                   ),
@@ -535,7 +561,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       ),
                       const SizedBox(height: kSpacing8),
                       SizedBox(
-                        height: 32,
+                        height: 36,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: _goalTemplates.length,
@@ -544,6 +570,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           itemBuilder: (context, index) {
                             final tmpl = _goalTemplates[index];
                             final tmplCol = hexToColor(tmpl['color'] as String);
+                            final tmplAmount = CurrencyFormatter.formatCents(
+                              (tmpl['amount'] as int) * 100,
+                            );
                             return TactileSpringContainer(
                               haptic: HapticType.selection,
                               onTap: () => _applyTemplate(tmpl),
@@ -558,24 +587,42 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                     AppTheme.radiusPill,
                                   ),
                                   border: Border.all(
-                                    color: context.appColors.hairline,
+                                    color: context.appColors.hairlineStrong,
                                   ),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(
-                                      getGoalIcon(tmpl['icon'] as String),
-                                      size: 13,
-                                      color: tmplCol,
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: tmplCol.withValues(alpha: 0.18),
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.squircleRadius(20),
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        getGoalIcon(tmpl['icon'] as String),
+                                        size: 11,
+                                        color: tmplCol,
+                                      ),
                                     ),
-                                    const SizedBox(width: kSpacing5),
+                                    const SizedBox(width: kSpacing6),
                                     Text(
                                       tmpl['title'] as String,
                                       style: context.ts(
                                         11,
                                         fontWeight: FontWeight.w600,
                                         color: theme.colorScheme.onSurface,
+                                      ),
+                                    ),
+                                    const SizedBox(width: kSpacing4),
+                                    Text(
+                                      '• $tmplAmount',
+                                      style: context.ts(
+                                        10,
+                                        color: context.appColors.textMedium,
                                       ),
                                     ),
                                   ],
@@ -608,7 +655,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         color: theme.colorScheme.onSurface,
                       ),
                       decoration: context.inputDecoration(
-                        hintText: 'e.g. Emergency Fund, New Laptop',
+                        hintText: 'e.g. Land Plot, Business Capital',
                         prefixIcon: Icon(
                           PesaFlowIcons.title,
                           size: 18,
@@ -640,10 +687,12 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         if (_amountController.text.isNotEmpty)
                           Text(
                             _targetAmountFormatted,
-                            style: context.ts(
-                              12,
-                              fontWeight: FontWeight.w700,
-                              color: theme.colorScheme.onSurface,
+                            style: AppTheme.getMonospaceStyle(
+                              context.ts(
+                                12,
+                                fontWeight: FontWeight.w700,
+                                color: themeCol,
+                              ),
                             ),
                           ),
                       ],
@@ -718,6 +767,12 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           ),
                           const SizedBox(width: kSpacing6),
                           _buildIncrementPill(
+                            label: '+250K',
+                            onTap: () => _addAmount(25000000),
+                            theme: theme,
+                          ),
+                          const SizedBox(width: kSpacing6),
+                          _buildIncrementPill(
                             label: '+500K',
                             onTap: () => _addAmount(50000000),
                             theme: theme,
@@ -730,9 +785,25 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           ),
                           const SizedBox(width: kSpacing6),
                           _buildIncrementPill(
+                            label: '+2M',
+                            onTap: () => _addAmount(200000000),
+                            theme: theme,
+                          ),
+                          const SizedBox(width: kSpacing6),
+                          _buildIncrementPill(
                             label: '+5M',
                             onTap: () => _addAmount(500000000),
                             theme: theme,
+                          ),
+                          const SizedBox(width: kSpacing6),
+                          _buildIncrementPill(
+                            label: 'Clear',
+                            onTap: () {
+                              _amountController.clear();
+                              setState(() {});
+                            },
+                            theme: theme,
+                            isClear: true,
                           ),
                         ],
                       ),
@@ -774,7 +845,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       lastDate: DateTime(2045),
                       onChanged: (d) => setState(() => _selectedDate = d),
                     ),
-                    const SizedBox(height: kSpacing6),
+                    const SizedBox(height: kSpacing8),
 
                     // Horizon Presets
                     SingleChildScrollView(
@@ -785,30 +856,42 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             label: '1 Mo',
                             months: 1,
                             theme: theme,
+                            activeColor: themeCol,
                           ),
                           const SizedBox(width: kSpacing6),
                           _buildHorizonChip(
                             label: '3 Mos',
                             months: 3,
                             theme: theme,
+                            activeColor: themeCol,
                           ),
                           const SizedBox(width: kSpacing6),
                           _buildHorizonChip(
                             label: '6 Mos',
                             months: 6,
                             theme: theme,
+                            activeColor: themeCol,
                           ),
                           const SizedBox(width: kSpacing6),
                           _buildHorizonChip(
                             label: '1 Yr',
                             months: 12,
                             theme: theme,
+                            activeColor: themeCol,
                           ),
                           const SizedBox(width: kSpacing6),
                           _buildHorizonChip(
                             label: '2 Yrs',
                             months: 24,
                             theme: theme,
+                            activeColor: themeCol,
+                          ),
+                          const SizedBox(width: kSpacing6),
+                          _buildHorizonChip(
+                            label: '3 Yrs',
+                            months: 36,
+                            theme: theme,
+                            activeColor: themeCol,
                           ),
                         ],
                       ),
@@ -837,7 +920,8 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           haptic: HapticType.selection,
                           onTap: () => setState(() => _selectedColor = hex),
                           child: AnimatedContainer(
-                            duration: MotionTokens.durationExit,
+                            duration: MotionTokens.durationNormal,
+                            curve: Curves.easeOutCubic,
                             width: isSel ? 36 : 30,
                             height: isSel ? 36 : 30,
                             decoration: BoxDecoration(
@@ -848,7 +932,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               border: Border.all(
                                 color: isSel
                                     ? theme.colorScheme.onSurface
-                                    : context.appColors.hairline,
+                                    : context.appColors.hairlineStrong,
                                 width: isSel ? 2 : 1,
                               ),
                             ),
@@ -872,15 +956,28 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
 
                     const SizedBox(height: kSpacing18),
 
-                    // ── Visual Identity: Icon Squircle Grid ──
-                    Text(
-                      'GOAL ICON',
-                      style: context.ts(
-                        11,
-                        fontWeight: FontWeight.w600,
-                        color: context.appColors.sectionHeader,
-                        letterSpacing: 0.6,
-                      ),
+                    // ── Visual Identity: Redesigned Squircle Icons Grid ──
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'GOAL ICON',
+                          style: context.ts(
+                            11,
+                            fontWeight: FontWeight.w600,
+                            color: context.appColors.sectionHeader,
+                            letterSpacing: 0.6,
+                          ),
+                        ),
+                        Text(
+                          'SELECT VISUAL BADGE',
+                          style: context.ts(
+                            10,
+                            color: context.appColors.textLow,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: kSpacing8),
                     GridView.builder(
@@ -891,29 +988,35 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 6,
                             crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
-                            childAspectRatio: 1,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 0.74,
                           ),
                       itemBuilder: (context, idx) {
                         final itm = _iconChoices[idx];
-                        final isSel = _selectedIcon == itm['name'];
-                        return LayoutBuilder(
-                          builder: (context, constraints) {
-                            final size = constraints.maxWidth;
-                            return TactileSpringContainer(
-                              haptic: HapticType.selection,
-                              onTap: () => setState(
-                                () => _selectedIcon = itm['name'] as String,
-                              ),
-                              child: AnimatedContainer(
+                        final name = itm['name'] as String;
+                        final label = itm['label'] as String;
+                        final icon = itm['icon'] as IconData;
+                        final isSel = _selectedIcon == name;
+
+                        return GestureDetector(
+                          onTap: () {
+                            PesaHaptics.selection();
+                            setState(() => _selectedIcon = name);
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AnimatedContainer(
                                 duration: MotionTokens.durationNormal,
                                 curve: Curves.easeOutCubic,
+                                width: isSel ? 50 : 46,
+                                height: isSel ? 50 : 46,
                                 decoration: BoxDecoration(
                                   color: isSel
                                       ? themeCol.withValues(alpha: 0.22)
                                       : theme.colorScheme.surfaceContainerHigh,
                                   borderRadius: BorderRadius.circular(
-                                    AppTheme.squircleRadius(size),
+                                    AppTheme.squircleRadius(isSel ? 50 : 46),
                                   ),
                                   border: Border.all(
                                     color: isSel
@@ -926,7 +1029,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                   alignment: Alignment.center,
                                   children: [
                                     Icon(
-                                      itm['icon'] as IconData,
+                                      icon,
                                       size: isSel ? 24 : 22,
                                       color: isSel
                                           ? themeCol
@@ -960,8 +1063,25 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                   ],
                                 ),
                               ),
-                            );
-                          },
+                              const SizedBox(height: kSpacing4),
+                              Text(
+                                label,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: context.ts(
+                                  10,
+                                  fontWeight: isSel
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                  color: isSel
+                                      ? theme.colorScheme.onSurface
+                                      : theme.colorScheme.onSurface.withValues(
+                                          alpha: 0.65,
+                                        ),
+                                ),
+                              ),
+                            ],
+                          ),
                         );
                       },
                     ),
@@ -971,7 +1091,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                     // ── Submit Action Button ──
                     SizedBox(
                       width: double.infinity,
-                      height: 48,
+                      height: 50,
                       child: TactileSpringContainer(
                         haptic: HapticType.success,
                         onTap: _isLoading ? null : _save,
@@ -984,7 +1104,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: context.appColors.shadowMedium,
+                                color: themeCol.withValues(alpha: 0.35),
                                 blurRadius: 14,
                                 offset: const Offset(0, 4),
                               ),
@@ -1039,6 +1159,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
     required String label,
     required VoidCallback onTap,
     required ThemeData theme,
+    bool isClear = false,
   }) {
     return TactileSpringContainer(
       haptic: HapticType.selection,
@@ -1046,19 +1167,27 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: kSpacing10,
-          vertical: kSpacing5,
+          vertical: kSpacing6,
         ),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHigh,
+          color: isClear
+              ? context.appColors.expenseColor.withValues(alpha: 0.1)
+              : theme.colorScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-          border: Border.all(color: context.appColors.hairline),
+          border: Border.all(
+            color: isClear
+                ? context.appColors.expenseColor.withValues(alpha: 0.3)
+                : context.appColors.hairlineStrong,
+          ),
         ),
         child: Text(
           label,
           style: context.ts(
             11,
             fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.75),
+            color: isClear
+                ? context.appColors.expenseColor
+                : theme.colorScheme.onSurface.withValues(alpha: 0.8),
           ),
         ),
       ),
@@ -1069,6 +1198,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
     required String label,
     required int months,
     required ThemeData theme,
+    required Color activeColor,
   }) {
     final now = DateTime.now();
     final diffDays = _selectedDate.difference(now).inDays;
@@ -1080,18 +1210,18 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: kSpacing10,
-          vertical: kSpacing5,
+          vertical: kSpacing6,
         ),
         decoration: BoxDecoration(
           color: isMatching
-              ? theme.colorScheme.primary.withValues(alpha: 0.12)
+              ? activeColor.withValues(alpha: 0.15)
               : theme.colorScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
           border: Border.all(
             color: isMatching
-                ? theme.colorScheme.primary
-                : context.appColors.hairline,
-            width: isMatching ? 1.4 : 1,
+                ? activeColor
+                : context.appColors.hairlineStrong,
+            width: isMatching ? 1.5 : 1,
           ),
         ),
         child: Text(
@@ -1100,7 +1230,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
             11,
             fontWeight: FontWeight.w600,
             color: isMatching
-                ? theme.colorScheme.primary
+                ? theme.colorScheme.onSurface
                 : theme.colorScheme.onSurface.withValues(alpha: 0.75),
           ),
         ),

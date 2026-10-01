@@ -119,6 +119,8 @@ IconData getGoalIcon(String iconName) {
     case 'savings':
       return PesaFlowIcons.savings;
     case 'laptop':
+    case 'tech':
+    case 'devices':
       return PesaFlowIcons.laptop;
     case 'flight':
     case 'travel':
@@ -126,10 +128,13 @@ IconData getGoalIcon(String iconName) {
     case 'home':
       return PesaFlowIcons.home;
     case 'car':
+    case 'vehicle':
       return PesaFlowIcons.car;
     case 'school':
+    case 'education':
       return PesaFlowIcons.school;
     case 'heart':
+    case 'health':
       return PesaFlowIcons.heart;
     case 'gift':
       return PesaFlowIcons.gift;
