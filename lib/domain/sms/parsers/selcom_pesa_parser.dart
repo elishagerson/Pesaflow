@@ -23,8 +23,10 @@ class SelcomPesaParser implements SmsParser {
     if (match != null) return match.group(1) ?? '';
 
     // Swahili: [reference] Imethibitishwa (Confirmed)
+    // Require at least 6 alphanumeric chars to avoid capturing ordinary
+    // Swahili words (e.g. "Muamala") as a transaction reference.
     final swaConfirmRegex = RegExp(
-      r'([A-Za-z0-9]+)\s+Imethibitishwa',
+      r'([A-Za-z0-9]{6,})\s+Imethibitishwa',
       caseSensitive: false,
     );
     final swaConfirmMatch = swaConfirmRegex.firstMatch(text);
@@ -120,6 +122,28 @@ class SelcomPesaParser implements SmsParser {
       }
 
       // ========== Swahili-format patterns (legacy) ==========
+
+      // Guard: reject SMS that clearly belongs to another provider.
+      // The main misrouting vector (IMETHIBITISHWA in ProviderMatcher) has been
+      // fixed, but as defense-in-depth, check for strong ownership signals from
+      // other providers before falling through to these broad Swahili patterns.
+      // Only check wallet/balance ownership keywords (not counterparty names,
+      // since cross-network transfers mention the other network in sender names).
+      final upperText = text.toUpperCase();
+      const otherProviderSignals = [
+        'NEW M-PESA BALANCE',
+        'M-PESA BALANCE',
+        'AIRTEL MONEY BALANCE',
+        'NEW MIXX BALANCE',
+        'NEW MIXX BALANCE IS',
+        'HALOPESA BALANCE',
+        'NMB KARIBU',
+        'CRDB:',
+        'NBC:',
+      ];
+      for (final signal in otherProviderSignals) {
+        if (upperText.contains(signal)) return null;
+      }
 
       // 3. Swahili/Fallback: Amount Extraction — require currency prefix
       final amtRegex = RegExp(

@@ -475,18 +475,13 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       );
       await update(transactions).replace(updated);
 
-      // The insert path already applied this transaction's balance movement, so a
-      // computed delta must NOT be applied again here — that is what double-counted
-      // the amount on approval. Only a carrier-reported `balanceAfter` is re-asserted,
-      // because that is an absolute ground-truth value rather than a delta, so
-      // re-applying it is idempotent and re-syncs the account to the carrier.
-      final balanceAfter = updated.balanceAfter;
-      final acctId = updated.accountId;
-      if (balanceAfter == null || acctId == null) return;
-      final acctQ = select(accounts)..where((t) => t.id.equals(acctId));
-      final acct = await acctQ.getSingleOrNull();
-      if (acct == null) return;
-      await update(accounts).replace(acct.copyWith(balance: balanceAfter));
+      // The insert path (writeTransactionWithBalanceAdjustment) already applied
+      // this transaction's balance movement — including setting the carrier's
+      // absolute balanceAfter as ground truth. Re-asserting balanceAfter here
+      // would overwrite the current account balance with a stale value from the
+      // original SMS timestamp, erasing all subsequent transaction movements
+      // that have occurred since. Approval only flips the source field and
+      // optionally updates the category — no balance change is needed.
     });
   }
 

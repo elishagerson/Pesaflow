@@ -64,13 +64,24 @@ class NmbBankParser implements SmsParser {
   }
 
   int? _extractBalance(String text) {
-    final regex = RegExp(
+    // Swahili: Salio: TZS X
+    final swaRegex = RegExp(
       r'Salio:\s*(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)',
       caseSensitive: false,
     );
-    final match = regex.firstMatch(text);
-    if (match != null) {
-      return parseAmount(match.group(1) ?? '');
+    final swaMatch = swaRegex.firstMatch(text);
+    if (swaMatch != null) {
+      return parseAmount(swaMatch.group(1) ?? '');
+    }
+
+    // English: Balance/Bal/Available: TZS X
+    final engRegex = RegExp(
+      r'(?:Balance|Bal|Available):\s*(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final engMatch = engRegex.firstMatch(text);
+    if (engMatch != null) {
+      return parseAmount(engMatch.group(1) ?? '');
     }
     return null;
   }
@@ -139,7 +150,7 @@ class NmbBankParser implements SmsParser {
       // 3b. Credit (income) — "umepokea" variant (no "kiasi cha", "kutoka kwa")
       // "Ndugu ELISHA GERSON NDUNDULU, umepokea TZS 5,000,000.00 kwenye akaunti inayoishia 1222 kutoka kwa ALEX SAMWEL MAPUNDA, 27-AUG-2026 17:29:15. Kumb: 610FTIT262391237. NMB Karibu Yako."
       match = RegExp(
-        r'umepokea\s+(?:TSH|TZS)\s*([\d,]+(?:\.\d+)?)\s+kwenye\s+akaunti\s+inayoishia\s+\d+\s+kutoka\s+kwa\s+(.+?)(?:,\s*\d{2}|\.\s*27|\.$|$)',
+        r'umepokea\s+(?:TSH|TZS)\s*([\d,]+(?:\.\d+)?)\s+kwenye\s+akaunti\s+inayoishia\s+\d+\s+kutoka\s+kwa\s+(.+?)(?:,\s*\d{1,2}[-\s]|\.\s*\d{1,2}[-\s]|\.$|$)',
         caseSensitive: false,
       ).firstMatch(text);
       if (match != null) {

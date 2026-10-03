@@ -71,12 +71,15 @@ class GenericFallbackParser implements SmsParser {
   }
 
   static int _extractFirstAmount(String text) {
-    // Require a currency prefix (Tsh, TZS, /=) to avoid matching dates/phone numbers
-    final regex = RegExp(
-      r'(?:Tsh|TZS|TSh|Tshs|\d+\/=)\s*([\d,]+(?:\.[\d]{2})?)',
+    // Pattern 1: currency prefix (Tsh, TZS, etc.)
+    final prefixRegex = RegExp(
+      r'(?:Tsh|TZS|TSh|Tshs)\s*([\d,]+(?:\.\d{2})?)',
       caseSensitive: false,
     );
-    final match = regex.firstMatch(text);
+    // Pattern 2: amount followed by /= suffix (Tanzanian notation, e.g. "5,000/=")
+    // Separate from the prefix pattern because /= appears AFTER the amount.
+    final slashEqRegex = RegExp(r'([\d,]+(?:\.\d{2})?)\/=');
+    final match = prefixRegex.firstMatch(text) ?? slashEqRegex.firstMatch(text);
     if (match == null) return 0;
     final val = match.group(1);
     if (val == null) return 0;
@@ -180,7 +183,7 @@ class GenericFallbackParser implements SmsParser {
   static int? _extractAnyBalance(String text) {
     // Require a balance keyword before the number to avoid picking up the transaction amount
     final regex = RegExp(
-      r'(?:Salio|Balance|New balance|Bal)[:\s]*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      r'(?:Salio|Balance|New balance|Bal)[:\s]*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.\d{2})?)',
       caseSensitive: false,
     );
     final match = regex.firstMatch(text);

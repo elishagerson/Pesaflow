@@ -79,7 +79,8 @@ class ProviderMatcher {
           upperBody.contains('NMB:') ||
           upperBody.contains('KIMETUMWA') ||
           upperBody.contains('KIMEWEKWA') ||
-          upperBody.contains('TUMEKUTOA')) {
+          upperBody.contains('TUMEKUTOA') ||
+          upperBody.contains('AKAUNTI INAYOISHIA')) {
         return 'NMB_Bank';
       }
       if (upperBody.contains('CRDB:')) {
@@ -169,7 +170,6 @@ class ProviderMatcher {
   static const _selcomOwnership = [
     'SELCOM PESA',
     'SELCOMPESA',
-    'IMETHIBITISHWA', // Selcom-specific Swahili confirmation
     'SELCOM WALLET',
   ];
 

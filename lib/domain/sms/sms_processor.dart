@@ -379,6 +379,11 @@ class SmsProcessor {
           finalDestinationAccountId = targetAccount.id;
           finalDescription =
               'Transfer from ${matchedOwnAccount.name} to ${targetAccount.name}';
+          // sms.balanceAfter is the carrier-reported balance for targetAccount
+          // (the destination), NOT for matchedOwnAccount (the source). Setting
+          // it on the transaction would corrupt matchedOwnAccount's balance in
+          // writeTransactionWithBalanceAdjustment. We null it here and
+          // reconcile targetAccount's balance separately after persisting.
         } else {
           finalAccountId = targetAccount.id;
           finalDestinationAccountId = matchedOwnAccount.id;
@@ -524,13 +529,32 @@ class SmsProcessor {
         reference: sms.reference,
         rawSms: sms.rawSmsBody,
         smsTimestamp: sms.timestamp,
-        balanceAfter: sms.balanceAfter,
+        // For income-to-transfer swaps, balanceAfter belongs to targetAccount
+        // (the destination), not the source account. Null it out to avoid
+        // corrupting the source account's balance. We reconcile the
+        // destination's balance separately below.
+        balanceAfter: (finalType == 'transfer' && sms.type == 'income')
+            ? null
+            : sms.balanceAfter,
         source: source,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
 
       await _transactionRepo.createTransaction(transaction);
+
+      // Reconcile targetAccount's balance for income-to-transfer swaps.
+      // The carrier-reported balance from the SMS belongs to targetAccount,
+      // which is now the destination — the DAO only credits it with a delta.
+      // We need to assert the absolute carrier balance separately.
+      if (finalType == 'transfer' &&
+          sms.type == 'income' &&
+          sms.balanceAfter != null) {
+        final reconciledAccount = targetAccount.copyWith(
+          balance: sms.balanceAfter!,
+        );
+        await _accountRepo.updateAccount(reconciledAccount);
+      }
 
       // Create separate fee transaction if SMS includes a tariff/fee amount
       // ONLY when SMS does NOT provide balanceAfter (carrier balance is authoritative and includes fees).
@@ -544,10 +568,10 @@ class SmsProcessor {
           trackerId: activeTrackerId,
           amount: sms.feeAmount!,
           type: 'fee',
-          description: 'NMB Transaction Tariff',
+          description: 'Transaction Fee',
           provider: sms.provider,
           sender: null,
-          recipient: 'NMB Bank Fee',
+          recipient: '${sms.provider} Fee',
           reference: '${sms.reference}-FEE',
           rawSms: sms.rawSmsBody,
           smsTimestamp: sms.timestamp,
@@ -558,7 +582,7 @@ class SmsProcessor {
         );
         await _transactionRepo.createTransaction(feeTransaction);
         developer.log(
-          'Created NMB tariff fee transaction: ${sms.feeAmount} cents',
+          'Created ${sms.provider} fee transaction: ${sms.feeAmount} cents',
           name: 'SmsProcessor',
         );
       }
