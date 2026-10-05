@@ -1000,6 +1000,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         Positioned(
           left: -9999,
           top: -9999,
+          width: 360,
           // These four are not part of the dashboard. They are stand-ins for
           // surfaces the launcher draws at a fixed size, with their own
           // typography, and they are only ever read as pixels for the capture.

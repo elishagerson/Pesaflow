@@ -130,19 +130,27 @@ class WidgetHeatmap extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'SPENDING ACTIVITY',
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.2,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                Flexible(
+                  child: Text(
+                    'SPENDING ACTIVITY',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.0,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                    ),
                   ),
                 ),
-                Text(
-                  totalStr,
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: appColors.expenseColor,
+                const SizedBox(width: kSpacing8),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    totalStr,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: appColors.expenseColor,
+                    ),
                   ),
                 ),
               ],
@@ -250,11 +258,15 @@ class WidgetSafeToSpend extends StatelessWidget {
               ),
             ),
             const SizedBox(height: kSpacing8),
-            Text(
-              remainingStr,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w900,
-                color: theme.colorScheme.onSurface,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                remainingStr,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: theme.colorScheme.onSurface,
+                ),
               ),
             ),
             const Spacer(),
