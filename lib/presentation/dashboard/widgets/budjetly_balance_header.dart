@@ -169,6 +169,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
 
     return PesaSurface.bleed(
       radius: BudjetlyBalanceHeader.radius,
+      edgeLight: true,
       // With the hairline and the shadow gone, the gradient is the only thing
       // giving the surface a top and a bottom. It stays in the slate family so
       // it does not compete with the numbers.
@@ -199,6 +200,30 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
       semanticLabel: 'Account balance and monthly cash flow',
       child: Stack(
         children: [
+          // Ambient glow behind the balance number
+          Positioned(
+            left: 10,
+            top: 36,
+            child: IgnorePointer(
+              child: Container(
+                width: 220,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: (isNegative
+                              ? theme.colorScheme.error
+                              : context.appColors.brandColor)
+                          .withValues(alpha: context.isDark ? 0.22 : 0.08),
+                      blurRadius: 55,
+                      spreadRadius: 8,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           // Ambient gradient shimmer sweep (neutral, non-distracting)
           if (!context.isReducedMotion)
             AnimatedBuilder(
@@ -358,10 +383,18 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
               ),
               const SizedBox(height: kSpacing18),
 
-              Divider(
+              // Gradient hairline divider
+              Container(
                 height: 1,
-                thickness: 0.8,
-                color: context.appColors.hairline,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      context.appColors.hairline.withValues(alpha: 0.15),
+                      context.appColors.hairline,
+                      context.appColors.hairline.withValues(alpha: 0.15),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: kSpacing14),
 
@@ -380,11 +413,21 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                       isNegative: false,
                     ),
                   ),
-                  // Vertical divider
+                  // Vertical gradient divider
                   Container(
                     width: 1,
-                    height: 28,
-                    color: context.appColors.hairline,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          context.appColors.hairline.withValues(alpha: 0.1),
+                          context.appColors.hairline,
+                          context.appColors.hairline.withValues(alpha: 0.1),
+                        ],
+                      ),
+                    ),
                     margin: const EdgeInsets.symmetric(horizontal: kSpacing12),
                   ),
                   // Total Out
@@ -403,10 +446,17 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
               ),
               if (widget.footer != null) ...[
                 const SizedBox(height: kSpacing14),
-                Divider(
+                Container(
                   height: 1,
-                  thickness: 0.8,
-                  color: context.appColors.hairline,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        context.appColors.hairline.withValues(alpha: 0.15),
+                        context.appColors.hairline,
+                        context.appColors.hairline.withValues(alpha: 0.15),
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(height: kSpacing14),
                 SizedBox(height: widget.footerHeight, child: widget.footer),
@@ -432,14 +482,18 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
     return Row(
       children: [
         Container(
-          width: 28,
-          height: 28,
+          width: 32,
+          height: 32,
           decoration: BoxDecoration(
-            color: accent.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(AppTheme.squircleRadius(28)),
+            color: accent.withValues(alpha: context.isDark ? 0.14 : 0.09),
+            borderRadius: BorderRadius.circular(AppTheme.squircleRadius(32)),
+            border: Border.all(
+              color: accent.withValues(alpha: context.isDark ? 0.25 : 0.15),
+              width: 1,
+            ),
           ),
           alignment: Alignment.center,
-          child: Icon(icon, size: 14, color: accent),
+          child: Icon(icon, size: 15, color: accent),
         ),
         const SizedBox(width: kSpacing10),
         Expanded(
@@ -448,17 +502,18 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
             children: [
               Text(
                 label,
-                style: context.appTypography.labelMicro.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                style: context.appTypography.eyebrow.copyWith(
+                  fontSize: 10,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 1),
+              const SizedBox(height: 2),
               Text(
                 value,
                 style: context.ts(
-                  13,
+                  14,
                   fontWeight: FontWeight.w700,
                   color: isNegative
                       ? theme.colorScheme.error
