@@ -96,6 +96,7 @@ class PesaSurface extends StatelessWidget {
     double radius = AppTheme.radiusHero,
     EdgeInsetsGeometry padding = EdgeInsets.zero,
     bool clipContent = true,
+    bool edgeLight = false,
     VoidCallback? onTap,
     String? semanticLabel,
   }) {
@@ -105,7 +106,7 @@ class PesaSurface extends StatelessWidget {
       stroke: const Color(0x00000000),
       shadows: const [],
       glow: 0,
-      edgeLight: false,
+      edgeLight: edgeLight,
       fill: fill,
       background: background,
       radius: radius,
@@ -171,6 +172,40 @@ class PesaSurface extends StatelessWidget {
       stroke: stroke,
       background: background,
       radius: radius,
+      shadows: shadows,
+      padding: padding,
+      clipContent: clipContent,
+      onTap: onTap,
+      semanticLabel: semanticLabel,
+      child: child,
+    );
+  }
+
+  /// A Box Box-inspired frosted glass surface with gradient fill, top edge specular highlight,
+  /// and optional ambient brand glow.
+  factory PesaSurface.glass({
+    Key? key,
+    required Widget child,
+    Color? fill,
+    Color? stroke,
+    Gradient? background,
+    double radius = AppTheme.radiusCard,
+    double glow = 0.15,
+    List<BoxShadow> shadows = const [],
+    EdgeInsetsGeometry padding = EdgeInsets.zero,
+    bool clipContent = true,
+    bool edgeLight = true,
+    VoidCallback? onTap,
+    String? semanticLabel,
+  }) {
+    return PesaSurface(
+      key: key,
+      fill: fill,
+      stroke: stroke,
+      background: background,
+      radius: radius,
+      glow: glow,
+      edgeLight: edgeLight,
       shadows: shadows,
       padding: padding,
       clipContent: clipContent,
