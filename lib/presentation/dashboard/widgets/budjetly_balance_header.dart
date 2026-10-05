@@ -169,7 +169,6 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
 
     return PesaSurface.bleed(
       radius: BudjetlyBalanceHeader.radius,
-      edgeLight: true,
       // With the hairline and the shadow gone, the gradient is the only thing
       // giving the surface a top and a bottom. It stays in the slate family so
       // it does not compete with the numbers.

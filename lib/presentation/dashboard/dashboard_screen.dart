@@ -854,12 +854,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               height: 38,
                                               decoration: BoxDecoration(
                                                 color: catColor.withValues(
-                                                  alpha: 0.12,
+                                                  alpha: context.isDark ? 0.16 : 0.09,
                                                 ),
                                                 borderRadius:
                                                     BorderRadius.circular(
-                                                      AppTheme.radiusCompact,
+                                                      AppTheme.squircleRadius(38),
                                                     ),
+                                                border: Border.all(
+                                                  color: catColor.withValues(
+                                                    alpha: context.isDark ? 0.28 : 0.16,
+                                                  ),
+                                                  width: 1,
+                                                ),
                                               ),
                                               alignment: Alignment.center,
                                               child: Icon(
@@ -1068,39 +1074,55 @@ class _QuickActionButton extends StatelessWidget {
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-            border: Border.all(color: context.appColors.hairline, width: 1),
+            border: Border.all(
+              color: context.appColors.hairline,
+              width: 1,
+            ),
             boxShadow: [
               BoxShadow(
-                color: context.appColors.shadowSubtle,
-                blurRadius: 6,
+                color: color.withValues(alpha: context.isDark ? 0.12 : 0.05),
+                blurRadius: 10,
                 offset: const Offset(0, 2),
+              ),
+              BoxShadow(
+                color: context.appColors.shadowSubtle,
+                blurRadius: 4,
+                offset: const Offset(0, 1),
               ),
             ],
           ),
-          child: Row(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 28,
-                height: 28,
+                width: 36,
+                height: 36,
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                  color: color.withValues(alpha: context.isDark ? 0.16 : 0.09),
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.squircleRadius(36),
+                  ),
+                  border: Border.all(
+                    color: color.withValues(
+                      alpha: context.isDark ? 0.28 : 0.16,
+                    ),
+                    width: 1,
+                  ),
                 ),
                 alignment: Alignment.center,
-                child: Icon(icon, color: color, size: 16),
+                child: Icon(icon, color: color, size: 18),
               ),
-              const SizedBox(width: kSpacing8),
-              Flexible(
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.ts(
-                    12,
-                    fontWeight: FontWeight.w700,
-                    color: theme.colorScheme.onSurface,
-                  ),
+              const SizedBox(height: kSpacing8),
+              Text(
+                label.toUpperCase(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: context.ts(
+                  11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.6,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
             ],

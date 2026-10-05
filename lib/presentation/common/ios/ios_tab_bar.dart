@@ -233,8 +233,31 @@ class _IosTabBarState extends State<IosTabBar>
               height: double.infinity,
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
-                color: navFgColor.withValues(alpha: bgAlpha),
+                color: isSelected
+                    ? context.appColors.brandColor.withValues(
+                        alpha: context.isDark ? 0.18 : 0.10,
+                      )
+                    : navFgColor.withValues(alpha: bgAlpha),
                 borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                border: isSelected
+                    ? Border.all(
+                        color: context.appColors.brandColor.withValues(
+                          alpha: context.isDark ? 0.35 : 0.22,
+                        ),
+                        width: 1,
+                      )
+                    : null,
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: context.appColors.brandColor.withValues(
+                            alpha: context.isDark ? 0.18 : 0.08,
+                          ),
+                          blurRadius: 10,
+                          offset: const Offset(0, 1),
+                        ),
+                      ]
+                    : null,
               ),
               alignment: Alignment.center,
               child: SingleChildScrollView(
@@ -264,7 +287,9 @@ class _IosTabBarState extends State<IosTabBar>
                           isSelected ? tab.activeIcon : tab.icon,
                           key: ValueKey('${tab.routeIndex}_$isSelected'),
                           size: iconSize,
-                          color: navFgColor,
+                          color: isSelected
+                              ? context.appColors.brandColor
+                              : navFgColor.withValues(alpha: 0.7),
                         ),
                       ),
                     ),
@@ -273,9 +298,11 @@ class _IosTabBarState extends State<IosTabBar>
                       Text(
                         tab.label,
                         style: context.ts(
-                          15,
-                          fontWeight: FontWeight.w600,
-                          color: navFgColor,
+                          14,
+                          fontWeight: FontWeight.w700,
+                          color: isSelected
+                              ? context.appColors.brandColor
+                              : navFgColor,
                         ),
                       ),
                     ],

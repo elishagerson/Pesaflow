@@ -49,6 +49,7 @@ class RightNowCard extends ConsumerWidget {
           title: '${budget.budget.name} is over budget',
           subtitle:
               'Over by ${CurrencyFormatter.formatCents(budget.remaining.abs())}',
+          actionLabel: 'Adjust',
           onTap: () => context.push('/budgets'),
         ),
       );
@@ -61,6 +62,7 @@ class RightNowCard extends ConsumerWidget {
           iconColor: context.appColors.transferColor,
           title: '$reviewCount SMS to review',
           subtitle: 'Tap to categorize incoming transactions',
+          actionLabel: 'Review',
           onTap: () => context.push('/sms-review'),
         ),
       );
@@ -73,12 +75,16 @@ class RightNowCard extends ConsumerWidget {
           iconColor: context.appColors.expenseColor,
           title: due.description ?? 'Recurring payment',
           subtitle: '${CurrencyFormatter.formatCents(due.amount)} due today',
+          actionLabel: 'Pay',
           onTap: () => context.push('/recurring'),
         ),
       );
     }
 
     return GlassCard(
+      accentColor: theme.colorScheme.error,
+      accentGlow: true,
+      elevation: CardElevation.low,
       padding: const EdgeInsets.all(kSpacing16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,25 +92,40 @@ class RightNowCard extends ConsumerWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(kSpacing6),
+                width: 6,
+                height: 6,
                 decoration: BoxDecoration(
-                  color: context.appColors.expenseColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
-                ),
-                child: Icon(
-                  PesaFlowIcons.bolt,
-                  size: 16,
-                  color: context.appColors.expenseColor,
+                  color: theme.colorScheme.error,
+                  shape: BoxShape.circle,
                 ),
               ),
-              const SizedBox(width: kSpacing10),
+              const SizedBox(width: kSpacing8),
               Text(
                 'NEEDS ATTENTION',
                 style: context.ts(
                   11,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.8,
-                  color: onSurface.withValues(alpha: 0.55),
+                  color: theme.colorScheme.error,
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 6,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.error.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                ),
+                child: Text(
+                  '${items.length}',
+                  style: context.ts(
+                    10,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.error,
+                  ),
                 ),
               ),
             ],
@@ -123,12 +144,20 @@ class RightNowCard extends ConsumerWidget {
                     child: Row(
                       children: [
                         Container(
-                          width: 32,
-                          height: 32,
+                          width: 34,
+                          height: 34,
                           decoration: BoxDecoration(
-                            color: item.iconColor.withValues(alpha: 0.1),
+                            color: item.iconColor.withValues(
+                              alpha: context.isDark ? 0.16 : 0.09,
+                            ),
                             borderRadius: BorderRadius.circular(
-                              AppTheme.radiusSmall,
+                              AppTheme.squircleRadius(34),
+                            ),
+                            border: Border.all(
+                              color: item.iconColor.withValues(
+                                alpha: context.isDark ? 0.28 : 0.16,
+                              ),
+                              width: 1,
                             ),
                           ),
                           alignment: Alignment.center,
@@ -166,10 +195,35 @@ class RightNowCard extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        Icon(
-                          PesaFlowIcons.chevronRight,
-                          size: 14,
-                          color: onSurface.withValues(alpha: 0.2),
+                        const SizedBox(width: kSpacing8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing8,
+                            vertical: kSpacing4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: item.iconColor.withValues(
+                              alpha: context.isDark ? 0.16 : 0.08,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusPill,
+                            ),
+                            border: Border.all(
+                              color: item.iconColor.withValues(
+                                alpha: context.isDark ? 0.30 : 0.18,
+                              ),
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            item.actionLabel.toUpperCase(),
+                            style: context.ts(
+                              10,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.5,
+                              color: item.iconColor,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -195,6 +249,7 @@ class _RightNowItem {
   final Color iconColor;
   final String title;
   final String subtitle;
+  final String actionLabel;
   final VoidCallback onTap;
 
   const _RightNowItem({
@@ -202,6 +257,7 @@ class _RightNowItem {
     required this.iconColor,
     required this.title,
     required this.subtitle,
+    required this.actionLabel,
     required this.onTap,
   });
 }
