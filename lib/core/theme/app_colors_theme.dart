@@ -37,6 +37,32 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
   final Color textLow;
   final Color scaffoldLine;
 
+  // ── Box Box-inspired depth tokens ──
+  //
+  // These enable the premium "floating card with ambient colour" treatment
+  // without BackdropFilter. Cards use gradient fills and ambient colour
+  // wash to simulate glass depth.
+
+  /// Ambient glow behind hero cards — brand colour at low alpha. Painted as a
+  /// radial gradient, it makes the card read as a light source on OLED.
+  final Color cardGlow;
+
+  /// Top stop of the subtle surface gradient inside premium cards. The
+  /// gradient is always near-surface: depth, not colour.
+  final Color cardGradientFrom;
+
+  /// Bottom stop of the card gradient.
+  final Color cardGradientTo;
+
+  /// Semi-transparent fill simulating frosted glass on cards. Real backdrop
+  /// blur is reserved for overlays per AGENTS.md; this fakes it on solid
+  /// surfaces.
+  final Color glassFill;
+
+  /// Ultra-subtle border for glass-styled surfaces. Invisible on solid
+  /// backgrounds; visible against depth-graded content.
+  final Color glassStroke;
+
   /// The 1px border on cards, pills and inputs. Replaces the
   /// `outlineVariant.withValues(alpha: 0.28)` expression that was repeated
   /// across every screen — one token, one place to change the hairline.
@@ -70,6 +96,11 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     required this.brandGradientFrom,
     required this.brandGradientTo,
     required this.brandGlow,
+    required this.cardGlow,
+    required this.cardGradientFrom,
+    required this.cardGradientTo,
+    required this.glassFill,
+    required this.glassStroke,
     required this.incomeColor,
     required this.expenseColor,
     required this.transferColor,
@@ -108,6 +139,11 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     brandGradientFrom: AppTheme.brandGradientFromLight,
     brandGradientTo: AppTheme.brandGradientToLight,
     brandGlow: AppTheme.brandGlowLight,
+    cardGlow: Color(0x143C4550), // Accent @ ~8% — gentle ambient halo
+    cardGradientFrom: Color(0xFFFFFFFF), // Pure white top
+    cardGradientTo: Color(0xFFF8FAFC), // Slate-50 bottom
+    glassFill: Color(0x0F000000), // Black @ 6% — subtle tint on white
+    glassStroke: Color(0x0A000000), // Black @ 4%
     incomeColor: AppTheme.incomeColor,
     expenseColor: AppTheme.expenseColor,
     transferColor: AppTheme.transferColor,
@@ -148,6 +184,11 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     brandGradientFrom: AppTheme.brandGradientFromDark,
     brandGradientTo: AppTheme.brandGradientToDark,
     brandGlow: AppTheme.brandGlowDark,
+    cardGlow: Color(0x288D99A6), // Accent @ ~16% — stronger on OLED
+    cardGradientFrom: Color(0xFF1A1F27), // Cool slate top
+    cardGradientTo: Color(0xFF13171D), // Near-black bottom
+    glassFill: Color(0x0AFFFFFF), // White @ 4% — subtle lift
+    glassStroke: Color(0x14FFFFFF), // White @ 8%
     incomeColor: AppTheme.incomeColorDark,
     expenseColor: AppTheme.expenseColorDark,
     transferColor: AppTheme.transferColorDark,
@@ -186,6 +227,11 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     Color? brandOnContainer,
     Color? brandGradientFrom,
     Color? brandGradientTo,
+    Color? cardGlow,
+    Color? cardGradientFrom,
+    Color? cardGradientTo,
+    Color? glassFill,
+    Color? glassStroke,
     Color? brandGlow,
     Color? incomeColor,
     Color? expenseColor,
@@ -224,6 +270,11 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       brandGradientFrom: brandGradientFrom ?? this.brandGradientFrom,
       brandGradientTo: brandGradientTo ?? this.brandGradientTo,
       brandGlow: brandGlow ?? this.brandGlow,
+      cardGlow: cardGlow ?? this.cardGlow,
+      cardGradientFrom: cardGradientFrom ?? this.cardGradientFrom,
+      cardGradientTo: cardGradientTo ?? this.cardGradientTo,
+      glassFill: glassFill ?? this.glassFill,
+      glassStroke: glassStroke ?? this.glassStroke,
       incomeColor: incomeColor ?? this.incomeColor,
       expenseColor: expenseColor ?? this.expenseColor,
       transferColor: transferColor ?? this.transferColor,
@@ -275,6 +326,12 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       )!,
       brandGradientTo: Color.lerp(brandGradientTo, other.brandGradientTo, t)!,
       brandGlow: Color.lerp(brandGlow, other.brandGlow, t)!,
+      cardGlow: Color.lerp(cardGlow, other.cardGlow, t)!,
+      cardGradientFrom:
+          Color.lerp(cardGradientFrom, other.cardGradientFrom, t)!,
+      cardGradientTo: Color.lerp(cardGradientTo, other.cardGradientTo, t)!,
+      glassFill: Color.lerp(glassFill, other.glassFill, t)!,
+      glassStroke: Color.lerp(glassStroke, other.glassStroke, t)!,
       incomeColor: Color.lerp(incomeColor, other.incomeColor, t)!,
       expenseColor: Color.lerp(expenseColor, other.expenseColor, t)!,
       transferColor: Color.lerp(transferColor, other.transferColor, t)!,

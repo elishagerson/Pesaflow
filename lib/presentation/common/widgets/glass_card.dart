@@ -23,6 +23,11 @@ class GlassCard extends StatefulWidget {
   final bool showAccentStrip;
   final bool frosted;
 
+  /// When true, the card gets an ambient colour wash behind it — a radial
+  /// glow of [accentColor] that makes the card read as a light source on a
+  /// dark canvas. One per screen region; two glowing cards cancel out.
+  final bool accentGlow;
+
   const GlassCard({
     super.key,
     required this.child,
@@ -38,6 +43,7 @@ class GlassCard extends StatefulWidget {
     this.onTap,
     this.showAccentStrip = false,
     this.frosted = false,
+    this.accentGlow = false,
   });
 
   @override
@@ -64,45 +70,89 @@ class _GlassCardState extends State<GlassCard>
   }
 
   /// Shadow parameters that respond to press state.
-  /// When pressed, shadow offset decreases and blur shrinks
-  /// → creates "card pushed into surface" illusion.
+  /// Box Box-inspired multi-layer system:
+  ///  1. Diffuse base shadow (large blur, high offset) → floating depth
+  ///  2. Crisp near shadow (small blur, tight offset)  → edge definition
+  /// When pressed, both compress → "card pushed into surface" illusion.
   _ShadowParams _resolveShadows(
     CardElevation elevation,
     bool isDark,
     double pressT,
   ) {
     final base = switch (elevation) {
-      CardElevation.low => _ShadowParams(
-        color: isDark
-            ? Colors.black.withValues(alpha: 0.20)
-            : Colors.black.withValues(alpha: 0.04),
-        blur: 8.0,
-        offsetY: 2.0,
+      CardElevation.low => (
+        diffuse: _SingleShadow(
+          color: isDark
+              ? Colors.black.withValues(alpha: 0.22)
+              : Colors.black.withValues(alpha: 0.04),
+          blur: 16.0,
+          offsetY: 4.0,
+        ),
+        crisp: _SingleShadow(
+          color: isDark
+              ? Colors.black.withValues(alpha: 0.12)
+              : Colors.black.withValues(alpha: 0.02),
+          blur: 3.0,
+          offsetY: 1.0,
+        ),
       ),
-      CardElevation.medium => _ShadowParams(
-        color: isDark
-            ? Colors.black.withValues(alpha: 0.28)
-            : Colors.black.withValues(alpha: 0.06),
-        blur: 16.0,
-        offsetY: 4.0,
+      CardElevation.medium => (
+        diffuse: _SingleShadow(
+          color: isDark
+              ? Colors.black.withValues(alpha: 0.30)
+              : Colors.black.withValues(alpha: 0.06),
+          blur: 28.0,
+          offsetY: 8.0,
+        ),
+        crisp: _SingleShadow(
+          color: isDark
+              ? Colors.black.withValues(alpha: 0.16)
+              : Colors.black.withValues(alpha: 0.03),
+          blur: 4.0,
+          offsetY: 2.0,
+        ),
       ),
-      CardElevation.high => _ShadowParams(
-        color: isDark
-            ? Colors.black.withValues(alpha: 0.35)
-            : Colors.black.withValues(alpha: 0.08),
-        blur: 24.0,
-        offsetY: 8.0,
+      CardElevation.high => (
+        diffuse: _SingleShadow(
+          color: isDark
+              ? Colors.black.withValues(alpha: 0.38)
+              : Colors.black.withValues(alpha: 0.08),
+          blur: 40.0,
+          offsetY: 12.0,
+        ),
+        crisp: _SingleShadow(
+          color: isDark
+              ? Colors.black.withValues(alpha: 0.20)
+              : Colors.black.withValues(alpha: 0.04),
+          blur: 6.0,
+          offsetY: 3.0,
+        ),
       ),
       CardElevation.none => null,
     };
 
     if (base == null) return _ShadowParams.none;
 
-    // Lerp shadow down on press — card "sinks into" surface
+    // Lerp both layers down on press — card "sinks into" surface
     return _ShadowParams(
-      color: base.color,
-      blur: lerpDouble(base.blur, base.blur * 0.5, pressT)!,
-      offsetY: lerpDouble(base.offsetY, base.offsetY * 0.25, pressT)!,
+      diffuse: _SingleShadow(
+        color: base.diffuse.color,
+        blur: lerpDouble(base.diffuse.blur, base.diffuse.blur * 0.4, pressT)!,
+        offsetY: lerpDouble(
+          base.diffuse.offsetY,
+          base.diffuse.offsetY * 0.2,
+          pressT,
+        )!,
+      ),
+      crisp: _SingleShadow(
+        color: base.crisp.color,
+        blur: lerpDouble(base.crisp.blur, base.crisp.blur * 0.5, pressT)!,
+        offsetY: lerpDouble(
+          base.crisp.offsetY,
+          base.crisp.offsetY * 0.3,
+          pressT,
+        )!,
+      ),
     );
   }
 
@@ -111,7 +161,9 @@ class _GlassCardState extends State<GlassCard>
     final appColors = context.appColors;
     final theme = Theme.of(context);
 
-    // Clean solid background — Budjetly style
+    // Box Box-inspired: gradient fill instead of flat fill, unless the caller
+    // overrode the background. The gradient is near-surface (depth, not colour)
+    // and gives the card a physical top edge and a receding bottom edge.
     final Color cardColor;
     if (widget.backgroundColor != null) {
       cardColor = widget.backgroundColor!;
@@ -123,13 +175,30 @@ class _GlassCardState extends State<GlassCard>
       cardColor = appColors.cardBackground;
     }
 
+    // Use gradient fill when no explicit background was given — the card gets
+    // a physical top-to-bottom depth instead of a flat swatch.
+    final Gradient? autoGradient;
+    if (widget.backgroundColor == null &&
+        widget.backgroundGradient == null &&
+        widget.accentColor == null) {
+      autoGradient = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [appColors.cardGradientFrom, appColors.cardGradientTo],
+      );
+    } else {
+      autoGradient = null;
+    }
+
     final bool isDark = context.isDark;
 
-    // Clean card — standard rounded rect
+    // Card — gradient-filled rounded rect with optional accent glow
     Widget innerContent = Container(
       decoration: BoxDecoration(
-        color: widget.backgroundGradient == null ? cardColor : null,
-        gradient: widget.backgroundGradient,
+        color: (widget.backgroundGradient == null && autoGradient == null)
+            ? cardColor
+            : null,
+        gradient: widget.backgroundGradient ?? autoGradient,
         borderRadius: BorderRadius.circular(widget.borderRadius),
       ),
       child: Stack(
@@ -264,17 +333,48 @@ class _GlassCardState extends State<GlassCard>
     final opacity = 1.0 - (pressT * (1.0 - MotionTokens.opacityPress));
 
     Widget body = RepaintBoundary(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(widget.borderRadius),
-          boxShadow: shadow.toList(),
-        ),
-        child: CustomPaint(
-          foregroundPainter: widget.hasBorder
-              ? HairlineBorderPainter.of(context, widget.borderRadius)
-              : null,
-          child: child,
-        ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Ambient accent glow behind the card
+          if (widget.accentGlow && widget.accentColor != null)
+            Positioned(
+              left: -20,
+              right: -20,
+              top: -10,
+              bottom: -10,
+              child: IgnorePointer(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      widget.borderRadius + 20,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: widget.accentColor!.withValues(
+                          alpha: isDark ? 0.16 : 0.08,
+                        ),
+                        blurRadius: 40,
+                        spreadRadius: 4,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              boxShadow: shadow.toList(),
+            ),
+            child: CustomPaint(
+              foregroundPainter: widget.hasBorder
+                  ? HairlineBorderPainter.of(context, widget.borderRadius)
+                  : null,
+              child: child,
+            ),
+          ),
+        ],
       ),
     );
 
@@ -289,28 +389,44 @@ class _GlassCardState extends State<GlassCard>
   }
 }
 
-/// Shadow parameters that animate with press state.
-class _ShadowParams {
+/// A single shadow layer.
+class _SingleShadow {
   final Color color;
   final double blur;
   final double offsetY;
 
-  const _ShadowParams({
+  const _SingleShadow({
     required this.color,
     required this.blur,
     required this.offsetY,
   });
+}
 
-  static const none = _ShadowParams(
-    color: Colors.transparent,
-    blur: 0,
-    offsetY: 0,
-  );
+/// Box Box-inspired dual-layer shadow: diffuse halo + crisp near edge.
+class _ShadowParams {
+  final _SingleShadow? diffuse;
+  final _SingleShadow? crisp;
+
+  const _ShadowParams({this.diffuse, this.crisp});
+
+  static const none = _ShadowParams();
 
   List<BoxShadow> toList() {
-    if (blur == 0 && offsetY == 0) return [];
-    return [
-      BoxShadow(color: color, blurRadius: blur, offset: Offset(0, offsetY)),
-    ];
+    final out = <BoxShadow>[];
+    if (diffuse != null && (diffuse!.blur > 0 || diffuse!.offsetY > 0)) {
+      out.add(BoxShadow(
+        color: diffuse!.color,
+        blurRadius: diffuse!.blur,
+        offset: Offset(0, diffuse!.offsetY),
+      ));
+    }
+    if (crisp != null && (crisp!.blur > 0 || crisp!.offsetY > 0)) {
+      out.add(BoxShadow(
+        color: crisp!.color,
+        blurRadius: crisp!.blur,
+        offset: Offset(0, crisp!.offsetY),
+      ));
+    }
+    return out;
   }
 }
