@@ -38,16 +38,25 @@ class _PesaSplashState extends State<PesaSplash>
 
   late final AnimationController _c;
   bool _done = false;
+  bool _hasStarted = false;
 
   @override
   void initState() {
     super.initState();
     _c = AnimationController(vsync: this, duration: _total);
-    if (context.isReducedMotion) {
-      _c.value = 1;
-      WidgetsBinding.instance.addPostFrameCallback((_) => _finish());
-    } else {
-      _c.forward();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_hasStarted) {
+      _hasStarted = true;
+      if (context.isReducedMotion) {
+        _c.value = 1;
+        WidgetsBinding.instance.addPostFrameCallback((_) => _finish());
+      } else {
+        _c.forward();
+      }
     }
   }
 
