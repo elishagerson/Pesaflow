@@ -5,9 +5,8 @@ import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
-import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
-import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 /// A 2x2 executive financial hub grid replacing scattered carousels.
 class FinancialHubGrid extends StatelessWidget {
@@ -75,14 +74,27 @@ class FinancialHubGrid extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: kSpacing4),
-          child: Text(
-            'FINANCIAL OVERVIEW',
-            style: context.ts(
-              11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.8,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
+          child: Row(
+            children: [
+              Container(
+                width: 6,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: context.appColors.brandColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: kSpacing8),
+              Text(
+                'FINANCIAL OVERVIEW',
+                style: context.ts(
+                  11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.8,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: kSpacing12),
@@ -170,119 +182,127 @@ class _HubCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return TactileSpringContainer(
+    return GlassCard(
       onTap: onTap,
-      child: PesaSurface.bleed(
-        fill: theme.colorScheme.surfaceContainerHigh,
-        radius: AppTheme.radiusCard,
-        padding: const EdgeInsets.all(kSpacing14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // The title gives way, the icon and the affordance do not.
-                //
-                // `mainAxisSize: MainAxisSize.min` is not a constraint: a
-                // non-flex child of a Row is still handed an unbounded max
-                // width, so a long title simply runs past the card edge. At
-                // two-per-row that is a 159px card, which 28px of icon, 8px
-                // of gap, a 12px title and a 14px chevron clears only just —
-                // and not at all at a larger text scale.
-                Flexible(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 28,
-                        height: 28,
-                        decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusSmall,
-                          ),
+      accentColor: color,
+      accentGlow: true,
+      elevation: CardElevation.low,
+      borderRadius: AppTheme.radiusCard,
+      padding: const EdgeInsets.all(kSpacing14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // The title gives way, the icon and the affordance do not.
+              Flexible(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: color.withValues(
+                          alpha: context.isDark ? 0.16 : 0.09,
                         ),
-                        alignment: Alignment.center,
-                        child: Icon(icon, size: 14, color: color),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.squircleRadius(28),
+                        ),
+                        border: Border.all(
+                          color: color.withValues(
+                            alpha: context.isDark ? 0.28 : 0.15,
+                          ),
+                          width: 1,
+                        ),
                       ),
-                      const SizedBox(width: kSpacing8),
-                      Flexible(
-                        child: Text(
-                          title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.ts(
-                            12,
-                            fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+                      alignment: Alignment.center,
+                      child: Icon(icon, size: 14, color: color),
+                    ),
+                    const SizedBox(width: kSpacing8),
+                    Flexible(
+                      child: Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.ts(
+                          12,
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurfaceVariant,
                         ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (badgeCount != null && badgeCount! > 0)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.error,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.error.withValues(alpha: 0.35),
+                        blurRadius: 6,
+                        offset: const Offset(0, 1),
                       ),
                     ],
                   ),
-                ),
-                if (badgeCount != null && badgeCount! > 0)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.error,
-                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                    ),
-                    child: Text(
-                      '$badgeCount',
-                      style: context.ts(
-                        10,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onError,
-                      ),
-                    ),
-                  )
-                else
-                  Icon(
-                    PesaFlowIcons.chevronRight,
-                    size: 14,
-                    color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: 0.4,
+                  child: Text(
+                    '$badgeCount',
+                    style: context.ts(
+                      10,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onError,
                     ),
                   ),
-              ],
-            ),
-            const SizedBox(height: kSpacing12),
-            Text(
-              metric,
-              style: context.ts(
-                14,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurface,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: kSpacing2),
-            Text(
-              subtitle,
-              style: context.ts(11, color: theme.colorScheme.onSurfaceVariant),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            if (progress != null) ...[
-              const SizedBox(height: kSpacing8),
-              PesaProgressBar(
-                value: progress!,
-                color: progress! > 1.0 ? theme.colorScheme.error : color,
-                trackColor: color.withValues(alpha: 0.12),
-                height: 4,
-                wave: false,
-                showEndStop: false,
-                semanticsLabel: '$title progress',
-              ),
+                )
+              else
+                Icon(
+                  PesaFlowIcons.chevronRight,
+                  size: 14,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.4,
+                  ),
+                ),
             ],
+          ),
+          const SizedBox(height: kSpacing12),
+          Text(
+            metric,
+            style: context.ts(
+              15,
+              fontWeight: FontWeight.w800,
+              color: theme.colorScheme.onSurface,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: kSpacing2),
+          Text(
+            subtitle,
+            style: context.ts(11, color: theme.colorScheme.onSurfaceVariant),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          if (progress != null) ...[
+            const SizedBox(height: kSpacing8),
+            PesaProgressBar(
+              value: progress!,
+              color: progress! > 1.0 ? theme.colorScheme.error : color,
+              trackColor: color.withValues(alpha: 0.12),
+              height: 4,
+              wave: false,
+              showEndStop: false,
+              semanticsLabel: '$title progress',
+            ),
           ],
-        ),
+        ],
       ),
     );
   }
