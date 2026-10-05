@@ -77,6 +77,9 @@ ProviderScope _scope({
       transactionTemplatesStreamProvider.overrideWith(
         (ref) => Stream.value(const <Map<String, dynamic>>[]),
       ),
+      activeLoansStreamProvider.overrideWith(
+        (ref) => Stream.value(const <Loan>[]),
+      ),
     ],
     child: MaterialApp(
       theme: AppTheme.lightTheme,

@@ -23,7 +23,9 @@ import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.d
 import 'package:pesaflow/services/home_widgets_renderer.dart';
 import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_hero_strip.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/notification_center_sheet.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/right_now_card.dart';
+import 'package:pesaflow/presentation/state/notification_providers.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -169,6 +171,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       data: (list) => list.length,
       orElse: () => 0,
     );
+    final notificationCounts = ref.watch(notificationCountsProvider);
 
     final accounts = accountsAsync.value ?? [];
     final recsAsync = ref.watch(recurringTransactionsStreamProvider);
@@ -318,7 +321,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       const SizedBox(width: kSpacing8),
                                       TactileSpringContainer(
                                         onTap: () =>
-                                            context.push('/sms-review'),
+                                            showNotificationCenterSheet(
+                                              context,
+                                            ),
                                         selectedColor:
                                             theme.colorScheme.onSurface,
                                         child: Stack(
@@ -347,13 +352,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               ),
                                               alignment: Alignment.center,
                                               child: Icon(
-                                                PesaFlowIcons.sms,
+                                                PesaFlowIcons.notification,
                                                 size: 18,
                                                 color:
                                                     theme.colorScheme.onSurface,
                                               ),
                                             ),
-                                            if (pendingReviewCount > 0)
+                                            if (notificationCounts.total > 0)
                                               Positioned(
                                                 right: -2,
                                                 top: -2,
@@ -379,7 +384,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                     ),
                                                   ),
                                                   child: Text(
-                                                    '$pendingReviewCount',
+                                                    '${notificationCounts.total}',
                                                     style: context.ts(
                                                       9,
                                                       color: theme
@@ -1067,10 +1072,8 @@ class _QuickActionButton extends StatelessWidget {
       child: TactileSpringContainer(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: kSpacing12,
-            horizontal: kSpacing8,
-          ),
+          height: 44,
+          padding: const EdgeInsets.symmetric(horizontal: kSpacing8),
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -1091,17 +1094,16 @@ class _QuickActionButton extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 36,
-                height: 36,
+                width: 26,
+                height: 26,
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: context.isDark ? 0.16 : 0.09),
                   borderRadius: BorderRadius.circular(
-                    AppTheme.squircleRadius(36),
+                    AppTheme.squircleRadius(26),
                   ),
                   border: Border.all(
                     color: color.withValues(
@@ -1111,18 +1113,19 @@ class _QuickActionButton extends StatelessWidget {
                   ),
                 ),
                 alignment: Alignment.center,
-                child: Icon(icon, color: color, size: 18),
+                child: Icon(icon, color: color, size: 14),
               ),
-              const SizedBox(height: kSpacing8),
-              Text(
-                label.toUpperCase(),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: context.ts(
-                  11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.6,
-                  color: theme.colorScheme.onSurface,
+              const SizedBox(width: kSpacing8),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.ts(
+                    12,
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.onSurface,
+                  ),
                 ),
               ),
             ],
