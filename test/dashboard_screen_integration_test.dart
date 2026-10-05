@@ -228,12 +228,7 @@ void main() {
       tester,
     ) async {
       await _pump(tester, size: const Size(320, 700), textScale: 1.3);
-      final err = tester.takeException();
-      if (err is FlutterError) {
-        // ignore: avoid_print
-        print('DEBUG OVERFLOW DETAILS:\n${err.toStringDeep()}');
-      }
-      expect(err, isNull);
+      expect(tester.takeException(), isNull);
     });
   });
 
