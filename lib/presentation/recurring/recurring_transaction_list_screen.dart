@@ -24,6 +24,8 @@ import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/recurring/widgets/mark_recurring_payment_sheet.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
+import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
+import 'package:pesaflow/core/utils/scroll_helpers.dart';
 
 /// Filter options for the recurring flows list.
 enum _RecurringFilter { all, expenses, income, transfers }
@@ -38,7 +40,14 @@ class RecurringTransactionListScreen extends ConsumerStatefulWidget {
 
 class _RecurringTransactionListScreenState
     extends ConsumerState<RecurringTransactionListScreen> {
+  final _scrollController = ScrollController();
   _RecurringFilter _activeFilter = _RecurringFilter.all;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   List<RecurringTransaction> _applyFilter(List<RecurringTransaction> items) {
     return switch (_activeFilter) {
@@ -54,6 +63,9 @@ class _RecurringTransactionListScreenState
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(scrollToTopProvider, (_, _) {
+      _scrollController.scrollToTop(context);
+    });
     final theme = Theme.of(context);
     final recurringAsync = ref.watch(recurringTransactionsStreamProvider);
     final dueAsync = ref.watch(dueRecurringTransactionsProvider);
@@ -89,24 +101,8 @@ class _RecurringTransactionListScreenState
         bottom: false,
         child: Column(
           children: [
-            // ── OLED Header ──
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                kSpacing20,
-                kSpacing16,
-                kSpacing20,
-                kSpacing8,
-              ),
-              child: Text(
-                'Recurring Flows',
-                style: context.ts(
-                  34,
-                  fontWeight: FontWeight.w800,
-                  color: context.appColors.onBgColor,
-                  letterSpacing: -0.5,
-                ),
-              ),
-            ),
+            // ── Floating Top Bar ──
+            const FloatingTopBar(title: 'Recurring Flows'),
             // ── Content ──
             Expanded(
               child: recurringAsync.when(
@@ -131,6 +127,7 @@ class _RecurringTransactionListScreenState
                             child: _buildEmptyState(context, theme),
                           )
                         : CustomScrollView(
+                            controller: _scrollController,
                             key: const PageStorageKey('recurring_list'),
                             physics: const AlwaysScrollableScrollPhysics(),
                             slivers: [
@@ -729,12 +726,11 @@ class _RecurringTransactionListScreenState
   ) {
     final isActive = _activeFilter == filter;
     return Expanded(
-      child: GestureDetector(
+      child: TactileSpringContainer(
+        haptic: HapticType.selection,
         onTap: () {
-          PesaHaptics.selection();
           setState(() => _activeFilter = filter);
         },
-        behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(
           duration: MotionTokens.durationExit,
           curve: Curves.easeInOut,
@@ -867,11 +863,15 @@ class _RecurringTransactionListScreenState
                   children: [
                     // Icon
                     Container(
-                      padding: const EdgeInsets.all(kSpacing10),
+                      width: 38,
+                      height: 38,
+                      alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: mutedAccent.withValues(alpha: 0.12),
+                        color: mutedAccent.withValues(
+                          alpha: context.appColors.badgeFillAlpha,
+                        ),
                         borderRadius: BorderRadius.circular(
-                          AppTheme.radiusInput,
+                          AppTheme.squircleRadius(38),
                         ),
                       ),
                       child: Icon(
@@ -1052,9 +1052,9 @@ class _RecurringTransactionListScreenState
                       ),
                     ),
                   const SizedBox(height: kSpacing10),
-                  GestureDetector(
+                  TactileSpringContainer(
+                    haptic: HapticType.light,
                     onTap: () {
-                      PesaHaptics.light();
                       showMarkRecurringPaymentSheet(
                         context: context,
                         ref: ref,
@@ -1070,10 +1070,10 @@ class _RecurringTransactionListScreenState
                       ),
                       decoration: BoxDecoration(
                         color: context.appColors.incomeColor.withValues(
-                          alpha: 0.12,
+                          alpha: context.appColors.badgeFillAlpha,
                         ),
                         borderRadius: BorderRadius.circular(
-                          AppTheme.radiusSmall,
+                          AppTheme.radiusPill,
                         ),
                       ),
                       child: Row(
@@ -1105,8 +1105,8 @@ class _RecurringTransactionListScreenState
             Divider(
               height: 1,
               thickness: 0.5,
-              color: onSurface.withValues(alpha: 0.05),
-              indent: 14 + 32 + 12,
+              color: context.appColors.hairline,
+              indent: 14 + 38 + 12,
             ),
         ],
       ),
@@ -1135,8 +1135,10 @@ class _RecurringTransactionListScreenState
             vertical: kSpacing2,
           ),
           decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+            color: theme.colorScheme.primary.withValues(
+              alpha: context.appColors.badgeFillAlpha,
+            ),
+            borderRadius: BorderRadius.circular(AppTheme.squircleRadius(14)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

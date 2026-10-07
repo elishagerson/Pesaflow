@@ -270,10 +270,14 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
         vertical: kSpacing12,
       ),
       decoration: BoxDecoration(
-        color: context.appColors.warningColor.withValues(alpha: 0.10),
+        color: context.appColors.warningColor.withValues(
+          alpha: context.appColors.badgeFillAlpha,
+        ),
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         border: Border.all(
-          color: context.appColors.warningColor.withValues(alpha: 0.25),
+          color: context.appColors.warningColor.withValues(
+            alpha: context.appColors.badgeBorderAlpha,
+          ),
           width: 1,
         ),
       ),
@@ -338,18 +342,20 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(kSpacing6),
+                    width: 36,
+                    height: 36,
+                    alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: context.appColors.expenseColor.withValues(
-                        alpha: 0.12,
+                        alpha: context.appColors.badgeFillAlpha,
                       ),
                       borderRadius: BorderRadius.circular(
-                        AppTheme.squircleRadius(27),
+                        AppTheme.squircleRadius(36),
                       ),
                     ),
                     child: Icon(
                       PesaFlowIcons.loans,
-                      size: 15,
+                      size: 16,
                       color: context.appColors.expenseColor,
                     ),
                   ),
@@ -371,11 +377,13 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                   vertical: kSpacing4,
                 ),
                 decoration: BoxDecoration(
-                  color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                  color: context.appColors.expenseColor.withValues(
+                    alpha: context.appColors.badgeFillAlpha,
+                  ),
                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   border: Border.all(
                     color: context.appColors.expenseColor.withValues(
-                      alpha: 0.25,
+                      alpha: context.appColors.badgeBorderAlpha,
                     ),
                     width: 0.8,
                   ),
@@ -484,11 +492,15 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(kSpacing8),
+                        width: 36,
+                        height: 36,
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: progressColor.withValues(alpha: 0.12),
+                          color: progressColor.withValues(
+                            alpha: context.appColors.badgeFillAlpha,
+                          ),
                           borderRadius: BorderRadius.circular(
-                            AppTheme.squircleRadius(34),
+                            AppTheme.squircleRadius(36),
                           ),
                         ),
                         child: Icon(
@@ -522,9 +534,11 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                                     ),
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.primary
-                                          .withValues(alpha: 0.1),
+                                          .withValues(
+                                            alpha: context.appColors.badgeFillAlpha,
+                                          ),
                                       borderRadius: BorderRadius.circular(
-                                        AppTheme.radiusSmall,
+                                        AppTheme.squircleRadius(16),
                                       ),
                                     ),
                                     child: Text(
@@ -572,17 +586,29 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
-                            CurrencyFormatter.formatCents(loan.amount),
+                          AmountText(
+                            amountInCents: loan.amount,
                             style: context.ts(14, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: kSpacing2),
-                          Text(
-                            '${CurrencyFormatter.formatCents(loan.remaining)} left',
-                            style: context.ts(
-                              11,
-                              color: onSurface.withValues(alpha: 0.6),
-                            ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AmountText(
+                                amountInCents: loan.remaining,
+                                style: context.ts(
+                                  11,
+                                  color: onSurface.withValues(alpha: 0.6),
+                                ),
+                              ),
+                              Text(
+                                'left',
+                                style: context.ts(
+                                  11,
+                                  color: onSurface.withValues(alpha: 0.6),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -605,8 +631,8 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
               Divider(
                 height: 1,
                 thickness: 0.5,
-                color: onSurface.withValues(alpha: 0.05),
-                indent: 14 + 34 + 12,
+                color: context.appColors.hairline,
+                indent: 14 + 36 + 12,
               ),
           ],
         ),
@@ -636,13 +662,15 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(kSpacing8),
+                    width: 36,
+                    height: 36,
+                    alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: context.appColors.incomeColor.withValues(
-                        alpha: 0.12,
+                        alpha: context.appColors.badgeFillAlpha,
                       ),
                       borderRadius: BorderRadius.circular(
-                        AppTheme.squircleRadius(34),
+                        AppTheme.squircleRadius(36),
                       ),
                     ),
                     child: Icon(
@@ -673,9 +701,11 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: context.appColors.incomeColor
-                                      .withValues(alpha: 0.1),
+                                      .withValues(
+                                        alpha: context.appColors.badgeFillAlpha,
+                                      ),
                                   borderRadius: BorderRadius.circular(
-                                    AppTheme.radiusSmall,
+                                    AppTheme.squircleRadius(16),
                                   ),
                                 ),
                                 child: Text(
@@ -703,8 +733,8 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                       ],
                     ),
                   ),
-                  Text(
-                    CurrencyFormatter.formatCents(loan.amount),
+                  AmountText(
+                    amountInCents: loan.amount,
                     style: context.ts(14, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -714,8 +744,8 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
               Divider(
                 height: 1,
                 thickness: 0.5,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-                indent: 14 + 34 + 12,
+                color: context.appColors.hairline,
+                indent: 14 + 36 + 12,
               ),
           ],
         ),
