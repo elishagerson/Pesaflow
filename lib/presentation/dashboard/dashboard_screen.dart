@@ -859,15 +859,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               height: 38,
                                               decoration: BoxDecoration(
                                                 color: catColor.withValues(
-                                                  alpha: context.isDark ? 0.16 : 0.09,
+                                                  alpha: context
+                                                      .appColors
+                                                      .badgeFillAlpha,
                                                 ),
                                                 borderRadius:
                                                     BorderRadius.circular(
-                                                      AppTheme.squircleRadius(38),
+                                                      AppTheme.squircleRadius(
+                                                        38,
+                                                      ),
                                                     ),
                                                 border: Border.all(
                                                   color: catColor.withValues(
-                                                    alpha: context.isDark ? 0.28 : 0.16,
+                                                    alpha: context
+                                                        .appColors
+                                                        .badgeBorderAlpha,
                                                   ),
                                                   width: 1,
                                                 ),
@@ -1084,7 +1090,9 @@ class _QuickActionButton extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color: color.withValues(alpha: context.isDark ? 0.12 : 0.05),
+                color: color.withValues(
+                  alpha: context.appColors.badgeFillAlpha,
+                ),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -1102,13 +1110,15 @@ class _QuickActionButton extends StatelessWidget {
                 width: 26,
                 height: 26,
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: context.isDark ? 0.16 : 0.09),
+                  color: color.withValues(
+                    alpha: context.appColors.badgeFillAlpha,
+                  ),
                   borderRadius: BorderRadius.circular(
                     AppTheme.squircleRadius(26),
                   ),
                   border: Border.all(
                     color: color.withValues(
-                      alpha: context.isDark ? 0.28 : 0.16,
+                      alpha: context.appColors.badgeBorderAlpha,
                     ),
                     width: 1,
                   ),
