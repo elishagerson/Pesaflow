@@ -189,12 +189,11 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
       child: Row(
         children: [
           Expanded(
-            child: GestureDetector(
+            child: TactileSpringContainer(
+              haptic: HapticType.selection,
               onTap: () {
-                PesaHaptics.selection();
                 ref.read(budgetActiveTabProvider.notifier).state = 0;
               },
-              behavior: HitTestBehavior.opaque,
               child: AnimatedContainer(
                 duration: MotionTokens.durationNormal,
                 curve: Curves.easeOutCubic,
@@ -231,12 +230,11 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
             ),
           ),
           Expanded(
-            child: GestureDetector(
+            child: TactileSpringContainer(
+              haptic: HapticType.selection,
               onTap: () {
-                PesaHaptics.selection();
                 ref.read(budgetActiveTabProvider.notifier).state = 1;
               },
-              behavior: HitTestBehavior.opaque,
               child: AnimatedContainer(
                 duration: MotionTokens.durationNormal,
                 curve: Curves.easeOutCubic,
@@ -2222,7 +2220,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                                   ),
                                                 ),
                                               const SizedBox(height: kSpacing4),
-                                              GestureDetector(
+                                              TactileSpringContainer(
+                                                haptic: HapticType.light,
                                                 onTap: () {
                                                   showSpringSheet(
                                                     context,
