@@ -407,7 +407,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       height: 36,
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+        borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
       ),
       child: Center(
         child: Icon(icon, color: color, size: size),
@@ -424,61 +424,59 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     required String value,
     VoidCallback? onTap,
   }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap != null
-            ? () {
-                PesaHaptics.selection();
-                onTap();
-              }
-            : null,
-        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: kSpacing12,
-            horizontal: kSpacing8,
+    return TactileSpringContainer(
+      onTap: onTap != null
+          ? () {
+              PesaHaptics.selection();
+              onTap();
+            }
+          : null,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: kSpacing12,
+          horizontal: kSpacing8,
+        ),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHighest.withValues(
+            alpha: 0.35,
           ),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(
-              alpha: 0.35,
+          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+          border: Border.all(color: context.appColors.hairline),
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(
+                  AppTheme.squircleRadius(28),
+                ),
+              ),
+              child: Center(child: Icon(icon, color: color, size: 15)),
             ),
-            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-            border: Border.all(color: context.appColors.hairline),
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-                ),
-                child: Center(child: Icon(icon, color: color, size: 15)),
+            const SizedBox(height: kSpacing6),
+            Text(
+              value,
+              style: context.ts(
+                16,
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.onSurface,
               ),
-              const SizedBox(height: kSpacing6),
-              Text(
-                value,
-                style: context.ts(
-                  16,
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.onSurface,
-                ),
+            ),
+            const SizedBox(height: kSpacing2),
+            Text(
+              label,
+              style: context.ts(
+                11,
+                color: context.appColors.textMedium,
+                fontWeight: FontWeight.w500,
               ),
-              const SizedBox(height: kSpacing2),
-              Text(
-                label,
-                style: context.ts(
-                  11,
-                  color: context.appColors.textMedium,
-                  fontWeight: FontWeight.w500,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
         ),
       ),
     );
@@ -644,9 +642,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       Divider(
                         height: 1,
                         thickness: 0.5,
-                        color: theme.colorScheme.outlineVariant.withValues(
-                          alpha: 0.20,
-                        ),
+                        color: context.appColors.hairline,
                       ),
                       const SizedBox(height: kSpacing12),
                       // 3-Metric Summary Strip
