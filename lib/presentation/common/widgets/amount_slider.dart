@@ -474,9 +474,7 @@ class _SliderTrack extends StatelessWidget {
                   bottom: 14,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: context.isDark
-                          ? Colors.white.withValues(alpha: 0.08)
-                          : Colors.black.withValues(alpha: 0.06),
+                      color: context.appColors.glassFill,
                       borderRadius: BorderRadius.circular(kSpacing4),
                     ),
                   ),
@@ -599,20 +597,18 @@ class _GlassThumb extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            context.isDark
-                ? Colors.white.withValues(alpha: isDragging ? 0.30 : 0.22)
-                : Colors.white.withValues(alpha: isDragging ? 0.95 : 0.90),
-            context.isDark
-                ? Colors.white.withValues(alpha: isDragging ? 0.15 : 0.10)
-                : Colors.white.withValues(alpha: isDragging ? 0.80 : 0.70),
+            context.appColors.cardGradientFrom.withValues(
+              alpha: isDragging ? 0.95 : 0.85,
+            ),
+            context.appColors.cardGradientTo.withValues(
+              alpha: isDragging ? 0.80 : 0.70,
+            ),
           ],
         ),
         border: Border.all(
           color: isDragging
               ? accentColor.withValues(alpha: 0.6)
-              : (context.isDark
-                    ? Colors.white.withValues(alpha: 0.20)
-                    : Colors.white.withValues(alpha: 0.50)),
+              : context.appColors.hairlineStrong,
           width: isDragging ? 2.0 : 1.5,
         ),
         boxShadow: [
@@ -622,7 +618,7 @@ class _GlassThumb extends StatelessWidget {
             offset: const Offset(0, 2),
           ),
           BoxShadow(
-            color: Colors.black.withValues(alpha: context.isDark ? 0.3 : 0.08),
+            color: context.appColors.shadowMedium,
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),

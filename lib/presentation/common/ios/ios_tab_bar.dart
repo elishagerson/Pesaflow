@@ -235,14 +235,14 @@ class _IosTabBarState extends State<IosTabBar>
               decoration: BoxDecoration(
                 color: isSelected
                     ? context.appColors.brandColor.withValues(
-                        alpha: context.isDark ? 0.18 : 0.10,
+                        alpha: context.appColors.badgeFillAlpha,
                       )
                     : navFgColor.withValues(alpha: bgAlpha),
                 borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                 border: isSelected
                     ? Border.all(
                         color: context.appColors.brandColor.withValues(
-                          alpha: context.isDark ? 0.35 : 0.22,
+                          alpha: context.appColors.badgeBorderAlpha,
                         ),
                         width: 1,
                       )
@@ -251,7 +251,7 @@ class _IosTabBarState extends State<IosTabBar>
                     ? [
                         BoxShadow(
                           color: context.appColors.brandColor.withValues(
-                            alpha: context.isDark ? 0.18 : 0.08,
+                            alpha: context.appColors.badgeFillAlpha,
                           ),
                           blurRadius: 10,
                           offset: const Offset(0, 1),

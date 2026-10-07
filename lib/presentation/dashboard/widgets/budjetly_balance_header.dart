@@ -214,7 +214,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                       color: (isNegative
                               ? theme.colorScheme.error
                               : context.appColors.brandColor)
-                          .withValues(alpha: context.isDark ? 0.22 : 0.08),
+                          .withValues(
+                            alpha: context.appColors.badgeBorderAlpha,
+                          ),
                       blurRadius: 55,
                       spreadRadius: 8,
                     ),
@@ -484,10 +486,12 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: accent.withValues(alpha: context.isDark ? 0.14 : 0.09),
+            color: accent.withValues(alpha: context.appColors.badgeFillAlpha),
             borderRadius: BorderRadius.circular(AppTheme.squircleRadius(32)),
             border: Border.all(
-              color: accent.withValues(alpha: context.isDark ? 0.25 : 0.15),
+              color: accent.withValues(
+                alpha: context.appColors.badgeBorderAlpha,
+              ),
               width: 1,
             ),
           ),

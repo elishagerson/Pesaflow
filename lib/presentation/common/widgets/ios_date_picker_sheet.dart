@@ -86,7 +86,7 @@ Future<DateTime?> showIosDatePicker(
             Expanded(
               child: CupertinoTheme(
                 data: CupertinoThemeData(
-                  brightness: ctx.isDark ? Brightness.dark : Brightness.light,
+                  brightness: Theme.of(ctx).brightness,
                   textTheme: CupertinoTextThemeData(
                     dateTimePickerTextStyle: ctx.ts(22),
                   ),

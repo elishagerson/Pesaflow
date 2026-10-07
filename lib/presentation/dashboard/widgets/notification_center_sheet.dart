@@ -102,14 +102,14 @@ class _NotificationCenterSheetState
                       height: 38,
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primary.withValues(
-                          alpha: context.isDark ? 0.16 : 0.09,
+                          alpha: context.appColors.badgeFillAlpha,
                         ),
                         borderRadius: BorderRadius.circular(
                           AppTheme.squircleRadius(38),
                         ),
                         border: Border.all(
                           color: theme.colorScheme.primary.withValues(
-                            alpha: context.isDark ? 0.28 : 0.15,
+                            alpha: context.appColors.badgeBorderAlpha,
                           ),
                           width: 1,
                         ),
@@ -436,7 +436,7 @@ class _NotificationCenterSheetState
         decoration: BoxDecoration(
           color: isSelected
               ? accentColor.withValues(
-                  alpha: context.isDark ? 0.20 : 0.12,
+                  alpha: context.appColors.badgeFillAlpha,
                 )
               : theme.colorScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
@@ -511,7 +511,7 @@ class _NotificationCenterSheetState
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: context.isDark ? 0.16 : 0.10),
+              color: color.withValues(alpha: context.appColors.badgeFillAlpha),
               borderRadius: BorderRadius.circular(AppTheme.radiusPill),
             ),
             child: Text(
@@ -547,12 +547,12 @@ class _NotificationCenterSheetState
           ),
           decoration: BoxDecoration(
             color: context.appColors.transferColor.withValues(
-              alpha: context.isDark ? 0.12 : 0.08,
+              alpha: context.appColors.badgeFillAlpha,
             ),
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
             border: Border.all(
               color: context.appColors.transferColor.withValues(
-                alpha: context.isDark ? 0.25 : 0.16,
+                alpha: context.appColors.badgeBorderAlpha,
               ),
               width: 1,
             ),

@@ -150,14 +150,14 @@ class RightNowCard extends ConsumerWidget {
                           height: 34,
                           decoration: BoxDecoration(
                             color: item.iconColor.withValues(
-                              alpha: context.isDark ? 0.16 : 0.09,
+                              alpha: context.appColors.badgeFillAlpha,
                             ),
                             borderRadius: BorderRadius.circular(
                               AppTheme.squircleRadius(34),
                             ),
                             border: Border.all(
                               color: item.iconColor.withValues(
-                                alpha: context.isDark ? 0.28 : 0.16,
+                                alpha: context.appColors.badgeBorderAlpha,
                               ),
                               width: 1,
                             ),
