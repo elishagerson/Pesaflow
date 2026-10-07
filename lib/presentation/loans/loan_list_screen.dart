@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/date_formatter.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/scroll_helpers.dart';
-import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';

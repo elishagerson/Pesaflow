@@ -26,6 +26,7 @@ import 'package:pesaflow/presentation/recurring/widgets/mark_recurring_payment_s
 import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/core/utils/scroll_helpers.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 
 /// Filter options for the recurring flows list.
 enum _RecurringFilter { all, expenses, income, transfers }
@@ -824,7 +825,6 @@ class _RecurringTransactionListScreenState
     int index,
     int totalCount,
   ) {
-    final onSurface = theme.colorScheme.onSurface;
     final isExpense = recurring.type == 'expense';
     final accentColor = isDue
         ? context.appColors.transferColor
@@ -1053,7 +1053,7 @@ class _RecurringTransactionListScreenState
                     ),
                   const SizedBox(height: kSpacing10),
                   TactileSpringContainer(
-                    haptic: HapticType.light,
+                    haptic: HapticType.soft,
                     onTap: () {
                       showMarkRecurringPaymentSheet(
                         context: context,

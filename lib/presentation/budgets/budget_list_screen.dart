@@ -2221,7 +2221,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                                 ),
                                               const SizedBox(height: kSpacing4),
                                               TactileSpringContainer(
-                                                haptic: HapticType.light,
+                                                haptic: HapticType.soft,
                                                 onTap: () {
                                                   showSpringSheet(
                                                     context,
