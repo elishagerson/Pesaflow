@@ -1145,7 +1145,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                                           ),
                                                                       borderRadius:
                                                                           BorderRadius.circular(
-                                                                            kSpacing6,
+                                                                            AppTheme.squircleRadius(
+                                                                              14,
+                                                                            ),
                                                                           ),
                                                                     ),
                                                                     child: Icon(
