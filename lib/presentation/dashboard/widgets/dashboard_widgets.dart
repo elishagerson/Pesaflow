@@ -199,14 +199,14 @@ class _HubCard extends StatelessWidget {
                         height: 28,
                         decoration: BoxDecoration(
                           color: color.withValues(
-                            alpha: context.isDark ? 0.16 : 0.09,
+                            alpha: context.appColors.badgeFillAlpha,
                           ),
                           borderRadius: BorderRadius.circular(
                             AppTheme.squircleRadius(28),
                           ),
                           border: Border.all(
                             color: color.withValues(
-                              alpha: context.isDark ? 0.28 : 0.15,
+                              alpha: context.appColors.badgeBorderAlpha,
                             ),
                             width: 1,
                           ),
