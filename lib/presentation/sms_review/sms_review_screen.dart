@@ -873,119 +873,103 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                               .isNotEmpty) ||
                                                       item.account != null) ...[
                                                     const SizedBox(
-                                                      height: kSpacing8,
+                                                      height: kSpacing6,
                                                     ),
-                                                    Container(
-                                                      width: double.infinity,
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal:
-                                                                kSpacing10,
-                                                            vertical: kSpacing6,
+                                                    Row(
+                                                      children: [
+                                                        if (item.account !=
+                                                            null) ...[
+                                                          Icon(
+                                                            PesaFlowIcons
+                                                                .wallet,
+                                                            size: 13,
+                                                            color: theme
+                                                                .colorScheme
+                                                                .onSurfaceVariant,
                                                           ),
-                                                      decoration: BoxDecoration(
-                                                        color: theme
-                                                            .colorScheme
-                                                            .surfaceContainerHighest
-                                                            .withValues(
-                                                              alpha: 0.25,
-                                                            ),
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              kSpacing6,
-                                                            ),
-                                                      ),
-                                                      child: Row(
-                                                        children: [
-                                                          if (trans.reference !=
-                                                                  null &&
-                                                              trans
-                                                                  .reference!
-                                                                  .isNotEmpty) ...[
-                                                            Icon(
-                                                              PesaFlowIcons.tag,
-                                                              size: 12,
+                                                          const SizedBox(
+                                                            width: kSpacing4,
+                                                          ),
+                                                          Text(
+                                                            item.account!.name,
+                                                            style: context.ts(
+                                                              11,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
                                                               color: theme
                                                                   .colorScheme
                                                                   .onSurfaceVariant,
                                                             ),
-                                                            const SizedBox(
-                                                              width: kSpacing4,
-                                                            ),
-                                                            Flexible(
-                                                              child: Text(
-                                                                trans
-                                                                    .reference!,
-                                                                style: context.ts(
-                                                                  10,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  color: theme
-                                                                      .colorScheme
-                                                                      .onSurfaceVariant,
-                                                                ),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                          if (trans.reference !=
-                                                                  null &&
-                                                              trans
-                                                                  .reference!
-                                                                  .isNotEmpty &&
-                                                              item.account !=
-                                                                  null)
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets.symmetric(
-                                                                    horizontal:
-                                                                        kSpacing6,
+                                                          ),
+                                                        ],
+                                                        if (item.account !=
+                                                                null &&
+                                                            trans.reference !=
+                                                                null &&
+                                                            trans
+                                                                .reference!
+                                                                .isNotEmpty) ...[
+                                                          const SizedBox(
+                                                            width: kSpacing8,
+                                                          ),
+                                                          Text(
+                                                            '•',
+                                                            style: TextStyle(
+                                                              fontSize: 11,
+                                                              color: theme
+                                                                  .colorScheme
+                                                                  .onSurfaceVariant
+                                                                  .withValues(
+                                                                    alpha: 0.4,
                                                                   ),
-                                                              child: Container(
-                                                                width: 1,
-                                                                height: 12,
-                                                                color: theme
-                                                                    .colorScheme
-                                                                    .onSurfaceVariant
-                                                                    .withValues(
-                                                                      alpha:
-                                                                          0.3,
-                                                                    ),
-                                                              ),
                                                             ),
-                                                          if (item.account !=
-                                                              null) ...[
-                                                            Icon(
-                                                              PesaFlowIcons
-                                                                  .wallet,
-                                                              size: 12,
-                                                              color: theme
-                                                                  .colorScheme
-                                                                  .onSurfaceVariant,
-                                                            ),
-                                                            const SizedBox(
-                                                              width: kSpacing4,
-                                                            ),
-                                                            Text(
-                                                              item
-                                                                  .account!
-                                                                  .name,
+                                                          ),
+                                                          const SizedBox(
+                                                            width: kSpacing8,
+                                                          ),
+                                                        ],
+                                                        if (trans.reference !=
+                                                                null &&
+                                                            trans
+                                                                .reference!
+                                                                .isNotEmpty) ...[
+                                                          Icon(
+                                                            PesaFlowIcons.tag,
+                                                            size: 11,
+                                                            color: theme
+                                                                .colorScheme
+                                                                .onSurfaceVariant
+                                                                .withValues(
+                                                                  alpha: 0.7,
+                                                                ),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: kSpacing4,
+                                                          ),
+                                                          Flexible(
+                                                            child: Text(
+                                                              trans.reference!,
                                                               style: context.ts(
-                                                                10,
+                                                                10.5,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w500,
                                                                 color: theme
                                                                     .colorScheme
-                                                                    .onSurfaceVariant,
+                                                                    .onSurfaceVariant
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.8,
+                                                                    ),
                                                               ),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
                                                             ),
-                                                          ],
+                                                          ),
                                                         ],
-                                                      ),
+                                                      ],
                                                     ),
                                                   ],
 
