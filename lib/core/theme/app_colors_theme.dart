@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'app_theme.dart';
 
@@ -87,6 +88,8 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
   final Color investColor;
   final Color dangerColor;
   final Color neutralColor;
+  final double badgeFillAlpha;
+  final double badgeBorderAlpha;
 
   const AppColorsTheme({
     required this.brandColor,
@@ -129,6 +132,8 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     required this.investColor,
     required this.dangerColor,
     required this.neutralColor,
+    this.badgeFillAlpha = 0.12,
+    this.badgeBorderAlpha = 0.25,
   });
 
   factory AppColorsTheme.light() => const AppColorsTheme(
@@ -174,6 +179,8 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     investColor: AppTheme.incomeColor, // == income, don't ship two greens
     dangerColor: AppTheme.expenseColor, // == expense, don't ship two reds
     neutralColor: Color(0xFF6B7280), // Gray-500
+    badgeFillAlpha: 0.10,
+    badgeBorderAlpha: 0.18,
   );
 
   factory AppColorsTheme.dark() => const AppColorsTheme(
@@ -217,6 +224,8 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     investColor: AppTheme.incomeColorDark, // == income
     dangerColor: AppTheme.expenseColorDark, // == expense
     neutralColor: Color(0xFF9CA3AF), // Gray-400
+    badgeFillAlpha: 0.16,
+    badgeBorderAlpha: 0.28,
   );
 
   @override
@@ -261,6 +270,8 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     Color? investColor,
     Color? dangerColor,
     Color? neutralColor,
+    double? badgeFillAlpha,
+    double? badgeBorderAlpha,
   }) {
     return AppColorsTheme(
       brandColor: brandColor ?? this.brandColor,
@@ -304,6 +315,8 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       investColor: investColor ?? this.investColor,
       dangerColor: dangerColor ?? this.dangerColor,
       neutralColor: neutralColor ?? this.neutralColor,
+      badgeFillAlpha: badgeFillAlpha ?? this.badgeFillAlpha,
+      badgeBorderAlpha: badgeBorderAlpha ?? this.badgeBorderAlpha,
     );
   }
 
@@ -368,6 +381,12 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       investColor: Color.lerp(investColor, other.investColor, t)!,
       dangerColor: Color.lerp(dangerColor, other.dangerColor, t)!,
       neutralColor: Color.lerp(neutralColor, other.neutralColor, t)!,
+      badgeFillAlpha:
+          ui.lerpDouble(badgeFillAlpha, other.badgeFillAlpha, t) ??
+          badgeFillAlpha,
+      badgeBorderAlpha:
+          ui.lerpDouble(badgeBorderAlpha, other.badgeBorderAlpha, t) ??
+          badgeBorderAlpha,
     );
   }
 }
