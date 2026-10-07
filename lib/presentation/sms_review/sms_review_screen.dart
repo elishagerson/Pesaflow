@@ -1471,13 +1471,13 @@ class _ActionPill extends StatelessWidget {
       selectedColor: Theme.of(context).colorScheme.onSurface,
       child: Container(
         padding: const EdgeInsets.symmetric(
-          horizontal: kSpacing12,
-          vertical: kSpacing8,
+          horizontal: kSpacing10,
+          vertical: 5,
         ),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-          border: Border.all(color: color.withValues(alpha: 0.22), width: 1.0),
+          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+          border: Border.all(color: color.withValues(alpha: 0.22), width: 0.8),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
