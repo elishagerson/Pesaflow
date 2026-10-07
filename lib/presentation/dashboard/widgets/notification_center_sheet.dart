@@ -635,7 +635,7 @@ class _NotificationCenterSheetState
             height: 36,
             decoration: BoxDecoration(
               color: context.appColors.transferColor.withValues(
-                alpha: context.isDark ? 0.16 : 0.09,
+                alpha: context.appColors.badgeFillAlpha,
               ),
               borderRadius: BorderRadius.circular(
                 AppTheme.squircleRadius(36),
@@ -676,7 +676,7 @@ class _NotificationCenterSheetState
                       ),
                       decoration: BoxDecoration(
                         color: context.appColors.transferColor.withValues(
-                          alpha: context.isDark ? 0.18 : 0.10,
+                          alpha: context.appColors.badgeFillAlpha,
                         ),
                         borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                       ),
@@ -732,12 +732,12 @@ class _NotificationCenterSheetState
                   ),
                   decoration: BoxDecoration(
                     color: context.appColors.transferColor.withValues(
-                      alpha: context.isDark ? 0.20 : 0.12,
+                      alpha: context.appColors.badgeFillAlpha,
                     ),
                     borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                     border: Border.all(
                       color: context.appColors.transferColor.withValues(
-                        alpha: context.isDark ? 0.30 : 0.18,
+                        alpha: context.appColors.badgeBorderAlpha,
                       ),
                       width: 0.8,
                     ),
