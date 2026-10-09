@@ -24,7 +24,6 @@ import 'package:pesaflow/services/home_widgets_renderer.dart';
 import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_hero_strip.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/notification_center_sheet.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/right_now_card.dart';
 import 'package:pesaflow/presentation/state/notification_providers.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -178,6 +177,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final dueAsync = ref.watch(dueRecurringTransactionsProvider);
     final heatmapAsync = ref.watch(spendingHeatmapProvider);
     final templatesAsync = ref.watch(transactionTemplatesStreamProvider);
+    final activeLoansAsync = ref.watch(activeLoansStreamProvider);
 
     // Debounce AppWidget captures
     _scheduleHomeWidgetCaptures();
@@ -669,11 +669,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                         ),
 
-                        // ── 4. Actionable Alerts (Only if items exist) ──
-                        const RightNowCard(),
-                        const SizedBox(height: kSpacing16),
-
-                        // ── 5. Financial Overview 2x2 Hub Grid ──
+                        // ── 4. Financial Overview 2x2 Hub Grid ──
                         FinancialHubGrid(
                           budgets: budgets,
                           overallPct: overallPct,
@@ -694,6 +690,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             orElse: () => 0,
                           ),
                           pendingReviewCount: pendingReviewCount,
+                          activeLoansCount: activeLoansAsync.maybeWhen(
+                            data: (loans) => loans.length,
+                            orElse: () => 0,
+                          ),
                           trackerColor: trackerColor,
                         ),
                         const SizedBox(height: kSpacing24),
@@ -822,7 +822,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   separatorBuilder: (_, _) => Divider(
                                     height: 1,
                                     thickness: 0.5,
-                                    color: onSurface.withValues(alpha: 0.06),
+                                    color: context.appColors.hairline,
                                     indent: 58,
                                   ),
                                   itemBuilder: (context, index) {
@@ -993,7 +993,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: kSpacing20),
+                        const SizedBox(height: kSpacing80),
                       ],
                     ),
                   ),

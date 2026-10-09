@@ -17,6 +17,7 @@ class FinancialHubGrid extends StatelessWidget {
   final int activeRecurringCount;
   final int dueCount;
   final int pendingReviewCount;
+  final int activeLoansCount;
   final Color trackerColor;
 
   const FinancialHubGrid({
@@ -27,6 +28,7 @@ class FinancialHubGrid extends StatelessWidget {
     required this.activeRecurringCount,
     required this.dueCount,
     required this.pendingReviewCount,
+    this.activeLoansCount = 0,
     required this.trackerColor,
   });
 
@@ -69,6 +71,13 @@ class FinancialHubGrid extends StatelessWidget {
     final recurringColor = dueCount > 0
         ? theme.colorScheme.error
         : context.appColors.transferColor;
+
+    final loansMetric = activeLoansCount > 0
+        ? '$activeLoansCount active'
+        : 'Liabilities';
+    final loansSub = activeLoansCount > 0
+        ? 'Active facilities'
+        : 'Track payables';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,8 +141,8 @@ class FinancialHubGrid extends StatelessWidget {
               child: _HubCard(
                 icon: PesaFlowIcons.creditScore,
                 title: 'Loans & Debt',
-                metric: 'Liabilities',
-                subtitle: 'Track payables',
+                metric: loansMetric,
+                subtitle: loansSub,
                 color: context.appColors.transferColor,
                 onTap: () => context.go('/loans'),
               ),
@@ -172,8 +181,9 @@ class _HubCard extends StatelessWidget {
 
     return TactileSpringContainer(
       onTap: onTap,
-      child: PesaSurface.bleed(
+      child: PesaSurface(
         fill: theme.colorScheme.surfaceContainerHigh,
+        stroke: context.appColors.hairline,
         radius: AppTheme.radiusCard,
         padding: const EdgeInsets.all(kSpacing14),
         child: Column(
