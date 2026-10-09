@@ -293,20 +293,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         selectedColor:
                                             theme.colorScheme.onSurface,
                                         child: Container(
-                                          width: 42,
-                                          height: 42,
+                                          width: 38,
+                                          height: 38,
                                           decoration: BoxDecoration(
                                             color: theme
                                                 .colorScheme
                                                 .surfaceContainerHigh,
                                             borderRadius: BorderRadius.circular(
-                                              AppTheme.squircleRadius(42),
+                                              AppTheme.squircleRadius(38),
                                             ),
                                             border: Border.all(
-                                              color: theme
-                                                  .colorScheme
-                                                  .outlineVariant
-                                                  .withValues(alpha: 0.35),
+                                              color: context.appColors.hairline,
                                               width: 1,
                                             ),
                                           ),
@@ -330,8 +327,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           clipBehavior: Clip.none,
                                           children: [
                                             Container(
-                                              width: 42,
-                                              height: 42,
+                                              width: 38,
+                                              height: 38,
                                               decoration: BoxDecoration(
                                                 color: theme
                                                     .colorScheme
@@ -339,14 +336,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                       AppTheme.squircleRadius(
-                                                        42,
+                                                        38,
                                                       ),
                                                     ),
                                                 border: Border.all(
-                                                  color: theme
-                                                      .colorScheme
-                                                      .outlineVariant
-                                                      .withValues(alpha: 0.35),
+                                                  color: context
+                                                      .appColors
+                                                      .hairline,
                                                   width: 1,
                                                 ),
                                               ),
@@ -496,12 +492,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                       ? theme
                                                             .colorScheme
                                                             .primary
-                                                      : theme
-                                                            .colorScheme
-                                                            .outlineVariant
-                                                            .withValues(
-                                                              alpha: 0.35,
-                                                            ),
+                                                      : context
+                                                            .appColors
+                                                            .hairline,
                                                   width: isSelected ? 1.2 : 0.8,
                                                 ),
                                               ),
@@ -561,12 +554,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               border: Border.all(
                                                 color: isSelected
                                                     ? theme.colorScheme.primary
-                                                    : theme
-                                                          .colorScheme
-                                                          .outlineVariant
-                                                          .withValues(
-                                                            alpha: 0.35,
-                                                          ),
+                                                    : context
+                                                          .appColors
+                                                          .hairline,
                                                 width: isSelected ? 1.2 : 0.8,
                                               ),
                                             ),
