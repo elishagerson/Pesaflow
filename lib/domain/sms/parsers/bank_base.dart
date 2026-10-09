@@ -147,10 +147,10 @@ class NmbBankParser implements SmsParser {
         );
       }
 
-      // 3b. Credit (income) — "umepokea" variant (no "kiasi cha", "kutoka kwa")
+      // 3b. Credit (income) — "umepokea" variant with sender ("kutoka kwa")
       // "Ndugu ELISHA GERSON NDUNDULU, umepokea TZS 5,000,000.00 kwenye akaunti inayoishia 1222 kutoka kwa ALEX SAMWEL MAPUNDA, 27-AUG-2026 17:29:15. Kumb: 610FTIT262391237. NMB Karibu Yako."
       match = RegExp(
-        r'umepokea\s+(?:TSH|TZS)\s*([\d,]+(?:\.\d+)?)\s+kwenye\s+akaunti\s+inayoishia\s+\d+\s+kutoka\s+kwa\s+(.+?)(?:,\s*\d{1,2}[-\s]|\.\s*\d{1,2}[-\s]|\.$|$)',
+        r'umepokea\s+(?:TSH|TZS)\s*([\d,]+(?:\.\d+)?)\s+kwenye\s+akaunti\s+inayoishia\s+(?:na\s+)?\d+\s+kutoka\s+kwa\s+(.+?)(?:,\s*\d{1,2}[-\s]|\.\s*\d{1,2}[-\s]|tarehe|\.$|$)',
         caseSensitive: false,
       ).firstMatch(text);
       if (match != null) {
@@ -164,6 +164,30 @@ class NmbBankParser implements SmsParser {
           amount: amt,
           type: 'income',
           senderOrRecipient: senderName,
+          reference: ref,
+          provider: 'NMB_Bank',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 3c. Credit (income) — "umepokea" variant without sender (direct deposit / transfer)
+      // "Ndugu ELISHA GERSON NDUNDULU, umepokea TZS 350,000.00 kwenye akaunti inayoishia 1222 tarehe 08-OCT-2026 20:49:15. Kumb: 101TPFT26281AHG6. NMB Karibu Yako."
+      match = RegExp(
+        r'umepokea\s+(?:TSH|TZS)\s*([\d,]+(?:\.\d+)?)\s+kwenye\s+akaunti\s+inayoishia\s+(?:na\s+)?\d+',
+        caseSensitive: false,
+      ).firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'income',
+          senderOrRecipient: 'Deposit',
           reference: ref,
           provider: 'NMB_Bank',
           balanceAfter: bal,

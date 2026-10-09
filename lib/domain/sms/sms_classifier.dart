@@ -313,9 +313,9 @@ class SmsClassifier {
   }
 
   static bool _hasReferencePattern(String text) {
-    // Labelled reference: Rej:, Ref:, TxnID:, etc.
+    // Labelled reference: Rej:, Ref:, TxnID:, Kumb:, Kumbukumbu:, etc.
     if (RegExp(
-      r'(?:Rej|Ref|TxnID|TxnId|Transaction|Kumbukumbu|ID)[:\s]+[A-Za-z0-9]{4,}',
+      r'(?:Rej|Ref|TxnID|TxnId|Transaction|Kumb(?:ukumbu)?|ID)[:\s]+[A-Za-z0-9]{4,}',
       caseSensitive: false,
     ).hasMatch(text)) {
       return true;
@@ -342,6 +342,13 @@ class SmsClassifier {
     // Matches patterns like "on 15/5/2026 at 1:19 PM" or "tarehe 15/5/2026"
     if (RegExp(
       r'(?:on|tarehe)\s+\d{1,2}/\d{1,2}/\d{2,4}',
+      caseSensitive: false,
+    ).hasMatch(text)) {
+      return true;
+    }
+    // Date formats with month abbreviations like "tarehe 08-OCT-2026"
+    if (RegExp(
+      r'(?:on|tarehe)\s+\d{1,2}-[A-Za-z]{3}-\d{2,4}',
       caseSensitive: false,
     ).hasMatch(text)) {
       return true;

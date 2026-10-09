@@ -839,6 +839,19 @@ void main() {
       expect(result.provider, 'NMB_Bank');
     });
 
+    test('parses credit (umepokea direct deposit variant without sender)', () {
+      const sms =
+          'Ndugu ELISHA GERSON NDUNDULU, umepokea TZS 350,000.00 kwenye akaunti inayoishia 1222 tarehe 08-OCT-2026 20:49:15. Kumb: 101TPFT26281AHG6. NMB Karibu Yako.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 35000000);
+      expect(result.senderOrRecipient, 'Deposit');
+      expect(result.reference, 'NMB-101TPFT26281AHG6');
+      expect(result.provider, 'NMB_Bank');
+    });
+
     test('parses debit (Kimetumwa) with fee in SMS body', () {
       const sms =
           'Kumb: GWX102246282556 Imethibitishwa.\nKiasi cha TSH334,500 kimetumwa kutoka katika akaunti inayoishia na 1222 kwenda ELISHA NDUNDULU 255763559341. Ada: TZS 2,000\nTarehe:10-06-2026 20:11:13. Salio: TZS 1,000,000.00';
