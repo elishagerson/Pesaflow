@@ -14,6 +14,7 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/savings_goals/widgets/quick_deposit_sheet.dart';
 import 'package:pesaflow/presentation/state/notification_providers.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 /// Opens the unified Executive Notification Center sheet.
 Future<void> showNotificationCenterSheet(BuildContext context) {
@@ -428,7 +429,7 @@ class _NotificationCenterSheetState
         setState(() => _selectedFilter = filter);
       },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 140),
+        duration: MotionTokens.durationMicro,
         padding: const EdgeInsets.symmetric(
           horizontal: kSpacing10,
           vertical: 5,

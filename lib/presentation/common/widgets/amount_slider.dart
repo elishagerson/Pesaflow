@@ -159,7 +159,7 @@ class _AmountDisplay extends StatelessWidget {
     }
 
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 180),
+      duration: MotionTokens.durationMicro,
       transitionBuilder: (child, animation) {
         final isNew = child.key == ValueKey(amountStr);
         return isNew
@@ -173,7 +173,7 @@ class _AmountDisplay extends StatelessWidget {
                       ).animate(
                         CurvedAnimation(
                           parent: animation,
-                          curve: Curves.easeOutCubic,
+                          curve: MotionTokens.curveEntrance,
                         ),
                       ),
                   child: child,
@@ -389,7 +389,8 @@ class _DigitTransitionState extends State<_DigitTransition>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) {
-        final eased = Curves.easeOutCubic.transform(_controller.value);
+        final eased =
+            MotionTokens.curveEntrance.transform(_controller.value);
         final slideOffset = (1.0 - eased) * 16.0;
         return Opacity(
           opacity: _controller.value,
@@ -587,8 +588,8 @@ class _GlassThumb extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = radius * 2;
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
-      curve: Curves.easeOutCubic,
+      duration: MotionTokens.durationMicro,
+      curve: MotionTokens.curveEntrance,
       width: size,
       height: size,
       decoration: BoxDecoration(

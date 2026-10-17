@@ -329,7 +329,7 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 150),
+                          duration: MotionTokens.durationMicro,
                           child: _selectedDate != null
                               ? Text(
                                   '${DateFormat('d MMM').format(_selectedDate!)}: ${CurrencyFormatter.formatCents(_selectedAmount ?? 0)}',

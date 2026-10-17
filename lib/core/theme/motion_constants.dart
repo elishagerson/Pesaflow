@@ -47,6 +47,10 @@ class MotionTokens {
   /// Ultra-fast feedback (press-down scale).
   static const Duration durationFast = Duration(milliseconds: 100);
 
+  /// Micro-interaction feedback (selection pills, thumb size changes,
+  /// list scroll-into-view nudges) — fast, but with room to read motion.
+  static const Duration durationMicro = Duration(milliseconds: 150);
+
   /// Standard transitions (crossfades, simple state changes).
   static const Duration durationNormal = Duration(milliseconds: 250);
 

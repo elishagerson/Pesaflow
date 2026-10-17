@@ -38,7 +38,7 @@ class ModernDialog extends StatelessWidget {
       barrierColor: Colors.black.withValues(alpha: 0.6),
       transitionDuration: reduced
           ? MotionTokens.durationFast
-          : const Duration(milliseconds: 260),
+          : MotionTokens.durationNormal,
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, child) {
         final dialog = ModernDialog(
@@ -52,7 +52,9 @@ class ModernDialog extends StatelessWidget {
           return FadeTransition(opacity: anim1, child: dialog);
         }
         final isReverse = anim1.status == AnimationStatus.reverse;
-        final curve = isReverse ? Curves.easeInCubic : Curves.easeOutCubic;
+        final curve = isReverse
+            ? MotionTokens.curveExit
+            : MotionTokens.curveEntrance;
         final scaleValue = Tween<double>(
           begin: isReverse ? 0.95 : 0.92,
           end: 1.0,
@@ -81,14 +83,16 @@ class ModernDialog extends StatelessWidget {
       barrierColor: Colors.black.withValues(alpha: 0.6),
       transitionDuration: reduced
           ? MotionTokens.durationFast
-          : const Duration(milliseconds: 260),
+          : MotionTokens.durationNormal,
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, _) {
         if (reduced) {
           return FadeTransition(opacity: anim1, child: child);
         }
         final isReverse = anim1.status == AnimationStatus.reverse;
-        final curve = isReverse ? Curves.easeInCubic : Curves.easeOutCubic;
+        final curve = isReverse
+            ? MotionTokens.curveExit
+            : MotionTokens.curveEntrance;
         final scaleValue = Tween<double>(
           begin: isReverse ? 0.95 : 0.92,
           end: 1.0,
@@ -264,7 +268,7 @@ class _StaggeredActionsState extends State<_StaggeredActions>
             final t = Interval(
               start.clamp(0.0, 1.0),
               end.clamp(0.0, 1.0),
-              curve: Curves.easeOut,
+              curve: MotionTokens.curveStandard,
             ).transform(_controller.value);
             return Padding(
               padding: EdgeInsets.only(left: i > 0 ? kSpacing12 : 0),

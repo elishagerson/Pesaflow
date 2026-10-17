@@ -11,6 +11,7 @@ import 'package:local_auth/local_auth.dart';
 
 import 'package:pesaflow/core/router/app_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
@@ -621,10 +622,10 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                         ),
                       ),
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 220),
-                      reverseDuration: const Duration(milliseconds: 180),
-                      switchInCurve: Curves.easeOutCubic,
-                      switchOutCurve: Curves.easeInCubic,
+                      duration: MotionTokens.durationDismiss,
+                      reverseDuration: MotionTokens.durationExit,
+                      switchInCurve: MotionTokens.curveEntrance,
+                      switchOutCurve: MotionTokens.curveExit,
                       transitionBuilder: (child, animation) {
                         return FadeTransition(
                           opacity: animation,
@@ -653,8 +654,8 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                     IgnorePointer(
                       ignoring: _booted,
                       child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 420),
-                        switchOutCurve: Curves.easeInCubic,
+                        duration: MotionTokens.durationSlow,
+                        switchOutCurve: MotionTokens.curveExit,
                         transitionBuilder: (child, animation) =>
                             FadeTransition(opacity: animation, child: child),
                         child: _booted

@@ -12,6 +12,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/global_search_provider.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 class _PaletteAction {
   final IconData icon;
@@ -262,8 +263,8 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
     final targetOffset = (index * itemEstimateHeight) - 120.0;
     _scrollController.animateTo(
       targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
-      duration: const Duration(milliseconds: 140),
-      curve: Curves.easeOutCubic,
+      duration: MotionTokens.durationMicro,
+      curve: MotionTokens.curveEntrance,
     );
   }
 
@@ -696,7 +697,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                               duration: const Duration(
                                                 milliseconds: 120,
                                               ),
-                                              curve: Curves.easeOutCubic,
+                                              curve: MotionTokens.curveEntrance,
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                     horizontal: kSpacing10,

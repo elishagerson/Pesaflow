@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/analytics/analytics_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
@@ -45,15 +46,52 @@ Page<dynamic> _nativeIosPage(Widget page) {
   return CupertinoPage(key: ValueKey(page.runtimeType), child: page);
 }
 
+/// Horizontal travel direction of the most recent shell-tab switch
+/// (−1 left, +1 right, 0 none yet). Read by [_tabTransitionPage] so incoming
+/// content slides in from the direction of travel instead of a flat crossfade.
+double _tabTravelDirection = 0;
+
+/// Premium shell-tab transition: a fast opacity ramp so the outgoing branch
+/// never leaves a visible gap, plus a directional slide and a subtle
+/// scale-up settle that carry the rest of the entrance.
 Page<dynamic> _tabTransitionPage(Widget child) {
   return CustomTransitionPage(
     child: child,
-    transitionDuration: const Duration(milliseconds: 200),
-    reverseTransitionDuration: const Duration(milliseconds: 180),
+    transitionDuration: MotionTokens.durationEntrance,
+    reverseTransitionDuration: MotionTokens.durationDismiss,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      final direction = _tabTravelDirection;
+      final settle = CurvedAnimation(
+        parent: animation,
+        curve: MotionTokens.curveEntrance,
+        reverseCurve: MotionTokens.curveExit,
+      );
       return FadeTransition(
-        opacity: CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
-        child: child,
+        // Opacity resolves in the first ~45% of the transition so content
+        // is readable almost immediately; slide/scale own the settle.
+        opacity: CurvedAnimation(
+          parent: animation,
+          curve: const Interval(
+            0.0,
+            0.45,
+            curve: MotionTokens.curveEntrance,
+          ),
+          reverseCurve: const Interval(
+            0.0,
+            0.55,
+            curve: MotionTokens.curveExit,
+          ),
+        ),
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: Offset(0.05 * direction, 0),
+            end: Offset.zero,
+          ).animate(settle),
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.985, end: 1.0).animate(settle),
+            child: child,
+          ),
+        ),
       );
     },
   );
@@ -73,12 +111,15 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
 
   /// Re-tapping the currently-active tab scrolls the visible screen to top.
   void _onDestinationSelected(int index) {
-    if (index == widget.navigationShell.currentIndex) {
+    final current = widget.navigationShell.currentIndex;
+    if (index == current) {
       ref.read(scrollToTopProvider.notifier).trigger();
+    } else {
+      _tabTravelDirection = (index - current).sign.toDouble();
     }
     widget.navigationShell.goBranch(
       index,
-      initialLocation: index == widget.navigationShell.currentIndex,
+      initialLocation: index == current,
     );
   }
 
