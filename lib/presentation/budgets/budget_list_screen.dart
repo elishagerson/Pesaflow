@@ -343,8 +343,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ...StaggeredEntrance(
-                children: [
+              ...staggerEntrance([
                   _buildPlanHeroCard(
                     context,
                     theme,
@@ -408,7 +407,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     ),
                   ],
                 ],
-              ).children,
+              ]),
             ],
           ),
         ),
@@ -434,15 +433,14 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ...StaggeredEntrance(
-                children: [
+              ...staggerEntrance([
                   _buildUpgradeBanner(context, theme),
                   const SizedBox(height: kSpacing16),
                   ...allBudgets.map(
                     (bp) => _buildBudgetCard(context, theme, bp, ref),
                   ),
                 ],
-              ).children,
+              ]),
             ],
           ),
         ),

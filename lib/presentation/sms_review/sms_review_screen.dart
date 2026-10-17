@@ -1516,31 +1516,52 @@ class ConfidenceRing extends StatefulWidget {
 
 class _ConfidenceRingState extends State<ConfidenceRing>
     with SingleTickerProviderStateMixin {
-  late AnimationController _pulseController;
+  late AnimationController _entrance;
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
-    _pulseController = AnimationController(
+    // One-shot draw-in instead of a perpetual pulse: the ring sweeps to its
+    // score once (settling at a static glow) so it never keeps a ticker —
+    // and therefore a repaint — alive while the list sits still.
+    _entrance = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: MotionTokens.durationNormal,
     );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (context.isReducedMotion) {
-      _pulseController.stop();
-      _pulseController.value = 1.0;
-    } else if (!_pulseController.isAnimating) {
-      _pulseController.repeat(reverse: true);
+    if (!_initialized) {
+      _initialized = true;
+      if (context.isReducedMotion) {
+        _entrance.value = 1.0;
+      } else {
+        _entrance.forward();
+      }
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant ConfidenceRing oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.score != widget.score) {
+      // Re-draw the sweep whenever confidence changes.
+      if (context.isReducedMotion) {
+        _entrance.value = 1.0;
+      } else {
+        _entrance
+          ..value = 0.0
+          ..forward();
+      }
     }
   }
 
   @override
   void dispose() {
-    _pulseController.dispose();
+    _entrance.dispose();
     super.dispose();
   }
 
@@ -1553,7 +1574,7 @@ class _ConfidenceRingState extends State<ConfidenceRing>
         painter: _ConfidenceRingPainter(
           score: widget.score,
           color: widget.color,
-          pulseAnimation: _pulseController,
+          entrance: _entrance,
         ),
       ),
     );
@@ -1563,13 +1584,13 @@ class _ConfidenceRingState extends State<ConfidenceRing>
 class _ConfidenceRingPainter extends CustomPainter {
   final double score;
   final Color color;
-  final Animation<double> pulseAnimation;
+  final Animation<double> entrance;
 
   _ConfidenceRingPainter({
     required this.score,
     required this.color,
-    required this.pulseAnimation,
-  }) : super(repaint: pulseAnimation);
+    required this.entrance,
+  }) : super(repaint: entrance);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1578,7 +1599,7 @@ class _ConfidenceRingPainter extends CustomPainter {
     }
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2 - 1;
-    final pulseValue = pulseAnimation.value;
+    final t = MotionTokens.curveEntrance.transform(entrance.value);
 
     final bgPaint = Paint()
       ..color = color.withValues(alpha: 0.18)
@@ -1588,7 +1609,7 @@ class _ConfidenceRingPainter extends CustomPainter {
     canvas.drawCircle(center, radius, bgPaint);
 
     final activePaint = Paint()
-      ..color = color.withValues(alpha: 0.65 + 0.35 * pulseValue)
+      ..color = color.withValues(alpha: 0.65 + 0.25 * t)
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -1596,13 +1617,13 @@ class _ConfidenceRingPainter extends CustomPainter {
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
       -1.5708,
-      6.28318 * score,
+      6.28318 * score * t,
       false,
       activePaint,
     );
 
     final glowPaint = Paint()
-      ..color = color.withValues(alpha: 0.12 + 0.12 * pulseValue)
+      ..color = color.withValues(alpha: 0.10 + 0.08 * t)
       ..strokeWidth = 4
       ..style = PaintingStyle.stroke
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
@@ -1610,7 +1631,7 @@ class _ConfidenceRingPainter extends CustomPainter {
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
       -1.5708,
-      6.28318 * score,
+      6.28318 * score * t,
       false,
       glowPaint,
     );
@@ -1620,7 +1641,7 @@ class _ConfidenceRingPainter extends CustomPainter {
   bool shouldRepaint(covariant _ConfidenceRingPainter oldDelegate) {
     return oldDelegate.score != score ||
         oldDelegate.color != color ||
-        oldDelegate.pulseAnimation.value != pulseAnimation.value;
+        oldDelegate.entrance.value != entrance.value;
   }
 }
 

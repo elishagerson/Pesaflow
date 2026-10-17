@@ -87,8 +87,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                 // ── Floating Top Bar ──
                 const FloatingTopBar(title: 'Loans', padding: EdgeInsets.zero),
                 const SizedBox(height: kSpacing16),
-                ...StaggeredEntrance(
-                  children: [
+                ...staggerEntrance([
                     // Outstanding header
                     totalOutstandingAsync.when(
                       data: (total) => total > 0
@@ -216,7 +215,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                       error: (_, _) => const SizedBox.shrink(),
                     ),
                   ],
-                ).children,
+                ]),
               ],
             ),
           ),

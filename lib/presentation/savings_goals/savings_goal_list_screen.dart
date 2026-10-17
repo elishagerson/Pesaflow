@@ -148,8 +148,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                         padding: const EdgeInsets.all(kSpacing16),
                         child: Column(
                           children: [
-                            ...StaggeredEntrance(
-                              children: [
+                            ...staggerEntrance([
                                 _buildSummaryCard(
                                   context,
                                   theme,
@@ -210,7 +209,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                                 ],
                                 const SizedBox(height: kSpacing80),
                               ],
-                            ).children,
+                            ]),
                           ],
                         ),
                       ),
