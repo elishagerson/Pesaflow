@@ -215,7 +215,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                       error: (_, _) => const SizedBox.shrink(),
                     ),
                   ],
-                ]),
+                ),
               ],
             ),
           ),
