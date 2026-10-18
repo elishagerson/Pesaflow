@@ -113,10 +113,7 @@ class RightNowCard extends ConsumerWidget {
               ),
               const Spacer(),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 6,
-                  vertical: 2,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.error.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),

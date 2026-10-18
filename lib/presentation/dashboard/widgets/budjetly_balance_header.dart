@@ -211,12 +211,13 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
-                      color: (isNegative
-                              ? theme.colorScheme.error
-                              : context.appColors.brandColor)
-                          .withValues(
-                            alpha: context.appColors.badgeBorderAlpha,
-                          ),
+                      color:
+                          (isNegative
+                                  ? theme.colorScheme.error
+                                  : context.appColors.brandColor)
+                              .withValues(
+                                alpha: context.appColors.badgeBorderAlpha,
+                              ),
                       blurRadius: 55,
                       spreadRadius: 8,
                     ),
@@ -507,7 +508,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                 label,
                 style: context.appTypography.eyebrow.copyWith(
                   fontSize: 10,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.8,
+                  ),
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
