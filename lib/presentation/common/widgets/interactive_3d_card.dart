@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 
@@ -188,7 +189,9 @@ class _Interactive3DCardState extends State<Interactive3DCard>
                 end: _isPressed ? Offset(_tiltX, _tiltY) : Offset.zero,
               ),
               duration: Duration(milliseconds: _isPressed ? 80 : 500),
-              curve: _isPressed ? Curves.easeOutQuad : Curves.easeOutCubic,
+              curve: _isPressed
+                  ? Curves.easeOutQuad
+                  : MotionTokens.curveEntrance,
               builder: (context, tilt, child) {
                 // Perspective transformation matrix
                 final matrix = Matrix4.identity()

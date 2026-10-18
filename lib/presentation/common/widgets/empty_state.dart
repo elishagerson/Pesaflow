@@ -40,7 +40,10 @@ class _EmptyStateState extends State<EmptyState>
     super.initState();
     _entranceController = AnimationController(vsync: this);
     _entranceScale = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _entranceController, curve: Curves.easeOutCubic),
+      CurvedAnimation(
+        parent: _entranceController,
+        curve: MotionTokens.curveEntrance,
+      ),
     );
   }
 

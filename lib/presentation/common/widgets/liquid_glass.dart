@@ -144,7 +144,7 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
       child: AnimatedBuilder(
         animation: _entrance,
         builder: (context, child) {
-          final e = Curves.easeOutCubic.transform(_entrance.value);
+          final e = MotionTokens.curveEntrance.transform(_entrance.value);
           final k = e * widget.intensity;
           if (k <= 0.01) return child!;
 

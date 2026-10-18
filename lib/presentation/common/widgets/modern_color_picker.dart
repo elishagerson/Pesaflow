@@ -427,7 +427,7 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
               ? CrossFadeState.showSecond
               : CrossFadeState.showFirst,
           duration: MotionTokens.durationSlow,
-          sizeCurve: Curves.easeOutCubic,
+          sizeCurve: MotionTokens.curveEntrance,
         ),
       ],
     );

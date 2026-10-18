@@ -61,7 +61,7 @@ mixin MotionAwareMixin<T extends StatefulWidget> on State<T> {
     AnimationController controller,
     double target, {
     Duration duration = MotionTokens.durationNormal,
-    Curve curve = Curves.easeOutCubic,
+    Curve curve = MotionTokens.curveEntrance,
   }) {
     if (!shouldAnimate) {
       controller.value = target;

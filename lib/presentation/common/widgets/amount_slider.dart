@@ -389,8 +389,7 @@ class _DigitTransitionState extends State<_DigitTransition>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) {
-        final eased =
-            MotionTokens.curveEntrance.transform(_controller.value);
+        final eased = MotionTokens.curveEntrance.transform(_controller.value);
         final slideOffset = (1.0 - eased) * 16.0;
         return Opacity(
           opacity: _controller.value,

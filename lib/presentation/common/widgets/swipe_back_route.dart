@@ -202,7 +202,9 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
       animation: Listenable.merge(listenables),
       builder: (_, _) {
         final isReverse = widget.animation.status == AnimationStatus.reverse;
-        final curve = isReverse ? Curves.easeInCubic : Curves.easeOutCubic;
+        final curve = isReverse
+            ? MotionTokens.curveExit
+            : MotionTokens.curveEntrance;
         final pushValue = curve.transform(
           widget.animation.value.clamp(0.0, 1.0),
         );
@@ -222,7 +224,7 @@ class _SwipeBackTransitionState extends State<_SwipeBackTransition>
         // Secondary parallax shift: if another route is pushed on top of this one,
         // this route subtly shifts left by 25% of the screen width and dims by 15%.
         final secondaryValue = widget.secondaryAnimation != null
-            ? Curves.easeOutCubic.transform(
+            ? MotionTokens.curveEntrance.transform(
                 widget.secondaryAnimation!.value.clamp(0.0, 1.0),
               )
             : 0.0;

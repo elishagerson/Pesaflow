@@ -118,7 +118,7 @@ class _AmountTextState extends ConsumerState<AmountText> {
         return TweenAnimationBuilder<double>(
           key: ValueKey(widget.amountInCents),
           duration: context.motionDuration(MotionTokens.durationProgress),
-          curve: Curves.easeOutCubic,
+          curve: MotionTokens.curveEntrance,
           tween: Tween<double>(
             begin: begin.toDouble(),
             end: widget.amountInCents.toDouble(),

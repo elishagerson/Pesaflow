@@ -19,7 +19,9 @@ class HeroCardRoute<T> extends PageRouteBuilder<T> {
         pageBuilder: (context, animation, secondaryAnimation) => page,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           final isReverse = animation.status == AnimationStatus.reverse;
-          final curve = isReverse ? Curves.easeInCubic : Curves.easeOutCubic;
+          final curve = isReverse
+              ? MotionTokens.curveExit
+              : MotionTokens.curveEntrance;
           final curvedAnim = CurvedAnimation(parent: animation, curve: curve);
 
           return FadeTransition(

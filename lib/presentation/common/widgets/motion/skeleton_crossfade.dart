@@ -29,8 +29,8 @@ class SkeletonCrossfade extends StatelessWidget {
 
     return AnimatedSwitcher(
       duration: MotionTokens.durationNormal,
-      switchInCurve: Curves.easeOutCubic,
-      switchOutCurve: Curves.easeInCubic,
+      switchInCurve: MotionTokens.curveEntrance,
+      switchOutCurve: MotionTokens.curveExit,
       transitionBuilder: (child, animation) {
         final isContent = child.key != const ValueKey('skeleton');
         if (isContent) {

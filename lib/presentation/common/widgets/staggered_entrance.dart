@@ -53,8 +53,7 @@ class _StaggeredEntranceItem extends StatefulWidget {
   });
 
   @override
-  State<_StaggeredEntranceItem> createState() =>
-      _StaggeredEntranceItemState();
+  State<_StaggeredEntranceItem> createState() => _StaggeredEntranceItemState();
 }
 
 class _StaggeredEntranceItemState extends State<_StaggeredEntranceItem>

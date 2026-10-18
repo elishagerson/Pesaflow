@@ -177,7 +177,7 @@ Future<Category?> showAddCategoryDialog(
                     children: [
                       AnimatedContainer(
                         duration: MotionTokens.durationNormal,
-                        curve: Curves.easeOutCubic,
+                        curve: MotionTokens.curveEntrance,
                         width: 48,
                         height: 48,
                         decoration: BoxDecoration(
@@ -203,8 +203,9 @@ Future<Category?> showAddCategoryDialog(
                               size: 22,
                               color: isSelected
                                   ? accentColor
-                                  : theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.65),
+                                  : theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.65,
+                                    ),
                             ),
                             // ── Selected checkmark badge ──
                             if (isSelected)
@@ -246,8 +247,9 @@ Future<Category?> showAddCategoryDialog(
                               : FontWeight.w500,
                           color: isSelected
                               ? theme.colorScheme.onSurface
-                              : theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.55),
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.55,
+                                ),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

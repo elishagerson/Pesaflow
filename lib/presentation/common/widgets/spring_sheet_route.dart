@@ -105,8 +105,8 @@ class _SpringSheetAnimatedTransition extends StatelessWidget {
       builder: (context, child) {
         final isReverse = animation.status == AnimationStatus.reverse;
         final t = isReverse
-            ? Curves.easeInCubic.transform(animation.value)
-            : Curves.easeOutCubic.transform(animation.value);
+            ? MotionTokens.curveExit.transform(animation.value)
+            : MotionTokens.curveEntrance.transform(animation.value);
 
         // Slide up smoothly from completely off-screen at bottom, slide down on exit
         final scale = 0.98 + (0.02 * t);

@@ -118,7 +118,7 @@ class _ToastWidgetState extends State<_ToastWidget>
         .animateTo(
           0.0,
           duration: MotionTokens.durationExit,
-          curve: Curves.easeInCubic,
+          curve: MotionTokens.curveExit,
         )
         .then((_) {
           widget.onDismiss();

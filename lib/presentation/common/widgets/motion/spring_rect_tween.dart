@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 
 /// Hero rect interpolation using an ease-out-cubic curve for a smooth
 /// (non-spring) flight between the source and destination rects.
@@ -9,7 +10,7 @@ class CubicHeroRectTween extends RectTween {
 
   @override
   Rect evaluate(Animation<double> animation) {
-    final double t = Curves.easeOutCubic.transform(animation.value);
+    final double t = MotionTokens.curveEntrance.transform(animation.value);
 
     final double? left = ui.lerpDouble(begin?.left, end?.left, t);
     final double? top = ui.lerpDouble(begin?.top, end?.top, t);
