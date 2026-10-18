@@ -174,43 +174,39 @@ class ProviderMatcher {
   ];
 
   static const _tigoOwnership = [
-    'NEW MIXX BALANCE',       // Only Tigo/Mixx uses this
+    'NEW MIXX BALANCE', // Only Tigo/Mixx uses this
     'MIXX WALLET',
     'MIXX BY YAS',
     'TIGO PESA AIRTIME',
     'TIGO PESA BUNDLE',
     'TIGO PESA SERVICE FEE',
-    'UNUNUZI WA KIFURUSHI',   // Tigo bundle purchase (Swahili)
-    'CASH-IN OF',             // Tigo Cash-In format
-    'BUSTISHA',               // Tigo loan product
-    'NIVUSHE',                // Tigo loan product
-    'MKOPO WA MIXX',          // Tigo loan product
-    'MIXX MKOPO',             // Tigo loan product
-    'YAS POSTPAID',           // Yas PostPaid bill
+    'UNUNUZI WA KIFURUSHI', // Tigo bundle purchase (Swahili)
+    'CASH-IN OF', // Tigo Cash-In format
+    'BUSTISHA', // Tigo loan product
+    'NIVUSHE', // Tigo loan product
+    'MKOPO WA MIXX', // Tigo loan product
+    'MIXX MKOPO', // Tigo loan product
+    'YAS POSTPAID', // Yas PostPaid bill
   ];
 
   static const _mpesaOwnership = [
-    'NEW M-PESA BALANCE',      // Only in M-Pesa-sent SMS
-    'NEW M PESA BALANCE',      // Variant without hyphen
-    'PESA ZIMEWEKWA',          // M-Pesa Swahili deposit
-    'PESA ZIMEKOPESHWA',       // M-Pesa Swahili loan
-    'KODI YA KUHUDUMIA',       // M-Pesa Swahili service fee
-    'M-PESA OVERDRAFT',        // M-Pesa overdraft repayment
-    'LIPA KWA M-PESA',         // M-Pesa merchant payment
-    'YOUR M-PESA ACCOUNT',     // Deducted from your M-Pesa account
-    'FROM YOUR M-PESA',        // Deducted from your M-Pesa
+    'NEW M-PESA BALANCE', // Only in M-Pesa-sent SMS
+    'NEW M PESA BALANCE', // Variant without hyphen
+    'PESA ZIMEWEKWA', // M-Pesa Swahili deposit
+    'PESA ZIMEKOPESHWA', // M-Pesa Swahili loan
+    'KODI YA KUHUDUMIA', // M-Pesa Swahili service fee
+    'M-PESA OVERDRAFT', // M-Pesa overdraft repayment
+    'LIPA KWA M-PESA', // M-Pesa merchant payment
+    'YOUR M-PESA ACCOUNT', // Deducted from your M-Pesa account
+    'FROM YOUR M-PESA', // Deducted from your M-Pesa
   ];
 
   static const _airtelOwnership = [
-    'AIRTEL MONEY',             // Two-word compound (not bare 'AIRTEL')
+    'AIRTEL MONEY', // Two-word compound (not bare 'AIRTEL')
     'AIRTELMONEY',
     'AIRTEL PESA',
-    'MAKATO',                   // Airtel-specific fee breakdown term
+    'MAKATO', // Airtel-specific fee breakdown term
   ];
 
-  static const _halopesaOwnership = [
-    'HALOPESA',
-    'HALO PESA',
-    'HALOTEL',
-  ];
+  static const _halopesaOwnership = ['HALOPESA', 'HALO PESA', 'HALOTEL'];
 }

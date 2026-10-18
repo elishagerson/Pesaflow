@@ -64,7 +64,10 @@ class _IosTabBarState extends State<IosTabBar>
       return;
     }
     _selAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _selController, curve: Curves.easeOutCubic),
+      CurvedAnimation(
+        parent: _selController,
+        curve: MotionTokens.curveEntrance,
+      ),
     );
     _selController.forward(from: 0.0);
   }
@@ -268,14 +271,14 @@ class _IosTabBarState extends State<IosTabBar>
                   children: [
                     AnimatedSwitcher(
                       duration: MotionTokens.durationExit,
-                      switchInCurve: Curves.easeOutCubic,
-                      switchOutCurve: Curves.easeInCubic,
+                      switchInCurve: MotionTokens.curveEntrance,
+                      switchOutCurve: MotionTokens.curveExit,
                       transitionBuilder: (child, anim) {
                         return ScaleTransition(
                           scale: Tween<double>(begin: 0.82, end: 1.0).animate(
                             CurvedAnimation(
                               parent: anim,
-                              curve: Curves.easeOutCubic,
+                              curve: MotionTokens.curveEntrance,
                             ),
                           ),
                           child: child,
@@ -532,7 +535,7 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
     _controller.animateTo(
       1.0,
       duration: MotionTokens.durationFast,
-      curve: Curves.easeOutCubic,
+      curve: MotionTokens.curveEntrance,
     );
   }
 

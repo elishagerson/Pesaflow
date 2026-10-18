@@ -344,20 +344,46 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ...staggerEntrance([
-                  _buildPlanHeroCard(
-                    context,
-                    theme,
-                    groups,
-                    monthlyIncome,
-                    budgetRule,
-                    ref,
-                  ),
-                  const SizedBox(height: kSpacing20),
+                _buildPlanHeroCard(
+                  context,
+                  theme,
+                  groups,
+                  monthlyIncome,
+                  budgetRule,
+                  ref,
+                ),
+                const SizedBox(height: kSpacing20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'BUDGET GROUPS',
+                      style: context.ts(
+                        12,
+                        fontWeight: FontWeight.w700,
+                        color: onSurface.withValues(alpha: 0.5),
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                    Text(
+                      '${groups.length} groups',
+                      style: context.ts(
+                        12,
+                        fontWeight: FontWeight.w600,
+                        color: onSurface.withValues(alpha: 0.4),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: kSpacing12),
+                ...groups.map((g) => _buildGroupCard(context, theme, g, ref)),
+                if (standaloneBudgets.isNotEmpty) ...[
+                  const SizedBox(height: kSpacing24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'BUDGET GROUPS',
+                        'STANDALONE BUDGETS',
                         style: context.ts(
                           12,
                           fontWeight: FontWeight.w700,
@@ -366,7 +392,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         ),
                       ),
                       Text(
-                        '${groups.length} groups',
+                        '${standaloneBudgets.length} envelopes',
                         style: context.ts(
                           12,
                           fontWeight: FontWeight.w600,
@@ -376,38 +402,11 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     ],
                   ),
                   const SizedBox(height: kSpacing12),
-                  ...groups.map((g) => _buildGroupCard(context, theme, g, ref)),
-                  if (standaloneBudgets.isNotEmpty) ...[
-                    const SizedBox(height: kSpacing24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'STANDALONE BUDGETS',
-                          style: context.ts(
-                            12,
-                            fontWeight: FontWeight.w700,
-                            color: onSurface.withValues(alpha: 0.5),
-                            letterSpacing: 1.0,
-                          ),
-                        ),
-                        Text(
-                          '${standaloneBudgets.length} envelopes',
-                          style: context.ts(
-                            12,
-                            fontWeight: FontWeight.w600,
-                            color: onSurface.withValues(alpha: 0.4),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: kSpacing12),
-                    ...standaloneBudgets.map(
-                      (bp) => _buildBudgetCard(context, theme, bp, ref),
-                    ),
-                  ],
+                  ...standaloneBudgets.map(
+                    (bp) => _buildBudgetCard(context, theme, bp, ref),
+                  ),
                 ],
-              ),
+              ]),
             ],
           ),
         ),
@@ -434,13 +433,12 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ...staggerEntrance([
-                  _buildUpgradeBanner(context, theme),
-                  const SizedBox(height: kSpacing16),
-                  ...allBudgets.map(
-                    (bp) => _buildBudgetCard(context, theme, bp, ref),
-                  ),
-                ],
-              ),
+                _buildUpgradeBanner(context, theme),
+                const SizedBox(height: kSpacing16),
+                ...allBudgets.map(
+                  (bp) => _buildBudgetCard(context, theme, bp, ref),
+                ),
+              ]),
             ],
           ),
         ),

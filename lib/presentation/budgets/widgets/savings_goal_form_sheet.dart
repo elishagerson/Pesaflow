@@ -1034,7 +1034,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                       color: isSel
                                           ? themeCol
                                           : theme.colorScheme.onSurface
-                                              .withValues(alpha: 0.85),
+                                                .withValues(alpha: 0.85),
                                     ),
                                     if (isSel)
                                       Positioned(
@@ -1218,9 +1218,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
               : theme.colorScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
           border: Border.all(
-            color: isMatching
-                ? activeColor
-                : context.appColors.hairlineStrong,
+            color: isMatching ? activeColor : context.appColors.hairlineStrong,
             width: isMatching ? 1.5 : 1,
           ),
         ),

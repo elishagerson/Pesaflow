@@ -12,6 +12,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:pesaflow/core/router/app_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
@@ -561,7 +562,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                                   ),
                                             ),
                                             child: const Icon(
-                                              Icons.lock_outline_rounded,
+                                              PesaFlowIcons.lock,
                                               color: Color(0xFF0F4C5C),
                                               size: 48,
                                             ),
@@ -593,7 +594,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                         FilledButton.icon(
                                           onPressed: _authenticate,
                                           icon: const Icon(
-                                            Icons.fingerprint_rounded,
+                                            PesaFlowIcons.biometric,
                                           ),
                                           label: const Text('Unlock App'),
                                           style: FilledButton.styleFrom(
