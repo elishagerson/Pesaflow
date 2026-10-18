@@ -13,6 +13,7 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -874,10 +875,10 @@ class _SavingsGoalDetailSheetState
                                 ),
                               ),
                               const SizedBox(height: kSpacing4),
-                              Text(
-                                CurrencyFormatter.formatCents(
-                                  widget.goal.currentAmount,
-                                ),
+                              AmountText(
+                                amountInCents: widget.goal.currentAmount,
+                                animate: true,
+                                useMonospace: false,
                                 style: context.ts(
                                   22,
                                   fontWeight: FontWeight.w800,

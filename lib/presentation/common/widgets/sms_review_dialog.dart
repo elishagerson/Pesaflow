@@ -150,6 +150,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                     AmountText(
                       amountInCents: transactedCents,
                       type: amountType,
+                      animate: true,
                       style: context
                           .ts(28, fontWeight: FontWeight.bold)
                           .copyWith(

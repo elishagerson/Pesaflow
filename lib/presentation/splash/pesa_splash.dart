@@ -186,15 +186,15 @@ class _PesaSplashState extends State<PesaSplash>
                       SizedBox(height: kSpacing6),
                       Opacity(
                         opacity: wordIn * 0.7,
-                          child: Text(
-                            'EVERY SHILLING, TRACKED',
-                            style: context.ts(
-                              10,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 2.4,
-                              color: wordColor,
-                            ),
+                        child: Text(
+                          'EVERY SHILLING, TRACKED',
+                          style: context.ts(
+                            10,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 2.4,
+                            color: wordColor,
                           ),
+                        ),
                       ),
                     ],
                   ),

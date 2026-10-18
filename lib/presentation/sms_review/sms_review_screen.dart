@@ -915,17 +915,15 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                           ),
                                                           Text(
                                                             '•',
-                                                            style: context
-                                                                .ts(
-                                                                  11,
-                                                                  color: theme
-                                                                      .colorScheme
-                                                                      .onSurfaceVariant
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.4,
-                                                                      ),
-                                                                ),
+                                                            style: context.ts(
+                                                              11,
+                                                              color: theme
+                                                                  .colorScheme
+                                                                  .onSurfaceVariant
+                                                                  .withValues(
+                                                                    alpha: 0.4,
+                                                                  ),
+                                                            ),
                                                           ),
                                                           const SizedBox(
                                                             width: kSpacing8,

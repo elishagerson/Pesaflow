@@ -9,6 +9,7 @@ import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -299,16 +300,19 @@ class TransactionDetailScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: kSpacing20),
                         // Display Amount
-                        Text(
-                          (isIncome ? '+ ' : '- ') +
-                              CurrencyFormatter.formatCents(t.amount),
+                        AmountText(
+                          amountInCents: t.amount,
+                          type: isIncome
+                              ? AmountType.income
+                              : AmountType.expense,
+                          animate: true,
+                          useMonospace: false,
                           style: context.ts(
                             36,
                             fontWeight: FontWeight.w900,
                             color: amountColor,
                             letterSpacing: -1.2,
                           ),
-                          textAlign: TextAlign.center,
                         ),
 
                         // Perforated Ticket Divider & Mask Cutouts

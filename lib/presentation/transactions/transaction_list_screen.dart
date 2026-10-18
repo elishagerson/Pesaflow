@@ -847,6 +847,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                             : (dailyNetChange < 0
                                                   ? AmountType.expense
                                                   : AmountType.neutral),
+                                        animate: true,
                                         style: context.ts(
                                           12,
                                           fontWeight: FontWeight.w700,
@@ -1012,10 +1013,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                               ),
                                                           borderRadius:
                                                               BorderRadius.circular(
-                                                                AppTheme
-                                                                    .squircleRadius(
-                                                                      38,
-                                                                    ),
+                                                                AppTheme.squircleRadius(
+                                                                  38,
+                                                                ),
                                                               ),
                                                         ),
                                                         child: Icon(

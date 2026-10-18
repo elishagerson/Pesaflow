@@ -146,6 +146,7 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                     ),
                     AmountText(
                       amountInCents: data.totalExpenditure,
+                      animate: true,
                       style: context.ts(
                         20,
                         color: appColors.expenseColor,

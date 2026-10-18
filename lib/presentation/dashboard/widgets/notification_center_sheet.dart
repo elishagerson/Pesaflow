@@ -512,11 +512,7 @@ class _NotificationCenterSheetState
             ),
             child: Text(
               '$count',
-              style: context.ts(
-                9.5,
-                fontWeight: FontWeight.w800,
-                color: color,
-              ),
+              style: context.ts(9.5, fontWeight: FontWeight.w800, color: color),
             ),
           ),
         ],

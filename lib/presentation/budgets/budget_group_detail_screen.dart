@@ -219,6 +219,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                                       const SizedBox(height: kSpacing4),
                                       AmountText(
                                         amountInCents: groupData.totalSpent,
+                                        animate: true,
                                         style: context.ts(
                                           28,
                                           fontWeight: FontWeight.w800,

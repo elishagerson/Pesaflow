@@ -9,6 +9,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
@@ -312,10 +313,10 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
               FittedBox(
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  CurrencyFormatter.formatCents(
-                    isActive ? loan.remaining : loan.amount,
-                  ),
+                child: AmountText(
+                  amountInCents: isActive ? loan.remaining : loan.amount,
+                  animate: true,
+                  useMonospace: false,
                   // The optical display cut of Inter, not w900: at this size
                   // the two differ by less than a pixel of weight but a lot of
                   // colour, and this is the one number the screen is about.

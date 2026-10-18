@@ -30,7 +30,8 @@ void main() {
         createTestWidget(
           overrides: [
             reviewQueueStreamProvider.overrideWith(
-              (ref) => Stream.value(const <TransactionWithCategoryAndAccount>[]),
+              (ref) =>
+                  Stream.value(const <TransactionWithCategoryAndAccount>[]),
             ),
             dueRecurringTransactionsProvider.overrideWith(
               (ref) async => const <RecurringTransaction>[],
@@ -187,48 +188,50 @@ void main() {
       expect(find.text('Adjust'), findsOneWidget);
     });
 
-    testWidgets('displays savings milestone reminders and provides deposit action', (
-      tester,
-    ) async {
-      final now = DateTime.now();
-      final mockGoal = SavingsGoal(
-        id: 'goal-1',
-        name: 'Emergency Fund',
-        targetAmount: 50000000, // 500,000 TSh
-        currentAmount: 20000000, // 200,000 TSh
-        targetDate: now.add(const Duration(days: 15)),
-        color: '#4CAF50',
-        icon: 'savings',
-        isCompleted: false,
-        createdAt: now,
-      );
+    testWidgets(
+      'displays savings milestone reminders and provides deposit action',
+      (tester) async {
+        final now = DateTime.now();
+        final mockGoal = SavingsGoal(
+          id: 'goal-1',
+          name: 'Emergency Fund',
+          targetAmount: 50000000, // 500,000 TSh
+          currentAmount: 20000000, // 200,000 TSh
+          targetDate: now.add(const Duration(days: 15)),
+          color: '#4CAF50',
+          icon: 'savings',
+          isCompleted: false,
+          createdAt: now,
+        );
 
-      await tester.pumpWidget(
-        createTestWidget(
-          overrides: [
-            reviewQueueStreamProvider.overrideWith(
-              (ref) => Stream.value(const <TransactionWithCategoryAndAccount>[]),
-            ),
-            dueRecurringTransactionsProvider.overrideWith(
-              (ref) async => const <RecurringTransaction>[],
-            ),
-            budgetProgressProvider.overrideWith((ref) async => const []),
-            activeLoansStreamProvider.overrideWith(
-              (ref) => Stream.value(const <Loan>[]),
-            ),
-            savingsGoalsStreamProvider.overrideWith(
-              (ref) => Stream.value([mockGoal]),
-            ),
-          ],
-          child: const NotificationCenterSheet(),
-        ),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          createTestWidget(
+            overrides: [
+              reviewQueueStreamProvider.overrideWith(
+                (ref) =>
+                    Stream.value(const <TransactionWithCategoryAndAccount>[]),
+              ),
+              dueRecurringTransactionsProvider.overrideWith(
+                (ref) async => const <RecurringTransaction>[],
+              ),
+              budgetProgressProvider.overrideWith((ref) async => const []),
+              activeLoansStreamProvider.overrideWith(
+                (ref) => Stream.value(const <Loan>[]),
+              ),
+              savingsGoalsStreamProvider.overrideWith(
+                (ref) => Stream.value([mockGoal]),
+              ),
+            ],
+            child: const NotificationCenterSheet(),
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Emergency Fund'), findsOneWidget);
-      expect(find.textContaining('DUE IN'), findsOneWidget);
-      expect(find.text('Deposit'), findsOneWidget);
-    });
+        expect(find.text('Emergency Fund'), findsOneWidget);
+        expect(find.textContaining('DUE IN'), findsOneWidget);
+        expect(find.text('Deposit'), findsOneWidget);
+      },
+    );
 
     testWidgets('filtering tabs isolates corresponding category items', (
       tester,
@@ -255,7 +258,8 @@ void main() {
         createTestWidget(
           overrides: [
             reviewQueueStreamProvider.overrideWith(
-              (ref) => Stream.value(const <TransactionWithCategoryAndAccount>[]),
+              (ref) =>
+                  Stream.value(const <TransactionWithCategoryAndAccount>[]),
             ),
             dueRecurringTransactionsProvider.overrideWith(
               (ref) async => [mockDueBill],

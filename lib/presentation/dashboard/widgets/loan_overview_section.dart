@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -178,8 +179,10 @@ class LoanOverviewSection extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              CurrencyFormatter.formatCents(totalOutstanding),
+                            AmountText(
+                              amountInCents: totalOutstanding,
+                              animate: true,
+                              useMonospace: false,
                               style: context.ts(
                                 24,
                                 fontWeight: FontWeight.w900,
