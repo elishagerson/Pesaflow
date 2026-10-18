@@ -414,18 +414,22 @@ class _ShadowParams {
   List<BoxShadow> toList() {
     final out = <BoxShadow>[];
     if (diffuse != null && (diffuse!.blur > 0 || diffuse!.offsetY > 0)) {
-      out.add(BoxShadow(
-        color: diffuse!.color,
-        blurRadius: diffuse!.blur,
-        offset: Offset(0, diffuse!.offsetY),
-      ));
+      out.add(
+        BoxShadow(
+          color: diffuse!.color,
+          blurRadius: diffuse!.blur,
+          offset: Offset(0, diffuse!.offsetY),
+        ),
+      );
     }
     if (crisp != null && (crisp!.blur > 0 || crisp!.offsetY > 0)) {
-      out.add(BoxShadow(
-        color: crisp!.color,
-        blurRadius: crisp!.blur,
-        offset: Offset(0, crisp!.offsetY),
-      ));
+      out.add(
+        BoxShadow(
+          color: crisp!.color,
+          blurRadius: crisp!.blur,
+          offset: Offset(0, crisp!.offsetY),
+        ),
+      );
     }
     return out;
   }

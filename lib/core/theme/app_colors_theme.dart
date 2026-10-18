@@ -340,8 +340,11 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       brandGradientTo: Color.lerp(brandGradientTo, other.brandGradientTo, t)!,
       brandGlow: Color.lerp(brandGlow, other.brandGlow, t)!,
       cardGlow: Color.lerp(cardGlow, other.cardGlow, t)!,
-      cardGradientFrom:
-          Color.lerp(cardGradientFrom, other.cardGradientFrom, t)!,
+      cardGradientFrom: Color.lerp(
+        cardGradientFrom,
+        other.cardGradientFrom,
+        t,
+      )!,
       cardGradientTo: Color.lerp(cardGradientTo, other.cardGradientTo, t)!,
       glassFill: Color.lerp(glassFill, other.glassFill, t)!,
       glassStroke: Color.lerp(glassStroke, other.glassStroke, t)!,
