@@ -590,8 +590,7 @@ class _SavingsGoalDetailScreenState
                                             child: Row(
                                               children: [
                                                 Icon(
-                                                  Icons
-                                                      .account_balance_wallet_rounded,
+                                                  PesaFlowIcons.wallet,
                                                   size: 18,
                                                   color: onSurface.withValues(
                                                     alpha: 0.38,
@@ -618,8 +617,7 @@ class _SavingsGoalDetailScreenState
                                                       theme.colorScheme.surface,
                                                   underline: const SizedBox(),
                                                   icon: Icon(
-                                                    Icons
-                                                        .keyboard_arrow_down_rounded,
+                                                    PesaFlowIcons.chevronDown,
                                                     size: 20,
                                                     color: onSurface.withValues(
                                                       alpha: 0.5,
@@ -716,10 +714,8 @@ class _SavingsGoalDetailScreenState
                                               children: [
                                                 Icon(
                                                   isDeposit
-                                                      ? Icons
-                                                            .add_circle_outline_rounded
-                                                      : Icons
-                                                            .remove_circle_outline_rounded,
+                                                      ? PesaFlowIcons.add
+                                                      : PesaFlowIcons.remove,
                                                   size: 18,
                                                   color: theme
                                                       .colorScheme

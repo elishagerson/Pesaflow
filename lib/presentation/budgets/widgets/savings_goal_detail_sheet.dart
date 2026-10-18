@@ -582,8 +582,7 @@ class _SavingsGoalDetailSheetState
                                                     theme.colorScheme.surface,
                                                 underline: const SizedBox(),
                                                 icon: Icon(
-                                                  Icons
-                                                      .keyboard_arrow_down_rounded,
+                                                  PesaFlowIcons.chevronDown,
                                                   size: 20,
                                                   color: onSurface.withValues(
                                                     alpha: 0.5,
@@ -679,8 +678,7 @@ class _SavingsGoalDetailSheetState
                                                 Icon(
                                                   isDeposit
                                                       ? PesaFlowIcons.add
-                                                      : Icons
-                                                            .remove_circle_outline_rounded,
+                                                      : PesaFlowIcons.remove,
                                                   size: 18,
                                                   color: context
                                                       .appColors

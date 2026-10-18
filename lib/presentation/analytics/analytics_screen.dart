@@ -710,10 +710,9 @@ class _OverviewTab extends ConsumerWidget {
                                             Icon(
                                               goal.icon == 'savings'
                                                   ? PesaFlowIcons.savings
-                                                  : goal.icon == 'laptop'
-                                                  ? Icons
-                                                        .laptop_chromebook_rounded
-                                                  : goal.icon == 'flight'
+                                              : goal.icon == 'laptop'
+                                              ? PesaFlowIcons.laptop
+                                              : goal.icon == 'flight'
                                                   ? PesaFlowIcons.flight
                                                   : goal.icon == 'home'
                                                   ? PesaFlowIcons.home
