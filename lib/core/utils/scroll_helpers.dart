@@ -15,7 +15,7 @@ extension ScrollToTopExtension on ScrollController {
       animateTo(
         0,
         duration: MotionTokens.durationNormal,
-        curve: Curves.easeOutCubic,
+        curve: MotionTokens.curveEntrance,
       );
     }
   }

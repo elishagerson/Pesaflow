@@ -1008,10 +1008,10 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                                 ? themeCol.withValues(
                                                     alpha: 0.25,
                                                   )
-                                                : theme.colorScheme
+                                                : theme
+                                                      .colorScheme
                                                       .surfaceContainerHigh,
-                                            borderRadius:
-                                                BorderRadius.circular(
+                                            borderRadius: BorderRadius.circular(
                                               AppTheme.squircleRadius(
                                                 isSelected ? 52 : 48,
                                               ),
@@ -1051,10 +1051,10 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                                       color: themeCol,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                        AppTheme.squircleRadius(
-                                                          14,
-                                                        ),
-                                                      ),
+                                                            AppTheme.squircleRadius(
+                                                              14,
+                                                            ),
+                                                          ),
                                                       border: Border.all(
                                                         color: theme
                                                             .colorScheme

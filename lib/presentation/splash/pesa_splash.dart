@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
@@ -92,11 +93,11 @@ class _PesaSplashState extends State<PesaSplash>
         }
 
         // Beat 1 — the stroke draws over the first fifth of the timeline.
-        final draw = Curves.easeOutCubic.transform(
+        final draw = MotionTokens.curveEntrance.transform(
           (_seg(t, 0.0, 0.20)).clamp(0.0, 1.0),
         );
         // Beat 2 — the glow blooms, overlapping the end of the draw.
-        final bloom = Curves.easeOutCubic.transform(
+        final bloom = MotionTokens.curveEntrance.transform(
           (_seg(t, 0.12, 0.48)).clamp(0.0, 1.0),
         );
         // Beat 3 — the mark settles on a spring curve after the bloom peaks.
@@ -108,7 +109,7 @@ class _PesaSplashState extends State<PesaSplash>
           (_seg(t, 0.52, 0.80)).clamp(0.0, 1.0),
         );
         // Beat 5 — the wordmark.
-        final wordIn = Curves.easeOutCubic.transform(
+        final wordIn = MotionTokens.curveEntrance.transform(
           (_seg(t, 0.44, 0.78)).clamp(0.0, 1.0),
         );
 
@@ -301,7 +302,7 @@ class _BloomPainter extends CustomPainter {
     if (progress <= 0) return;
     final center = size.center(Offset.zero);
     final maxRadius = size.longestSide * 0.9;
-    final radius = maxRadius * Curves.easeOutCubic.transform(progress);
+    final radius = maxRadius * MotionTokens.curveEntrance.transform(progress);
 
     canvas.drawCircle(
       center,

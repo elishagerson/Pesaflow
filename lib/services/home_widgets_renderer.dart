@@ -138,7 +138,9 @@ class WidgetHeatmap extends StatelessWidget {
                     style: theme.textTheme.labelMedium?.copyWith(
                       fontWeight: FontWeight.w900,
                       letterSpacing: 1.0,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                      color: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.45,
+                      ),
                     ),
                   ),
                 ),
