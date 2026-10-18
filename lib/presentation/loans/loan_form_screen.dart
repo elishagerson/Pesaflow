@@ -13,6 +13,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/core/utils/provider_brand_colors.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
