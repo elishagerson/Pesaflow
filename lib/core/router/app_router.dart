@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/presentation/analytics/analytics_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_setup_screen.dart';
@@ -71,11 +72,7 @@ Page<dynamic> _tabTransitionPage(Widget child) {
         // is readable almost immediately; slide/scale own the settle.
         opacity: CurvedAnimation(
           parent: animation,
-          curve: const Interval(
-            0.0,
-            0.45,
-            curve: MotionTokens.curveEntrance,
-          ),
+          curve: const Interval(0.0, 0.45, curve: MotionTokens.curveEntrance),
           reverseCurve: const Interval(
             0.0,
             0.55,
@@ -117,10 +114,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
     } else {
       _tabTravelDirection = (index - current).sign.toDouble();
     }
-    widget.navigationShell.goBranch(
-      index,
-      initialLocation: index == current,
-    );
+    widget.navigationShell.goBranch(index, initialLocation: index == current);
   }
 
   @override
@@ -177,11 +171,11 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
     final currentIndex = widget.navigationShell.currentIndex;
 
     final navItems = [
-      (Icons.home_rounded, 'Home', 0),
-      (Icons.swap_horiz_rounded, 'Transactions', 1),
-      (Icons.donut_large_rounded, 'Budgets', 2),
-      (Icons.leaderboard_rounded, 'Analytics', 3),
-      (Icons.settings_rounded, 'Settings', 4),
+      (PesaFlowIcons.home, 'Home', 0),
+      (PesaFlowIcons.transfer, 'Transactions', 1),
+      (PesaFlowIcons.budgets, 'Budgets', 2),
+      (PesaFlowIcons.analytics, 'Analytics', 3),
+      (PesaFlowIcons.settings, 'Settings', 4),
     ];
 
     return NavigationRail(
@@ -202,7 +196,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(
-                Icons.account_balance_wallet_rounded,
+                PesaFlowIcons.wallet,
                 color: Colors.white,
                 size: 20,
               ),
@@ -233,11 +227,11 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
     final theme = Theme.of(context);
     final appColors = theme.extension<AppColorsTheme>()!;
     final navItems = [
-      (Icons.home_rounded, 'Dashboard', 0),
-      (Icons.swap_horiz_rounded, 'Transactions', 1),
-      (Icons.donut_large_rounded, 'Budgets', 2),
-      (Icons.leaderboard_rounded, 'Analytics', 3),
-      (Icons.settings_rounded, 'Settings', 4),
+      (PesaFlowIcons.home, 'Dashboard', 0),
+      (PesaFlowIcons.transfer, 'Transactions', 1),
+      (PesaFlowIcons.budgets, 'Budgets', 2),
+      (PesaFlowIcons.analytics, 'Analytics', 3),
+      (PesaFlowIcons.settings, 'Settings', 4),
     ];
 
     return Container(
@@ -270,7 +264,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(
-                    Icons.account_balance_wallet_rounded,
+                    PesaFlowIcons.wallet,
                     color: Colors.white,
                     size: 18,
                   ),
@@ -399,7 +393,7 @@ class _RouterErrorPage extends StatelessWidget {
                 const SizedBox(height: kSpacing24),
                 FilledButton.icon(
                   onPressed: () => context.go('/'),
-                  icon: const Icon(Icons.home_rounded),
+                  icon: const Icon(PesaFlowIcons.home),
                   label: const Text('Go Home'),
                 ),
               ],

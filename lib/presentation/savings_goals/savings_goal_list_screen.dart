@@ -149,67 +149,58 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                         child: Column(
                           children: [
                             ...staggerEntrance([
-                                _buildSummaryCard(
+                              _buildSummaryCard(
+                                context,
+                                theme,
+                                totalSaved,
+                                totalTarget,
+                                overallPct,
+                              ),
+                              const SizedBox(height: kSpacing20),
+                              if (activeGoals.isNotEmpty) ...[
+                                _buildSectionHeader(
+                                  context,
+                                  'ACTIVE GOALS',
+                                  '${activeGoals.length}',
+                                  theme,
+                                ),
+                                const SizedBox(height: kSpacing12),
+                                ...activeGoals.map(
+                                  (goal) =>
+                                      _buildGoalCard(context, ref, goal, theme),
+                                ),
+                              ],
+                              if (activeGoals.isNotEmpty) ...[
+                                const SizedBox(height: kSpacing12),
+                                _buildStrategyInsightCard(
                                   context,
                                   theme,
-                                  totalSaved,
-                                  totalTarget,
-                                  overallPct,
+                                  activeGoals,
+                                  totalMonthlyCommitment,
+                                  nextDueGoal,
+                                  shortestDays,
                                 ),
-                                const SizedBox(height: kSpacing20),
-                                if (activeGoals.isNotEmpty) ...[
-                                  _buildSectionHeader(
-                                    context,
-                                    'ACTIVE GOALS',
-                                    '${activeGoals.length}',
-                                    theme,
-                                  ),
-                                  const SizedBox(height: kSpacing12),
-                                  ...activeGoals.map(
-                                    (goal) => _buildGoalCard(
-                                      context,
-                                      ref,
-                                      goal,
-                                      theme,
-                                    ),
-                                  ),
-                                ],
-                                if (activeGoals.isNotEmpty) ...[
-                                  const SizedBox(height: kSpacing12),
-                                  _buildStrategyInsightCard(
-                                    context,
-                                    theme,
-                                    activeGoals,
-                                    totalMonthlyCommitment,
-                                    nextDueGoal,
-                                    shortestDays,
-                                  ),
-                                ],
-                                if (activeGoals.length < 4) ...[
-                                  const SizedBox(height: kSpacing20),
-                                  _buildStarterSuggestions(context, theme),
-                                ],
-                                if (completedGoals.isNotEmpty) ...[
-                                  const SizedBox(height: kSpacing20),
-                                  _buildSectionHeader(
-                                    context,
-                                    'COMPLETED MILESTONES',
-                                    '${completedGoals.length}',
-                                    theme,
-                                  ),
-                                  const SizedBox(height: kSpacing12),
-                                  ...completedGoals.map(
-                                    (goal) => _buildGoalCard(
-                                      context,
-                                      ref,
-                                      goal,
-                                      theme,
-                                    ),
-                                  ),
-                                ],
-                                const SizedBox(height: kSpacing80),
                               ],
-                            ),
+                              if (activeGoals.length < 4) ...[
+                                const SizedBox(height: kSpacing20),
+                                _buildStarterSuggestions(context, theme),
+                              ],
+                              if (completedGoals.isNotEmpty) ...[
+                                const SizedBox(height: kSpacing20),
+                                _buildSectionHeader(
+                                  context,
+                                  'COMPLETED MILESTONES',
+                                  '${completedGoals.length}',
+                                  theme,
+                                ),
+                                const SizedBox(height: kSpacing12),
+                                ...completedGoals.map(
+                                  (goal) =>
+                                      _buildGoalCard(context, ref, goal, theme),
+                                ),
+                              ],
+                              const SizedBox(height: kSpacing80),
+                            ]),
                           ],
                         ),
                       ),
