@@ -80,7 +80,10 @@ class _NotificationCenterSheetState
               // ── Handle Bar ──
               Center(
                 child: Container(
-                  margin: const EdgeInsets.only(top: kSpacing10, bottom: kSpacing8),
+                  margin: const EdgeInsets.only(
+                    top: kSpacing10,
+                    bottom: kSpacing8,
+                  ),
                   width: 36,
                   height: 4,
                   decoration: BoxDecoration(
@@ -281,10 +284,7 @@ class _NotificationCenterSheetState
               ),
 
               const SizedBox(height: kSpacing10),
-              Divider(
-                height: 1,
-                color: context.appColors.hairline,
-              ),
+              Divider(height: 1, color: context.appColors.hairline),
 
               // ── Notifications Content List ──
               Expanded(
@@ -436,9 +436,7 @@ class _NotificationCenterSheetState
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? accentColor.withValues(
-                  alpha: context.appColors.badgeFillAlpha,
-                )
+              ? accentColor.withValues(alpha: context.appColors.badgeFillAlpha)
               : theme.colorScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
           border: Border.all(
@@ -460,10 +458,7 @@ class _NotificationCenterSheetState
             if (count > 0) ...[
               const SizedBox(width: 5),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 5,
-                  vertical: 1,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? accentColor
@@ -564,7 +559,9 @@ class _NotificationCenterSheetState
                 width: 26,
                 height: 26,
                 decoration: BoxDecoration(
-                  color: context.appColors.transferColor.withValues(alpha: 0.16),
+                  color: context.appColors.transferColor.withValues(
+                    alpha: 0.16,
+                  ),
                   borderRadius: BorderRadius.circular(
                     AppTheme.squircleRadius(26),
                   ),
@@ -624,10 +621,7 @@ class _NotificationCenterSheetState
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(
-          color: context.appColors.hairline,
-          width: 1,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1),
       ),
       child: Row(
         children: [
@@ -638,9 +632,7 @@ class _NotificationCenterSheetState
               color: context.appColors.transferColor.withValues(
                 alpha: context.appColors.badgeFillAlpha,
               ),
-              borderRadius: BorderRadius.circular(
-                AppTheme.squircleRadius(36),
-              ),
+              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
             ),
             alignment: Alignment.center,
             child: Icon(
@@ -679,7 +671,9 @@ class _NotificationCenterSheetState
                         color: context.appColors.transferColor.withValues(
                           alpha: context.appColors.badgeFillAlpha,
                         ),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusPill,
+                        ),
                       ),
                       child: Text(
                         carrierTag,
@@ -780,10 +774,7 @@ class _NotificationCenterSheetState
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(
-          color: context.appColors.hairline,
-          width: 1,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1),
       ),
       child: Row(
         children: [
@@ -794,9 +785,7 @@ class _NotificationCenterSheetState
               color: context.appColors.expenseColor.withValues(
                 alpha: context.appColors.badgeFillAlpha,
               ),
-              borderRadius: BorderRadius.circular(
-                AppTheme.squircleRadius(36),
-              ),
+              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
             ),
             alignment: Alignment.center,
             child: Icon(
@@ -835,7 +824,9 @@ class _NotificationCenterSheetState
                         color: context.appColors.expenseColor.withValues(
                           alpha: context.appColors.badgeFillAlpha,
                         ),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusPill,
+                        ),
                       ),
                       child: Text(
                         'Due Today',
@@ -943,10 +934,7 @@ class _NotificationCenterSheetState
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(
-          color: context.appColors.hairline,
-          width: 1,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -966,11 +954,7 @@ class _NotificationCenterSheetState
                   ),
                 ),
                 alignment: Alignment.center,
-                child: Icon(
-                  getGoalIcon(goal.icon),
-                  color: goalColor,
-                  size: 17,
-                ),
+                child: Icon(getGoalIcon(goal.icon), color: goalColor, size: 17),
               ),
               const SizedBox(width: kSpacing10),
               Expanded(
@@ -1267,10 +1251,7 @@ class _NotificationCenterSheetState
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(
-          color: context.appColors.hairline,
-          width: 1,
-        ),
+        border: Border.all(color: context.appColors.hairline, width: 1),
       ),
       child: Row(
         children: [
@@ -1281,9 +1262,7 @@ class _NotificationCenterSheetState
               color: theme.colorScheme.primary.withValues(
                 alpha: context.appColors.badgeFillAlpha,
               ),
-              borderRadius: BorderRadius.circular(
-                AppTheme.squircleRadius(36),
-              ),
+              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
             ),
             alignment: Alignment.center,
             child: Icon(
@@ -1319,10 +1298,13 @@ class _NotificationCenterSheetState
                         vertical: 1.5,
                       ),
                       decoration: BoxDecoration(
-                        color: (isOverdue
-                                ? theme.colorScheme.error
-                                : theme.colorScheme.primary)
-                            .withValues(alpha: context.appColors.badgeFillAlpha),
+                        color:
+                            (isOverdue
+                                    ? theme.colorScheme.error
+                                    : theme.colorScheme.primary)
+                                .withValues(
+                                  alpha: context.appColors.badgeFillAlpha,
+                                ),
                         borderRadius: BorderRadius.circular(
                           AppTheme.radiusPill,
                         ),
