@@ -69,7 +69,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   bool _isSaving = false;
   bool _shakeFields = false;
 
-  static const List<_LoanStarter> _starters = [
+  static final List<_LoanStarter> _starters = [
     _LoanStarter(
       title: 'M-Pesa Songesha',
       lender: 'Vodacom M-Pesa',
@@ -77,7 +77,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       defaultAmountCents: 5000000, // 50,000 Tsh
       termDays: 30,
       interestRate: 5.0,
-      color: Color(0xFFE21A2C),
+      color: kProviderBrandColors['M-Pesa_TZ']!,
       icon: PesaFlowIcons.offline,
     ),
     _LoanStarter(
@@ -87,7 +87,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       defaultAmountCents: 10000000, // 100,000 Tsh
       termDays: 30,
       interestRate: 6.0,
-      color: Color(0xFF0066B3),
+      color: kProviderBrandColors['TigoPesa_TZ']!,
       icon: PesaFlowIcons.offline,
     ),
     _LoanStarter(
@@ -97,7 +97,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       defaultAmountCents: 5000000, // 50,000 Tsh
       termDays: 30,
       interestRate: 5.5,
-      color: Color(0xFFED1C24),
+      color: kProviderBrandColors['AirtelMoney_TZ']!,
       icon: PesaFlowIcons.offline,
     ),
     _LoanStarter(
@@ -107,7 +107,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       defaultAmountCents: 50000000, // 500,000 Tsh
       termDays: 90,
       interestRate: 12.0,
-      color: Color(0xFF003DA5),
+      color: kProviderBrandColors['NMB']!,
       icon: PesaFlowIcons.loans,
     ),
     _LoanStarter(
@@ -1329,13 +1329,13 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     );
   }
 
-  static const _lenderBrandColors = {
-    'Vodacom': Color(0xFFE21A2C),
-    'Tigo': Color(0xFF0066B3),
-    'Airtel': Color(0xFFED1C24),
-    'NMB': Color(0xFF003DA5),
-    'CRDB': Color(0xFF0066B3),
-    'NBC': Color(0xFF003366),
+  static final _lenderBrandColors = {
+    'Vodacom': kProviderBrandColors['M-Pesa_TZ']!,
+    'Tigo': kProviderBrandColors['TigoPesa_TZ']!,
+    'Airtel': kProviderBrandColors['Airtel_TZ']!,
+    'NMB': kProviderBrandColors['NMB']!,
+    'CRDB': kProviderBrandColors['CRDB']!,
+    'NBC': kProviderBrandColors['NBC']!,
     'Family': Color(0xFF10B981),
     'SACCOS': Color(0xFF059669),
   };

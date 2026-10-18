@@ -172,29 +172,29 @@ class _PesaSplashState extends State<PesaSplash>
                           child: Text(
                             'PESAFLOW',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: AppTheme.fontPoster,
-                              fontSize: 34,
-                              height: 1.0,
-                              letterSpacing: 3,
-                              color: wordColor,
-                            ),
+                            style: context
+                                .ts(
+                                  34,
+                                  height: 1.0,
+                                  letterSpacing: 3,
+                                  color: wordColor,
+                                )
+                                .copyWith(fontFamily: AppTheme.fontPoster),
                           ),
                         ),
                       ),
                       SizedBox(height: kSpacing6),
                       Opacity(
                         opacity: wordIn * 0.7,
-                        child: Text(
-                          'EVERY SHILLING, TRACKED',
-                          style: TextStyle(
-                            fontFamily: AppTheme.fontText,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 2.4,
-                            color: wordColor,
+                          child: Text(
+                            'EVERY SHILLING, TRACKED',
+                            style: context.ts(
+                              10,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 2.4,
+                              color: wordColor,
+                            ),
                           ),
-                        ),
                       ),
                     ],
                   ),

@@ -467,8 +467,8 @@ class _NotificationCenterSheetState
                 ),
                 child: Text(
                   '$count',
-                  style: TextStyle(
-                    fontSize: 9.5,
+                  style: context.ts(
+                    9.5,
                     fontWeight: FontWeight.w800,
                     color: isSelected
                         ? theme.colorScheme.onPrimary
@@ -512,8 +512,8 @@ class _NotificationCenterSheetState
             ),
             child: Text(
               '$count',
-              style: TextStyle(
-                fontSize: 9.5,
+              style: context.ts(
+                9.5,
                 fontWeight: FontWeight.w800,
                 color: color,
               ),
@@ -677,8 +677,8 @@ class _NotificationCenterSheetState
                       ),
                       child: Text(
                         carrierTag,
-                        style: TextStyle(
-                          fontSize: 8.5,
+                        style: context.ts(
+                          8.5,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.3,
                           color: context.appColors.transferColor,
@@ -830,8 +830,8 @@ class _NotificationCenterSheetState
                       ),
                       child: Text(
                         'Due Today',
-                        style: TextStyle(
-                          fontSize: 8.5,
+                        style: context.ts(
+                          8.5,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.3,
                           color: context.appColors.expenseColor,
@@ -992,8 +992,8 @@ class _NotificationCenterSheetState
                           ),
                           child: Text(
                             statusLabel,
-                            style: TextStyle(
-                              fontSize: 8.5,
+                            style: context.ts(
+                              8.5,
                               fontWeight: FontWeight.w800,
                               letterSpacing: 0.3,
                               color: statusColor,
@@ -1162,8 +1162,8 @@ class _NotificationCenterSheetState
                           ),
                           child: Text(
                             isExceeded ? '$pctInt% EXCEEDED' : '$pctInt% LIMIT',
-                            style: TextStyle(
-                              fontSize: 8.5,
+                            style: context.ts(
+                              8.5,
                               fontWeight: FontWeight.w800,
                               letterSpacing: 0.3,
                               color: theme.colorScheme.error,
@@ -1311,8 +1311,8 @@ class _NotificationCenterSheetState
                       ),
                       child: Text(
                         isOverdue ? 'OVERDUE' : 'DUE SOON',
-                        style: TextStyle(
-                          fontSize: 8.5,
+                        style: context.ts(
+                          8.5,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.3,
                           color: isOverdue
