@@ -8,11 +8,11 @@ import 'tactile_spring_container.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 
-class PremiumFab extends StatelessWidget {
+class AppFab extends StatelessWidget {
   final VoidCallback? onPressed;
   final Color? accentColor;
 
-  const PremiumFab({super.key, this.onPressed, this.accentColor});
+  const AppFab({super.key, this.onPressed, this.accentColor});
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +58,13 @@ class PremiumFab extends StatelessWidget {
   }
 }
 
-class PremiumExtendedFab extends StatelessWidget {
+class AppExtendedFab extends StatelessWidget {
   final VoidCallback? onPressed;
   final String label;
   final IconData icon;
   final Color? accentColor;
 
-  const PremiumExtendedFab({
+  const AppExtendedFab({
     super.key,
     this.onPressed,
     required this.label,

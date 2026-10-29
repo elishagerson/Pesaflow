@@ -922,7 +922,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      // Premium Segmented Control
+                      // Segmented control
                       Container(
                         margin: const EdgeInsets.symmetric(
                           horizontal: kSpacing32,

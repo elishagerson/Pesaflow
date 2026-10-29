@@ -663,7 +663,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       ),
                       const SizedBox(height: kSpacing28),
 
-                      // ── 7. Executive Action Button ──
+                      // ── 7. Submit button ──
                       TactileSpringContainer(
                         onTap: _isSaving ? null : _submit,
                         child: Container(

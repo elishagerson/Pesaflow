@@ -40,7 +40,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
 
   // ── Box Box-inspired depth tokens ──
   //
-  // These enable the premium "floating card with ambient colour" treatment
+  // These enable the "floating card with ambient colour" treatment
   // without BackdropFilter. Cards use gradient fills and ambient colour
   // wash to simulate glass depth.
 
@@ -48,7 +48,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
   /// radial gradient, it makes the card read as a light source on OLED.
   final Color cardGlow;
 
-  /// Top stop of the subtle surface gradient inside premium cards. The
+  /// Top stop of the subtle surface gradient inside cards. The
   /// gradient is always near-surface: depth, not colour.
   final Color cardGradientFrom;
 
@@ -72,7 +72,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
   /// Border for a selected or focused surface. Reads as "armed", not "quiet".
   final Color hairlineStrong;
 
-  // Budjetly-inspired tokens
+  // Surface and shadow tokens
   final Color cardBackground;
   final Color cardBorder;
   final Color sectionHeader;

@@ -26,7 +26,7 @@ void main() {
     );
   }
 
-  group('Savings Goal Form Redesign', () {
+  group('SavingsGoalForm', () {
     testWidgets('renders live goal preview, title, and quick starters', (
       WidgetTester tester,
     ) async {

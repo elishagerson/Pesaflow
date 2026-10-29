@@ -402,59 +402,58 @@ void main() {
     });
   });
 
-  group('CommandPalette Refinement Tests', () {
-    testWidgets(
-      'renders search input, category headers, actions, and pro footer',
-      (tester) async {
-        tester.view.physicalSize = const Size(1080, 1920);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(() {
-          tester.view.resetPhysicalSize();
-          tester.view.resetDevicePixelRatio();
-        });
+  group('CommandPalette', () {
+    testWidgets('renders search input, category headers, actions, and footer', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(1080, 1920);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
 
-        await tester.pumpWidget(
-          const ProviderScope(
-            child: MaterialApp(home: Scaffold(body: CommandPalette())),
-          ),
-        );
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(home: Scaffold(body: CommandPalette())),
+        ),
+      );
 
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-        // Search input and ESC pill
-        expect(find.text('Type a command or search...'), findsOneWidget);
-        expect(find.text('ESC'), findsOneWidget);
+      // Search input and ESC pill
+      expect(find.text('Type a command or search...'), findsOneWidget);
+      expect(find.text('ESC'), findsOneWidget);
 
-        // Section headers
-        expect(find.text('QUICK ACTIONS'), findsOneWidget);
-        expect(find.text('NAVIGATION'), findsOneWidget);
+      // Section headers
+      expect(find.text('QUICK ACTIONS'), findsOneWidget);
+      expect(find.text('NAVIGATION'), findsOneWidget);
 
-        // Actions in initial view
-        expect(find.text('Record Expense'), findsOneWidget);
-        expect(find.text('Record Income'), findsOneWidget);
+      // Actions in initial view
+      expect(find.text('Record Expense'), findsOneWidget);
+      expect(find.text('Record Income'), findsOneWidget);
 
-        // Pro footer keyboard hints
-        expect(find.text('Navigate'), findsOneWidget);
-        expect(find.text('Open'), findsOneWidget);
-        expect(find.text('Dismiss'), findsOneWidget);
+      // Footer keyboard hints
+      expect(find.text('Navigate'), findsOneWidget);
+      expect(find.text('Open'), findsOneWidget);
+      expect(find.text('Dismiss'), findsOneWidget);
 
-        // Filter by typing 'Dashboard'
-        await tester.enterText(find.byType(TextField), 'Dashboard');
-        await tester.pump(const Duration(milliseconds: 200));
-        await tester.pump(const Duration(milliseconds: 200));
+      // Filter by typing 'Dashboard'
+      await tester.enterText(find.byType(TextField), 'Dashboard');
+      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pump(const Duration(milliseconds: 200));
 
-        expect(find.text('Go to Dashboard'), findsOneWidget);
-        expect(find.text('Record Income'), findsNothing);
+      expect(find.text('Go to Dashboard'), findsOneWidget);
+      expect(find.text('Record Income'), findsNothing);
 
-        // Filter by typing 'budget'
-        await tester.enterText(find.byType(TextField), 'budget');
-        await tester.pump(const Duration(milliseconds: 200));
-        await tester.pump(const Duration(milliseconds: 200));
+      // Filter by typing 'budget'
+      await tester.enterText(find.byType(TextField), 'budget');
+      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pump(const Duration(milliseconds: 200));
 
-        expect(find.text('New Budget'), findsOneWidget);
-        expect(find.text('View Budgets'), findsOneWidget);
-        expect(find.text('Record Income'), findsNothing);
-      },
-    );
+      expect(find.text('New Budget'), findsOneWidget);
+      expect(find.text('View Budgets'), findsOneWidget);
+      expect(find.text('Record Income'), findsNothing);
+    });
   });
 }

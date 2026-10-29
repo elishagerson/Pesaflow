@@ -5,7 +5,7 @@ import 'package:pesaflow/presentation/common/widgets/motion/motion_aware.dart';
 
 /// A press-interactive container with physics-based spring scale + opacity dim.
 ///
-/// Provides PocketCal-level tactile feel:
+/// Provides a consistent tactile feel:
 /// - Press-down: quick ease to [scaleFactor] + subtle opacity dim
 /// - Release: spring-back to 1.0 (haptic fires on release, confirming action)
 /// - Reduced motion: instant state changes, no spring physics

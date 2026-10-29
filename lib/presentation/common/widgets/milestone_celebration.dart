@@ -11,7 +11,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 /// Shows a brief, satisfying celebration when a savings goal reaches 100%.
 ///
 /// Not confetti — a confident checkmark with a subtle ring expansion.
-/// Inspired by PocketCal's emotional transformation moments:
+/// Celebration treatment for completed milestones:
 /// the relief of organisation becomes the joy of financial achievement.
 ///
 /// ```dart

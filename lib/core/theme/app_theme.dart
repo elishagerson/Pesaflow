@@ -59,7 +59,7 @@ class AppTheme {
   static const Color brandGlowLight = Color(0xFF3C4550);
   static const Color brandGlowDark = Color(0xFF8D99A6);
 
-  // ── Calm & Clean — Budjetly-inspired palette ──
+  // ── Calm & Clean palette ──
 
   // Light — airy blue-grey canvas
   static const Color primaryLight = Color(
@@ -109,7 +109,7 @@ class AppTheme {
   static const Color surfaceOverlayDark = Color(0xFF252B34);
   static const Color hairlineDark = Color(0x47FFFFFF); // White @ ~28%
 
-  // Finance semantic colors — desaturated, premium tones.
+  // Finance semantic colors — desaturated, muted tones.
   // Transfer is cyan, not indigo: the brand accent now owns the violet end of
   // the wheel, and a transfer pill must never be mistaken for a brand surface.
   static const Color incomeColor = Color(0xFF16A34A); // Muted green, not neon
@@ -139,7 +139,7 @@ class AppTheme {
   // Backward compat aliases
   static Color get surfaceContainerDark => surfaceHighDark;
 
-  // Radii — generous, soft corners (Budjetly feel)
+  // Radii — generous, soft corners
   static const double radiusTiny = 4.0;
   static const double radiusSmall = 8.0;
   static const double radiusCompact = 10.0;

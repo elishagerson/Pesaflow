@@ -11,7 +11,7 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
-import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
+import 'package:pesaflow/presentation/common/widgets/app_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -218,7 +218,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
           ],
         ),
       ),
-      floatingActionButton: PremiumExtendedFab(
+      floatingActionButton: AppExtendedFab(
         onPressed: () {
           PesaHaptics.medium();
           context.push('/savings-goals/add');

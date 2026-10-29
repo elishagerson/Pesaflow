@@ -28,7 +28,7 @@ import 'package:pesaflow/presentation/common/widgets/hero_card_route.dart';
 import 'package:pesaflow/presentation/common/widgets/ios_large_title_header.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
-import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
+import 'package:pesaflow/presentation/common/widgets/app_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -277,7 +277,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: kSpacing80),
-        child: PremiumExtendedFab(
+        child: AppExtendedFab(
           label: 'New Transaction',
           onPressed: () {
             PesaHaptics.medium();
@@ -1475,7 +1475,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                           ),
                         ),
                         child: Text(
-                          'EXECUTIVE INSIGHT',
+                          'SPENDING INSIGHT',
                           style: context.ts(
                             9,
                             fontWeight: FontWeight.w800,

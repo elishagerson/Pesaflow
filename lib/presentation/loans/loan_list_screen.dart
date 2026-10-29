@@ -14,7 +14,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
-import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
+import 'package:pesaflow/presentation/common/widgets/app_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_entrance.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
@@ -54,7 +54,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: kSpacing80),
-        child: PremiumExtendedFab(
+        child: AppExtendedFab(
           label: 'New Loan',
           onPressed: () {
             PesaHaptics.medium();

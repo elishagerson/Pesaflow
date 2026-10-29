@@ -2,7 +2,7 @@ import 'package:flutter/animation.dart';
 
 /// Centralized motion design tokens for PesaFlow.
 ///
-/// Inspired by PocketCal's physics-based motion: every interaction should
+/// every interaction should
 /// feel physical, purposeful, and invisible — not decorative.
 ///
 /// Usage:
@@ -26,7 +26,7 @@ class MotionTokens {
   );
 
   /// Bouncy spring for celebrations and emphasis moments.
-  /// Noticeable overshoot — use sparingly for delight.
+  /// Noticeable overshoot — use sparingly for emphasis.
   static const SpringDescription springBouncy = SpringDescription(
     mass: 0.6,
     stiffness: 200.0,

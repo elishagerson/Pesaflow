@@ -106,7 +106,7 @@ const _actions = <_PaletteAction>[
   _PaletteAction(
     icon: PesaFlowIcons.dashboard,
     label: 'Go to Dashboard',
-    subtitle: 'Executive overview & live cash flow',
+    subtitle: 'Overview & live cash flow',
     route: '/',
     keywords: ['home', 'dashboard', 'overview', 'summary'],
     category: 'Navigation',
@@ -897,7 +897,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                           ),
                         ),
 
-                      // ── Pro Footer Bar with Keyboard Shortcuts ──
+                      // ── Footer bar with keyboard shortcuts ──
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: kSpacing16,

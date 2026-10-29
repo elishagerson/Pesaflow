@@ -101,7 +101,7 @@ class _ToastWidgetState extends State<_ToastWidget>
       return;
     }
 
-    // Physics-based spring simulation for premium entry feel
+    // Physics-based spring simulation for the entrance
     final spring = SpringSimulation(MotionTokens.springBouncy, 0.0, 1.0, 0.0);
     _entryController.animateWith(spring);
     _timerController.forward();

@@ -114,7 +114,7 @@ void main() {
     );
   }
 
-  group('RecurringTransactionFormScreen Executive Redesign', () {
+  group('RecurringTransactionFormScreen', () {
     testWidgets(
       'renders elevated recurring form with starters, hero input, and projection',
       (WidgetTester tester) async {

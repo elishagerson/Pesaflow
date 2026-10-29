@@ -7,7 +7,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/presentation/dashboard/dashboard_screen.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/dashboard_balance_header.dart';
 import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -135,7 +135,7 @@ void main() {
     testWidgets('the hero touches both screen edges', (tester) async {
       await _pump(tester);
 
-      final hero = find.byType(BudjetlyBalanceHeader);
+      final hero = find.byType(DashboardBalanceHeader);
       expect(hero, findsOneWidget, reason: 'the hero did not render at all');
 
       final rect = tester.getRect(hero);
@@ -150,7 +150,7 @@ void main() {
     testWidgets('the hero stays flush across phone widths', (tester) async {
       for (final width in [320.0, 360.0, 390.0, 430.0]) {
         await _pump(tester, size: Size(width, 900));
-        final rect = tester.getRect(find.byType(BudjetlyBalanceHeader));
+        final rect = tester.getRect(find.byType(DashboardBalanceHeader));
         expect(rect.left, 0, reason: 'not flush at $width');
         expect(rect.width, width, reason: 'not full width at $width');
       }
@@ -244,7 +244,7 @@ void main() {
 
       final hero = tester.widget<PesaSurface>(
         find.descendant(
-          of: find.byType(BudjetlyBalanceHeader),
+          of: find.byType(DashboardBalanceHeader),
           matching: find.byType(PesaSurface),
         ),
       );
@@ -257,7 +257,7 @@ void main() {
       await _pump(tester);
       final hero = tester.widget<PesaSurface>(
         find.descendant(
-          of: find.byType(BudjetlyBalanceHeader),
+          of: find.byType(DashboardBalanceHeader),
           matching: find.byType(PesaSurface),
         ),
       );
@@ -272,7 +272,7 @@ void main() {
       await _pump(tester);
       final hero = tester.widget<PesaSurface>(
         find.descendant(
-          of: find.byType(BudjetlyBalanceHeader),
+          of: find.byType(DashboardBalanceHeader),
           matching: find.byType(PesaSurface),
         ),
       );

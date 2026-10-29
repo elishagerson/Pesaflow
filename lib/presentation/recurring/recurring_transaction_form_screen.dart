@@ -1071,7 +1071,7 @@ class _RecurringTransactionFormScreenState
                       _buildCadenceCard(context),
                       const SizedBox(height: kSpacing32),
 
-                      // 8. EXECUTIVE SUBMIT BUTTON
+                      // 8. Submit button
                       _buildSubmitButton(context),
                       const SizedBox(height: kSpacing32),
                     ],

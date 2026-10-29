@@ -7,7 +7,7 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 
-class BudjetlyBalanceHeader extends StatefulWidget {
+class DashboardBalanceHeader extends StatefulWidget {
   final int balance;
   final String label;
   final int income;
@@ -15,17 +15,12 @@ class BudjetlyBalanceHeader extends StatefulWidget {
   final VoidCallback? onAccountTap;
 
   /// Optional block rendered under the cash-flow row, inside the same card.
-  ///
-  /// The hero strip uses this to hang its side-by-side cells off the balance
-  /// card rather than laying a second card next to it. Putting them in separate
-  /// cards is what made the dashboard read as a carousel of competing widgets;
-  /// one card with hairline-divided cells reads as a single instrument.
   final Widget? footer;
 
   /// Extra height reserved for [footer] when the card needs to grow for it.
   final double footerHeight;
 
-  const BudjetlyBalanceHeader({
+  const DashboardBalanceHeader({
     super.key,
     required this.balance,
     required this.label,
@@ -36,20 +31,15 @@ class BudjetlyBalanceHeader extends StatefulWidget {
     this.footerHeight = 0,
   });
 
-  /// The plate's cut, in one place. The shape and the padding that has to clear
-  /// it are the same decision, so they read the same number rather than two
-  /// literals that can drift apart and leave content tucked under the diagonal.
-  /// Corner radius. Deliberately small: the hero runs edge to edge, so the
-  /// rounding only shows at the screen's own corners, where a large radius
-  /// would carve visible bites out of the left and right edges instead of
-  /// softening them.
+  /// Small on purpose: the hero runs edge to edge, so a large radius would cut
+  /// visible bites out of the left and right edges.
   static const double radius = AppTheme.radiusHero;
 
   @override
-  State<BudjetlyBalanceHeader> createState() => _BudjetlyBalanceHeaderState();
+  State<DashboardBalanceHeader> createState() => _DashboardBalanceHeaderState();
 }
 
-class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
+class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader>
     with TickerProviderStateMixin {
   bool _isHidden = false;
 
@@ -149,7 +139,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
   }
 
   @override
-  void didUpdateWidget(covariant BudjetlyBalanceHeader oldWidget) {
+  void didUpdateWidget(covariant DashboardBalanceHeader oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.balance != widget.balance) {
       _initDigitAnimations();
@@ -168,7 +158,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
         : theme.colorScheme.onSurface;
 
     return PesaSurface.bleed(
-      radius: BudjetlyBalanceHeader.radius,
+      radius: DashboardBalanceHeader.radius,
       // With the hairline and the shadow gone, the gradient is the only thing
       // giving the surface a top and a bottom. It stays in the slate family so
       // it does not compete with the numbers.

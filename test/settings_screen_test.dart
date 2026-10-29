@@ -43,7 +43,7 @@ void main() {
 
   final testTracker = Tracker(
     id: 'trk1',
-    name: 'Executive Vault',
+    name: 'Personal Vault',
     icon: 'home',
     color: '#4CAF50',
     isArchived: false,
@@ -84,8 +84,8 @@ void main() {
     );
   }
 
-  group('SettingsScreen Redesign', () {
-    testWidgets('renders title, executive snapshot card, and offline badge', (
+  group('SettingsScreen', () {
+    testWidgets('renders title, snapshot card, and offline badge', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(createTestWidget());
@@ -94,8 +94,8 @@ void main() {
       // Title in IosLargeTitleHeader (large + collapsed)
       expect(find.text('Settings'), findsAtLeastNWidgets(1));
 
-      // Executive overview card with active workspace and offline status
-      expect(find.text('Executive Vault'), findsOneWidget);
+      // Snapshot card with active workspace and offline status
+      expect(find.text('Personal Vault'), findsOneWidget);
       expect(find.text('Active Offline Workspace'), findsOneWidget);
       expect(find.text('Offline'), findsOneWidget);
 
@@ -106,7 +106,7 @@ void main() {
       expect(find.text('128'), findsOneWidget);
     });
 
-    testWidgets('renders all consolidated executive section headers', (
+    testWidgets('renders all consolidated section headers', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(createTestWidget());

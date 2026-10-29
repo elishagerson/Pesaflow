@@ -107,7 +107,7 @@ void main() {
     await database.close();
   });
 
-  group('Adaptive Dynamic Auto-Categorization Tests', () {
+  group('Auto-categorization', () {
     test(
       'Learns from past matching transactions and assigns custom categories with high confidence',
       () async {
@@ -173,7 +173,7 @@ void main() {
     );
   });
 
-  group('Automated Transfer & Deduplication Tests', () {
+  group('Transfers and deduplication', () {
     test(
       'Intercepts P2P transfer as a Transfer transaction and deduplicates counterparty SMS',
       () async {

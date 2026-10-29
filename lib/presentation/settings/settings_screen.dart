@@ -516,7 +516,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
               const SizedBox(height: kSpacing8),
 
-              // ── Executive Database Snapshot Card ──
+              // ── Database snapshot card ──
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                 child: Container(

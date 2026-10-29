@@ -577,7 +577,7 @@ class AppDatabase extends _$AppDatabase {
           }
         }
 
-        // Migration from schema version 13 → 14: add comprehensive expense categories
+        // Migration from schema version 13 → 14: add expense categories
         if (from < 14) {
           final existingCats = await select(categories).get();
           final existingNames = existingCats

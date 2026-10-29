@@ -49,7 +49,7 @@ void main() {
     );
   }
 
-  group('LoanFormScreen Executive Redesign', () {
+  group('LoanFormScreen', () {
     testWidgets(
       'renders elevated loan form with starters carousel, hero input, and live projection',
       (WidgetTester tester) async {

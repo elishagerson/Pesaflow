@@ -21,7 +21,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
-import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
+import 'package:pesaflow/presentation/common/widgets/app_fab.dart';
 import 'package:pesaflow/presentation/recurring/widgets/mark_recurring_payment_sheet.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
@@ -89,7 +89,7 @@ class _RecurringTransactionListScreenState
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: kSpacing80),
-        child: PremiumExtendedFab(
+        child: AppExtendedFab(
           label: 'New Recurring',
           onPressed: () {
             PesaHaptics.medium();

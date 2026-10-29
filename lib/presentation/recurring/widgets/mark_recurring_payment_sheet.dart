@@ -166,7 +166,7 @@ Future<void> showMarkRecurringPaymentSheet({
                         controller: scrollController,
                         padding: const EdgeInsets.all(kSpacing20),
                         children: [
-                          // ── Executive Receipt Card ──
+                          // ── Receipt card ──
                           Container(
                             padding: const EdgeInsets.all(kSpacing16),
                             decoration: BoxDecoration(

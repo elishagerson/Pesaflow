@@ -9,7 +9,7 @@ import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
-/// A 2x2 executive financial hub grid replacing scattered carousels.
+/// A 2x2 grid of the primary financial sections.
 class FinancialHubGrid extends StatelessWidget {
   final List<dynamic> budgets;
   final double overallPct;

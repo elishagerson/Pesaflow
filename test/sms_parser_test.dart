@@ -373,7 +373,7 @@ void main() {
       expect(result.balanceAfter, 38000000);
     });
 
-    test('robust name extraction in Swahili', () {
+    test('extracts names in Swahili', () {
       const sms =
           'Umepokea Tsh 45,000.00 kutoka kwa JOHN DOE tarehe 15/05/2026. Rej: AT123456. Salio: Tsh 300,000.00';
       final result = parser.parse(sms, now);
@@ -471,7 +471,7 @@ void main() {
       expect(result.balanceAfter, 15000000);
     });
 
-    test('robust name extraction in Swahili received', () {
+    test('extracts names in Swahili received', () {
       const sms =
           'Umepokea TZS 25,000.00 kutoka kwa JOHN DOE tarehe 15/05/2026. Kumbukumbu: MX789012. Salio: TZS 150,000.00';
       final result = parser.parse(sms, now);

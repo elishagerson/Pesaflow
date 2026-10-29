@@ -2,13 +2,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-/// Corner treatments available in the shape library.
+/// Corner treatment for a rounded rectangle.
 ///
-/// The app's rule, borrowed from the racing-poster idiom: **rounded everywhere,
-/// but never uniform.** A screen of identical rounded rectangles reads as
-/// generic; a screen with one or two deliberate angles reads as designed. Use
-/// [rounded] as the default and reach for [chamfer] on at most one surface per
-/// screen — the hero, a primary action, or a badge.
+/// [rounded] is the default. Use [chamfer] on at most one surface per screen;
+/// repeated angles stop reading as intentional.
 enum AppCorner {
   /// Continuous curve, using the same iOS superellipse as `SquircleBorder`.
   rounded,
@@ -168,11 +165,9 @@ Path _lerpPaths(Path a, Path b, double t, {int samples = 48}) {
 
 /// A `ShapeBorder` whose outline is a morph between two paths.
 ///
-/// This is the engine behind the app's signature press interaction: a surface
-/// does not merely scale, it *changes shape* — a full-width pill contracts into
-/// a squircle under the finger and springs back on release. `t` is driven
-/// straight from a `SpringSimulation`, so the morph inherits the same physics
-/// as the scale and never feels like a separate animation.
+/// Drives the press morph: a pill contracts into a squircle under the finger
+/// and springs back on release. [t] is driven by a `SpringSimulation`, so the
+/// shape change shares the physics of the scale.
 class MorphShapeBorder extends ShapeBorder {
   final Path pathA;
   final Path pathB;
@@ -325,17 +320,3 @@ class ChicaneBorder extends ShapeBorder {
   @override
   int get hashCode => Object.hash(borderRadius, chamfer, side);
 }
-
-/// The boldest cut in the library: a **left-pointing chevron** — both left
-/// corners 45°-cut, both right corners hard 90° — a racing number plate rather
-/// than a rounded rectangle with two nicks taken out of it.
-///
-/// [ChicaneBorder] cuts opposite corners, which leaves a cut at one end of each
-/// vertical edge and a bare right angle at the other. That reads as an
-/// accident: the eye pairs the two cut corners across the diagonal and then
-/// finds two unexplained spikes. Cutting both corners of the *same* edge makes
-/// the diagonal a single continuous gesture — one line of intent down each side
-/// — and squaring the opposite edge is what gives the plate its authority to
-/// carry a number big enough to dominate a screen.
-///
-/// Reserve it for the single hero surface of a screen. Using it on a list row

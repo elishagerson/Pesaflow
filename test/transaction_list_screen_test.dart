@@ -85,7 +85,7 @@ void main() {
     );
   }
 
-  group('TransactionListScreen Refinement', () {
+  group('TransactionListScreen', () {
     testWidgets('renders title, type filters, and action buttons', (
       WidgetTester tester,
     ) async {
@@ -189,8 +189,8 @@ void main() {
         expect(find.text('Dinner with friends'), findsOneWidget);
         expect(find.text('M-Pesa'), findsOneWidget);
 
-        // Executive insight card at the end of the list
-        expect(find.text('EXECUTIVE INSIGHT'), findsOneWidget);
+        // Insight card at the end of the list
+        expect(find.text('SPENDING INSIGHT'), findsOneWidget);
         expect(find.text('High Dining Expenses'), findsOneWidget);
       },
     );

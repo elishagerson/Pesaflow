@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 
 const _roundAllowed = <String>{
-  'lib/presentation/common/widgets/premium_fab.dart',
+  'lib/presentation/common/widgets/app_fab.dart',
   'lib/presentation/common/widgets/modern_numpad.dart',
   'lib/presentation/common/widgets/amount_slider.dart',
   'lib/presentation/dashboard/widgets/monthly_overview_section.dart',

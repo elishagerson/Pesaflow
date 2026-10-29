@@ -98,7 +98,7 @@ class BackupService {
       if (filePath == null) return false;
       final pickedFile = File(filePath);
 
-      // Premium check: Verify the picked file is a valid SQLite 3 database file
+      // Sanity check: Verify the picked file is a valid SQLite 3 database file
       final byteStream = pickedFile.openRead(0, 16);
       final firstChunk = await byteStream.firstWhere(
         (_) => true,

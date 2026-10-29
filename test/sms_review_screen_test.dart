@@ -74,7 +74,7 @@ void main() {
     );
   }
 
-  group('SmsReviewScreen Icons & Buttons Refinement', () {
+  group('SmsReviewScreen', () {
     testWidgets(
       'renders empty state with success icon when no reviews pending',
       (WidgetTester tester) async {

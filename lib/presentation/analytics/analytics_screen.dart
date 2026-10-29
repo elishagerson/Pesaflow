@@ -272,7 +272,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 }
 
-Gradient _getCategoryNeonGradient(Color baseColor) {
+Gradient _categoryGradient(Color baseColor) {
   final hsl = HSLColor.fromColor(baseColor);
   final brighter = hsl
       .withLightness((hsl.lightness + 0.15).clamp(0.0, 1.0))
@@ -952,9 +952,7 @@ class _OverviewTab extends ConsumerWidget {
                                           : hexToColor(cat.categoryColor);
                                       return PieChartSectionData(
                                         value: cat.amount.toDouble(),
-                                        gradient: _getCategoryNeonGradient(
-                                          color,
-                                        ),
+                                        gradient: _categoryGradient(color),
                                         radius: 14,
                                         showTitle: false,
                                       );
@@ -1035,10 +1033,9 @@ class _OverviewTab extends ConsumerWidget {
                                                 width: 10,
                                                 height: 4,
                                                 decoration: BoxDecoration(
-                                                  gradient:
-                                                      _getCategoryNeonGradient(
-                                                        color,
-                                                      ),
+                                                  gradient: _categoryGradient(
+                                                    color,
+                                                  ),
                                                   borderRadius:
                                                       BorderRadius.circular(2),
                                                 ),
@@ -1081,10 +1078,9 @@ class _OverviewTab extends ConsumerWidget {
                                               widthFactor: pctFactor,
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                  gradient:
-                                                      _getCategoryNeonGradient(
-                                                        color,
-                                                      ),
+                                                  gradient: _categoryGradient(
+                                                    color,
+                                                  ),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                         AppTheme.radiusPill,

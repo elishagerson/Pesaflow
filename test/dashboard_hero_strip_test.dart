@@ -5,7 +5,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/dashboard_balance_header.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_hero_strip.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -97,7 +97,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(PageView), findsNothing);
-      expect(find.byType(BudjetlyBalanceHeader), findsOneWidget);
+      expect(find.byType(DashboardBalanceHeader), findsOneWidget);
     });
 
     testWidgets('renders every metric at once, without a gesture', (
@@ -150,7 +150,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // A single surface owns the whole strip.
-      final headers = find.byType(BudjetlyBalanceHeader);
+      final headers = find.byType(DashboardBalanceHeader);
       expect(headers, findsOneWidget);
 
       final card = tester.renderObject<RenderBox>(headers);

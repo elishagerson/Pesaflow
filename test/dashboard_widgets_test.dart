@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/dashboard_balance_header.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_widgets.dart';
 
 void main() {
@@ -13,13 +13,13 @@ void main() {
     );
   }
 
-  group('BudjetlyBalanceHeader', () {
+  group('DashboardBalanceHeader', () {
     testWidgets('renders balance, label, and monthly cash flow metrics', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
         createTestWidget(
-          child: const BudjetlyBalanceHeader(
+          child: const DashboardBalanceHeader(
             balance: 250000000, // TSh 2,500,000.00
             label: 'Total Net Worth',
             income: 300000000,
@@ -40,7 +40,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         createTestWidget(
-          child: const BudjetlyBalanceHeader(
+          child: const DashboardBalanceHeader(
             balance: 150000000,
             label: 'CRDB Bank',
             income: 200000000,
@@ -66,7 +66,7 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(
           createTestWidget(
-            child: const BudjetlyBalanceHeader(
+            child: const DashboardBalanceHeader(
               balance: -4500000, // - TSh 45,000.00
               label: 'Credit Card',
               income: 10000000,

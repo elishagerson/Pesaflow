@@ -144,7 +144,7 @@ void main() {
     );
   });
 
-  group('QuickDepositSheet Executive Features', () {
+  group('QuickDepositSheet features', () {
     testWidgets(
       'renders live milestone progress simulator and quick increment chips',
       (WidgetTester tester) async {
@@ -205,7 +205,7 @@ void main() {
     );
   });
 
-  group('BudgetFormScreen Executive Features', () {
+  group('BudgetFormScreen features', () {
     testWidgets(
       'renders budget allocation hero and interactive quick increment pills',
       (WidgetTester tester) async {
@@ -259,7 +259,7 @@ void main() {
     );
   });
 
-  group('SavingsGoalFormScreen Executive Features', () {
+  group('SavingsGoalFormScreen features', () {
     testWidgets(
       'renders Tanzanian milestone presets and applies template on tap',
       (WidgetTester tester) async {

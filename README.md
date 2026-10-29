@@ -1,103 +1,104 @@
-# 📱 PesaFlow
-### *Automated Offline-First Tanzanian Mobile Money & Bank Tracker*
+# PesaFlow
 
-PesaFlow is an ultra-premium, privacy-first mobile application designed to seamlessly track your incomes, expenses, and savings pacing. Tailored specifically for the East African financial ecosystem, PesaFlow automatically listens, parses, and logs transaction alerts from Tanzanian carrier wallets and major banks in real-time, completely offline.
+PesaFlow is an offline-first Android app for tracking money in Tanzania. It reads
+mobile money and bank transaction SMS on the device, turns them into a local
+ledger, and layers budgeting, savings goals, loans, and recurring bills on top.
+There is no account, no cloud sync, and no network call in the transaction path.
 
----
+## What it does
 
-## 🌟 Key Features
+- **SMS capture.** Listens for incoming messages in the foreground, from the
+  background handler, and from the notification listener as a fallback.
+- **Provider parsing.** M-Pesa, Airtel Money, Tigo Pesa/Mixx, Halopesa, Selcom
+  Pesa, NMB, CRDB, and NBC each have a dedicated parser, with a generic parser
+  as a last resort.
+- **Transaction classification.** Weighted signals separate real receipts from
+  promotions and service messages. Messages that contain marketing links are
+  dropped before parsing.
+- **Deduplication.** A per-provider coalescing window merges split messages
+  (transfer plus fee, for example), and reference/content checks stop the same
+  message being recorded twice.
+- **Local storage.** Drift/SQLite, with reactive streams for every list and
+  summary. Data leaves the device only when you export it.
+- **Budgets.** Envelope groups (needs/wants/investments), rollover, period
+  close-out, and an emergency-budget sweep into savings.
+- **Savings goals, loans, and recurring bills**, including contributions,
+  payoff projections, and due reminders.
+- **Analytics and reports.** Monthly trends, category breakdowns, spending
+  heatmap, and PDF/CSV export.
+- **Android home widgets and local notifications.**
 
-*   🤖 **Automatic SMS Parsing:** Background listeners capture incoming transactions and extract amounts, service fees, reference codes, and recipients in milliseconds.
-*   🏦 **Multi-Provider Support:** Supports up to 5+ simultaneous carriers and banks concurrently:
-    *   **Mobile Money:** Vodacom M-Pesa, Tigo Pesa, Airtel Money, Halopesa, and Selcom Pesa.
-    *   **Commercial Banks:** CRDB Bank, NMB Bank, and NBC Bank.
-*   🛡️ **100% Offline & Private:** Built on a secure local sqlite database (**Drift**). No cloud synchronization, no third-party APIs, and no data leaves your mobile device.
-*   ⚖️ **Smart Balance Reconciliation:** Reconciles wallet account balances using the exact post-transaction ending balance (`Salio`) stated by the carrier, automatically accounting for government levies, service fees, and VAT.
-*   📊 **Dynamic Budgeting Engine:** Calculates roll-over carryforwards, warning thresholds, and dynamic overall spent-to-income percentages.
-*   🎨 **Sleek Noir Aesthetics:** A premium, dark-mode aesthetic with vibrant Apple-inspired neon cyan and white brand accents.
-*   🔤 **Gorgeous Typography:** Unified around Google Fonts' **"Outfit"** — a geometric display-friendly typeface matching the aesthetic of premium iOS interfaces.
+## Requirements
 
----
+| Tool | Version |
+| --- | --- |
+| Flutter | 3.44 or newer |
+| Dart | 3.12 or newer |
+| Android | 7.0 (API 24) or newer |
+| Device | A physical Android phone for SMS testing |
 
-## 🚀 Architecture & Core Pipelines
+The SMS listener does not work on an emulator or on iOS.
 
-### 1. SMS Automated Ingestion Pipeline
-```
- [ Incoming SMS ] ──> [ Background Isolate Listener ]
-                             │
-                             ▼
-                    [ Provider Matching ] (Shortcode Check)
-                             │
-                             ▼
-                    [ RegEx Parser Engine ] (M-Pesa, Airtel, Selcom, Banks...)
-                             │
-                             ▼
-                 [ Transaction Deduplication ] (Reference Checks)
-                             │
-                             ▼
-                  [ Auto-Categorization ] (NLP Pattern Classifier)
-                             │
-                             ▼
-                  [ Database Persist (Drift) ]
-                             │
-                             ▼
-              [ Wallet Balance Reconciliation ] (Updates exact ending Salio)
-                             │
-                             ▼
-                  [ Native System Alert ]
-```
+## Getting started
 
-*   **Deduplication:** A secure deduplication hashing engine prevents multi-parsing or double-entry logs.
-*   **Balance Reconciliation:** Wallet balances are locked directly to the carrier's calculated `balanceAfter` to handle VAT and separate service tax levies automatically.
-
-### 2. Tech Stack
-*   **Framework:** Flutter (Dart)
-*   **State Management:** Flutter Riverpod (Reactive dependency injection & streams)
-*   **Database:** Drift (SQLite wrapper for reactive streams and type-safe schema generations)
-*   **Automation:** Native Android Telephony listener (Background Message Interception)
-
----
-
-## 🛠️ Developer Setup & Commands
-
-### Prerequisites
-*   Flutter SDK (v3.19.0+ recommended)
-*   Android SDK (with cmdline-tools & platform tools installed)
-*   Physical Android Device (for testing background Telephony APIs)
-
-### Installation
-1.  Clone the repository:
-    ```bash
-    git clone https://github.com/elishagerson/Pesaflow.git
-    cd Pesaflow
-    ```
-2.  Install dependencies:
-    ```bash
-    flutter pub get
-    ```
-3.  Run code generators (Drift database models, Riverpod providers):
-    ```bash
-    flutter pub run build_runner build --delete-conflicting-outputs
-    ```
-
-### Running the App
-*   **Development Server:**
-    ```bash
-    flutter run
-    ```
-*   **Build Release APK:**
-    ```bash
-    flutter build apk --release
-    ```
-
-### Running Test Suite
-Execute the comprehensive suite of 62+ regex, budget threshold, and CSV helper unit/widget tests:
 ```bash
-flutter test
+git clone git@github.com:elishagerson/Pesaflow.git
+cd Pesaflow
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
+flutter run
 ```
 
----
+Generated Drift and Riverpod files are committed, so `build_runner` is only
+needed after changing a table or an annotated provider.
 
-## 🎨 Branding & Design System
-*   **Font Family:** Google Fonts **Outfit** (Display) / JetBrains Mono (Numeric Metrics)
-*   **Launcher Icon:** Refined **3D squircle (rounded square)** featuring the official **"pesaflow"** geometric typography wordmark with vibrant neon-cyan and stark white contrast, optimized to look native in Pixel UI drawers.
+## Checks and builds
+
+```bash
+dart analyze lib test
+dart format --set-exit-if-changed lib test
+flutter test
+flutter build apk --release
+```
+
+The suite currently has 541 tests. Most of them cover SMS parsing, budget
+arithmetic, and the main screens.
+
+## Project layout
+
+```
+lib/
+  core/            router, theme tokens, formatting and context helpers
+  data/            Drift database, DAOs, repositories, seed data
+  domain/          SMS parsers and classifier, budget engine, analytics, export
+  presentation/    screens, widgets, and Riverpod UI state
+  services/        background SMS, notifications, reminders, backups, home widgets
+plugins/
+  another_telephony/  vendored Android telephony plugin
+test/              unit and widget tests, plus SMS corpus fixtures
+```
+
+`ARCHITECTURE.md` describes the data model and request flow in more detail.
+
+## Releases
+
+Version history lives in [CHANGELOG.md](CHANGELOG.md). Published builds and
+release notes are listed on the
+[GitHub Releases page](https://github.com/elishagerson/Pesaflow/releases).
+
+Releases are cut from tags (`v1.2.3`). The workflow in
+`.github/workflows/release.yml` builds the APK and publishes the notes.
+`scripts/release.sh` bumps the version, commits, and tags once the
+`CHANGELOG.md` section exists; see `CONTRIBUTING.md` for the full process.
+
+## Privacy
+
+PesaFlow stores everything in a local SQLite file. There is no telemetry, no
+analytics SDK, and no server component. The app requests SMS and notification
+access only to read transaction alerts. Backups are written to a file you
+choose, and exports are generated on-device.
+
+## Contributing
+
+Bug reports and pull requests are welcome. Read `CONTRIBUTING.md` first; it
+covers the code style, test expectations, and release process.

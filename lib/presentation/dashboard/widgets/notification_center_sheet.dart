@@ -16,7 +16,7 @@ import 'package:pesaflow/presentation/state/notification_providers.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 
-/// Opens the unified Executive Notification Center sheet.
+/// Opens the unified notification center sheet.
 Future<void> showNotificationCenterSheet(BuildContext context) {
   return showSpringSheet(
     context,

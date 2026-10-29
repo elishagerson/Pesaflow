@@ -66,11 +66,9 @@ class HairlineBorderPainter extends CustomPainter {
   /// Strokes an arbitrary shape with the same gradient, for surfaces whose
   /// outline is not a rectangle.
   ///
-  /// `PesaSurface` resolves cut outlines (`PosterBorder`, `ChicaneBorder`) to a
-  /// custom path. Stroking an `RRect` over it traced a plain rectangle: the
-  /// diagonals were left with no border at all and the square corners bled
-  /// past the cut into empty space, so the chamfer the rest of the surface
-  /// agreed on was the one thing you could not see.
+  /// Used for cut outlines (`ChicaneBorder`), where stroking an `RRect` would
+  /// leave the diagonals without a border and paint square corners outside the
+  /// cut.
   void strokePath(Canvas canvas, Path path, Rect rect) {
     canvas.drawPath(
       path,

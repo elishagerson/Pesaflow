@@ -8,23 +8,14 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/track_ring.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/dashboard_balance_header.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
-/// The dashboard hero: one full-width card whose metrics sit **side by side** in
-/// hairline-divided cells.
+/// Dashboard hero: one full-width card with the balance, the next bill, and the
+/// remaining budget in hairline-divided cells.
 ///
-/// This replaces a snap-paged carousel. The carousel was the wrong read of the
-/// reference: in a Formula Widgets home screen the widgets sit next to each
-/// other inside a single continuous card, and they do not present as individual
-/// cards at all. Paging them made one thing loud at a time, which is the
-/// opposite of the point — the balance, what is due, and what is left to spend
-/// are one reading of the same financial position, and a reader should be able
-/// to take all three in without a gesture.
-///
-/// So: no `PageController`, no dot rail, no peeking neighbour, no per-cell card
-/// chrome. One outline, one subtle gradient, cells separated by a 1px hairline
-/// that is a divider rather than a border.
+/// The cells share a single surface so the three numbers read as one financial
+/// position. There is no pager, dot rail, or per-cell card chrome.
 class DashboardHeroStrip extends ConsumerWidget {
   final int balance;
   final String label;
@@ -50,7 +41,7 @@ class DashboardHeroStrip extends ConsumerWidget {
     final upcoming = ref.watch(recurringTransactionsStreamProvider).value;
     final event = _nextEvent(upcoming);
 
-    return BudjetlyBalanceHeader(
+    return DashboardBalanceHeader(
       balance: balance,
       label: label,
       income: income,

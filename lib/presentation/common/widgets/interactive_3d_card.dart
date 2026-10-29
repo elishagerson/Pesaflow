@@ -3,9 +3,8 @@ import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 
-/// A premium, state-of-the-art interactive container that provides a 3D perspective
-/// tilt effect, dynamic shadow translation, and a shifting light reflection sheen
-/// when touched or dragged.
+/// A container that tilts in 3D under the pointer, shifts its shadow, and moves
+/// a light reflection across the surface while pressed or dragged.
 class Interactive3DCard extends StatefulWidget {
   final Widget child;
   final double borderRadius;

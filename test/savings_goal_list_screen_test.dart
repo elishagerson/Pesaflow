@@ -34,7 +34,7 @@ void main() {
     );
   }
 
-  group('SavingsGoalListScreen Executive Redesign', () {
+  group('SavingsGoalListScreen', () {
     testWidgets('renders empty state when no goals exist', (
       WidgetTester tester,
     ) async {
@@ -51,7 +51,7 @@ void main() {
     });
 
     testWidgets(
-      'renders executive savings vault, active goals, strategy card, and suggestions',
+      'renders savings vault, active goals, strategy card, and suggestions',
       (WidgetTester tester) async {
         tester.view.physicalSize = const Size(1080, 2400);
         tester.view.devicePixelRatio = 2.0;

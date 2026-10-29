@@ -377,7 +377,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── Executive Live Milestone Projection Card ──
+                    // ── Live milestone projection card ──
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(kSpacing16),

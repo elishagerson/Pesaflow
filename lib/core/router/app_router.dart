@@ -52,7 +52,7 @@ Page<dynamic> _nativeIosPage(Widget page) {
 /// content slides in from the direction of travel instead of a flat crossfade.
 double _tabTravelDirection = 0;
 
-/// Premium shell-tab transition: a fast opacity ramp so the outgoing branch
+/// Shell-tab transition: a fast opacity ramp so the outgoing branch
 /// never leaves a visible gap, plus a directional slide and a subtle
 /// scale-up settle that carry the rest of the entrance.
 Page<dynamic> _tabTransitionPage(Widget child) {
