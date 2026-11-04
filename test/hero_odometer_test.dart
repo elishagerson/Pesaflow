@@ -41,9 +41,15 @@ void main() {
     );
     await tester.pump(const Duration(milliseconds: 200));
 
-    final animatingGlyphs = find.descendant(
-      of: find.byType(SlideTransition),
-      matching: find.byType(Text),
+    // Animating digits are the only text that asks for tabular figures.
+    final animatingGlyphs = find.byWidgetPredicate(
+      (widget) =>
+          widget is Text &&
+          RegExp(r'^\d$').hasMatch(widget.data ?? '') &&
+          (widget.style?.fontFeatures?.contains(
+                const FontFeature.tabularFigures(),
+              ) ??
+              false),
     );
     expect(animatingGlyphs, findsWidgets);
 
