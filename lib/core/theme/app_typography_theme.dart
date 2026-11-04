@@ -53,6 +53,7 @@ class AppTypographyTheme extends ThemeExtension<AppTypographyTheme> {
             'Roboto Mono',
             'Courier New',
           ],
+          fontFeatures: const [FontFeature.tabularFigures()],
           fontWeight: FontWeight.w900,
         ) ??
         const TextStyle(),
