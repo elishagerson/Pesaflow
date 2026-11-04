@@ -168,7 +168,8 @@ providers. `ProviderScope` wraps the app in `main.dart`.
 two `ThemeExtension`s:
 
 - `AppColorsTheme` — semantic finance colours, surfaces, hairlines, shadows.
-- `AppTypographyTheme` — poster, numeral, eyebrow, and monospace roles.
+- `AppTypographyTheme` — poster, numeral, eyebrow, and monospace roles. The
+  monospace role carries tabular figures, so money columns keep a stable width.
 
 Widgets read colours from `context.appColors` and text styles from
 `theme.textTheme` or `context.ts(...)`. There is no `context.isDark` branching

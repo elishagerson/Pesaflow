@@ -62,5 +62,8 @@ void main() {
             'or the number snaps wider the frame the run completes.',
       );
     }
+
+    // The odometer staggers its digit timers; let them all fire before teardown.
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
   });
 }
