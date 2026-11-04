@@ -161,6 +161,9 @@ class AppTheme {
         'Roboto Mono',
         'Courier New',
       ],
+      // The primary family (Inter) resolves every digit, so a fallback font
+      // never makes the figures tabular. Ask the face for tabular figures.
+      fontFeatures: const [FontFeature.tabularFigures()],
       fontWeight: FontWeight.w700,
     );
   }
