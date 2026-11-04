@@ -36,6 +36,7 @@ extension PesaFlowContext on BuildContext {
     double? height,
     TextDecoration? decoration,
     FontStyle? fontStyle,
+    bool tabular = false,
   }) {
     final t = Theme.of(this).textTheme;
     final base = switch (size) {
@@ -66,6 +67,7 @@ extension PesaFlowContext on BuildContext {
       height: height,
       decoration: decoration,
       fontStyle: fontStyle,
+      fontFeatures: tabular ? const [FontFeature.tabularFigures()] : null,
     );
   }
 

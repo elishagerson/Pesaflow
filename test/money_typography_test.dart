@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 void main() {
   group('money figures', () {
@@ -25,6 +27,51 @@ void main() {
       expect(
         typography.monospace.fontFeatures,
         contains(const FontFeature.tabularFigures()),
+      );
+    });
+
+    testWidgets('tabular context styles keep digit widths equal', (
+      tester,
+    ) async {
+      // The flutter_test fallback font gives every glyph one width, so the
+      // shipped Inter face has to be loaded for digit advances to differ.
+      await (FontLoader(
+        'Inter',
+      )..addFont(rootBundle.load('assets/fonts/Inter-Regular.ttf'))).load();
+
+      late BuildContext ctx;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: Builder(
+            builder: (context) {
+              ctx = context;
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+
+      double widthOf(String text, TextStyle style) {
+        final painter = TextPainter(
+          text: TextSpan(text: text, style: style),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        return painter.width;
+      }
+
+      final proportional = ctx.ts(14);
+      expect(
+        widthOf('1,111', proportional),
+        isNot(moreOrLessEquals(widthOf('9,999', proportional), epsilon: 0.01)),
+        reason: 'Inter digits are proportional, so this is what needs fixing.',
+      );
+
+      final tabular = ctx.ts(14, tabular: true);
+      expect(
+        widthOf('1,111', tabular),
+        moreOrLessEquals(widthOf('9,999', tabular), epsilon: 0.01),
+        reason: 'A money figure must not change width as its digits change.',
       );
     });
   });
