@@ -567,25 +567,25 @@ class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader>
                     animation: animVal!,
                     builder: (context, _) {
                       final spinDigit = (animVal.value * 9).round();
-                      return SizedBox(
-                        width: 24,
-                        child: ClipRect(
-                          child: SlideTransition(
-                            position: Tween<Offset>(
-                              begin: Offset(
-                                0,
-                                (spinDigit == 0 && isAnimating) ? -1 : 0,
-                              ),
-                              end: Offset.zero,
-                            ).animate(animVal),
-                            child: Text(
-                              '$spinDigit',
-                              style: baseStyle.copyWith(
-                                color: textColor,
-                                fontFeatures: const [
-                                  FontFeature.tabularFigures(),
-                                ],
-                              ),
+                      // Bebas advances every digit by 0.4em, so the glyph
+                      // itself sizes the cell. A fixed cell width would clip
+                      // the digit and then snap wider when the run completes.
+                      return ClipRect(
+                        child: SlideTransition(
+                          position: Tween<Offset>(
+                            begin: Offset(
+                              0,
+                              (spinDigit == 0 && isAnimating) ? -1 : 0,
+                            ),
+                            end: Offset.zero,
+                          ).animate(animVal),
+                          child: Text(
+                            '$spinDigit',
+                            style: baseStyle.copyWith(
+                              color: textColor,
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
                             ),
                           ),
                         ),
