@@ -73,7 +73,7 @@ Future<Category?> showAddCategoryDialog(
 
   await ModernDialog.show(
     context: context,
-    title: Text(isEditing ? 'Edit Category' : 'Add Custom Category'),
+    title: Text(isEditing ? context.l10n.edit_category : context.l10n.add_custom_category),
     titleIcon: PesaFlowIcons.category,
     content: StatefulBuilder(
       builder: (context, setState) {
@@ -315,7 +315,7 @@ Future<Category?> showAddCategoryDialog(
             Navigator.of(context, rootNavigator: true).pop();
           }
         },
-        child: Text(isEditing ? 'Save' : 'Create'),
+        child: Text(isEditing ? context.l10n.save : context.l10n.create),
       ),
     ],
   );

@@ -327,4 +327,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get auth_required_message =>
       'Authentication required to access offline data';
+
+  @override
+  String get edit_category => 'Edit Category';
+
+  @override
+  String get add_custom_category => 'Add Custom Category';
 }

@@ -327,4 +327,10 @@ class AppLocalizationsSw extends AppLocalizations {
   @override
   String get auth_required_message =>
       'Uthibitishaji unahitajika kufikia data nje ya mtandao';
+
+  @override
+  String get edit_category => 'Hariri Kundi';
+
+  @override
+  String get add_custom_category => 'Ongeza Kundi Maalum';
 }

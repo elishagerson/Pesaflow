@@ -709,6 +709,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Authentication required to access offline data'**
   String get auth_required_message;
+
+  /// No description provided for @edit_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Category'**
+  String get edit_category;
+
+  /// No description provided for @add_custom_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Custom Category'**
+  String get add_custom_category;
 }
 
 class _AppLocalizationsDelegate
