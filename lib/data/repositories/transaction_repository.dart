@@ -115,6 +115,10 @@ class TransactionRepository {
     return _transactionDao.existsByReference(reference);
   }
 
+  Future<Transaction?> getTransactionByReference(String reference) {
+    return _transactionDao.getTransactionByReference(reference);
+  }
+
   Future<List<Transaction>> getTransactionsByFuzzyWindow({
     required String provider,
     required String type,

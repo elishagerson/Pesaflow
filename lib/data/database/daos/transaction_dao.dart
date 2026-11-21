@@ -320,6 +320,12 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
     return row != null;
   }
 
+  /// Retrieves a transaction matching the carrier reference code.
+  Future<Transaction?> getTransactionByReference(String reference) {
+    return (select(transactions)..where((t) => t.reference.equals(reference)))
+        .getSingleOrNull();
+  }
+
   /// Finds transactions matching exact amount, provider, and type within a time window.
   Future<List<Transaction>> getFuzzyMatches({
     required String provider,

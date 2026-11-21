@@ -8,6 +8,7 @@ class SmsParsed {
   final DateTime timestamp;
   final String rawSmsBody;
   final int? feeAmount;
+  final String? reversedReference;
 
   const SmsParsed({
     required this.amount,
@@ -19,10 +20,11 @@ class SmsParsed {
     required this.timestamp,
     required this.rawSmsBody,
     this.feeAmount,
+    this.reversedReference,
   });
 
   @override
   String toString() {
-    return 'SmsParsed(amount: $amount, type: $type, senderOrRecipient: $senderOrRecipient, reference: $reference, provider: $provider, balanceAfter: $balanceAfter, timestamp: $timestamp)';
+    return 'SmsParsed(amount: $amount, type: $type, senderOrRecipient: $senderOrRecipient, reference: $reference, provider: $provider, balanceAfter: $balanceAfter, reversedReference: $reversedReference, timestamp: $timestamp)';
   }
 }

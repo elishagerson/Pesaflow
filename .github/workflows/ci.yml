@@ -34,5 +34,10 @@ jobs:
       - name: Check formatting
         run: dart format --output=none --set-exit-if-changed lib test
 
+      - name: Verify generated files are up to date
+        run: |
+          dart run build_runner build --delete-conflicting-outputs
+          git diff --exit-code || (echo "::error::Generated files (*.g.dart) are out of date. Run 'dart run build_runner build --delete-conflicting-outputs' locally and commit the changes." && exit 1)
+
       - name: Test
         run: flutter test
