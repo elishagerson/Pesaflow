@@ -25,7 +25,7 @@ class EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final illustration =
+    final resolvedIllustration =
         illustration ??
         Semantics(
           excludeSemantics: true,
@@ -45,7 +45,7 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            illustration,
+            resolvedIllustration,
             SizedBox(height: context.isCompactView ? kSpacing16 : kSpacing24),
             Semantics(
               header: true,

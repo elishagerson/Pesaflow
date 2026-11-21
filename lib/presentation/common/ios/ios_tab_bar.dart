@@ -4,7 +4,6 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/physics.dart';
 
 import 'package:pesaflow/core/theme/motion_constants.dart';
-import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';

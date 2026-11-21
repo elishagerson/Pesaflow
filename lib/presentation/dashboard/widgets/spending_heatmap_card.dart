@@ -287,8 +287,8 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                         : null,
                                   ),
                                 ),
-                              );
                               ),
+                            );
                             }),
                           ],
                         ),
