@@ -175,7 +175,7 @@ class ModernDialog extends StatelessWidget {
               // Content
               Flexible(
                 child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
                   child: DefaultTextStyle(
                     style: context.ts(

@@ -1017,7 +1017,7 @@ class _SavingsGoalDetailScreenState
                 Expanded(
                   child: SingleChildScrollView(
                     controller: _scrollController,
-                    physics: const BouncingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     padding: const EdgeInsets.fromLTRB(
                       kSpacing16,
                       0,

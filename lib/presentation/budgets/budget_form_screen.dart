@@ -283,7 +283,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
           height: 80,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             itemCount: categories.length,
             itemBuilder: (context, index) {
               final cat = categories[index];
@@ -683,7 +683,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   child: Form(
                     key: _formKey,
                     child: Column(

@@ -496,11 +496,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
             systemNavigationBarContrastEnforced: false,
             systemStatusBarContrastEnforced: false,
           ),
-          child: MediaQuery(
-            data: MediaQuery.of(
-              context,
-            ).copyWith(textScaler: MediaQuery.textScalerOf(context)),
-            child: Listener(
+          child: Listener(
               onPointerDown: (_) {
                 final currentFocus = FocusScope.of(context);
                 if (!currentFocus.hasPrimaryFocus &&
@@ -554,7 +550,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                             ),
                                             decoration: BoxDecoration(
                                               color: const Color(
-                                                0xFF609F8A,
+                                                0xFF3C4550,
                                               ).withValues(alpha: 0.15),
                                               borderRadius:
                                                   BorderRadius.circular(
@@ -563,7 +559,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                             ),
                                             child: const Icon(
                                               PesaFlowIcons.lock,
-                                              color: Color(0xFF0F4C5C),
+                                              color: Color(0xFF3C4550),
                                               size: 48,
                                             ),
                                           ),
@@ -599,7 +595,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                           label: const Text('Unlock App'),
                                           style: FilledButton.styleFrom(
                                             backgroundColor: const Color(
-                                              0xFF609F8A,
+                                              0xFF3C4550,
                                             ),
                                             foregroundColor: Colors.white,
                                             padding: const EdgeInsets.symmetric(
@@ -676,7 +672,6 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                   ],
                 ),
               ),
-            ),
           ),
         );
       },

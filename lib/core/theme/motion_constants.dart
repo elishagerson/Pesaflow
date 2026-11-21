@@ -58,13 +58,13 @@ class MotionTokens {
   static const Duration durationSlow = Duration(milliseconds: 400);
 
   /// Sheet and dialog entrance.
-  static const Duration durationSheet = Duration(milliseconds: 600);
+  static const Duration durationSheet = Duration(milliseconds: 280);
 
   /// Exit/dismiss animations — always faster than entrance.
   static const Duration durationExit = Duration(milliseconds: 200);
 
   /// Screen/sheet entrance transitions (push).
-  static const Duration durationEntrance = Duration(milliseconds: 320);
+  static const Duration durationEntrance = Duration(milliseconds: 240);
 
   /// Screen/sheet dismiss transitions (pop).
   static const Duration durationDismiss = Duration(milliseconds: 220);
@@ -73,7 +73,7 @@ class MotionTokens {
   static const Duration durationProgress = Duration(milliseconds: 800);
 
   /// Post-save navigation delay (e.g. pop after form save).
-  static const Duration durationDelayedNav = Duration(milliseconds: 500);
+  static const Duration durationDelayedNav = Duration(milliseconds: 0);
 
   /// Long progress animations (overall dashboard progress, etc.).
   static const Duration durationLongProgress = Duration(milliseconds: 1000);

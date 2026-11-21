@@ -295,7 +295,7 @@ class _OverviewTab extends ConsumerWidget {
     final categoriesAsync = ref.watch(topCategoriesProvider);
 
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       padding: EdgeInsets.fromLTRB(
         kSpacing16,
         kSpacing16,
@@ -642,7 +642,7 @@ class _OverviewTab extends ConsumerWidget {
                       height: 125,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-                        physics: const BouncingScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         itemCount: goals.length,
                         separatorBuilder: (_, _) =>
                             const SizedBox(width: kSpacing12),
@@ -1161,7 +1161,7 @@ class _TrendsTab extends ConsumerWidget {
     final trendPointsAsync = ref.watch(trendPointsProvider);
 
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       padding: EdgeInsets.fromLTRB(
         kSpacing16,
         kSpacing16,

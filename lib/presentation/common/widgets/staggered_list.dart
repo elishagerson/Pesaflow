@@ -37,7 +37,7 @@ class StaggeredList extends StatelessWidget {
           physics ??
           (shrinkWrap
               ? const NeverScrollableScrollPhysics()
-              : const BouncingScrollPhysics()),
+              : const ClampingScrollPhysics()),
       shrinkWrap: shrinkWrap,
       padding: padding,
       itemCount: itemCount,

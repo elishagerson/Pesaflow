@@ -985,7 +985,7 @@ class _RecurringTransactionFormScreenState
             ),
             Expanded(
               child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 padding: const EdgeInsets.symmetric(
                   horizontal: kSpacing16,
                   vertical: kSpacing8,
@@ -1137,7 +1137,7 @@ class _RecurringTransactionFormScreenState
       height: 110,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         itemCount: _starters.length,
         separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
         itemBuilder: (context, index) {
@@ -1330,7 +1330,7 @@ class _RecurringTransactionFormScreenState
           // Quick increment chips
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             child: Row(
               children: [
                 ..._amountIncrements.map((inc) {
@@ -2081,7 +2081,7 @@ class _RecurringTransactionFormScreenState
           const SizedBox(height: kSpacing8),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             child: Row(
               children: _frequencies.map((freq) {
                 final isSelected = _frequency == freq;

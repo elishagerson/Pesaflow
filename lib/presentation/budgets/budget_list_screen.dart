@@ -333,7 +333,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
         child: SingleChildScrollView(
           controller: _scrollController,
           key: const PageStorageKey('budget_list_groups'),
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           padding: EdgeInsets.fromLTRB(
             kSpacing16,
             kSpacing16,
@@ -422,7 +422,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
         child: SingleChildScrollView(
           controller: _scrollController,
           key: const PageStorageKey('budget_list_legacy'),
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           padding: EdgeInsets.fromLTRB(
             kSpacing16,
             kSpacing16,
@@ -1285,7 +1285,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   const SizedBox(height: kSpacing10),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     child: Row(
                       children: g.subBudgets.take(4).map((sub) {
                         final catColor = hexToColor(sub.category.color);
@@ -1843,7 +1843,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           child: SingleChildScrollView(
             controller: _scrollController,
             key: const PageStorageKey('savings_goals_tab'),
-            physics: const BouncingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             padding: EdgeInsets.fromLTRB(
               kSpacing16,
               kSpacing16,

@@ -147,4 +147,5 @@ migrate_working_dir/
 *.map.json
 
 design-plans/
+DESIGN.md
 AGENTS.md

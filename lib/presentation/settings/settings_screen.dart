@@ -503,7 +503,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         child: SingleChildScrollView(
           controller: _scrollController,
           key: const PageStorageKey('settings'),
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           padding: EdgeInsets.only(bottom: IosTabBar.navBarHeight + kSpacing32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

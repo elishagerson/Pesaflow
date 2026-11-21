@@ -330,7 +330,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
     int lastMonthIncomeCents,
   ) {
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       padding: const EdgeInsets.all(kSpacing20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -516,7 +516,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
     final incomeCents = _incomeCents;
 
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       padding: const EdgeInsets.all(kSpacing20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -799,7 +799,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
     );
 
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       padding: const EdgeInsets.all(kSpacing20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

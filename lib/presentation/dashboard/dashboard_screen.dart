@@ -55,7 +55,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (value >= 1000000) {
       return '${(value / 1000000).toStringAsFixed(1)}M';
     } else if (value >= 1000) {
-      return '${(value / 1000).toStringAsFixed(0)}k';
+      return '${(value / 1000).toStringAsFixed(0)}K';
     }
     return value.toStringAsFixed(0);
   }
@@ -118,7 +118,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
     final cardholderName =
-        ref.watch(cardholderNameProvider).value ?? 'TOTAL NET WORTH';
+        ref.watch(cardholderNameProvider).value ?? 'Your accounts';
 
     // Active tracker properties for dynamic aesthetic blending
     final activeTrackerAsync = ref.watch(activeTrackerProvider);
@@ -221,7 +221,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 },
                 child: SingleChildScrollView(
                   controller: _scrollController,
-                  physics: const BouncingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   padding: EdgeInsets.only(
                     top: kSpacing8,
                     bottom: IosTabBar.navBarHeight + kSpacing32,
@@ -266,7 +266,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         Text(
                                           cardholderName.isNotEmpty &&
                                                   cardholderName !=
-                                                      'TOTAL NET WORTH'
+                                                      'Your accounts'
                                               ? cardholderName
                                               : 'PesaFlow',
                                           maxLines: 1,
@@ -367,7 +367,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   decoration: BoxDecoration(
                                                     color: context
                                                         .appColors
-                                                        .expenseColor,
+                                                        .brandColor,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           AppTheme.radiusPill,
@@ -452,7 +452,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   height: 34,
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
-                                    physics: const BouncingScrollPhysics(),
+                                    physics: const ClampingScrollPhysics(),
                                     itemCount: accounts.length + 1,
                                     itemBuilder: (context, index) {
                                       if (index == 0) {

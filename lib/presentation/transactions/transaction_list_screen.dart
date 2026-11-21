@@ -468,7 +468,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                 height: 38,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                   children: ['All', 'Income', 'Expense', 'Transfer'].map((
                     type,
@@ -760,7 +760,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                         controller: _scrollController,
                         key: const PageStorageKey('transaction_list'),
                         shrinkWrap: false,
-                        physics: const BouncingScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         padding: const EdgeInsets.fromLTRB(
                           kSpacing16,
                           kSpacing8,
@@ -1409,7 +1409,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
         height: 32,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
           itemCount: chips.length,
           separatorBuilder: (_, _) => const SizedBox(width: kSpacing6),

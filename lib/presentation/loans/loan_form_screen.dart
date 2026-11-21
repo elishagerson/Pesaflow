@@ -764,7 +764,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       height: 110,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         itemCount: _starters.length,
         separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
         itemBuilder: (context, index) {

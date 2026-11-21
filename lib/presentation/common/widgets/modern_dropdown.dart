@@ -229,7 +229,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
               const SizedBox(height: kSpacing12),
               Flexible(
                 child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: items.map((item) {

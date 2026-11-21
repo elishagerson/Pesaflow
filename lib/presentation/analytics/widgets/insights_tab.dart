@@ -66,7 +66,7 @@ class InsightsTab extends ConsumerWidget {
           );
         }
         return ListView.builder(
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           padding: EdgeInsets.fromLTRB(
             kSpacing16,
             kSpacing16,

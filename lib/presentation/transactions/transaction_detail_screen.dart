@@ -195,7 +195,7 @@ class TransactionDetailScreen extends ConsumerWidget {
         ),
         // Scrollable Content
         SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(
             kSpacing16,
             kSpacing12,

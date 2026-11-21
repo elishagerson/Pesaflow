@@ -615,7 +615,7 @@ class _AccountsPage extends StatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
-              physics: const BouncingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
               children: accounts.entries.toList().asMap().entries.map((entry) {
                 final i = entry.key;
                 final e = entry.value;

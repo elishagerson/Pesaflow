@@ -803,7 +803,7 @@ class _SavingsGoalDetailSheetState
           // Main scrolling body containing dashboard progress and ledger list
           Expanded(
             child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
               child: Column(
                 children: [

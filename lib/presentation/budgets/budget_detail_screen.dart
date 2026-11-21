@@ -441,7 +441,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                 Expanded(
                   child: SingleChildScrollView(
                     controller: _scrollController,
-                    physics: const BouncingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     padding: const EdgeInsets.fromLTRB(
                       kSpacing16,
                       kSpacing12,

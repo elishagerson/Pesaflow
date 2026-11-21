@@ -184,7 +184,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                 // Content
                 Expanded(
                   child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     padding: const EdgeInsets.fromLTRB(
                       kSpacing16,
                       kSpacing12,
