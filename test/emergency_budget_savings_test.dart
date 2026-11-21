@@ -154,7 +154,7 @@ void main() {
         const remainingCents = 10000000; // 100,000 TZS remaining
 
         await budgetRepo.createBudget(
-          name: 'Urgent Care',
+          name: 'Urgent Care Emergency',
           categoryId: emergencyCat.id,
           period: 'monthly',
           amount: allocatedCents,
