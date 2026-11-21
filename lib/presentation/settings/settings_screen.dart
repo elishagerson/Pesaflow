@@ -28,6 +28,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/ios_large_title_header.dart';
 import 'widgets/accounts_manager_sheet.dart';
 import 'widgets/categories_manager_sheet.dart';
+import 'widgets/background_protection_sheet.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -757,7 +758,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               StaggeredFadeSlide(
                 index: 1,
                 child: IosListSection(
-                  header: 'AUTOMATION & BUDGETING',
+                  header: 'AUTOMATION & RELIABILITY',
                   rows: [
                     IosToggleRow(
                       leading: _buildSquircleIcon(
@@ -807,6 +808,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               'sms_auto_deduplication',
                               val.toString(),
                             );
+                      },
+                    ),
+                    IosListRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.bolt,
+                        color: const Color(0xFFF59E0B),
+                      ),
+                      title: const Text('Background SMS Reliability'),
+                      subtitle: const Text(
+                        'Keep SMS capture alive on Tecno, Infinix, Xiaomi & Samsung',
+                      ),
+                      onTap: () {
+                        PesaHaptics.light();
+                        showBackgroundProtectionSheet(context);
                       },
                     ),
                   ],
