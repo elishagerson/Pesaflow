@@ -78,232 +78,232 @@ class AppLocalizationsSw extends AppLocalizations {
   String get recurring => 'Malipo ya kurudia';
 
   @override
-  String get accounts_manager => 'Accounts Manager';
+  String get accounts_manager => 'Msimamizi wa Akaunti';
 
   @override
-  String get add_account => 'Add Account';
+  String get add_account => 'Ongeza Akaunti';
 
   @override
-  String get add_custom => 'Add Custom';
+  String get add_custom => 'Ongeza Maalum';
 
   @override
-  String get add_recurring_flow => 'Add Recurring Flow';
+  String get add_recurring_flow => 'Ongeza Mtiririko wa Kurudia';
 
   @override
-  String get all_accounts => 'All Accounts';
+  String get all_accounts => 'Akaunti Zote';
 
   @override
-  String get app_theme => 'App Theme';
+  String get app_theme => 'Mbadala wa Programu';
 
   @override
-  String get auto_budget_on_income => 'Auto-Budget on Income';
+  String get auto_budget_on_income => 'Bajeti Otomatiki kwenye Mapato';
 
   @override
-  String get back_2 => 'Back';
+  String get back_2 => 'Rudi';
 
   @override
-  String get backup_database => 'Backup Database';
+  String get backup_database => 'Hifadhi Nakala ya Hifadhidata';
 
   @override
-  String get biometric_app_lock => 'Biometric App Lock';
+  String get biometric_app_lock => 'Kufunga Programu kwa Biometriki';
 
   @override
-  String get csv_spreadsheet_data => 'CSV - Spreadsheet data';
+  String get csv_spreadsheet_data => 'CSV - Data ya lahajedwali';
 
   @override
-  String get cancel_2 => 'Cancel';
+  String get cancel_2 => 'Ghairi';
 
   @override
-  String get categories_manager => 'Categories Manager';
+  String get categories_manager => 'Msimamizi wa Makundi';
 
   @override
-  String get clear_search => 'Clear search';
+  String get clear_search => 'Futa utafutaji';
 
   @override
-  String get close_2 => 'Close';
+  String get close_2 => 'Funga';
 
   @override
-  String get create_2 => 'Create';
+  String get create_2 => 'Unda';
 
   @override
-  String get custom_range => 'Custom Range';
+  String get custom_range => 'Kipindi Maalum';
 
   @override
-  String get delete_2 => 'Delete';
+  String get delete_2 => 'Futa';
 
   @override
-  String get delete_account => 'Delete Account';
+  String get delete_account => 'Futa Akaunti';
 
   @override
-  String get delete_budget_plan => 'Delete Budget Plan?';
+  String get delete_budget_plan => 'Futa Mpango wa Bajeti?';
 
   @override
-  String get delete_budget => 'Delete Budget?';
+  String get delete_budget => 'Futa Bajeti?';
 
   @override
-  String get delete_loan => 'Delete Loan?';
+  String get delete_loan => 'Futa Mkopo?';
 
   @override
-  String get delete_recurring_flow => 'Delete Recurring Flow?';
+  String get delete_recurring_flow => 'Futa Mtiririko wa Kurudia?';
 
   @override
-  String get delete_savings_goal => 'Delete Savings Goal?';
+  String get delete_savings_goal => 'Futa Lengo la Akiba?';
 
   @override
-  String get delete_sub_budget => 'Delete Sub-Budget?';
+  String get delete_sub_budget => 'Futa Bajeti Ndogo?';
 
   @override
-  String get delete_transaction => 'Delete Transaction';
+  String get delete_transaction => 'Futa Muamala';
 
   @override
-  String get delete_workspace => 'Delete Workspace?';
+  String get delete_workspace => 'Futa Eneo la Kazi?';
 
   @override
-  String get discard_2 => 'Discard';
+  String get discard_2 => 'Tupa';
 
   @override
-  String get discard_changes => 'Discard Changes?';
+  String get discard_changes => 'Tupa Mabadiliko?';
 
   @override
-  String get download_formatted_pdf_or_csv => 'Download formatted PDF or CSV';
+  String get download_formatted_pdf_or_csv => 'Pakua PDF au CSV iliyopangwa';
 
   @override
   String get download_transactions_as_csv_file =>
-      'Download transactions as CSV file';
+      'Pakua miamala kama faili CSV';
 
   @override
-  String get edit_account => 'Edit Account';
+  String get edit_account => 'Hariri Akaunti';
 
   @override
-  String get edit_workspace => 'Edit Workspace';
+  String get edit_workspace => 'Hariri Eneo la Kazi';
 
   @override
-  String get enable_rollover => 'Enable Rollover';
+  String get enable_rollover => 'Wezesha Uhamisho';
 
   @override
-  String get export_2 => 'Export';
+  String get export_2 => 'Hamisha';
 
   @override
-  String get export_monthly_statement => 'Export Monthly Statement';
+  String get export_monthly_statement => 'Hamisha Taarifa ya Mwezi';
 
   @override
-  String get export_statement => 'Export Statement';
+  String get export_statement => 'Hamisha Taarifa';
 
   @override
-  String get export_to_csv => 'Export to CSV';
+  String get export_to_csv => 'Hamisha kwenda CSV';
 
   @override
-  String get go_home => 'Go Home';
+  String get go_home => 'Rudi Nyumbani';
 
   @override
-  String get import_csv => 'Import CSV';
+  String get import_csv => 'Ingiza CSV';
 
   @override
   String get import_transactions_from_csv_file =>
-      'Import transactions from CSV file';
+      'Ingiza miamala kutoka faili CSV';
 
   @override
-  String get keep_editing => 'Keep Editing';
+  String get keep_editing => 'Endelea Kuhariri';
 
   @override
-  String get lock_screen_balance => 'Lock Screen Balance';
+  String get lock_screen_balance => 'Salio kwenye Skrini ya Kufunga';
 
   @override
-  String get make_a_payment => 'Make a Payment';
+  String get make_a_payment => 'Fanya Malipo';
 
   @override
-  String get manage_workspaces => 'Manage Workspaces';
+  String get manage_workspaces => 'Simamia Maeneo ya Kazi';
 
   @override
-  String get monthly => 'Monthly';
+  String get monthly => 'Kila Mwezi';
 
   @override
-  String get monthly_income => 'Monthly Income';
+  String get monthly_income => 'Mapato ya Mwezi';
 
   @override
-  String get new_workspace => 'New Workspace';
+  String get new_workspace => 'Eneo la Kazi Jipya';
 
   @override
-  String get no_account_offline => 'No account (offline)';
+  String get no_account_offline => 'Hakuna akaunti (nje ya mtandao)';
 
   @override
-  String get no_active_accounts => 'No active accounts.';
+  String get no_active_accounts => 'Hakuna akaunti hai.';
 
   @override
-  String get no_categories_seeded => 'No categories seeded.';
+  String get no_categories_seeded => 'Hakuna makundi yaliyopandikizwa.';
 
   @override
-  String get none_standalone => 'None (Standalone)';
+  String get none_standalone => 'Hakuna (Kujitegemea)';
 
   @override
-  String get offline_privacy_guarantee => 'Offline Privacy Guarantee';
+  String get offline_privacy_guarantee => 'Dhamana ya Faragha Nje ya Mtandao';
 
   @override
-  String get open_settings => 'Open Settings';
+  String get open_settings => 'Fungua Mipangilio';
 
   @override
-  String get pdf_professional_report => 'PDF - Professional report';
+  String get pdf_professional_report => 'PDF - Ripoti ya kitaalamu';
 
   @override
-  String get recurring_bills => 'Recurring & Bills';
+  String get recurring_bills => 'Malipo ya kurudia';
 
   @override
-  String get remind_later => 'Remind later';
+  String get remind_later => 'Nikumbushe baadaye';
 
   @override
-  String get restore_2 => 'Restore';
+  String get restore_2 => 'Rejesha';
 
   @override
-  String get restore_database => 'Restore Database';
+  String get restore_database => 'Rejesha Hifadhidata';
 
   @override
-  String get restore_database_2 => 'Restore Database?';
+  String get restore_database_2 => 'Rejesha Hifadhidata?';
 
   @override
-  String get restore_failed => 'Restore Failed';
+  String get restore_failed => 'Urejeshaji Umeshindwa';
 
   @override
-  String get run_full_pipeline => 'Run Full Pipeline';
+  String get run_full_pipeline => 'Endesha Mchakato Wote';
 
   @override
-  String get sms_auto_deduplication => 'SMS Auto-Deduplication';
+  String get sms_auto_deduplication => 'Uondoshaji Otomatiki wa SMS';
 
   @override
-  String get sms_parser_debug => 'SMS Parser Debug';
+  String get sms_parser_debug => 'Utatuzi wa Kuchanganua SMS';
 
   @override
-  String get save_2 => 'Save';
+  String get save_2 => 'Hifadhi';
 
   @override
-  String get show_decimals => 'Show Decimals';
+  String get show_decimals => 'Onyesha Desimali';
 
   @override
-  String get skip_2 => 'Skip';
+  String get skip_2 => 'Ruka';
 
   @override
-  String get try_another_file => 'Try Another File';
+  String get try_another_file => 'Jaribu Faili Nyingine';
 
   @override
-  String get unlock_app => 'Unlock App';
+  String get unlock_app => 'Fungua Programu';
 
   @override
   String deleteGroup(String groupName) {
-    return 'Delete $groupName Group?';
+    return 'Futa Kundi la $groupName?';
   }
 
   @override
   String errorLoadingActivity(String error) {
-    return 'Error loading activity: $error';
+    return 'Hitilafu kupakia shughuli: $error';
   }
 
   @override
   String errorLoadingTransactions(String error) {
-    return 'Error loading transactions: $error';
+    return 'Hitilafu kupakia miamala: $error';
   }
 
   @override
   String importTransactions(int count) {
-    return 'Import $count Transactions';
+    return 'Ingiza Miamala $count';
   }
 
   @override
