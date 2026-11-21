@@ -920,7 +920,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                     context,
                                                     rootNavigator: true,
                                                   ).pop(false),
-                                                  child: Text(AppLocalizations.of(context)!.cancel_2),
+                                                  child: Text(context.l10n.cancel_2),
                                                 ),
                                                 ElevatedButton(
                                                   style:
@@ -933,7 +933,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                     context,
                                                     rootNavigator: true,
                                                   ).pop(true),
-                                                  child: Text(AppLocalizations.of(context)!.delete_2),
+                                                  child: Text(context.l10n.delete_2),
                                                 ),
                                               ],
                                             ) ??
@@ -1252,7 +1252,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                     },
                     loading: () => const SizedBox.shrink(),
                     error: (err, _) =>
-                        Center(child: Text('Error loading transactions: $err')),
+                        Center(child: Text(context.l10n.errorLoadingTransactions(err.toString()))),
                   ),
                 ),
               ),

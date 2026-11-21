@@ -580,7 +580,7 @@ Future<void> showMarkRecurringPaymentSheet({
                               onPressed: isProcessing
                                   ? null
                                   : () => context.pop(),
-                              child: Text(AppLocalizations.of(context)!.cancel_2),
+                              child: Text(context.l10n.cancel_2),
                             ),
                           ),
                         ],

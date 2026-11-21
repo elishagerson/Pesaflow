@@ -539,7 +539,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
 
     final confirm = await ModernDialog.show<bool>(
       context: context,
-      title: Text('Delete ${group.name} Group?'),
+      title: Text(context.l10n.deleteGroup(group.name)),
       titleIcon: PesaFlowIcons.delete,
       iconColor: context.appColors.expenseColor,
       content: Text(contentText),
@@ -547,7 +547,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
         TextButton(
           onPressed: () =>
               Navigator.of(context, rootNavigator: true).pop(false),
-          child: Text(AppLocalizations.of(context)!.cancel_2),
+          child: Text(context.l10n.cancel_2),
         ),
         TextButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
@@ -630,7 +630,7 @@ class _SubBudgetCard extends ConsumerWidget {
         confirmDismiss: (direction) async {
           return await ModernDialog.show<bool>(
             context: context,
-            title: Text(AppLocalizations.of(context)!.delete_sub_budget),
+            title: Text(context.l10n.delete_sub_budget),
             titleIcon: PesaFlowIcons.delete,
             iconColor: context.appColors.expenseColor,
             content: Text(
@@ -640,7 +640,7 @@ class _SubBudgetCard extends ConsumerWidget {
               TextButton(
                 onPressed: () =>
                     Navigator.of(context, rootNavigator: true).pop(false),
-                child: Text(AppLocalizations.of(context)!.cancel_2),
+                child: Text(context.l10n.cancel_2),
               ),
               TextButton(
                 onPressed: () =>

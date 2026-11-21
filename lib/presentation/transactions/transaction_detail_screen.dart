@@ -909,7 +909,7 @@ class TransactionDetailScreen extends ConsumerWidget {
 
     ModernDialog.show(
       context: context,
-      title: Text(AppLocalizations.of(context)!.delete_transaction),
+      title: Text(context.l10n.delete_transaction),
       titleIcon: PesaFlowIcons.delete,
       iconColor: theme.colorScheme.error,
       content: const Text(
@@ -918,7 +918,7 @@ class TransactionDetailScreen extends ConsumerWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-          child: Text(AppLocalizations.of(context)!.cancel_2),
+          child: Text(context.l10n.cancel_2),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -953,7 +953,7 @@ class TransactionDetailScreen extends ConsumerWidget {
               },
             );
           },
-          child: Text(AppLocalizations.of(context)!.delete_2),
+          child: Text(context.l10n.delete_2),
         ),
       ],
     );

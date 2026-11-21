@@ -95,10 +95,10 @@ void showAccountsManager(BuildContext context, WidgetRef ref) {
               ),
             ),
             if (accounts.isEmpty)
-              const Center(
+              Center(
                 child: Padding(
                   padding: EdgeInsets.all(kSpacing32),
-                  child: Text(AppLocalizations.of(context)!.no_active_accounts),
+                  child: Text(context.l10n.no_active_accounts),
                 ),
               )
             else
@@ -227,7 +227,7 @@ void _showEditAccountDialog(BuildContext context, WidgetRef ref, Account acc) {
 
   ModernDialog.show(
     context: context,
-    title: Text(AppLocalizations.of(context)!.edit_account),
+    title: Text(context.l10n.edit_account),
     titleIcon: PesaFlowIcons.edit,
     content: StatefulBuilder(
       builder: (context, setState) {
@@ -395,7 +395,7 @@ void _showEditAccountDialog(BuildContext context, WidgetRef ref, Account acc) {
     actions: [
       TextButton(
         onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-        child: Text(AppLocalizations.of(context)!.cancel_2),
+        child: Text(context.l10n.cancel_2),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -459,7 +459,7 @@ void _showEditAccountDialog(BuildContext context, WidgetRef ref, Account acc) {
             );
           }
         },
-        child: Text(AppLocalizations.of(context)!.save_2),
+        child: Text(context.l10n.save_2),
       ),
     ],
   );
@@ -469,7 +469,7 @@ void _confirmDeleteAccount(BuildContext context, WidgetRef ref, Account acc) {
   final theme = Theme.of(context);
   ModernDialog.show(
     context: context,
-    title: Text(AppLocalizations.of(context)!.delete_account),
+    title: Text(context.l10n.delete_account),
     titleIcon: PesaFlowIcons.delete,
     iconColor: theme.colorScheme.error,
     content: Text(
@@ -478,7 +478,7 @@ void _confirmDeleteAccount(BuildContext context, WidgetRef ref, Account acc) {
     actions: [
       TextButton(
         onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-        child: Text(AppLocalizations.of(context)!.cancel_2),
+        child: Text(context.l10n.cancel_2),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -533,7 +533,7 @@ void _confirmDeleteAccount(BuildContext context, WidgetRef ref, Account acc) {
             onDelete: () async {},
           );
         },
-        child: Text(AppLocalizations.of(context)!.delete_2),
+        child: Text(context.l10n.delete_2),
       ),
     ],
   );

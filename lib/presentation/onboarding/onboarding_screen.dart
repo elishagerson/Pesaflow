@@ -299,7 +299,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                   duration: MotionTokens.durationSlow,
                                   curve: Curves.easeInOut,
                                 ),
-                                child: Text(AppLocalizations.of(context)!.back_2),
+                                child: Text(context.l10n.back_2),
                               ),
                             const Spacer(),
                             TactileSpringContainer(

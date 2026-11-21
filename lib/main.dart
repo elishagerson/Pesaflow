@@ -37,6 +37,7 @@ import 'package:pesaflow/data/seed/default_data.dart';
 import 'package:pesaflow/presentation/splash/pesa_splash.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -319,7 +320,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                   children: [
                     TextButton(
                       onPressed: () => Navigator.of(dialogCtx).pop(),
-                      child: Text(AppLocalizations.of(context)!.remind_later),
+                      child: Text(context.l10n.remind_later),
                     ),
                     TextButton(
                       onPressed: () async {
@@ -340,7 +341,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                         );
                         if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
                       },
-                      child: Text(AppLocalizations.of(context)!.open_settings),
+                      child: Text(context.l10n.open_settings),
                     ),
                   ],
                 ),
@@ -573,7 +574,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                           icon: const Icon(
                                             PesaFlowIcons.biometric,
                                           ),
-                                          label: Text(AppLocalizations.of(context)!.unlock_app),
+                                          label: Text(context.l10n.unlock_app),
                                           style: FilledButton.styleFrom(
                                             backgroundColor: const Color(
                                               0xFF3C4550,

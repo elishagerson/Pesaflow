@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import '../theme/app_colors_theme.dart';
 import '../theme/app_theme.dart';
 import 'responsive.dart';
@@ -18,6 +19,11 @@ extension PesaFlowContext on BuildContext {
       AppTypographyTheme.base(Theme.of(this).textTheme);
 
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
+
+  /// Localized strings for this context. Falls back to English when no
+  /// localization delegates are installed (e.g. in unit tests).
+  AppLocalizations get l10n =>
+      AppLocalizations.of(this) ?? AppLocalizations('en');
 
   bool get isReducedMotion =>
       MediaQuery.maybeOf(this)?.disableAnimations ?? false;

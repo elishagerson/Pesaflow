@@ -870,7 +870,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                   showPaymentSheet(context, ref, loan);
                 },
                 icon: const Icon(PesaFlowIcons.payment, size: 18),
-                label: Text(AppLocalizations.of(context)!.make_a_payment),
+                label: Text(context.l10n.make_a_payment),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.appColors.incomeColor,
                   foregroundColor: theme.colorScheme.onPrimary,
@@ -913,7 +913,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
   void _confirmDelete(BuildContext context, WidgetRef ref, Loan loan) async {
     final confirm = await ModernDialog.show<bool>(
       context: context,
-      title: Text(AppLocalizations.of(context)!.delete_loan),
+      title: Text(context.l10n.delete_loan),
       titleIcon: PesaFlowIcons.delete,
       iconColor: context.appColors.expenseColor,
       content: Text(
@@ -926,7 +926,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
         TextButton(
           onPressed: () =>
               Navigator.of(context, rootNavigator: true).pop(false),
-          child: Text(AppLocalizations.of(context)!.cancel_2),
+          child: Text(context.l10n.cancel_2),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -934,7 +934,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
             foregroundColor: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
-          child: Text(AppLocalizations.of(context)!.delete_2),
+          child: Text(context.l10n.delete_2),
         ),
       ],
     );

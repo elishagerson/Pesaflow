@@ -586,7 +586,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                     PesaFlowIcons.clear,
                                     size: 14,
                                   ),
-                                  label: Text(AppLocalizations.of(context)!.clear_search),
+                                  label: Text(context.l10n.clear_search),
                                   style: OutlinedButton.styleFrom(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: kSpacing14,

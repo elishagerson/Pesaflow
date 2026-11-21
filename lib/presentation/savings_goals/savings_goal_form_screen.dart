@@ -301,7 +301,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
         if (didPop) return;
         final shouldPop = await ModernDialog.show<bool>(
           context: context,
-          title: Text(AppLocalizations.of(context)!.discard_changes),
+          title: Text(context.l10n.discard_changes),
           titleIcon: PesaFlowIcons.warning,
           iconColor: context.appColors.expenseColor,
           content: const Text(
@@ -311,7 +311,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
             TextButton(
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(false),
-              child: Text(AppLocalizations.of(context)!.keep_editing),
+              child: Text(context.l10n.keep_editing),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -320,7 +320,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
               ),
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(true),
-              child: Text(AppLocalizations.of(context)!.discard_2),
+              child: Text(context.l10n.discard_2),
             ),
           ],
         );

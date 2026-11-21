@@ -40,7 +40,7 @@ void showCategoriesManager(BuildContext context, WidgetRef ref) {
               ),
               TextButton.icon(
                 icon: const Icon(PesaFlowIcons.add),
-                label: Text(AppLocalizations.of(context)!.add_custom),
+                label: Text(context.l10n.add_custom),
                 onPressed: () {
                   context.pop();
                   showAddCategoryDialog(context, ref);
@@ -50,10 +50,10 @@ void showCategoriesManager(BuildContext context, WidgetRef ref) {
           ),
         ),
         if (categories.isEmpty)
-          const Center(
+          Center(
             child: Padding(
               padding: EdgeInsets.all(kSpacing32),
-              child: Text(AppLocalizations.of(context)!.no_categories_seeded),
+              child: Text(context.l10n.no_categories_seeded),
             ),
           )
         else

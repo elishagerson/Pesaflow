@@ -23,7 +23,7 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
 
   ModernDialog.show(
     context: context,
-    title: Text(AppLocalizations.of(context)!.add_account),
+    title: Text(context.l10n.add_account),
     titleIcon: PesaFlowIcons.wallet,
     content: StatefulBuilder(
       builder: (context, setState) {
@@ -192,7 +192,7 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
     actions: [
       TextButton(
         onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-        child: Text(AppLocalizations.of(context)!.cancel_2),
+        child: Text(context.l10n.cancel_2),
       ),
       ElevatedButton(
         onPressed: () async {
@@ -240,7 +240,7 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
             );
           }
         },
-        child: Text(AppLocalizations.of(context)!.create_2),
+        child: Text(context.l10n.create_2),
       ),
     ],
   );

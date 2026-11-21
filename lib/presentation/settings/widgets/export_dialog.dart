@@ -105,7 +105,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
     context: context,
     titleIcon: PesaFlowIcons.download,
     iconColor: Theme.of(context).colorScheme.primary,
-    title: Text(AppLocalizations.of(context)!.export_statement),
+    title: Text(context.l10n.export_statement),
     content: StatefulBuilder(
       builder: (ctx, setState) {
         return Column(
@@ -113,15 +113,15 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
           children: [
             const SizedBox(height: kSpacing4),
             SegmentedButton<_DateMode>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: _DateMode.monthly,
-                  label: Text(AppLocalizations.of(context)!.monthly),
+                  label: Text(context.l10n.monthly),
                   icon: Icon(PesaFlowIcons.calendar, size: 18),
                 ),
                 ButtonSegment(
                   value: _DateMode.customRange,
-                  label: Text(AppLocalizations.of(context)!.custom_range),
+                  label: Text(context.l10n.custom_range),
                   icon: Icon(PesaFlowIcons.dateRange, size: 18),
                 ),
               ],
@@ -154,7 +154,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
                 decoration: buildDecoration('Year', PesaFlowIcons.dateRange),
                 items: List.generate(10, (i) {
                   final year = DateTime.now().year - 5 + i;
-                  return DropdownMenuItem(value: year, child: Text('$year'));
+                  return DropdownMenuItem(value: year, child: Text(context.l10n.yearValue(year)));
                 }),
                 onChanged: (val) {
                   if (val != null) setState(() => selectedYear = val);
@@ -189,14 +189,14 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
             DropdownButtonFormField<ExportFormat>(
               initialValue: format,
               decoration: buildDecoration('Format', PesaFlowIcons.description),
-              items: const [
+              items: [
                 DropdownMenuItem(
                   value: ExportFormat.pdf,
-                  child: Text(AppLocalizations.of(context)!.pdf_professional_report),
+                  child: Text(context.l10n.pdf_professional_report),
                 ),
                 DropdownMenuItem(
                   value: ExportFormat.csv,
-                  child: Text(AppLocalizations.of(context)!.csv_spreadsheet_data),
+                  child: Text(context.l10n.csv_spreadsheet_data),
                 ),
               ],
               onChanged: (val) {
@@ -224,7 +224,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
       ),
       ElevatedButton.icon(
         icon: const Icon(PesaFlowIcons.download, size: 18),
-        label: Text(AppLocalizations.of(context)!.export_2),
+        label: Text(context.l10n.export_2),
         onPressed: () async {
           context.pop();
           final isMonthly = dateMode == _DateMode.monthly;

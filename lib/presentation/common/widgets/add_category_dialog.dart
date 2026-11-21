@@ -268,7 +268,7 @@ Future<Category?> showAddCategoryDialog(
     actions: [
       TextButton(
         onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-        child: Text(AppLocalizations.of(context)!.cancel_2),
+        child: Text(context.l10n.cancel_2),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(

@@ -891,7 +891,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
 
     final saved = await ModernDialog.show<bool>(
       context: context,
-      title: Text(AppLocalizations.of(context)!.monthly_income),
+      title: Text(context.l10n.monthly_income),
       titleIcon: PesaFlowIcons.income,
       iconColor: context.appColors.incomeColor,
       content: Builder(
@@ -929,7 +929,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
         TextButton(
           onPressed: () =>
               Navigator.of(context, rootNavigator: true).pop(false),
-          child: Text(AppLocalizations.of(context)!.cancel_2),
+          child: Text(context.l10n.cancel_2),
         ),
         TextButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
@@ -995,7 +995,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
   ) async {
     final confirm = await ModernDialog.show<bool>(
       context: context,
-      title: Text(AppLocalizations.of(context)!.delete_budget_plan),
+      title: Text(context.l10n.delete_budget_plan),
       titleIcon: PesaFlowIcons.delete,
       iconColor: context.appColors.expenseColor,
       content: const Text(
@@ -1005,7 +1005,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
         TextButton(
           onPressed: () =>
               Navigator.of(context, rootNavigator: true).pop(false),
-          child: Text(AppLocalizations.of(context)!.cancel_2),
+          child: Text(context.l10n.cancel_2),
         ),
         TextButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
@@ -1105,7 +1105,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               : 'Are you sure you want to delete the "${g.group.name}" group?';
           return await ModernDialog.show<bool>(
             context: context,
-            title: Text('Delete ${g.group.name} Group?'),
+            title: Text(context.l10n.deleteGroup(g.group.name)),
             titleIcon: PesaFlowIcons.delete,
             iconColor: context.appColors.expenseColor,
             content: Text(contentText),
@@ -1113,7 +1113,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               TextButton(
                 onPressed: () =>
                     Navigator.of(context, rootNavigator: true).pop(false),
-                child: Text(AppLocalizations.of(context)!.cancel_2),
+                child: Text(context.l10n.cancel_2),
               ),
               TextButton(
                 onPressed: () =>
@@ -1452,7 +1452,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
         confirmDismiss: (direction) async {
           return await ModernDialog.show<bool>(
             context: context,
-            title: Text(AppLocalizations.of(context)!.delete_budget),
+            title: Text(context.l10n.delete_budget),
             titleIcon: PesaFlowIcons.delete,
             iconColor: context.appColors.expenseColor,
             content: Text(
@@ -1462,7 +1462,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               TextButton(
                 onPressed: () =>
                     Navigator.of(context, rootNavigator: true).pop(false),
-                child: Text(AppLocalizations.of(context)!.cancel_2),
+                child: Text(context.l10n.cancel_2),
               ),
               TextButton(
                 onPressed: () =>

@@ -75,7 +75,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                   child: SafeArea(
                     child: TextButton(
                       onPressed: widget.onComplete,
-                      child: Text(AppLocalizations.of(context)!.skip_2),
+                      child: Text(context.l10n.skip_2),
                     ),
                   ),
                 ),

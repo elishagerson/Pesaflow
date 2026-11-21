@@ -271,7 +271,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
                 _parseResult = null;
                 _error = null;
               }),
-              child: Text(AppLocalizations.of(context)!.try_another_file),
+              child: Text(context.l10n.try_another_file),
             ),
           ),
         ],
@@ -290,9 +290,9 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
               ),
             ),
             items: [
-              const DropdownMenuItem(
+              DropdownMenuItem(
                 value: null,
-                child: Text(AppLocalizations.of(context)!.no_account_offline),
+                child: Text(context.l10n.no_account_offline),
               ),
               ...widget.accounts.map(
                 (a) => DropdownMenuItem(value: a.id, child: Text(a.name)),
@@ -399,7 +399,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
             width: double.infinity,
             child: ElevatedButton.icon(
               icon: const Icon(PesaFlowIcons.download, size: 18),
-              label: Text('Import ${result.transactions.length} Transactions'),
+              label: Text(context.l10n.importTransactions(result.transactions.length)),
               onPressed: _confirmImport,
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,

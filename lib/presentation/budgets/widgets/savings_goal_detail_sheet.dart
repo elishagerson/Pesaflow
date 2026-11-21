@@ -1136,7 +1136,7 @@ class _SavingsGoalDetailSheetState
                                                         Navigator.of(
                                                           context,
                                                         ).pop(false),
-                                                    child: Text(AppLocalizations.of(context)!.cancel_2),
+                                                    child: Text(context.l10n.cancel_2),
                                                   ),
                                                   TextButton(
                                                     onPressed: () =>

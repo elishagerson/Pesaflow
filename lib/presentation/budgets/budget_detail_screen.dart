@@ -177,7 +177,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                 PesaHaptics.heavy();
                                 final confirm = await ModernDialog.show<bool>(
                                   context: context,
-                                  title: Text(AppLocalizations.of(context)!.delete_budget),
+                                  title: Text(context.l10n.delete_budget),
                                   titleIcon: PesaFlowIcons.delete,
                                   iconColor: context.appColors.expenseColor,
                                   content: const Text(
@@ -189,7 +189,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                         context,
                                         rootNavigator: true,
                                       ).pop(false),
-                                      child: Text(AppLocalizations.of(context)!.cancel_2),
+                                      child: Text(context.l10n.cancel_2),
                                     ),
                                     TextButton(
                                       onPressed: () => Navigator.of(

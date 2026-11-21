@@ -154,7 +154,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     // Confirmation dialog before destructive operation
     final confirmed = await ModernDialog.show<bool>(
       context: context,
-      title: Text(AppLocalizations.of(context)!.restore_database_2),
+      title: Text(context.l10n.restore_database_2),
       titleIcon: PesaFlowIcons.warning,
       iconColor: context.appColors.warningColor,
       content: const Text(
@@ -166,7 +166,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         TextButton(
           onPressed: () =>
               Navigator.of(context, rootNavigator: true).pop(false),
-          child: Text(AppLocalizations.of(context)!.cancel_2),
+          child: Text(context.l10n.cancel_2),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -177,7 +177,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
           ),
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
-          child: Text(AppLocalizations.of(context)!.restore_2),
+          child: Text(context.l10n.restore_2),
         ),
       ],
     );
@@ -213,7 +213,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       if (context.mounted) {
         ModernDialog.show(
           context: context,
-          title: Text(AppLocalizations.of(context)!.restore_failed),
+          title: Text(context.l10n.restore_failed),
           titleIcon: PesaFlowIcons.error,
           iconColor: theme.colorScheme.error,
           content: Text(
@@ -224,7 +224,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-              child: Text(AppLocalizations.of(context)!.close_2),
+              child: Text(context.l10n.close_2),
             ),
           ],
         );
@@ -705,7 +705,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.home,
                         color: theme.colorScheme.primary,
                       ),
-                      title: Text(AppLocalizations.of(context)!.manage_workspaces),
+                      title: Text(context.l10n.manage_workspaces),
                       subtitle: const Text(
                         'Switch or create offline workspaces',
                       ),
@@ -720,7 +720,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.wallet,
                         color: theme.colorScheme.primary,
                       ),
-                      title: Text(AppLocalizations.of(context)!.accounts_manager),
+                      title: Text(context.l10n.accounts_manager),
                       subtitle: Text(
                         '${accounts.length} active wallets (Bank, M-Pesa, Cash)',
                       ),
@@ -732,7 +732,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.category,
                         color: context.appColors.transferColor,
                       ),
-                      title: Text(AppLocalizations.of(context)!.categories_manager),
+                      title: Text(context.l10n.categories_manager),
                       subtitle: Text(
                         '${categories.length} income & expense categories',
                       ),
@@ -744,7 +744,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.subscriptions,
                         color: context.appColors.incomeColor,
                       ),
-                      title: Text(AppLocalizations.of(context)!.recurring_bills),
+                      title: Text(context.l10n.recurring_bills),
                       subtitle: const Text(
                         'Manage scheduled commitments & subscriptions',
                       ),
@@ -766,7 +766,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.budgets,
                         color: context.appColors.incomeColor,
                       ),
-                      title: Text(AppLocalizations.of(context)!.auto_budget_on_income),
+                      title: Text(context.l10n.auto_budget_on_income),
                       subtitle: const Text(
                         'Automatically allocate 50/30/20 budgets on deposits',
                       ),
@@ -793,7 +793,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.sms,
                         color: theme.colorScheme.primary,
                       ),
-                      title: Text(AppLocalizations.of(context)!.sms_auto_deduplication),
+                      title: Text(context.l10n.sms_auto_deduplication),
                       subtitle: const Text(
                         'Automatically deduplicate incoming telco messages',
                       ),
@@ -826,7 +826,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.themeMode,
                         color: theme.colorScheme.primary,
                       ),
-                      title: Text(AppLocalizations.of(context)!.app_theme),
+                      title: Text(context.l10n.app_theme),
                       subtitle: Text(switch (ref.watch(themeModeProvider)) {
                         ThemeMode.light => 'Light appearance',
                         ThemeMode.dark => 'Dark appearance',
@@ -862,7 +862,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.pin,
                         color: context.appColors.transferColor,
                       ),
-                      title: Text(AppLocalizations.of(context)!.show_decimals),
+                      title: Text(context.l10n.show_decimals),
                       subtitle: const Text(
                         'Format currency with cents (.00) globally',
                       ),
@@ -885,7 +885,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.biometric,
                         color: theme.colorScheme.primary,
                       ),
-                      title: Text(AppLocalizations.of(context)!.biometric_app_lock),
+                      title: Text(context.l10n.biometric_app_lock),
                       subtitle: const Text(
                         'Require biometrics to open PesaFlow',
                       ),
@@ -903,7 +903,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.unlock,
                         color: theme.colorScheme.primary,
                       ),
-                      title: Text(AppLocalizations.of(context)!.lock_screen_balance),
+                      title: Text(context.l10n.lock_screen_balance),
                       subtitle: const Text(
                         'Show current balance in notification shade',
                       ),
@@ -923,7 +923,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.security,
                         color: context.appColors.incomeColor,
                       ),
-                      title: Text(AppLocalizations.of(context)!.offline_privacy_guarantee),
+                      title: Text(context.l10n.offline_privacy_guarantee),
                       subtitle: const Text(
                         '100% on-device storage. Zero cloud transfers.',
                       ),
@@ -966,8 +966,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.file,
                         color: theme.colorScheme.primary,
                       ),
-                      title: Text(AppLocalizations.of(context)!.export_monthly_statement),
-                      subtitle: Text(AppLocalizations.of(context)!.download_formatted_pdf_or_csv),
+                      title: Text(context.l10n.export_monthly_statement),
+                      subtitle: Text(context.l10n.download_formatted_pdf_or_csv),
                       onTap: () => showExportDialog(context, ref),
                     ),
                     IosListRow(
@@ -976,8 +976,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.download,
                         color: context.appColors.transferColor,
                       ),
-                      title: Text(AppLocalizations.of(context)!.export_to_csv),
-                      subtitle: Text(AppLocalizations.of(context)!.download_transactions_as_csv_file),
+                      title: Text(context.l10n.export_to_csv),
+                      subtitle: Text(context.l10n.download_transactions_as_csv_file),
                       onTap: () => _handleExportCsv(context, ref),
                     ),
                     IosListRow(
@@ -986,8 +986,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.upload,
                         color: context.appColors.transferColor,
                       ),
-                      title: Text(AppLocalizations.of(context)!.import_csv),
-                      subtitle: Text(AppLocalizations.of(context)!.import_transactions_from_csv_file),
+                      title: Text(context.l10n.import_csv),
+                      subtitle: Text(context.l10n.import_transactions_from_csv_file),
                       onTap: () => _handleImportCsv(context, ref),
                     ),
                     IosListRow(
@@ -996,7 +996,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.backup,
                         color: theme.colorScheme.primary,
                       ),
-                      title: Text(AppLocalizations.of(context)!.backup_database),
+                      title: Text(context.l10n.backup_database),
                       subtitle: const Text(
                         'Save an offline backup of your data',
                       ),
@@ -1008,7 +1008,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.restore,
                         color: context.appColors.warningColor,
                       ),
-                      title: Text(AppLocalizations.of(context)!.restore_database),
+                      title: Text(context.l10n.restore_database),
                       subtitle: const Text(
                         'Restore from a previous backup file',
                       ),
@@ -1030,7 +1030,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.info,
                         color: context.appColors.warningColor,
                       ),
-                      title: Text(AppLocalizations.of(context)!.sms_parser_debug),
+                      title: Text(context.l10n.sms_parser_debug),
                       subtitle: const Text(
                         'Test SMS parsing pipeline step-by-step',
                       ),

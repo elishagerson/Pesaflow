@@ -809,7 +809,7 @@ class _RecurringTransactionListScreenState
         action: FilledButton.icon(
           onPressed: () => context.push('/recurring/add'),
           icon: const Icon(PesaFlowIcons.add, size: 18),
-          label: Text(AppLocalizations.of(context)!.add_recurring_flow),
+          label: Text(context.l10n.add_recurring_flow),
         ),
       ),
     );

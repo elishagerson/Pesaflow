@@ -128,7 +128,7 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.sms_parser_debug)),
+      appBar: AppBar(title: Text(context.l10n.sms_parser_debug)),
       body: Padding(
         padding: const EdgeInsets.all(kSpacing16),
         child: Column(
@@ -164,7 +164,7 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : Text(AppLocalizations.of(context)!.run_full_pipeline),
+                    : Text(context.l10n.run_full_pipeline),
               ),
             ),
             const SizedBox(height: kSpacing16),

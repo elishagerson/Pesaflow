@@ -353,7 +353,7 @@ class _RouterErrorPage extends StatelessWidget {
                 FilledButton.icon(
                   onPressed: () => context.go('/'),
                   icon: const Icon(PesaFlowIcons.home),
-                  label: Text(AppLocalizations.of(context)!.go_home),
+                  label: Text(context.l10n.go_home),
                 ),
               ],
             ),

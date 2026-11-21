@@ -304,7 +304,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                 header: 'Account',
                 rows: [
                   IosListRow(
-                    title: Text(AppLocalizations.of(context)!.all_accounts),
+                    title: Text(context.l10n.all_accounts),
                     trailing: activeAccount == null
                         ? Icon(
                             PesaFlowIcons.check,

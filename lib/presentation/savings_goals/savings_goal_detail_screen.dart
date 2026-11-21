@@ -762,7 +762,7 @@ class _SavingsGoalDetailScreenState
   Future<void> _deleteGoal(String id) async {
     final confirm = await ModernDialog.show<bool>(
       context: context,
-      title: Text(AppLocalizations.of(context)!.delete_savings_goal),
+      title: Text(context.l10n.delete_savings_goal),
       titleIcon: PesaFlowIcons.warning,
       content: const Text(
         'This will permanently delete this goal and all its contribution history.',
@@ -770,7 +770,7 @@ class _SavingsGoalDetailScreenState
       actions: [
         TextButton(
           onPressed: () => context.pop(false),
-          child: Text(AppLocalizations.of(context)!.cancel_2),
+          child: Text(context.l10n.cancel_2),
         ),
         TextButton(
           onPressed: () => context.pop(true),
