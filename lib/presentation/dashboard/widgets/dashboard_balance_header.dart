@@ -52,23 +52,6 @@ class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader> {
     super.dispose();
   }
 
-  List<int> _balanceDigits(int balance) {
-    final text = CurrencyFormatter.formatCents(balance.abs());
-    return text
-        .split('')
-        .where((c) => RegExp(r'^\d$').hasMatch(c))
-        .map(int.parse)
-        .toList();
-  }
-
-  List<String> _formatBalanceDigits(int balance) {
-    if (balance < 0) {
-      final absFormatted = CurrencyFormatter.formatCents(balance.abs());
-      return ['-', ...absFormatted.split('')];
-    }
-    return CurrencyFormatter.formatCents(balance).split('');
-  }
-
   @override
   void didUpdateWidget(covariant DashboardBalanceHeader oldWidget) {
     super.didUpdateWidget(oldWidget);

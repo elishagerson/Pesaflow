@@ -218,7 +218,7 @@ class WidgetSafeToSpend extends StatelessWidget {
     final remainingStr =
         '${CurrencyFormatter.currencyPrefix}${NumberFormat('#,##0').format(remainingCents / 100)}';
     final limitStr = hasLimit
-        ? '${CurrencyFormatter.currencyPrefix}${NumberFormat('#,##0').format(limitCents / 100)}'
+        ? 'Limit: ${CurrencyFormatter.currencyPrefix}${NumberFormat('#,##0').format(limitCents / 100)}'
         : 'No budget set';
 
     return Theme(

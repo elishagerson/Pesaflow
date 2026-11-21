@@ -123,6 +123,7 @@ class _IosTabBarState extends State<IosTabBar> {
     final isSelected = tab.routeIndex == widget.selectedIndex;
 
     return Expanded(
+      flex: isSelected ? 2 : 1,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: kSpacing2),
         child: Semantics(
@@ -134,6 +135,7 @@ class _IosTabBarState extends State<IosTabBar> {
               widget.onDestinationSelected(tab.routeIndex);
             },
             child: Container(
+              width: double.infinity,
               height: double.infinity,
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
@@ -163,18 +165,14 @@ class _IosTabBarState extends State<IosTabBar> {
                         ? context.appColors.brandColor
                         : navFgColor.withValues(alpha: 0.7),
                   ),
-                  if (!widget.minimized) ...[
+                  if (isSelected && !widget.minimized) ...[
                     const SizedBox(width: kSpacing6),
                     Text(
                       tab.label,
                       style: context.ts(
                         12,
-                        fontWeight: isSelected
-                            ? FontWeight.w700
-                            : FontWeight.w500,
-                        color: isSelected
-                            ? context.appColors.brandColor
-                            : navFgColor.withValues(alpha: 0.7),
+                        fontWeight: FontWeight.w700,
+                        color: context.appColors.brandColor,
                       ),
                     ),
                   ],

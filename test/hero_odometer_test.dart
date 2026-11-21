@@ -11,7 +11,7 @@ Widget _host(Widget child) {
 }
 
 void main() {
-  testWidgets('an animating hero digit keeps the settled digit width', (
+  testWidgets('hero balance renders instantly without an odometer', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -24,10 +24,10 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
 
-    final settledWidth = tester.getSize(find.text('2')).width;
-    expect(settledWidth, greaterThan(0));
+    // The balance is readable on the first frame — no roll-up animation.
+    expect(find.textContaining('2,000'), findsOneWidget);
 
     await tester.pumpWidget(
       _host(
@@ -39,31 +39,9 @@ void main() {
         ),
       ),
     );
-    await tester.pump(const Duration(milliseconds: 200));
+    await tester.pump();
 
-    // Animating digits are the only text that asks for tabular figures.
-    final animatingGlyphs = find.byWidgetPredicate(
-      (widget) =>
-          widget is Text &&
-          RegExp(r'^\d$').hasMatch(widget.data ?? '') &&
-          (widget.style?.fontFeatures?.contains(
-                const FontFeature.tabularFigures(),
-              ) ??
-              false),
-    );
-    expect(animatingGlyphs, findsWidgets);
-
-    for (var i = 0; i < animatingGlyphs.evaluate().length; i++) {
-      expect(
-        tester.getSize(animatingGlyphs.at(i)).width,
-        moreOrLessEquals(settledWidth, epsilon: 0.5),
-        reason:
-            'An animating digit must occupy the same width as a settled digit, '
-            'or the number snaps wider the frame the run completes.',
-      );
-    }
-
-    // The odometer staggers its digit timers; let them all fire before teardown.
-    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    // Updating the balance updates the displayed value immediately.
+    expect(find.textContaining('3,000'), findsOneWidget);
   });
 }

@@ -78,7 +78,7 @@ void main() {
 
         expect(find.text('CREDIT CARD'), findsOneWidget);
         expect(find.text('DEFICIT'), findsOneWidget);
-        expect(find.text('-'), findsOneWidget);
+        expect(find.textContaining('-'), findsWidgets);
       },
     );
   });

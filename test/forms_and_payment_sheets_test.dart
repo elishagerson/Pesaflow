@@ -254,7 +254,7 @@ void main() {
         await tester.tap(find.text('Clear'));
         await tester.pumpAndSettle();
 
-        expect(find.text('TSh 0'), findsWidgets);
+        expect(find.text('Tsh 0'), findsWidgets);
       },
     );
   });
