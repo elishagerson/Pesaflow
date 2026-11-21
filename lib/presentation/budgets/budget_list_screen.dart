@@ -576,84 +576,36 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                 ),
               ),
               const SizedBox(width: kSpacing8),
-              if (isOverBudget)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing8,
-                    vertical: kSpacing4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: context.appColors.expenseColor.withValues(
-                      alpha: 0.12,
-                    ),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                    border: Border.all(
-                      color: context.appColors.expenseColor.withValues(
-                        alpha: 0.25,
-                      ),
-                      width: 0.8,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        PesaFlowIcons.error,
-                        size: 11,
-                        color: context.appColors.expenseColor,
-                      ),
-                      const SizedBox(width: kSpacing4),
-                      Text(
-                        'Over budget',
-                        style: context.ts(
-                          10,
-                          fontWeight: FontWeight.w800,
-                          color: context.appColors.expenseColor,
-                          letterSpacing: 0.4,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              else
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing8,
-                    vertical: kSpacing4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: context.appColors.incomeColor.withValues(
-                      alpha: 0.10,
-                    ),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                    border: Border.all(
-                      color: context.appColors.incomeColor.withValues(
-                        alpha: 0.20,
-                      ),
-                      width: 0.8,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        PesaFlowIcons.check,
-                        size: 11,
-                        color: context.appColors.incomeColor,
-                      ),
-                      const SizedBox(width: kSpacing4),
-                      Text(
-                        'On track',
-                        style: context.ts(
-                          10,
-                          fontWeight: FontWeight.w800,
-                          color: context.appColors.incomeColor,
-                          letterSpacing: 0.4,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+               Container(
+                 padding: const EdgeInsets.symmetric(
+                   horizontal: kSpacing8,
+                   vertical: kSpacing4,
+                 ),
+                 decoration: BoxDecoration(
+                   color: planStatusColor.withValues(alpha: 0.12),
+                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                   border: Border.all(
+                     color: planStatusColor.withValues(alpha: 0.25),
+                     width: 0.8,
+                   ),
+                 ),
+                 child: Row(
+                   mainAxisSize: MainAxisSize.min,
+                   children: [
+                     Icon(planStatusIcon, size: 11, color: planStatusColor),
+                     const SizedBox(width: kSpacing4),
+                     Text(
+                       planStatus.paceLabel,
+                       style: context.ts(
+                         10,
+                         fontWeight: FontWeight.w800,
+                         color: planStatusColor,
+                         letterSpacing: 0.4,
+                       ),
+                     ),
+                   ],
+                 ),
+               ),
               const Spacer(),
               TactileSpringContainer(
                 haptic: HapticType.soft,
@@ -907,13 +859,11 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                 ),
               ),
               Text(
-                isOverBudget ? 'Budget exceeded' : 'Within budget',
+                planStatus.paceLabel,
                 style: context.ts(
                   11,
                   fontWeight: FontWeight.w600,
-                  color: isOverBudget
-                      ? context.appColors.expenseColor
-                      : context.appColors.incomeColor,
+                  color: planStatusColor,
                 ),
               ),
             ],
