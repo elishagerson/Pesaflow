@@ -341,15 +341,18 @@ class SmsProcessor {
       // 6.2 Handle Reversals: link to original transaction and adjust balance
       if (sms.type == 'reversal') {
         final reversedRef = sms.reversedReference ?? sms.reference;
-        final origTx =
-            await _transactionRepo.getTransactionByReference(reversedRef);
+        final origTx = await _transactionRepo.getTransactionByReference(
+          reversedRef,
+        );
         final activeTrackerId =
             await _settingsRepo.getSetting('active_tracker_id') ??
             'default_personal';
 
-        final effectiveAmount =
-            sms.amount > 0 ? sms.amount : (origTx?.amount ?? 0);
-        final reversalType = (origTx?.type == 'expense' ||
+        final effectiveAmount = sms.amount > 0
+            ? sms.amount
+            : (origTx?.amount ?? 0);
+        final reversalType =
+            (origTx?.type == 'expense' ||
                 origTx?.type == 'airtime' ||
                 origTx?.type == 'fee')
             ? 'income'
@@ -385,12 +388,13 @@ class SmsProcessor {
 
         // If the original transaction had a loan repayment, restore the loan's balance
         if (origTx?.loanId != null && effectiveAmount > 0) {
-          await _loanRepo.revertPayment(origTx.loanId!, effectiveAmount);
+          await _loanRepo.revertPayment(origTx!.loanId!, effectiveAmount);
         }
 
         // Post notification
-        final amountFormatted = CurrencyFormatter.format(effectiveAmount);
-        await _notificationService.showTransactionNotification(
+        final amountFormatted = CurrencyFormatter.formatTsh(effectiveAmount);
+        await _notificationService.showNotification(
+          id: reversalTx.hashCode,
           title: 'Transaction Reversed',
           body: '$amountFormatted returned ($reversedRef)',
         );

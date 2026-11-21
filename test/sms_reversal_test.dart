@@ -44,15 +44,6 @@ class _MockNotificationService extends NotificationService {
     lastTitle = title;
     lastBody = body;
   }
-
-  @override
-  Future<void> showTransactionNotification({
-    required String title,
-    required String body,
-  }) async {
-    lastTitle = title;
-    lastBody = body;
-  }
 }
 
 void main() {
@@ -141,25 +132,30 @@ void main() {
 
       accountRepo = AccountRepository(accountDao);
       categoryRepo = CategoryRepository(categoryDao);
-      final analyticsRepo = AnalyticsRepository(analyticsDao, transactionDao);
-      final budgetAlertService = BudgetAlertService(budgetDao, transactionDao);
+      final analyticsRepo = AnalyticsRepository(analyticsDao);
+      mockNotificationService = _MockNotificationService();
+      final budgetAlertService = BudgetAlertService(
+        budgetDao: budgetDao,
+        notificationService: mockNotificationService,
+      );
       transactionRepo = TransactionRepository(
         transactionDao,
-        accountDao,
-        analyticsRepo,
         budgetAlertService,
-        db,
+        analyticsRepo,
       );
       loanRepo = LoanRepository(
         loanDao,
         transactionDao,
+        db,
         analyticsRepo,
         budgetAlertService,
-        db,
       );
       settingsRepo = SettingsRepository(settingsDao);
-      recurringTransactionRepo = RecurringTransactionRepository(recurringDao);
-      mockNotificationService = _MockNotificationService();
+      recurringTransactionRepo = RecurringTransactionRepository(
+        recurringDao,
+        transactionDao,
+        db,
+      );
 
       final deduplicator = Deduplicator(transactionRepo);
       final categorizer = AutoCategorizer(categoryRepo, transactionDao);
@@ -248,13 +244,16 @@ void main() {
         expect(success, isTrue);
 
         // 5. Verify the reversal transaction was created
-        final txs = await transactionRepo.getAllTransactions();
+        final txs = await db.select(db.transactions).get();
         expect(txs.length, 2);
 
         final reversalTx = txs.firstWhere((t) => t.reference != originalRef);
         expect(reversalTx.type, 'income'); // Credited back
         expect(reversalTx.amount, 1000000);
-        expect(reversalTx.description, contains('Reversal: Supermarket shopping'));
+        expect(
+          reversalTx.description,
+          contains('Reversal: Supermarket shopping'),
+        );
         expect(reversalTx.balanceAfter, 5000000);
 
         // 6. Verify account balance was updated to carrier reported balance

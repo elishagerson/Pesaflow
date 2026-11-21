@@ -113,7 +113,7 @@ class _BackgroundProtectionContentState
                 height: 44,
                 decoration: BoxDecoration(
                   color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(AppTheme.radius12),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                 ),
                 child: const Icon(
                   PesaFlowIcons.bolt,
@@ -135,7 +135,9 @@ class _BackgroundProtectionContentState
                       'Keep SMS capture alive when screen is off',
                       style: context.ts(
                         13,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                   ],
@@ -150,8 +152,10 @@ class _BackgroundProtectionContentState
           Container(
             padding: const EdgeInsets.all(kSpacing12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(AppTheme.radius12),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.5,
+              ),
+              borderRadius: BorderRadius.circular(AppTheme.radiusInput),
               border: Border.all(
                 color: theme.colorScheme.outline.withValues(alpha: 0.15),
               ),
@@ -197,8 +201,9 @@ class _BackgroundProtectionContentState
                     selectedColor: theme.colorScheme.primaryContainer,
                     labelStyle: context.ts(
                       12,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                       color: isSelected
                           ? theme.colorScheme.onPrimaryContainer
                           : theme.colorScheme.onSurface,
@@ -215,7 +220,7 @@ class _BackgroundProtectionContentState
           Expanded(
             child: ListView.separated(
               itemCount: activeBrand.steps.length,
-              separatorBuilder: (_, __) => const SizedBox(height: kSpacing12),
+              separatorBuilder: (_, _) => const SizedBox(height: kSpacing12),
               itemBuilder: (context, idx) {
                 final stepText = activeBrand.steps[idx];
                 return Row(
@@ -225,7 +230,9 @@ class _BackgroundProtectionContentState
                       width: 24,
                       height: 24,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                        color: theme.colorScheme.primary.withValues(
+                          alpha: 0.15,
+                        ),
                         shape: BoxShape.circle,
                       ),
                       alignment: Alignment.center,
@@ -264,13 +271,17 @@ class _BackgroundProtectionContentState
               padding: const EdgeInsets.symmetric(vertical: kSpacing14),
               decoration: BoxDecoration(
                 color: theme.colorScheme.primary,
-                borderRadius: BorderRadius.circular(AppTheme.radius12),
+                borderRadius: BorderRadius.circular(AppTheme.radiusInput),
               ),
               alignment: Alignment.center,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(PesaFlowIcons.settings, color: Colors.white, size: 18),
+                  const Icon(
+                    PesaFlowIcons.settings,
+                    color: Colors.white,
+                    size: 18,
+                  ),
                   const SizedBox(width: kSpacing8),
                   Text(
                     'Open App Battery Settings',
