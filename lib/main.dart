@@ -478,120 +478,115 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
             systemStatusBarContrastEnforced: false,
           ),
           child: Listener(
-              onPointerDown: (_) {
-                final currentFocus = FocusScope.of(context);
-                if (!currentFocus.hasPrimaryFocus &&
-                    currentFocus.focusedChild != null) {
-                  currentFocus.unfocus();
-                }
-              },
-              behavior: HitTestBehavior.translucent,
-              child: ScrollConfiguration(
-                behavior: CupertinoScrollBehavior(),
-                child: Stack(
-                  children: [
-                    child ?? const SizedBox.shrink(),
-                    _PendingReviewOverlay(),
-                    if (showLockOverlay)
-                      Positioned.fill(
-                        child: Container(
-                          color: Colors.black.withValues(alpha: 0.85),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                            child: Center(
-                              child: SingleChildScrollView(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                      MediaQuery.sizeOf(context).width < 400
-                                      ? 16
-                                      : 32,
-                                  vertical: 32,
-                                ),
-                                child: Card(
-                                  color: Colors.white.withValues(alpha: 0.08),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(24),
-                                    side: BorderSide(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.12,
-                                      ),
-                                      width: 1,
-                                    ),
+            onPointerDown: (_) {
+              final currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus &&
+                  currentFocus.focusedChild != null) {
+                currentFocus.unfocus();
+              }
+            },
+            behavior: HitTestBehavior.translucent,
+            child: ScrollConfiguration(
+              behavior: CupertinoScrollBehavior(),
+              child: Stack(
+                children: [
+                  child ?? const SizedBox.shrink(),
+                  _PendingReviewOverlay(),
+                  if (showLockOverlay)
+                    Positioned.fill(
+                      child: Container(
+                        color: Colors.black.withValues(alpha: 0.85),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                          child: Center(
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.sizeOf(context).width < 400
+                                    ? 16
+                                    : 32,
+                                vertical: 32,
+                              ),
+                              child: Card(
+                                color: Colors.white.withValues(alpha: 0.08),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                  side: BorderSide(
+                                    color: Colors.white.withValues(alpha: 0.12),
+                                    width: 1,
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(kSpacing32),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Semantics(
-                                          label: 'App locked',
-                                          child: Container(
-                                            padding: const EdgeInsets.all(
-                                              kSpacing16,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color(
-                                                0xFF3C4550,
-                                              ).withValues(alpha: 0.15),
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                    AppTheme.squircleRadius(80),
-                                                  ),
-                                            ),
-                                            child: const Icon(
-                                              PesaFlowIcons.lock,
-                                              color: Color(0xFF3C4550),
-                                              size: 48,
-                                            ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(kSpacing32),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Semantics(
+                                        label: 'App locked',
+                                        child: Container(
+                                          padding: const EdgeInsets.all(
+                                            kSpacing16,
                                           ),
-                                        ),
-                                        const SizedBox(height: kSpacing24),
-                                        Text(
-                                          context.l10n.app_locked_title,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge!
-                                              .copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                        ),
-                                        const SizedBox(height: kSpacing8),
-                                        Text(
-                                          context.l10n.auth_required_message,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall!
-                                              .copyWith(
-                                                color: Colors.grey[400],
-                                              ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        const SizedBox(height: kSpacing32),
-                                        FilledButton.icon(
-                                          onPressed: _authenticate,
-                                          icon: const Icon(
-                                            PesaFlowIcons.biometric,
-                                          ),
-                                          label: Text(context.l10n.unlock_app),
-                                          style: FilledButton.styleFrom(
-                                            backgroundColor: const Color(
+                                          decoration: BoxDecoration(
+                                            color: const Color(
                                               0xFF3C4550,
+                                            ).withValues(alpha: 0.15),
+                                            borderRadius: BorderRadius.circular(
+                                              AppTheme.squircleRadius(80),
                                             ),
-                                            foregroundColor: Colors.white,
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 24,
-                                              vertical: 14,
+                                          ),
+                                          child: const Icon(
+                                            PesaFlowIcons.lock,
+                                            color: Color(0xFF3C4550),
+                                            size: 48,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: kSpacing24),
+                                      Text(
+                                        context.l10n.app_locked_title,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
                                             ),
-                                            minimumSize: const Size(200, 48),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
+                                      ),
+                                      const SizedBox(height: kSpacing8),
+                                      Text(
+                                        context.l10n.auth_required_message,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(color: Colors.grey[400]),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: kSpacing32),
+                                      FilledButton.icon(
+                                        onPressed: _authenticate,
+                                        icon: const Icon(
+                                          PesaFlowIcons.biometric,
+                                        ),
+                                        label: Text(context.l10n.unlock_app),
+                                        style: FilledButton.styleFrom(
+                                          backgroundColor: const Color(
+                                            0xFF3C4550,
+                                          ),
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                            vertical: 14,
+                                          ),
+                                          minimumSize: const Size(200, 48),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              16,
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -599,58 +594,53 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                           ),
                         ),
                       ),
-                    AnimatedSwitcher(
-                      duration: MotionTokens.durationDismiss,
-                      reverseDuration: MotionTokens.durationExit,
-                      switchInCurve: MotionTokens.curveEntrance,
+                    ),
+                  AnimatedSwitcher(
+                    duration: MotionTokens.durationDismiss,
+                    reverseDuration: MotionTokens.durationExit,
+                    switchInCurve: MotionTokens.curveEntrance,
+                    switchOutCurve: MotionTokens.curveExit,
+                    transitionBuilder: (child, animation) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: ScaleTransition(
+                          scale: Tween<double>(
+                            begin: 0.96,
+                            end: 1.0,
+                          ).animate(animation),
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: ref.watch(paletteVisibilityProvider)
+                        ? const CommandPalette(key: ValueKey('command_palette'))
+                        : const SizedBox.shrink(key: ValueKey('empty_palette')),
+                  ),
+                  // The branded splash lives outside `builder` so it covers
+                  // the router itself — including the first frame of the
+                  // dashboard, which would otherwise flash on a cold start.
+                  IgnorePointer(
+                    ignoring: _booted,
+                    child: AnimatedSwitcher(
+                      duration: MotionTokens.durationSlow,
                       switchOutCurve: MotionTokens.curveExit,
-                      transitionBuilder: (child, animation) {
-                        return FadeTransition(
-                          opacity: animation,
-                          child: ScaleTransition(
-                            scale: Tween<double>(
-                              begin: 0.96,
-                              end: 1.0,
-                            ).animate(animation),
-                            child: child,
-                          ),
-                        );
-                      },
-                      child: ref.watch(paletteVisibilityProvider)
-                          ? const CommandPalette(
-                              key: ValueKey('command_palette'),
-                            )
-                          : const SizedBox.shrink(
-                              key: ValueKey('empty_palette'),
+                      transitionBuilder: (child, animation) =>
+                          FadeTransition(opacity: animation, child: child),
+                      child: _booted
+                          ? const SizedBox.shrink(key: ValueKey('splash_gone'))
+                          : PesaSplash(
+                              key: const ValueKey('splash'),
+                              onComplete: () {
+                                if (mounted) {
+                                  setState(() => _booted = true);
+                                }
+                              },
                             ),
                     ),
-                    // The branded splash lives outside `builder` so it covers
-                    // the router itself — including the first frame of the
-                    // dashboard, which would otherwise flash on a cold start.
-                    IgnorePointer(
-                      ignoring: _booted,
-                      child: AnimatedSwitcher(
-                        duration: MotionTokens.durationSlow,
-                        switchOutCurve: MotionTokens.curveExit,
-                        transitionBuilder: (child, animation) =>
-                            FadeTransition(opacity: animation, child: child),
-                        child: _booted
-                            ? const SizedBox.shrink(
-                                key: ValueKey('splash_gone'),
-                              )
-                            : PesaSplash(
-                                key: const ValueKey('splash'),
-                                onComplete: () {
-                                  if (mounted) {
-                                    setState(() => _booted = true);
-                                  }
-                                },
-                              ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
           ),
         );
       },

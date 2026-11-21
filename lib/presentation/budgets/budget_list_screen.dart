@@ -497,8 +497,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
     final now = DateTime.now();
     final planPeriodStart =
         planPeriod?.periodStart ?? DateTime(now.year, now.month, 1);
-    final planPeriodEnd = planPeriod?.periodEnd ??
-        DateTime(now.year, now.month + 1, 0);
+    final planPeriodEnd =
+        planPeriod?.periodEnd ?? DateTime(now.year, now.month + 1, 0);
     final planStatus = BudgetEngine.computeStatus(
       allocated: totalAllocated,
       spent: totalSpent,
@@ -576,36 +576,36 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                 ),
               ),
               const SizedBox(width: kSpacing8),
-               Container(
-                 padding: const EdgeInsets.symmetric(
-                   horizontal: kSpacing8,
-                   vertical: kSpacing4,
-                 ),
-                 decoration: BoxDecoration(
-                   color: planStatusColor.withValues(alpha: 0.12),
-                   borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                   border: Border.all(
-                     color: planStatusColor.withValues(alpha: 0.25),
-                     width: 0.8,
-                   ),
-                 ),
-                 child: Row(
-                   mainAxisSize: MainAxisSize.min,
-                   children: [
-                     Icon(planStatusIcon, size: 11, color: planStatusColor),
-                     const SizedBox(width: kSpacing4),
-                     Text(
-                       planStatus.paceLabel,
-                       style: context.ts(
-                         10,
-                         fontWeight: FontWeight.w800,
-                         color: planStatusColor,
-                         letterSpacing: 0.4,
-                       ),
-                     ),
-                   ],
-                 ),
-               ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kSpacing8,
+                  vertical: kSpacing4,
+                ),
+                decoration: BoxDecoration(
+                  color: planStatusColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                  border: Border.all(
+                    color: planStatusColor.withValues(alpha: 0.25),
+                    width: 0.8,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(planStatusIcon, size: 11, color: planStatusColor),
+                    const SizedBox(width: kSpacing4),
+                    Text(
+                      planStatus.paceLabel,
+                      style: context.ts(
+                        10,
+                        fontWeight: FontWeight.w800,
+                        color: planStatusColor,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               const Spacer(),
               TactileSpringContainer(
                 haptic: HapticType.soft,
@@ -1343,8 +1343,8 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                             color: groupStatus.paceLabel == 'Over budget'
                                 ? context.appColors.expenseColor
                                 : (groupStatus.paceLabel == 'Over pace'
-                                    ? context.appColors.warningColor
-                                    : context.appColors.incomeColor),
+                                      ? context.appColors.warningColor
+                                      : context.appColors.incomeColor),
                           ),
                         ),
                       ],

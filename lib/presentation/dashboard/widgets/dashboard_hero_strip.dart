@@ -57,7 +57,12 @@ class DashboardHeroStrip extends ConsumerWidget {
           Expanded(
             child: _NextUpCell(
               label: event?.label,
-              countdown: event == null ? null : _countdown(event.date, Localizations.localeOf(context).toLanguageTag()),
+              countdown: event == null
+                  ? null
+                  : _countdown(
+                      event.date,
+                      Localizations.localeOf(context).toLanguageTag(),
+                    ),
             ),
           ),
           const _CellDivider(),

@@ -966,7 +966,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         color: theme.colorScheme.primary,
                       ),
                       title: Text(context.l10n.export_monthly_statement),
-                      subtitle: Text(context.l10n.download_formatted_pdf_or_csv),
+                      subtitle: Text(
+                        context.l10n.download_formatted_pdf_or_csv,
+                      ),
                       onTap: () => showExportDialog(context, ref),
                     ),
                     IosListRow(
@@ -976,7 +978,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         color: context.appColors.transferColor,
                       ),
                       title: Text(context.l10n.export_to_csv),
-                      subtitle: Text(context.l10n.download_transactions_as_csv_file),
+                      subtitle: Text(
+                        context.l10n.download_transactions_as_csv_file,
+                      ),
                       onTap: () => _handleExportCsv(context, ref),
                     ),
                     IosListRow(
@@ -986,7 +990,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         color: context.appColors.transferColor,
                       ),
                       title: Text(context.l10n.import_csv),
-                      subtitle: Text(context.l10n.import_transactions_from_csv_file),
+                      subtitle: Text(
+                        context.l10n.import_transactions_from_csv_file,
+                      ),
                       onTap: () => _handleImportCsv(context, ref),
                     ),
                     IosListRow(

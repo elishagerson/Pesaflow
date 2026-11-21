@@ -398,7 +398,9 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
             width: double.infinity,
             child: ElevatedButton.icon(
               icon: const Icon(PesaFlowIcons.download, size: 18),
-              label: Text(context.l10n.importTransactions(result.transactions.length)),
+              label: Text(
+                context.l10n.importTransactions(result.transactions.length),
+              ),
               onPressed: _confirmImport,
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,

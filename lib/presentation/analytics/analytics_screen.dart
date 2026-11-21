@@ -1364,7 +1364,9 @@ class _TrendsTab extends ConsumerWidget {
                                   showTitles: true,
                                   reservedSize: 40,
                                   getTitlesWidget: (val, _) {
-                                    if (val <= 0) return const SizedBox.shrink();
+                                    if (val <= 0) {
+                                      return const SizedBox.shrink();
+                                    }
                                     return Text(
                                       CurrencyFormatter.formatCompact(
                                         (val * 100).round(),

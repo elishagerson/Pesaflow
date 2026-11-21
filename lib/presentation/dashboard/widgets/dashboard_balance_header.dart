@@ -405,5 +405,4 @@ class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader> {
       ],
     );
   }
-
 }

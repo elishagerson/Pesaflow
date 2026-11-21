@@ -179,7 +179,8 @@ class _PesaProgressBarState extends State<PesaProgressBar>
     final track = widget.trackColor ?? appColors.surfaceContainerHighest;
     return Semantics(
       label: widget.semanticsLabel,
-      value: '${(widget.value * 100).round()}%', // true progress; bar stays clamped
+      value:
+          '${(widget.value * 100).round()}%', // true progress; bar stays clamped
       child: ExcludeSemantics(
         child: SizedBox(
           height: widget.height,

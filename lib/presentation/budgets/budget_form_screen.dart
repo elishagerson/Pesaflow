@@ -416,7 +416,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         ? hexToColor(selectedCat.color)
         : theme.colorScheme.primary;
 
-    final int amountCents = CurrencyFormatter.parseToCents(_amountController.text);
+    final int amountCents = CurrencyFormatter.parseToCents(
+      _amountController.text,
+    );
     final String formattedVal = CurrencyFormatter.formatCents(amountCents);
 
     final now = DateTime.now();

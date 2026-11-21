@@ -239,56 +239,57 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                   _selectedDate!.day == date.day;
 
                               return Semantics(
-                                label: '$dateStr, spent ${CurrencyFormatter.formatCents(amount)}',
+                                label:
+                                    '$dateStr, spent ${CurrencyFormatter.formatCents(amount)}',
                                 button: true,
                                 child: GestureDetector(
-                                onTap: () {
-                                  triggerHaptic(HapticType.selection);
-                                  setState(() {
-                                    if (isSelected) {
-                                      _selectedDate = null;
-                                      _selectedAmount = null;
-                                    } else {
-                                      _selectedDate = date;
-                                      _selectedAmount = amount;
-                                    }
-                                  });
-                                },
-                                child: AnimatedContainer(
-                                  duration: MotionTokens.durationExit,
-                                  curve: Curves.easeOutCubic,
-                                  width: isSelected ? 15 : 13,
-                                  height: isSelected ? 15 : 13,
-                                  margin: EdgeInsets.symmetric(
-                                    vertical: isSelected ? 1.0 : 2.0,
-                                    horizontal: isSelected ? 0.0 : 1.0,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: cellColor,
-                                    borderRadius: BorderRadius.circular(
-                                      isSelected ? 4 : 3,
+                                  onTap: () {
+                                    triggerHaptic(HapticType.selection);
+                                    setState(() {
+                                      if (isSelected) {
+                                        _selectedDate = null;
+                                        _selectedAmount = null;
+                                      } else {
+                                        _selectedDate = date;
+                                        _selectedAmount = amount;
+                                      }
+                                    });
+                                  },
+                                  child: AnimatedContainer(
+                                    duration: MotionTokens.durationExit,
+                                    curve: Curves.easeOutCubic,
+                                    width: isSelected ? 15 : 13,
+                                    height: isSelected ? 15 : 13,
+                                    margin: EdgeInsets.symmetric(
+                                      vertical: isSelected ? 1.0 : 2.0,
+                                      horizontal: isSelected ? 0.0 : 1.0,
                                     ),
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? theme.colorScheme.onPrimary
-                                          : Colors.transparent,
-                                      width: isSelected ? 1.5 : 0.0,
-                                    ),
-                                    boxShadow: isSelected
-                                        ? [
-                                            BoxShadow(
-                                              color: cellColor.withValues(
-                                                alpha: 0.4,
+                                    decoration: BoxDecoration(
+                                      color: cellColor,
+                                      borderRadius: BorderRadius.circular(
+                                        isSelected ? 4 : 3,
+                                      ),
+                                      border: Border.all(
+                                        color: isSelected
+                                            ? theme.colorScheme.onPrimary
+                                            : Colors.transparent,
+                                        width: isSelected ? 1.5 : 0.0,
+                                      ),
+                                      boxShadow: isSelected
+                                          ? [
+                                              BoxShadow(
+                                                color: cellColor.withValues(
+                                                  alpha: 0.4,
+                                                ),
+                                                blurRadius: 6,
+                                                spreadRadius: 1,
                                               ),
-                                              blurRadius: 6,
-                                              spreadRadius: 1,
-                                            ),
-                                          ]
-                                        : null,
+                                            ]
+                                          : null,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
+                              );
                             }),
                           ],
                         ),

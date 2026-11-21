@@ -979,7 +979,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             },
                             loading: () => const SizedBox.shrink(),
                             error: (err, _) => Center(
-                              child: Text(context.l10n.errorLoadingActivity(err.toString())),
+                              child: Text(
+                                context.l10n.errorLoadingActivity(
+                                  err.toString(),
+                                ),
+                              ),
                             ),
                           ),
                         ),

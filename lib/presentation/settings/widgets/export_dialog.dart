@@ -153,7 +153,10 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
                 decoration: buildDecoration('Year', PesaFlowIcons.dateRange),
                 items: List.generate(10, (i) {
                   final year = DateTime.now().year - 5 + i;
-                  return DropdownMenuItem(value: year, child: Text(context.l10n.yearValue(year)));
+                  return DropdownMenuItem(
+                    value: year,
+                    child: Text(context.l10n.yearValue(year)),
+                  );
                 }),
                 onChanged: (val) {
                   if (val != null) setState(() => selectedYear = val);

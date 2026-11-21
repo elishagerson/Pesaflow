@@ -73,7 +73,9 @@ Future<Category?> showAddCategoryDialog(
 
   await ModernDialog.show(
     context: context,
-    title: Text(isEditing ? context.l10n.edit_category : context.l10n.add_custom_category),
+    title: Text(
+      isEditing ? context.l10n.edit_category : context.l10n.add_custom_category,
+    ),
     titleIcon: PesaFlowIcons.category,
     content: StatefulBuilder(
       builder: (context, setState) {
