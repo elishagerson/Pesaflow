@@ -47,51 +47,12 @@ Page<dynamic> _nativeIosPage(Widget page) {
   return CupertinoPage(key: ValueKey(page.runtimeType), child: page);
 }
 
-/// Horizontal travel direction of the most recent shell-tab switch
-/// (−1 left, +1 right, 0 none yet). Read by [_tabTransitionPage] so incoming
-/// content slides in from the direction of travel instead of a flat crossfade.
-double _tabTravelDirection = 0;
-
-/// Shell-tab transition: a fast opacity ramp so the outgoing branch
-/// never leaves a visible gap, plus a directional slide and a subtle
-/// scale-up settle that carry the rest of the entrance.
+/// Shell-tab transition: tabs are peers, so there is no slide/scale between
+/// branches. Use the platform default (no custom transition) per the
+/// navigation laws — a cross-fade or instant swap is acceptable; a directional
+/// slide is not.
 Page<dynamic> _tabTransitionPage(Widget child) {
-  return CustomTransitionPage(
-    child: child,
-    transitionDuration: MotionTokens.durationEntrance,
-    reverseTransitionDuration: MotionTokens.durationDismiss,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      final direction = _tabTravelDirection;
-      final settle = CurvedAnimation(
-        parent: animation,
-        curve: MotionTokens.curveEntrance,
-        reverseCurve: MotionTokens.curveExit,
-      );
-      return FadeTransition(
-        // Opacity resolves in the first ~45% of the transition so content
-        // is readable almost immediately; slide/scale own the settle.
-        opacity: CurvedAnimation(
-          parent: animation,
-          curve: const Interval(0.0, 0.45, curve: MotionTokens.curveEntrance),
-          reverseCurve: const Interval(
-            0.0,
-            0.55,
-            curve: MotionTokens.curveExit,
-          ),
-        ),
-        child: SlideTransition(
-          position: Tween<Offset>(
-            begin: Offset(0.05 * direction, 0),
-            end: Offset.zero,
-          ).animate(settle),
-          child: ScaleTransition(
-            scale: Tween<double>(begin: 0.985, end: 1.0).animate(settle),
-            child: child,
-          ),
-        ),
-      );
-    },
-  );
+  return NoTransitionPage(child: child);
 }
 
 class ScaffoldWithNavBar extends ConsumerStatefulWidget {
@@ -111,8 +72,6 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
     final current = widget.navigationShell.currentIndex;
     if (index == current) {
       ref.read(scrollToTopProvider.notifier).trigger();
-    } else {
-      _tabTravelDirection = (index - current).sign.toDouble();
     }
     widget.navigationShell.goBranch(index, initialLocation: index == current);
   }
@@ -227,7 +186,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
     final theme = Theme.of(context);
     final appColors = theme.extension<AppColorsTheme>()!;
     final navItems = [
-      (PesaFlowIcons.home, 'Dashboard', 0),
+      (PesaFlowIcons.home, 'Home', 0),
       (PesaFlowIcons.transfer, 'Transactions', 1),
       (PesaFlowIcons.budgets, 'Budgets', 2),
       (PesaFlowIcons.analytics, 'Analytics', 3),
@@ -344,7 +303,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
           Padding(
             padding: const EdgeInsets.all(kSpacing16),
             child: Text(
-              'PesaFlow v1.0.0',
+              'PesaFlow v1.0.1',
               style: context.ts(
                 13,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
