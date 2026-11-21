@@ -338,6 +338,65 @@ class SmsProcessor {
         );
       }
 
+      // 6.2 Handle Reversals: link to original transaction and adjust balance
+      if (sms.type == 'reversal') {
+        final reversedRef = sms.reversedReference ?? sms.reference;
+        final origTx =
+            await _transactionRepo.getTransactionByReference(reversedRef);
+        final activeTrackerId =
+            await _settingsRepo.getSetting('active_tracker_id') ??
+            'default_personal';
+
+        final effectiveAmount =
+            sms.amount > 0 ? sms.amount : (origTx?.amount ?? 0);
+        final reversalType = (origTx?.type == 'expense' ||
+                origTx?.type == 'airtime' ||
+                origTx?.type == 'fee')
+            ? 'income'
+            : 'expense';
+        final reversalDescription = origTx != null
+            ? 'Reversal: ${origTx.description}'
+            : 'Reversal: $reversedRef';
+        final reversalCategoryId = origTx?.categoryId ?? catResult.category.id;
+
+        final reversalTx = Transaction(
+          id: const Uuid().v4(),
+          accountId: targetAccount.id,
+          destinationAccountId: null,
+          loanId: origTx?.loanId,
+          categoryId: reversalCategoryId,
+          trackerId: activeTrackerId,
+          amount: effectiveAmount,
+          type: reversalType,
+          description: reversalDescription,
+          provider: effectiveProvider,
+          sender: reversalType == 'income' ? sms.senderOrRecipient : null,
+          recipient: reversalType == 'expense' ? sms.senderOrRecipient : null,
+          reference: sms.reference,
+          rawSms: sms.rawSmsBody,
+          smsTimestamp: sms.timestamp,
+          balanceAfter: sms.balanceAfter,
+          source: 'sms_auto',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+
+        await _transactionRepo.createTransaction(reversalTx);
+
+        // If the original transaction had a loan repayment, restore the loan's balance
+        if (origTx?.loanId != null && effectiveAmount > 0) {
+          await _loanRepo.revertPayment(origTx.loanId!, effectiveAmount);
+        }
+
+        // Post notification
+        final amountFormatted = CurrencyFormatter.format(effectiveAmount);
+        await _notificationService.showTransactionNotification(
+          title: 'Transaction Reversed',
+          body: '$amountFormatted returned ($reversedRef)',
+        );
+        return;
+      }
+
       // 6.5 Automated transfer detection & dynamic deduplication
       String finalType = sms.type;
       String finalCategoryId = catResult.category.id;
