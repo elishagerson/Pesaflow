@@ -206,4 +206,19 @@ class LoanDao extends DatabaseAccessor<AppDatabase> with _$LoanDaoMixin {
       ),
     );
   }
+
+  /// Revert a payment if a repayment transaction was reversed
+  Future<void> revertPayment(String loanId, int paymentAmount) async {
+    final loan = await getLoanById(loanId);
+    if (loan == null) return;
+    final newRemaining = (loan.remaining + paymentAmount).clamp(0, loan.amount);
+    await update(loans).replace(
+      loan.copyWith(
+        remaining: newRemaining,
+        status: 'active',
+        paidAt: const Value(null),
+        updatedAt: DateTime.now(),
+      ),
+    );
+  }
 }
