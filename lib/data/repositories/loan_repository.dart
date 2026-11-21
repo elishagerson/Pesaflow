@@ -77,6 +77,9 @@ class LoanRepository {
   Future<void> applyPayment(String loanId, int paymentAmount) =>
       _loanDao.applyPayment(loanId, paymentAmount);
 
+  Future<void> revertPayment(String loanId, int paymentAmount) =>
+      _loanDao.revertPayment(loanId, paymentAmount);
+
   Future<void> recordPaymentWithTransaction({
     required Transaction transaction,
     required String loanId,

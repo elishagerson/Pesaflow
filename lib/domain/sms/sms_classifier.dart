@@ -283,6 +283,11 @@ class SmsClassifier {
       'tumekutoa': 2.0, // "we have deducted"
       'tumeongeza': 2.0, // "we have added"
       'umekopeshwa': 2.0, // "you have been loaned"
+      'umerudishwa': 2.5, // "has been reversed/returned"
+      'imerejeshwa': 2.5, // "has been reversed/returned"
+      'has been reversed': 2.5,
+      'reversal': 2.0,
+      'reversed': 2.0,
       // Medium transaction verbs (1.5 each)
       'you have received': 1.5,
       'you have sent': 1.5,
