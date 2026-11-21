@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -82,10 +83,8 @@ class WidgetHeatmap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = theme.extension<AppColorsTheme>()!;
-    final totalStr = NumberFormat.simpleCurrency(
-      name: 'TZS ',
-      decimalDigits: 0,
-    ).format(data.totalExpenditure);
+    final totalStr =
+        '${CurrencyFormatter.currencyPrefix}${NumberFormat('#,##0').format(data.totalExpenditure)}';
 
     // Calculate grid start date (aligning Sundays)
     final startDayOfWeek = data.startDate.weekday;
@@ -216,15 +215,10 @@ class WidgetSafeToSpend extends StatelessWidget {
     final appColors = theme.extension<AppColorsTheme>()!;
     final bool hasLimit = limitCents > 0;
     final double fill = hasLimit ? percentage.clamp(0.0, 1.0) : 0.0;
-    final remainingStr = NumberFormat.simpleCurrency(
-      name: 'Tsh ',
-      decimalDigits: 0,
-    ).format(remainingCents / 100);
+    final remainingStr =
+        '${CurrencyFormatter.currencyPrefix}${NumberFormat('#,##0').format(remainingCents / 100)}';
     final limitStr = hasLimit
-        ? NumberFormat.simpleCurrency(
-            name: 'Limit: Tsh ',
-            decimalDigits: 0,
-          ).format(limitCents / 100)
+        ? '${CurrencyFormatter.currencyPrefix}${NumberFormat('#,##0').format(limitCents / 100)}'
         : 'No budget set';
 
     return Theme(
@@ -506,10 +500,8 @@ class WidgetRecentTransactions extends StatelessWidget {
                     final amountColor = isExpense
                         ? appColors.expenseColor
                         : appColors.incomeColor;
-                    final amountStr = NumberFormat.simpleCurrency(
-                      name: 'Tsh ',
-                      decimalDigits: 0,
-                    ).format(tx.transaction.amount / 100);
+                    final amountStr =
+                        '${CurrencyFormatter.currencyPrefix}${NumberFormat('#,##0').format(tx.transaction.amount / 100)}';
 
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 6.0),
