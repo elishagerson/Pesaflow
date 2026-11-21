@@ -1062,12 +1062,29 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
     final (icon, color) = _groupVisuals(context, type);
     final allocated = g.group.allocatedAmount;
     final spent = g.totalSpent;
-    final isOver = spent > allocated;
     final pct = allocated > 0 ? (spent / allocated).clamp(0.0, 2.0) : 0.0;
 
+    BudgetPeriod? groupPeriod;
+    for (final sub in g.subBudgets) {
+      if (sub.currentPeriod != null) {
+        groupPeriod = sub.currentPeriod;
+        break;
+      }
+    }
+    final now = DateTime.now();
+    final groupStatus = BudgetEngine.computeStatus(
+      allocated: allocated,
+      spent: spent,
+      periodStart: groupPeriod?.periodStart ?? DateTime(now.year, now.month, 1),
+      periodEnd: groupPeriod?.periodEnd ?? DateTime(now.year, now.month + 1, 0),
+    );
+    final isOver = groupStatus.isOverBudget;
+
     Color progressColor;
-    if (isOver) {
+    if (groupStatus.paceLabel == 'Over budget') {
       progressColor = context.appColors.expenseColor;
+    } else if (groupStatus.paceLabel == 'Over pace') {
+      progressColor = context.appColors.warningColor;
     } else if (pct > 0.85) {
       progressColor = context.appColors.warningColor;
     } else {
