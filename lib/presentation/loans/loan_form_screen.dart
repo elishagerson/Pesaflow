@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'package:pesaflow/l10n/app_localizations.dart';
 
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';

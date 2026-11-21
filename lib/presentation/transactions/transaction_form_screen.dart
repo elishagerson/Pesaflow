@@ -1,5 +1,4 @@
 import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:pesaflow/presentation/common/widgets/ios_date_picker_sheet.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';

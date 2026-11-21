@@ -23,7 +23,7 @@ extension PesaFlowContext on BuildContext {
   /// Localized strings for this context. Falls back to English when no
   /// localization delegates are installed (e.g. in unit tests).
   AppLocalizations get l10n =>
-      AppLocalizations.of(this) ?? AppLocalizations('en');
+      AppLocalizations.of(this) ?? lookupAppLocalizations(const Locale('en'));
 
   bool get isReducedMotion =>
       MediaQuery.maybeOf(this)?.disableAnimations ?? false;

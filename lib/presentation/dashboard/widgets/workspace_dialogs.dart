@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';

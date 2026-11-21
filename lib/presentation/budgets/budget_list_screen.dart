@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';

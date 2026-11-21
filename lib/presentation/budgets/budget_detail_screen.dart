@@ -1,5 +1,4 @@
 import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
-import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';

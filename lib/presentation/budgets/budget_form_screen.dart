@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart' show Value;
-import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';

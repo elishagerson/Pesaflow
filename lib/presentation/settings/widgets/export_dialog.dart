@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
