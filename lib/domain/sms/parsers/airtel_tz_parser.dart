@@ -73,6 +73,31 @@ class AirtelTzParser implements SmsParser {
     if (SmsClassifier.hasPromotionalLink(text)) return null;
 
     try {
+      // 0. Reversals
+      final revMatch = RegExp(
+        r'Muamala\s+(?:wenye\s+kumbukumbu\s+|namba\s+)?([A-Za-z0-9]+)(?:\s+wa\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?))?.*?umerudishwa',
+        caseSensitive: false,
+      ).firstMatch(text);
+      if (revMatch != null) {
+        final origRef = (revMatch.group(1) ?? '').trim();
+        final amtStr = revMatch.group(2);
+        final amt = amtStr != null ? parseAmount(amtStr) : 0;
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'reversal',
+          senderOrRecipient: 'Reversal: $origRef',
+          reference: ref != 'AIRTEL-REF-UNKNOWN' ? ref : '$origRef-REV',
+          reversedReference: origRef,
+          provider: 'AirtelMoney_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
       // 1. Swahili Received Money (Income)
       // Example: "Umepokea Tsh 45,000.00 kutoka kwa 0712345678. Rej: AT123456. Salio: Tsh 300,000.00"
       final swReceivedRegex = RegExp(

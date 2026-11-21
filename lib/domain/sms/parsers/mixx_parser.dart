@@ -132,6 +132,32 @@ class MixxParser implements SmsParser {
     if (SmsClassifier.hasPromotionalLink(text)) return null;
 
     try {
+      // 0. Reversal / Cancellation
+      // Example: "Muamala namba 12345678 wa Tsh 20,000.00 umerudishwa. Salio jipya ni Tsh 60,000.00"
+      final revMatch = RegExp(
+        r'Muamala\s+(?:namba\s+|wenye\s+kumbukumbu\s+)?([A-Za-z0-9]+)(?:\s+wa\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?))?.*?umerudishwa',
+        caseSensitive: false,
+      ).firstMatch(text);
+      if (revMatch != null) {
+        final origRef = (revMatch.group(1) ?? '').trim();
+        final amtStr = revMatch.group(2);
+        final amt = amtStr != null ? parseAmount(amtStr) : 0;
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'reversal',
+          senderOrRecipient: 'Reversal: $origRef',
+          reference: ref != 'TIGO-REF-UNKNOWN' ? ref : '$origRef-REV',
+          reversedReference: origRef,
+          provider: 'TigoPesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
       // ── SWAHILI PATTERNS ──────────────────────────────────────────────
 
       // 1a. Swahili Received Money (Income)
