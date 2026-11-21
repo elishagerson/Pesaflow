@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -908,7 +909,7 @@ class TransactionDetailScreen extends ConsumerWidget {
 
     ModernDialog.show(
       context: context,
-      title: const Text('Delete Transaction'),
+      title: Text(AppLocalizations.of(context)!.delete_transaction),
       titleIcon: PesaFlowIcons.delete,
       iconColor: theme.colorScheme.error,
       content: const Text(
@@ -917,7 +918,7 @@ class TransactionDetailScreen extends ConsumerWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel_2),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -952,7 +953,7 @@ class TransactionDetailScreen extends ConsumerWidget {
               },
             );
           },
-          child: const Text('Delete'),
+          child: Text(AppLocalizations.of(context)!.delete_2),
         ),
       ],
     );

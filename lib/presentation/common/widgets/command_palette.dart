@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -585,7 +586,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                                     PesaFlowIcons.clear,
                                     size: 14,
                                   ),
-                                  label: const Text('Clear search'),
+                                  label: Text(AppLocalizations.of(context)!.clear_search),
                                   style: OutlinedButton.styleFrom(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: kSpacing14,

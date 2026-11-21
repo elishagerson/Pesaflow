@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -546,7 +547,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
         TextButton(
           onPressed: () =>
               Navigator.of(context, rootNavigator: true).pop(false),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel_2),
         ),
         TextButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
@@ -629,7 +630,7 @@ class _SubBudgetCard extends ConsumerWidget {
         confirmDismiss: (direction) async {
           return await ModernDialog.show<bool>(
             context: context,
-            title: const Text('Delete Sub-Budget?'),
+            title: Text(AppLocalizations.of(context)!.delete_sub_budget),
             titleIcon: PesaFlowIcons.delete,
             iconColor: context.appColors.expenseColor,
             content: Text(
@@ -639,7 +640,7 @@ class _SubBudgetCard extends ConsumerWidget {
               TextButton(
                 onPressed: () =>
                     Navigator.of(context, rootNavigator: true).pop(false),
-                child: const Text('Cancel'),
+                child: Text(AppLocalizations.of(context)!.cancel_2),
               ),
               TextButton(
                 onPressed: () =>

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -104,7 +105,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
     context: context,
     titleIcon: PesaFlowIcons.download,
     iconColor: Theme.of(context).colorScheme.primary,
-    title: const Text('Export Statement'),
+    title: Text(AppLocalizations.of(context)!.export_statement),
     content: StatefulBuilder(
       builder: (ctx, setState) {
         return Column(
@@ -115,12 +116,12 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
               segments: const [
                 ButtonSegment(
                   value: _DateMode.monthly,
-                  label: Text('Monthly'),
+                  label: Text(AppLocalizations.of(context)!.monthly),
                   icon: Icon(PesaFlowIcons.calendar, size: 18),
                 ),
                 ButtonSegment(
                   value: _DateMode.customRange,
-                  label: Text('Custom Range'),
+                  label: Text(AppLocalizations.of(context)!.custom_range),
                   icon: Icon(PesaFlowIcons.dateRange, size: 18),
                 ),
               ],
@@ -191,11 +192,11 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
               items: const [
                 DropdownMenuItem(
                   value: ExportFormat.pdf,
-                  child: Text('PDF - Professional report'),
+                  child: Text(AppLocalizations.of(context)!.pdf_professional_report),
                 ),
                 DropdownMenuItem(
                   value: ExportFormat.csv,
-                  child: Text('CSV - Spreadsheet data'),
+                  child: Text(AppLocalizations.of(context)!.csv_spreadsheet_data),
                 ),
               ],
               onChanged: (val) {
@@ -223,7 +224,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
       ),
       ElevatedButton.icon(
         icon: const Icon(PesaFlowIcons.download, size: 18),
-        label: const Text('Export'),
+        label: Text(AppLocalizations.of(context)!.export_2),
         onPressed: () async {
           context.pop();
           final isMonthly = dateMode == _DateMode.monthly;

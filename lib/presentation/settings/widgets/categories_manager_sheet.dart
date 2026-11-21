@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -39,7 +40,7 @@ void showCategoriesManager(BuildContext context, WidgetRef ref) {
               ),
               TextButton.icon(
                 icon: const Icon(PesaFlowIcons.add),
-                label: const Text('Add Custom'),
+                label: Text(AppLocalizations.of(context)!.add_custom),
                 onPressed: () {
                   context.pop();
                   showAddCategoryDialog(context, ref);
@@ -52,7 +53,7 @@ void showCategoriesManager(BuildContext context, WidgetRef ref) {
           const Center(
             child: Padding(
               padding: EdgeInsets.all(kSpacing32),
-              child: Text('No categories seeded.'),
+              child: Text(AppLocalizations.of(context)!.no_categories_seeded),
             ),
           )
         else

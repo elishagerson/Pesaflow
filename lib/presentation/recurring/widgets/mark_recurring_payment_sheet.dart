@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -579,7 +580,7 @@ Future<void> showMarkRecurringPaymentSheet({
                               onPressed: isProcessing
                                   ? null
                                   : () => context.pop(),
-                              child: const Text('Cancel'),
+                              child: Text(AppLocalizations.of(context)!.cancel_2),
                             ),
                           ),
                         ],

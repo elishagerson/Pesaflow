@@ -22,5 +22,114 @@
   "analytics": "Takwimu",
   "savings": "Akiba",
   "loans": "Mikopo",
-  "recurring": "Malipo ya kurudia"
+  "recurring": "Malipo ya kurudia",
+  "accounts_manager": "Accounts Manager",
+  "add_account": "Add Account",
+  "add_custom": "Add Custom",
+  "add_recurring_flow": "Add Recurring Flow",
+  "all_accounts": "All Accounts",
+  "app_theme": "App Theme",
+  "auto_budget_on_income": "Auto-Budget on Income",
+  "back_2": "Back",
+  "backup_database": "Backup Database",
+  "biometric_app_lock": "Biometric App Lock",
+  "csv_spreadsheet_data": "CSV - Spreadsheet data",
+  "cancel_2": "Cancel",
+  "categories_manager": "Categories Manager",
+  "clear_search": "Clear search",
+  "close_2": "Close",
+  "create_2": "Create",
+  "custom_range": "Custom Range",
+  "delete_2": "Delete",
+  "delete_account": "Delete Account",
+  "delete_budget_plan": "Delete Budget Plan?",
+  "delete_budget": "Delete Budget?",
+  "delete_loan": "Delete Loan?",
+  "delete_recurring_flow": "Delete Recurring Flow?",
+  "delete_savings_goal": "Delete Savings Goal?",
+  "delete_sub_budget": "Delete Sub-Budget?",
+  "delete_transaction": "Delete Transaction",
+  "delete_workspace": "Delete Workspace?",
+  "discard_2": "Discard",
+  "discard_changes": "Discard Changes?",
+  "download_formatted_pdf_or_csv": "Download formatted PDF or CSV",
+  "download_transactions_as_csv_file": "Download transactions as CSV file",
+  "edit_account": "Edit Account",
+  "edit_workspace": "Edit Workspace",
+  "enable_rollover": "Enable Rollover",
+  "export_2": "Export",
+  "export_monthly_statement": "Export Monthly Statement",
+  "export_statement": "Export Statement",
+  "export_to_csv": "Export to CSV",
+  "go_home": "Go Home",
+  "import_csv": "Import CSV",
+  "import_transactions_from_csv_file": "Import transactions from CSV file",
+  "keep_editing": "Keep Editing",
+  "lock_screen_balance": "Lock Screen Balance",
+  "make_a_payment": "Make a Payment",
+  "manage_workspaces": "Manage Workspaces",
+  "monthly": "Monthly",
+  "monthly_income": "Monthly Income",
+  "new_workspace": "New Workspace",
+  "no_account_offline": "No account (offline)",
+  "no_active_accounts": "No active accounts.",
+  "no_categories_seeded": "No categories seeded.",
+  "none_standalone": "None (Standalone)",
+  "offline_privacy_guarantee": "Offline Privacy Guarantee",
+  "open_settings": "Open Settings",
+  "pdf_professional_report": "PDF - Professional report",
+  "recurring_bills": "Recurring & Bills",
+  "remind_later": "Remind later",
+  "restore_2": "Restore",
+  "restore_database": "Restore Database",
+  "restore_database_2": "Restore Database?",
+  "restore_failed": "Restore Failed",
+  "run_full_pipeline": "Run Full Pipeline",
+  "sms_auto_deduplication": "SMS Auto-Deduplication",
+  "sms_parser_debug": "SMS Parser Debug",
+  "save_2": "Save",
+  "show_decimals": "Show Decimals",
+  "skip_2": "Skip",
+  "try_another_file": "Try Another File",
+  "unlock_app": "Unlock App",
+  "deleteGroup": "Delete {groupName} Group?",
+  "@deleteGroup": {
+    "placeholders": {
+      "groupName": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadingActivity": "Error loading activity: {error}",
+  "@errorLoadingActivity": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadingTransactions": "Error loading transactions: {error}",
+  "@errorLoadingTransactions": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "importTransactions": "Import {count} Transactions",
+  "@importTransactions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "yearValue": "{year}",
+  "@yearValue": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
@@ -176,7 +177,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                 PesaHaptics.heavy();
                                 final confirm = await ModernDialog.show<bool>(
                                   context: context,
-                                  title: const Text('Delete Budget?'),
+                                  title: Text(AppLocalizations.of(context)!.delete_budget),
                                   titleIcon: PesaFlowIcons.delete,
                                   iconColor: context.appColors.expenseColor,
                                   content: const Text(
@@ -188,7 +189,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                         context,
                                         rootNavigator: true,
                                       ).pop(false),
-                                      child: const Text('Cancel'),
+                                      child: Text(AppLocalizations.of(context)!.cancel_2),
                                     ),
                                     TextButton(
                                       onPressed: () => Navigator.of(

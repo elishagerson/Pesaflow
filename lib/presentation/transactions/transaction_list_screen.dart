@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:pesaflow/l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -919,7 +920,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                     context,
                                                     rootNavigator: true,
                                                   ).pop(false),
-                                                  child: const Text('Cancel'),
+                                                  child: Text(AppLocalizations.of(context)!.cancel_2),
                                                 ),
                                                 ElevatedButton(
                                                   style:
@@ -932,7 +933,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                     context,
                                                     rootNavigator: true,
                                                   ).pop(true),
-                                                  child: const Text('Delete'),
+                                                  child: Text(AppLocalizations.of(context)!.delete_2),
                                                 ),
                                               ],
                                             ) ??

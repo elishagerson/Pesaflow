@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -22,7 +23,7 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
 
   ModernDialog.show(
     context: context,
-    title: const Text('Add Account'),
+    title: Text(AppLocalizations.of(context)!.add_account),
     titleIcon: PesaFlowIcons.wallet,
     content: StatefulBuilder(
       builder: (context, setState) {
@@ -191,7 +192,7 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
     actions: [
       TextButton(
         onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-        child: const Text('Cancel'),
+        child: Text(AppLocalizations.of(context)!.cancel_2),
       ),
       ElevatedButton(
         onPressed: () async {
@@ -239,7 +240,7 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
             );
           }
         },
-        child: const Text('Create'),
+        child: Text(AppLocalizations.of(context)!.create_2),
       ),
     ],
   );

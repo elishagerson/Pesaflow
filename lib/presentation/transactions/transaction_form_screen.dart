@@ -1,4 +1,5 @@
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:pesaflow/presentation/common/widgets/ios_date_picker_sheet.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
@@ -875,7 +876,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         if (didPop) return;
         final shouldPop = await ModernDialog.show<bool>(
           context: context,
-          title: const Text('Discard Changes?'),
+          title: Text(AppLocalizations.of(context)!.discard_changes),
           titleIcon: PesaFlowIcons.warning,
           iconColor: context.appColors.expenseColor,
           content: const Text(
@@ -885,7 +886,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             TextButton(
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(false),
-              child: const Text('Keep Editing'),
+              child: Text(AppLocalizations.of(context)!.keep_editing),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -894,7 +895,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               ),
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(true),
-              child: const Text('Discard'),
+              child: Text(AppLocalizations.of(context)!.discard_2),
             ),
           ],
         );

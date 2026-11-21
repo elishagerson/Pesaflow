@@ -319,7 +319,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                   children: [
                     TextButton(
                       onPressed: () => Navigator.of(dialogCtx).pop(),
-                      child: const Text('Remind later'),
+                      child: Text(AppLocalizations.of(context)!.remind_later),
                     ),
                     TextButton(
                       onPressed: () async {
@@ -340,7 +340,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                         );
                         if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
                       },
-                      child: const Text('Open Settings'),
+                      child: Text(AppLocalizations.of(context)!.open_settings),
                     ),
                   ],
                 ),
@@ -573,7 +573,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                           icon: const Icon(
                                             PesaFlowIcons.biometric,
                                           ),
-                                          label: const Text('Unlock App'),
+                                          label: Text(AppLocalizations.of(context)!.unlock_app),
                                           style: FilledButton.styleFrom(
                                             backgroundColor: const Color(
                                               0xFF3C4550,

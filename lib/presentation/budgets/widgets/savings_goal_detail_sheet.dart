@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
@@ -1135,7 +1136,7 @@ class _SavingsGoalDetailSheetState
                                                         Navigator.of(
                                                           context,
                                                         ).pop(false),
-                                                    child: Text('Cancel'),
+                                                    child: Text(AppLocalizations.of(context)!.cancel_2),
                                                   ),
                                                   TextButton(
                                                     onPressed: () =>

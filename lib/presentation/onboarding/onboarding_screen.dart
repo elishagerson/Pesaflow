@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -298,7 +299,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                   duration: MotionTokens.durationSlow,
                                   curve: Curves.easeInOut,
                                 ),
-                                child: const Text('Back'),
+                                child: Text(AppLocalizations.of(context)!.back_2),
                               ),
                             const Spacer(),
                             TactileSpringContainer(

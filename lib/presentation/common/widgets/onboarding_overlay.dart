@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -74,7 +75,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                   child: SafeArea(
                     child: TextButton(
                       onPressed: widget.onComplete,
-                      child: const Text('Skip'),
+                      child: Text(AppLocalizations.of(context)!.skip_2),
                     ),
                   ),
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -127,7 +128,7 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('SMS Parser Debug')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.sms_parser_debug)),
       body: Padding(
         padding: const EdgeInsets.all(kSpacing16),
         child: Column(
@@ -163,7 +164,7 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Run Full Pipeline'),
+                    : Text(AppLocalizations.of(context)!.run_full_pipeline),
               ),
             ),
             const SizedBox(height: kSpacing16),

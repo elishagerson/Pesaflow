@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -270,7 +271,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
                 _parseResult = null;
                 _error = null;
               }),
-              child: const Text('Try Another File'),
+              child: Text(AppLocalizations.of(context)!.try_another_file),
             ),
           ),
         ],
@@ -291,7 +292,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
             items: [
               const DropdownMenuItem(
                 value: null,
-                child: Text('No account (offline)'),
+                child: Text(AppLocalizations.of(context)!.no_account_offline),
               ),
               ...widget.accounts.map(
                 (a) => DropdownMenuItem(value: a.id, child: Text(a.name)),

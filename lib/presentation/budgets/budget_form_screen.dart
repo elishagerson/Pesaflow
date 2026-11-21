@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart' show Value;
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -204,7 +205,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
     if (widget.budgetId == null) return;
     final confirm = await ModernDialog.show<bool>(
       context: context,
-      title: const Text('Delete Budget?'),
+      title: Text(AppLocalizations.of(context)!.delete_budget),
       titleIcon: PesaFlowIcons.delete,
       iconColor: context.appColors.expenseColor,
       content: const Text(
@@ -214,7 +215,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         TextButton(
           onPressed: () =>
               Navigator.of(context, rootNavigator: true).pop(false),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel_2),
         ),
         TextButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
@@ -641,7 +642,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         if (didPop) return;
         final shouldPop = await ModernDialog.show<bool>(
           context: context,
-          title: const Text('Discard Changes?'),
+          title: Text(AppLocalizations.of(context)!.discard_changes),
           titleIcon: PesaFlowIcons.warning,
           iconColor: context.appColors.expenseColor,
           content: const Text(
@@ -651,7 +652,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
             TextButton(
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(false),
-              child: const Text('Keep Editing'),
+              child: Text(AppLocalizations.of(context)!.keep_editing),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -660,7 +661,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
               ),
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(true),
-              child: const Text('Discard'),
+              child: Text(AppLocalizations.of(context)!.discard_2),
             ),
           ],
         );
@@ -1094,7 +1095,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                 PesaFlowIcons.replay,
                                 context.appColors.transferColor,
                               ),
-                              title: const Text('Enable Rollover'),
+                              title: Text(AppLocalizations.of(context)!.enable_rollover),
                               subtitle: const Text(
                                 'Unused budget carries to next period',
                               ),
@@ -1483,7 +1484,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                 runSpacing: kSpacing8,
                 children: [
                   ChoiceChip(
-                    label: const Text('None (Standalone)'),
+                    label: Text(AppLocalizations.of(context)!.none_standalone),
                     selected: _selectedGroupId == null,
                     onSelected: (selected) {
                       if (selected) setState(() => _selectedGroupId = null);

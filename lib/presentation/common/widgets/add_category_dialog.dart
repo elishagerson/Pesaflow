@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -267,7 +268,7 @@ Future<Category?> showAddCategoryDialog(
     actions: [
       TextButton(
         onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-        child: const Text('Cancel'),
+        child: Text(AppLocalizations.of(context)!.cancel_2),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(

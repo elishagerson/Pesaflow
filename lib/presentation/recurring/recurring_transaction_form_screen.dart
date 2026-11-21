@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart' show Value;
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -835,7 +836,7 @@ class _RecurringTransactionFormScreenState
         if (didPop) return;
         final shouldPop = await ModernDialog.show<bool>(
           context: context,
-          title: const Text('Discard Changes?'),
+          title: Text(AppLocalizations.of(context)!.discard_changes),
           titleIcon: PesaFlowIcons.warning,
           iconColor: colors.expenseColor,
           content: const Text(
@@ -845,7 +846,7 @@ class _RecurringTransactionFormScreenState
             TextButton(
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(false),
-              child: const Text('Keep Editing'),
+              child: Text(AppLocalizations.of(context)!.keep_editing),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -854,7 +855,7 @@ class _RecurringTransactionFormScreenState
               ),
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(true),
-              child: const Text('Discard'),
+              child: Text(AppLocalizations.of(context)!.discard_2),
             ),
           ],
         );
@@ -880,7 +881,7 @@ class _RecurringTransactionFormScreenState
                         onTap: () async {
                           final confirm = await ModernDialog.show<bool>(
                             context: context,
-                            title: const Text('Delete Recurring Flow?'),
+                            title: Text(AppLocalizations.of(context)!.delete_recurring_flow),
                             titleIcon: PesaFlowIcons.warning,
                             iconColor: theme.colorScheme.error,
                             content: const Text(
@@ -892,7 +893,7 @@ class _RecurringTransactionFormScreenState
                                   context,
                                   rootNavigator: true,
                                 ).pop(false),
-                                child: const Text('Cancel'),
+                                child: Text(AppLocalizations.of(context)!.cancel_2),
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -903,7 +904,7 @@ class _RecurringTransactionFormScreenState
                                   context,
                                   rootNavigator: true,
                                 ).pop(true),
-                                child: const Text('Delete'),
+                                child: Text(AppLocalizations.of(context)!.delete_2),
                               ),
                             ],
                           );

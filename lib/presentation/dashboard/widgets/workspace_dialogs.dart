@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -74,7 +75,7 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                         showAddTrackerDialog(context, ref);
                       },
                       icon: const Icon(PesaFlowIcons.add, size: 18),
-                      label: const Text('New'),
+                      label: Text(AppLocalizations.of(context)!.newItem),
                     ),
                   ],
                 ),
@@ -236,7 +237,7 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
 
   ModernDialog.show(
     context: context,
-    title: const Text('New Workspace'),
+    title: Text(AppLocalizations.of(context)!.new_workspace),
     titleIcon: PesaFlowIcons.gridView,
     content: StatefulBuilder(
       builder: (context, setState) {
@@ -334,7 +335,7 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
     actions: [
       TextButton(
         onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-        child: const Text('Cancel'),
+        child: Text(AppLocalizations.of(context)!.cancel_2),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -380,7 +381,7 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
             );
           }
         },
-        child: const Text('Create'),
+        child: Text(AppLocalizations.of(context)!.create_2),
       ),
     ],
   );
@@ -417,7 +418,7 @@ void showManageTrackerDialog(
 
   ModernDialog.show(
     context: context,
-    title: const Text('Edit Workspace'),
+    title: Text(AppLocalizations.of(context)!.edit_workspace),
     titleIcon: PesaFlowIcons.edit,
     content: StatefulBuilder(
       builder: (context, setState) {
@@ -528,11 +529,11 @@ void showManageTrackerDialog(
           style: TextButton.styleFrom(
             foregroundColor: Theme.of(context).colorScheme.error,
           ),
-          child: const Text('Delete'),
+          child: Text(AppLocalizations.of(context)!.delete_2),
         ),
       TextButton(
         onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-        child: const Text('Cancel'),
+        child: Text(AppLocalizations.of(context)!.cancel_2),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -573,7 +574,7 @@ void showManageTrackerDialog(
             );
           }
         },
-        child: const Text('Save'),
+        child: Text(AppLocalizations.of(context)!.save_2),
       ),
     ],
   );
@@ -589,7 +590,7 @@ void confirmDeleteTracker(
   final theme = Theme.of(context);
   ModernDialog.show(
     context: context,
-    title: const Text('Delete Workspace?'),
+    title: Text(AppLocalizations.of(context)!.delete_workspace),
     titleIcon: PesaFlowIcons.warning,
     content: Text(
       'Are you sure you want to delete "${tracker.name}"? This will permanently delete all transactions and savings goals in this workspace.',
@@ -598,7 +599,7 @@ void confirmDeleteTracker(
     actions: [
       TextButton(
         onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-        child: const Text('Cancel'),
+        child: Text(AppLocalizations.of(context)!.cancel_2),
       ),
       ElevatedButton(
         onPressed: () async {
@@ -645,7 +646,7 @@ void confirmDeleteTracker(
           backgroundColor: theme.colorScheme.error,
           foregroundColor: theme.colorScheme.onError,
         ),
-        child: const Text('Delete'),
+        child: Text(AppLocalizations.of(context)!.delete_2),
       ),
     ],
   );

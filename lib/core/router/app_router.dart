@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -352,7 +353,7 @@ class _RouterErrorPage extends StatelessWidget {
                 FilledButton.icon(
                   onPressed: () => context.go('/'),
                   icon: const Icon(PesaFlowIcons.home),
-                  label: const Text('Go Home'),
+                  label: Text(AppLocalizations.of(context)!.go_home),
                 ),
               ],
             ),
