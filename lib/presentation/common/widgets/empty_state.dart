@@ -26,12 +26,12 @@ class EmptyState extends StatelessWidget {
     final theme = Theme.of(context);
 
     final illustration =
-        widget.illustration ??
+        illustration ??
         Semantics(
           excludeSemantics: true,
           child: Icon(
-            widget.icon,
-            size: widget.iconSize,
+            icon,
+            size: iconSize,
             color: theme.colorScheme.primary.withValues(alpha: 0.4),
           ),
         );
@@ -50,7 +50,7 @@ class EmptyState extends StatelessWidget {
             Semantics(
               header: true,
               child: Text(
-                widget.title,
+                title,
                 style: context.ts(
                   16,
                   fontWeight: FontWeight.w600,
@@ -58,10 +58,10 @@ class EmptyState extends StatelessWidget {
                 ),
               ),
             ),
-            if (widget.subtitle != null) ...[
+            if (subtitle != null) ...[
               SizedBox(height: context.isCompactView ? kSpacing8 : kSpacing12),
               Text(
-                widget.subtitle!,
+                subtitle!,
                 style: context.ts(
                   13,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
@@ -69,9 +69,9 @@ class EmptyState extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ],
-            if (widget.action != null) ...[
+            if (action != null) ...[
               SizedBox(height: context.isCompactView ? kSpacing20 : kSpacing28),
-              widget.action!,
+              action!,
             ],
           ],
         ),

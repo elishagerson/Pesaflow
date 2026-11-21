@@ -5,9 +5,11 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
+import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
@@ -82,6 +84,17 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
       ),
       child: heatmapAsync.when(
         data: (data) {
+          if (data.totalExpenditure == 0) {
+            return const Padding(
+              padding: EdgeInsets.all(kSpacing16),
+              child: EmptyState(
+                icon: PesaFlowIcons.analytics,
+                title: 'No spending yet',
+                subtitle:
+                    'Log expenses to see your spending pattern over time.',
+              ),
+            );
+          }
           // Align columns. We display exactly 20 columns (weeks).
           // We start on the Sunday before the calculated start date
           final startDayOfWeek = data.startDate.weekday;
@@ -225,7 +238,10 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                   _selectedDate!.month == date.month &&
                                   _selectedDate!.day == date.day;
 
-                              return GestureDetector(
+                              return Semantics(
+                                label: '$dateStr, spent ${CurrencyFormatter.formatCents(amount)}',
+                                button: true,
+                                child: GestureDetector(
                                 onTap: () {
                                   triggerHaptic(HapticType.selection);
                                   setState(() {
@@ -272,6 +288,7 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                   ),
                                 ),
                               );
+                              ),
                             }),
                           ],
                         ),
@@ -297,7 +314,10 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                           ),
                         ),
                         const SizedBox(width: kSpacing4),
-                        ...[0, 100, 200, 300, 400].map((val) {
+                        ...List.generate(5, (i) {
+                          final val = data.maxExpense <= 0
+                              ? 0
+                              : (data.maxExpense * (i / 4)).round();
                           return Container(
                             width: 9,
                             height: 9,
@@ -306,7 +326,7 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                               color: _getCellColor(
                                 context,
                                 val,
-                                400,
+                                data.maxExpense <= 0 ? 1 : data.maxExpense,
                                 appColors,
                               ),
                               borderRadius: BorderRadius.circular(2.5),
