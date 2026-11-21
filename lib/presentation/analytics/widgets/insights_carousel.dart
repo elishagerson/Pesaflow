@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
@@ -46,6 +47,11 @@ class _InsightsCarouselState extends ConsumerState<InsightsCarousel> {
                   index: i,
                   expanded: isExpanded,
                   onTap: () {
+                    final route = insights[i].route;
+                    if (route != null) {
+                      context.push(route);
+                      return;
+                    }
                     setState(() {
                       if (isExpanded) {
                         _expandedIndices.remove(i);

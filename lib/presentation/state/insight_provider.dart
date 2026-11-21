@@ -11,12 +11,14 @@ class InsightData {
   final String subtitle;
   final IconData icon;
   final Color color;
+  final String? route;
 
   const InsightData({
     required this.title,
     required this.subtitle,
     required this.icon,
     required this.color,
+    this.route,
   });
 }
 
@@ -70,6 +72,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         subtitle: 'Visited ${top.value} times this month',
         icon: PesaFlowIcons.transactions,
         color: AppTheme.brandPrimaryLight,
+        route: '/transactions',
       ),
     );
   }
@@ -109,6 +112,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
               : '${pct.abs()}% lower than last month',
           icon: curr > prev ? PesaFlowIcons.income : PesaFlowIcons.expense,
           color: curr > prev ? AppTheme.expenseColor : AppTheme.incomeColor,
+          route: '/transactions',
         ),
       );
     }
@@ -133,6 +137,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
               '${CurrencyFormatter.formatCents(lastTotal)} \u2192 ${CurrencyFormatter.formatCents(thisTotal)}',
           icon: pct > 0 ? PesaFlowIcons.income : PesaFlowIcons.expense,
           color: pct > 0 ? AppTheme.expenseColor : AppTheme.incomeColor,
+          route: '/analytics',
         ),
       );
     }
@@ -143,6 +148,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         subtitle: 'Total spending this month',
         icon: PesaFlowIcons.expense,
         color: AppTheme.brandPrimaryLight,
+        route: '/analytics',
       ),
     );
   }
@@ -157,6 +163,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         subtitle: 'Average daily spending this month',
         icon: PesaFlowIcons.calendar,
         color: AppTheme.transferColor,
+        route: '/analytics',
       ),
     );
   }
@@ -172,6 +179,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
             '${CurrencyFormatter.formatCents(top.value)} \u2014 $pct% of spending',
         icon: PesaFlowIcons.target,
         color: AppTheme.brandPrimaryLight,
+        route: '/transactions',
       ),
     );
   }

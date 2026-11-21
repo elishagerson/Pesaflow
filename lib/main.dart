@@ -33,9 +33,7 @@ import 'package:pesaflow/services/loan_reminder_service.dart';
 import 'package:pesaflow/services/background_scheduler_service.dart';
 import 'package:pesaflow/services/daily_summary_service.dart';
 import 'package:pesaflow/data/seed/default_data.dart';
-import 'package:pesaflow/presentation/common/widgets/onboarding_overlay.dart';
 import 'package:pesaflow/presentation/splash/pesa_splash.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 
@@ -57,7 +55,6 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
     'pesaflow/notification_listener',
   );
   bool _isAuthenticated = false;
-  bool _showOnboarding = false;
 
   /// Flips once the database is seeded and the entry route is decided. Drives
   /// the branded splash. A watchdog guarantees it can never trap the user if
@@ -111,29 +108,15 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
         developer.log('Default seeding failed: $e', name: 'AppLaunch');
       }
 
-      // Show quick-start walkthrough on very first launch
-      bool overlaySeen = false;
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        overlaySeen = prefs.getBool('onboarding_shown') ?? false;
-        if (!overlaySeen && mounted) {
-          await prefs.setBool('onboarding_shown', true);
-          setState(() => _showOnboarding = true);
-        }
-      } catch (e) {
-        developer.log('Onboarding overlay check failed: $e', name: 'AppLaunch');
-      }
-
-      // Check DB-based onboarding status only if overlay wasn't shown
+      // Single first-run flow: the route-based OnboardingScreen handles
+      // account selection, SMS permission, and demo seeding.
       var needsOnboarding = false;
-      if (!overlaySeen) {
-        try {
-          needsOnboarding = !await ref
-              .read(settingsRepositoryProvider)
-              .isOnboardingComplete();
-        } catch (e) {
-          developer.log('Onboarding check failed: $e', name: 'AppLaunch');
-        }
+      try {
+        needsOnboarding = !await ref
+            .read(settingsRepositoryProvider)
+            .isOnboardingComplete();
+      } catch (e) {
+        developer.log('Onboarding check failed: $e', name: 'AppLaunch');
       }
 
       // Database is seeded and the entry route is decided — the branded
@@ -238,11 +221,6 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
       // Trigger app lock if enabled
       await _triggerBiometricAuthIfNeeded();
     });
-  }
-
-  void _onOnboardingComplete() {
-    setState(() => _showOnboarding = false);
-    ref.read(settingsRepositoryProvider).markOnboardingComplete();
   }
 
   Future<void> _handleSmsNotification({
@@ -643,8 +621,6 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                               key: ValueKey('empty_palette'),
                             ),
                     ),
-                    if (_showOnboarding)
-                      OnboardingOverlay(onComplete: _onOnboardingComplete),
                     // The branded splash lives outside `builder` so it covers
                     // the router itself — including the first frame of the
                     // dashboard, which would otherwise flash on a cold start.
