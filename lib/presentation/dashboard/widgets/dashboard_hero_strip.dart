@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -56,7 +57,7 @@ class DashboardHeroStrip extends ConsumerWidget {
           Expanded(
             child: _NextUpCell(
               label: event?.label,
-              countdown: event == null ? null : _countdown(event.date),
+              countdown: event == null ? null : _countdown(event.date, Localizations.localeOf(context).toLanguageTag()),
             ),
           ),
           const _CellDivider(),
@@ -95,30 +96,15 @@ class DashboardHeroStrip extends ConsumerWidget {
 
 /// Human count-down, matching the language a person would use out loud rather
 /// than dumping a date on them.
-String _countdown(DateTime date) {
+String _countdown(DateTime date, String locale) {
   final now = DateTime.now();
   final days = date.difference(now).inDays;
   final hours = date.difference(now).inHours % 24;
   if (days <= 0) return 'TODAY ${hours}H';
   if (days == 1) return 'TOMORROW';
   if (days < 7) return '$days DAYS';
-  return '${date.day} ${_month(date.month)}';
+  return '${date.day} ${DateFormat('MMM', locale).format(date).toUpperCase()}';
 }
-
-String _month(int m) => const [
-  'JAN',
-  'FEB',
-  'MAR',
-  'APR',
-  'MAY',
-  'JUN',
-  'JUL',
-  'AUG',
-  'SEP',
-  'OCT',
-  'NOV',
-  'DEC',
-][m - 1];
 
 /// 1px vertical rule between two cells. A divider, not a border: it should read
 /// as a fold in one continuous surface, so it takes the hairline token and has

@@ -644,6 +644,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
               ),
               const SizedBox(width: kSpacing8),
               TactileSpringContainer(
+                semanticLabel: 'Plan options',
                 onTap: () => _showPlanOptions(context, ref, groups),
                 child: Container(
                   padding: const EdgeInsets.all(kSpacing4),
@@ -1226,6 +1227,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       ),
                     ),
                     TactileSpringContainer(
+                      semanticLabel: 'Add envelope to ${g.group.name}',
                       haptic: HapticType.soft,
                       onTap: () {
                         context.push('/budgets/groups/${g.group.id}/add');

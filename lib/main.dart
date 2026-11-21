@@ -11,6 +11,7 @@ import 'package:local_auth/local_auth.dart';
 
 import 'package:pesaflow/core/router/app_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/l10n/app_localizations.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
@@ -457,6 +458,8 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: mode,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: appRouter,
       scrollBehavior: const AppScrollBehavior(),
       builder: (context, child) {
