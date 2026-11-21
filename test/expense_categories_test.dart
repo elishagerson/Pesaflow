@@ -29,37 +29,49 @@ void main() {
     await db.close();
   });
 
-  group('New Expense Categories Seeding & Structure', () {
-    test('Database onCreate seeds all new expense categories', () async {
+  group('Well-Used Expense Categories Seeding & Structure', () {
+    test('Database onCreate seeds only well-used categories', () async {
       final categories = await categoryDao.getAllCategories();
       final categoryNames = categories.map((c) => c.name).toSet();
 
-      expect(categoryNames, contains('Emergencies'));
-      expect(categoryNames, contains('Charity & Offerings'));
-      expect(categoryNames, contains('Contributions & Michango'));
-      expect(categoryNames, contains('Personal Care'));
+      // Well-used core categories must be present
+      expect(categoryNames, contains('Food & Groceries'));
+      expect(categoryNames, contains('Transport'));
+      expect(categoryNames, contains('Rent'));
+      expect(categoryNames, contains('Utilities'));
+      expect(categoryNames, contains('Airtime & Data'));
+      expect(categoryNames, contains('Health'));
+      expect(categoryNames, contains('Education'));
+      expect(categoryNames, contains('Entertainment'));
+      expect(categoryNames, contains('Shopping'));
       expect(categoryNames, contains('Family Support'));
-      expect(categoryNames, contains('Home & Maintenance'));
-      expect(categoryNames, contains('Insurance & Taxes'));
-      expect(categoryNames, contains('Subscriptions & Streaming'));
-      expect(categoryNames, contains('Vehicle & Fuel'));
-      expect(categoryNames, contains('Travel & Vacations'));
-      expect(categoryNames, contains('Fitness & Sports'));
-      expect(categoryNames, contains('Children & Baby'));
-      expect(categoryNames, contains('Gifts & Celebrations'));
-      expect(categoryNames, contains('Electronics & Tech'));
-      expect(categoryNames, contains('Pets & Animals'));
-      expect(categoryNames, contains('Legal & Professional'));
-      expect(categoryNames, contains('Hobbies & Recreation'));
-      expect(categoryNames, contains('Fines & Penalties'));
+      expect(categoryNames, contains('Contributions & Michango'));
+      expect(categoryNames, contains('Charity & Offerings'));
+      expect(categoryNames, contains('Personal Care'));
+      expect(categoryNames, contains('Mobile Money Transfer'));
+      expect(categoryNames, contains('Bank Fees'));
+      expect(categoryNames, contains('Savings'));
+      expect(categoryNames, contains('Investments'));
+      expect(categoryNames, contains('Loans'));
+      expect(categoryNames, contains('Other'));
 
-      final emergencyCat = categories.firstWhere(
-        (c) => c.name == 'Emergencies',
-      );
-      expect(emergencyCat.type, 'expense');
-      expect(emergencyCat.isSystem, isTrue);
-      expect(emergencyCat.icon, 'alert-circle');
-      expect(emergencyCat.color, '#E11D48');
+      // Pruned / niche categories must NOT be in default categories
+      expect(categoryNames, isNot(contains('Vehicle & Fuel')));
+      expect(categoryNames, isNot(contains('Travel & Vacations')));
+      expect(categoryNames, isNot(contains('Fitness & Sports')));
+      expect(categoryNames, isNot(contains('Children & Baby')));
+      expect(categoryNames, isNot(contains('Gifts & Celebrations')));
+      expect(categoryNames, isNot(contains('Electronics & Tech')));
+      expect(categoryNames, isNot(contains('Pets & Animals')));
+      expect(categoryNames, isNot(contains('Legal & Professional')));
+      expect(categoryNames, isNot(contains('Hobbies & Recreation')));
+      expect(categoryNames, isNot(contains('Fines & Penalties')));
+      expect(categoryNames, isNot(contains('Eating Out')));
+      expect(categoryNames, isNot(contains('ATM Withdrawal')));
+      expect(categoryNames, isNot(contains('Emergencies')));
+      expect(categoryNames, isNot(contains('Home & Maintenance')));
+      expect(categoryNames, isNot(contains('Insurance & Taxes')));
+      expect(categoryNames, isNot(contains('Subscriptions & Streaming')));
 
       final charityCat = categories.firstWhere(
         (c) => c.name == 'Charity & Offerings',
@@ -76,40 +88,25 @@ void main() {
       expect(michangoCat.isSystem, isTrue);
       expect(michangoCat.icon, 'community');
       expect(michangoCat.color, '#2563EB');
-
-      final fuelCat = categories.firstWhere((c) => c.name == 'Vehicle & Fuel');
-      expect(fuelCat.type, 'expense');
-      expect(fuelCat.isSystem, isTrue);
-      expect(fuelCat.icon, 'gas-station');
-      expect(fuelCat.color, '#EA580C');
     });
 
     test(
-      'Migration from schema version 14 to 15 seeds missing categories for existing users',
+      'Migration from schema version 15 to 16 prunes niche categories and remaps transactions',
       () async {
-        // Delete Vehicle & Fuel and Travel & Vacations to simulate pre-v15 database
+        // Add a temporary deprecated category
         await db.customStatement(
-          "DELETE FROM categories WHERE name = 'Vehicle & Fuel'",
-        );
-        await db.customStatement(
-          "DELETE FROM categories WHERE name = 'Travel & Vacations'",
+          "INSERT INTO categories (id, name, icon, color, type, sort_order, is_system, created_at) "
+          "VALUES ('deprecated_fuel', 'Vehicle & Fuel', 'gas-station', '#EA580C', 'expense', 26, 1, 1700000000)",
         );
 
         final before = await categoryDao.getAllCategories();
-        expect(before.any((c) => c.name == 'Vehicle & Fuel'), isFalse);
-        expect(before.any((c) => c.name == 'Travel & Vacations'), isFalse);
+        expect(before.any((c) => c.name == 'Vehicle & Fuel'), isTrue);
 
-        // Run migration step for 14 -> 15
-        await db.migration.onUpgrade(db.createMigrator(), 14, 15);
+        // Run migration step for 15 -> 16
+        await db.migration.onUpgrade(db.createMigrator(), 15, 16);
 
         final after = await categoryDao.getAllCategories();
-        expect(after.any((c) => c.name == 'Vehicle & Fuel'), isTrue);
-        expect(after.any((c) => c.name == 'Travel & Vacations'), isTrue);
-
-        // Ensure no duplicate categories are added if run again
-        await db.migration.onUpgrade(db.createMigrator(), 14, 15);
-        final afterRerun = await categoryDao.getAllCategories();
-        expect(afterRerun.where((c) => c.name == 'Vehicle & Fuel').length, 1);
+        expect(after.any((c) => c.name == 'Vehicle & Fuel'), isFalse);
       },
     );
   });
@@ -146,14 +143,14 @@ void main() {
     });
   });
 
-  group('AutoCategorizer Keyword Matching for New Categories', () {
-    test('categorizes emergency keywords accurately', () async {
+  group('AutoCategorizer Keyword Matching for Consolidated Categories', () {
+    test('categorizes emergency keywords into Health or Other', () async {
       final res1 = await categorizer.categorize(
         type: 'expense',
         description: 'Hospital emergency medicine',
         senderOrRecipient: 'Agha Khan Hospital',
       );
-      expect(res1.category.name, 'Emergencies');
+      expect(res1.category.name, 'Health');
       expect(res1.confidence, 0.95);
 
       final res2 = await categorizer.categorize(
@@ -161,7 +158,7 @@ void main() {
         description: 'Dharura ya matibabu',
         senderOrRecipient: 'Mhasibu Dispensary',
       );
-      expect(res2.category.name, 'Emergencies');
+      expect(res2.category.name, 'Health');
     });
 
     test('categorizes charity, tithe, and sadaka accurately', () async {
@@ -225,68 +222,68 @@ void main() {
           description: 'Malipo ya fundi bomba',
           senderOrRecipient: 'Fundi Juma',
         );
-        expect(resMaintenance.category.name, 'Home & Maintenance');
+        expect(resMaintenance.category.name, 'Utilities');
 
         final resInsurance = await categorizer.categorize(
           type: 'expense',
           description: 'Malipo ya bima ya gari',
           senderOrRecipient: 'Sanlam Insurance',
         );
-        expect(resInsurance.category.name, 'Insurance & Taxes');
+        expect(resInsurance.category.name, 'Health');
 
         final resSubs = await categorizer.categorize(
           type: 'expense',
           description: 'Netflix subscription renewal',
           senderOrRecipient: 'Netflix International',
         );
-        expect(resSubs.category.name, 'Subscriptions & Streaming');
+        expect(resSubs.category.name, 'Entertainment');
       },
     );
 
     test(
-      'categorizes lifestyle, vehicle, travel, fitness, childcare, legal, fines',
+      'categorizes vehicle/fuel and travel into Transport, gym into Health, baby into Family Support, legal/fines into Other',
       () async {
         final resFuel = await categorizer.categorize(
           type: 'expense',
           description: 'Mafuta ya petrol gari',
           senderOrRecipient: 'TotalEnergies Station',
         );
-        expect(resFuel.category.name, 'Vehicle & Fuel');
+        expect(resFuel.category.name, 'Transport');
 
         final resTravel = await categorizer.categorize(
           type: 'expense',
           description: 'Booking ticket azam marine zanzibar',
           senderOrRecipient: 'Azam Marine Ferry',
         );
-        expect(resTravel.category.name, 'Travel & Vacations');
+        expect(resTravel.category.name, 'Transport');
 
         final resGym = await categorizer.categorize(
           type: 'expense',
           description: 'Monthly gym workout subscription',
           senderOrRecipient: 'Crossfit Gym Club',
         );
-        expect(resGym.category.name, 'Fitness & Sports');
+        expect(resGym.category.name, 'Health');
 
         final resBaby = await categorizer.categorize(
           type: 'expense',
           description: 'Pampers za mtoto na baby food',
           senderOrRecipient: 'Baby Care Store',
         );
-        expect(resBaby.category.name, 'Children & Baby');
+        expect(resBaby.category.name, 'Family Support');
 
         final resLegal = await categorizer.categorize(
           type: 'expense',
           description: 'Malipo ya mwanasheria kuthibitisha hati',
           senderOrRecipient: 'Advocate & Notary Public',
         );
-        expect(resLegal.category.name, 'Legal & Professional');
+        expect(resLegal.category.name, 'Other');
 
         final resFine = await categorizer.categorize(
           type: 'expense',
           description: 'Traffic fine TMS askari',
           senderOrRecipient: 'Tanzania Police TMS',
         );
-        expect(resFine.category.name, 'Fines & Penalties');
+        expect(resFine.category.name, 'Other');
       },
     );
   });

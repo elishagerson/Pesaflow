@@ -45,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 16;
 
   @override
   MigrationStrategy get migration {
@@ -70,7 +70,7 @@ class AppDatabase extends _$AppDatabase {
             true,
           ),
 
-          // Expense categories
+          // Expense categories (well-used, core categories)
           _cat(
             uuid.v4(),
             'Food & Groceries',
@@ -114,92 +114,11 @@ class AppDatabase extends _$AppDatabase {
           ),
           _cat(
             uuid.v4(),
-            'Eating Out',
-            'coffee',
-            '#795548',
+            'Family Support',
+            'family',
+            '#0D9488',
             'expense',
             10,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Mobile Money Transfer',
-            'send',
-            '#607D8B',
-            'expense',
-            11,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Bank Fees',
-            'credit-card',
-            '#D32F2F',
-            'expense',
-            12,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'ATM Withdrawal',
-            'banknote',
-            '#4CAF50',
-            'expense',
-            13,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Savings',
-            'piggy-bank',
-            '#4CAF50',
-            'expense',
-            14,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Investments',
-            'trending-up',
-            '#1B5E20',
-            'expense',
-            15,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Loans',
-            'credit-card',
-            '#9C27B0',
-            'expense',
-            16,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Other',
-            'more-horizontal',
-            '#9E9E9E',
-            'expense',
-            17,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Emergencies',
-            'alert-circle',
-            '#E11D48',
-            'expense',
-            18,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Charity & Offerings',
-            'charity',
-            '#7C3AED',
-            'expense',
-            19,
             true,
           ),
           _cat(
@@ -208,7 +127,16 @@ class AppDatabase extends _$AppDatabase {
             'community',
             '#2563EB',
             'expense',
-            20,
+            11,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Charity & Offerings',
+            'charity',
+            '#7C3AED',
+            'expense',
+            12,
             true,
           ),
           _cat(
@@ -217,133 +145,61 @@ class AppDatabase extends _$AppDatabase {
             'spa',
             '#DB2777',
             'expense',
-            21,
+            13,
             true,
           ),
           _cat(
             uuid.v4(),
-            'Family Support',
-            'family',
-            '#0D9488',
+            'Mobile Money Transfer',
+            'send',
+            '#607D8B',
             'expense',
-            22,
+            14,
             true,
           ),
           _cat(
             uuid.v4(),
-            'Home & Maintenance',
-            'handyman',
-            '#B45309',
+            'Bank Fees',
+            'credit-card',
+            '#D32F2F',
             'expense',
-            23,
+            15,
             true,
           ),
           _cat(
             uuid.v4(),
-            'Insurance & Taxes',
-            'insurance',
-            '#0284C7',
+            'Savings',
+            'piggy-bank',
+            '#4CAF50',
             'expense',
-            24,
+            16,
             true,
           ),
           _cat(
             uuid.v4(),
-            'Subscriptions & Streaming',
-            'subscriptions',
-            '#4F46E5',
+            'Investments',
+            'trending-up',
+            '#1B5E20',
             'expense',
-            25,
+            17,
             true,
           ),
           _cat(
             uuid.v4(),
-            'Vehicle & Fuel',
-            'gas-station',
-            '#EA580C',
+            'Loans',
+            'credit-card',
+            '#9C27B0',
             'expense',
-            26,
+            18,
             true,
           ),
           _cat(
             uuid.v4(),
-            'Travel & Vacations',
-            'flight',
-            '#0891B2',
+            'Other',
+            'more-horizontal',
+            '#9E9E9E',
             'expense',
-            27,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Fitness & Sports',
-            'fitness',
-            '#16A34A',
-            'expense',
-            28,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Children & Baby',
-            'childcare',
-            '#F472B6',
-            'expense',
-            29,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Gifts & Celebrations',
-            'gift',
-            '#EC4899',
-            'expense',
-            30,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Electronics & Tech',
-            'devices',
-            '#6366F1',
-            'expense',
-            31,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Pets & Animals',
-            'pets',
-            '#84CC16',
-            'expense',
-            32,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Legal & Professional',
-            'legal',
-            '#475569',
-            'expense',
-            33,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Hobbies & Recreation',
-            'palette',
-            '#A855F7',
-            'expense',
-            34,
-            true,
-          ),
-          _cat(
-            uuid.v4(),
-            'Fines & Penalties',
-            'fines',
-            '#DC2626',
-            'expense',
-            35,
+            19,
             true,
           ),
 
@@ -631,6 +487,49 @@ class AppDatabase extends _$AppDatabase {
               await into(categories).insert(
                 _cat(uuid.v4(), name, icon, color, 'expense', order, true),
               );
+            }
+          }
+        }
+
+        // Migration from schema version 15 → 16: prune unimportant categories and consolidate to well-used categories
+        if (from < 16) {
+          final allCats = await select(categories).get();
+          final catByName = {for (final c in allCats) c.name: c};
+
+          final replacements = {
+            'Vehicle & Fuel': 'Transport',
+            'Travel & Vacations': 'Transport',
+            'Eating Out': 'Food & Groceries',
+            'ATM Withdrawal': 'Bank Fees',
+            'Emergencies': 'Health',
+            'Home & Maintenance': 'Utilities',
+            'Insurance & Taxes': 'Other',
+            'Subscriptions & Streaming': 'Entertainment',
+            'Fitness & Sports': 'Health',
+            'Children & Baby': 'Family Support',
+            'Gifts & Celebrations': 'Contributions & Michango',
+            'Electronics & Tech': 'Shopping',
+            'Pets & Animals': 'Other',
+            'Legal & Professional': 'Other',
+            'Hobbies & Recreation': 'Entertainment',
+            'Fines & Penalties': 'Other',
+          };
+
+          for (final entry in replacements.entries) {
+            final oldCat = catByName[entry.key];
+            final newCat = catByName[entry.value] ?? catByName['Other'];
+            if (oldCat != null && newCat != null) {
+              await customUpdate(
+                'UPDATE transactions SET category_id = ? WHERE category_id = ?',
+                variables: [
+                  Variable.withString(newCat.id),
+                  Variable.withString(oldCat.id),
+                ],
+                updates: {transactions},
+              );
+              await (delete(
+                categories,
+              )..where((c) => c.id.equals(oldCat.id))).go();
             }
           }
         }
