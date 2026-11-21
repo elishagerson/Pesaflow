@@ -480,7 +480,48 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
     final overallPct = totalAllocated > 0
         ? (totalSpent / totalAllocated).clamp(0.0, 2.0)
         : 0.0;
-    final isOverBudget = totalSpent > totalAllocated;
+
+    // Unified pacing: derive the period from the first available sub-budget
+    // (fall back to the current calendar month) and run it through the same
+    // BudgetEngine.computeStatus the group cards use.
+    BudgetPeriod? planPeriod;
+    for (final g in groups) {
+      for (final s in g.subBudgets) {
+        if (s.currentPeriod != null) {
+          planPeriod = s.currentPeriod;
+          break;
+        }
+      }
+      if (planPeriod != null) break;
+    }
+    final now = DateTime.now();
+    final planPeriodStart =
+        planPeriod?.periodStart ?? DateTime(now.year, now.month, 1);
+    final planPeriodEnd = planPeriod?.periodEnd ??
+        DateTime(now.year, now.month + 1, 0);
+    final planStatus = BudgetEngine.computeStatus(
+      allocated: totalAllocated,
+      spent: totalSpent,
+      periodStart: planPeriodStart,
+      periodEnd: planPeriodEnd,
+    );
+    final isOverBudget = planStatus.isOverBudget;
+
+    final Color planStatusColor;
+    final IconData planStatusIcon;
+    switch (planStatus.paceLabel) {
+      case 'Over budget':
+        planStatusColor = context.appColors.expenseColor;
+        planStatusIcon = PesaFlowIcons.error;
+        break;
+      case 'Over pace':
+        planStatusColor = context.appColors.warningColor;
+        planStatusIcon = PesaFlowIcons.warning;
+        break;
+      default:
+        planStatusColor = context.appColors.incomeColor;
+        planStatusIcon = PesaFlowIcons.check;
+    }
 
     String ruleLabel = 'Budget Plan';
     if (budgetRuleName != null) {
