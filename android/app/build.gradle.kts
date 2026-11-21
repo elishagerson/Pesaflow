@@ -1,7 +1,17 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android plugin.
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties").takeIf { it.exists() }
+    ?: file("key.properties").takeIf { it.exists() }
+if (keystorePropertiesFile != null) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
@@ -28,6 +38,30 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        create("release") {
+            val keyAliasVal = keystoreProperties.getProperty("keyAlias") ?: System.getenv("KEY_ALIAS")
+            val keyPasswordVal = keystoreProperties.getProperty("keyPassword") ?: System.getenv("KEY_PASSWORD")
+            val storeFileVal = keystoreProperties.getProperty("storeFile") ?: System.getenv("KEYSTORE_FILE")
+            val storePasswordVal = keystoreProperties.getProperty("storePassword") ?: System.getenv("KEYSTORE_PASSWORD")
+
+            if (storeFileVal != null) {
+                val candidateFiles = listOf(
+                    file(storeFileVal),
+                    rootProject.file(storeFileVal),
+                    file("../$storeFileVal")
+                )
+                val resolvedStoreFile = candidateFiles.firstOrNull { it.exists() }
+                if (resolvedStoreFile != null) {
+                    keyAlias = keyAliasVal
+                    keyPassword = keyPasswordVal
+                    storeFile = resolvedStoreFile
+                    storePassword = storePasswordVal
+                }
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -36,7 +70,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            val releaseSigning = signingConfigs.getByName("release")
+            signingConfig = if (releaseSigning.storeFile != null) {
+                releaseSigning
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }
@@ -48,3 +87,4 @@ flutter {
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
+

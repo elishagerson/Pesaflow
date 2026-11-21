@@ -65,6 +65,7 @@ doc/api/
 # ── Android ──
 android/app/build/
 android/.gradle/
+**/.gradle/
 android/local.properties
 **/android/**/build/
 *.apk
