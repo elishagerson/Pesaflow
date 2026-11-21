@@ -484,7 +484,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
     // Unified pacing: derive the period from the first available sub-budget
     // (fall back to the current calendar month) and run it through the same
     // BudgetEngine.computeStatus the group cards use.
-    BudgetPeriod? planPeriod;
+    dynamic planPeriod;
     for (final g in groups) {
       for (final s in g.subBudgets) {
         if (s.currentPeriod != null) {
@@ -1064,7 +1064,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
     final spent = g.totalSpent;
     final pct = allocated > 0 ? (spent / allocated).clamp(0.0, 2.0) : 0.0;
 
-    BudgetPeriod? groupPeriod;
+    dynamic groupPeriod;
     for (final sub in g.subBudgets) {
       if (sub.currentPeriod != null) {
         groupPeriod = sub.currentPeriod;
