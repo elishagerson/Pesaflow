@@ -392,7 +392,7 @@ class SmsProcessor {
         }
 
         // Post notification
-        final amountFormatted = CurrencyFormatter.formatTsh(effectiveAmount);
+        final amountFormatted = CurrencyFormatter.formatCents(effectiveAmount);
         await _notificationService.showNotification(
           id: reversalTx.hashCode,
           title: 'Transaction Reversed',

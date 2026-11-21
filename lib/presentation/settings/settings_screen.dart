@@ -758,7 +758,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               StaggeredFadeSlide(
                 index: 1,
                 child: IosListSection(
-                  header: 'AUTOMATION & RELIABILITY',
+                  header: 'AUTOMATION & BUDGETING',
                   rows: [
                     IosToggleRow(
                       leading: _buildSquircleIcon(

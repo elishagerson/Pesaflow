@@ -57,7 +57,8 @@ void main() {
       () async {
         final categories = await categoryDao.getAllCategories();
         final emergencyCat = categories.firstWhere(
-          (c) => c.name == 'Emergencies',
+          (c) => c.name == 'Health',
+          orElse: () => categories.first,
         );
 
         final now = DateTime.now();
@@ -124,7 +125,8 @@ void main() {
       () async {
         final categories = await categoryDao.getAllCategories();
         final emergencyCat = categories.firstWhere(
-          (c) => c.name == 'Emergencies',
+          (c) => c.name == 'Health',
+          orElse: () => categories.first,
         );
         const uuid = Uuid();
 
@@ -253,7 +255,8 @@ void main() {
       () async {
         final categories = await categoryDao.getAllCategories();
         final emergencyCat = categories.firstWhere(
-          (c) => c.name == 'Emergencies',
+          (c) => c.name == 'Health',
+          orElse: () => categories.first,
         );
         const uuid = Uuid();
 

@@ -233,7 +233,9 @@ class _BackgroundProtectionContentState
                         color: theme.colorScheme.primary.withValues(
                           alpha: 0.15,
                         ),
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.squircleRadius(24),
+                        ),
                       ),
                       alignment: Alignment.center,
                       child: Text(

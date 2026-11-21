@@ -64,9 +64,9 @@ class MpesaTzParser implements SmsParser {
   }
 
   int? _extractBalance(String text) {
-    // Swahili: Salio: Tsh XXX
+    // Swahili: Salio: Tsh XXX, Salio lako jipya la M-Pesa ni Tsh XXX, Salio jipya ni Tsh XXX
     final salioRegex = RegExp(
-      r'Salio:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      r'Salio(?:\s+lako)?(?:\s+jipya)?(?:\s+la\s+M[- ]?Pesa)?(?:\s+ni|:)?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
       caseSensitive: false,
     );
     final match = salioRegex.firstMatch(text);
