@@ -697,7 +697,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     Text(
                       isOverBudget
                           ? '+${CurrencyFormatter.formatCents(totalSpent - totalAllocated)} over plan'
-                          : '${CurrencyFormatter.formatCents(totalAllocated - totalSpent)} remaining',
+                          : '${CurrencyFormatter.formatCents(planStatus.remaining)} remaining${planStatus.daysLeft > 0 ? ' · ${planStatus.daysLeft} days left' : ''}',
                       style: context.ts(
                         12,
                         fontWeight: FontWeight.w600,
@@ -1302,6 +1302,52 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   showEndStop: false,
                   growOnMount: true,
                   semanticsLabel: '${g.group.name} budget used',
+                ),
+                const SizedBox(height: kSpacing6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      groupStatus.isOverBudget
+                          ? '+${CurrencyFormatter.formatCents(groupStatus.spent - groupStatus.allocated)} over plan'
+                          : '${CurrencyFormatter.formatCents(groupStatus.remaining)} remaining',
+                      style: context.ts(
+                        11,
+                        fontWeight: FontWeight.w600,
+                        color: groupStatus.isOverBudget
+                            ? context.appColors.expenseColor
+                            : context.appColors.incomeColor,
+                      ),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (groupStatus.daysLeft > 0) ...[
+                          Text(
+                            '${groupStatus.daysLeft} days left',
+                            style: context.ts(
+                              11,
+                              fontWeight: FontWeight.w500,
+                              color: onSurface.withValues(alpha: 0.5),
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing8),
+                        ],
+                        Text(
+                          groupStatus.paceLabel,
+                          style: context.ts(
+                            11,
+                            fontWeight: FontWeight.w700,
+                            color: groupStatus.paceLabel == 'Over budget'
+                                ? context.appColors.expenseColor
+                                : (groupStatus.paceLabel == 'Over pace'
+                                    ? context.appColors.warningColor
+                                    : context.appColors.incomeColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 if (g.subBudgets.isNotEmpty) ...[
                   const SizedBox(height: kSpacing10),
