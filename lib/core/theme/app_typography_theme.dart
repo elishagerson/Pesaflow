@@ -81,9 +81,13 @@ class AppTypographyTheme extends ThemeExtension<AppTypographyTheme> {
       fontWeight: FontWeight.w400,
       height: 0.9,
     ),
-    numeral:
-        textTheme.displaySmall ??
-        const TextStyle(fontFamily: AppTheme.fontDisplay),
+    numeral: const TextStyle(
+      fontFamily: AppTheme.fontDisplay,
+      fontSize: 40,
+      fontWeight: FontWeight.w600,
+      height: 1.0,
+      fontFeatures: [FontFeature.tabularFigures()],
+    ),
     // Flutter 3.44 removed `TextStyle.textTransform`, so the tracked uppercase
     // is applied at the call site (`'income'.toUpperCase()`). Keep the style
     // itself free of case logic.

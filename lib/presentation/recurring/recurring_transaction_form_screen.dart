@@ -107,7 +107,7 @@ class _RecurringTransactionFormScreenState
       categoryHint: 'utilities',
       keywords: 'dawasa',
       icon: PesaFlowIcons.personalCare,
-      accentColor: Color(0xFF0284C7),
+      accentColor: Color(0xFF0891B2),
     ),
     _RecurringStarter(
       title: 'Fiber Internet',
@@ -119,7 +119,7 @@ class _RecurringTransactionFormScreenState
       categoryHint: 'utilities',
       keywords: 'fiber, zuku, ttcl, airtel broadband',
       icon: PesaFlowIcons.wifi,
-      accentColor: Color(0xFF6366F1),
+      accentColor: Color(0xFF2563EB),
     ),
     _RecurringStarter(
       title: 'Azam / DStv',
@@ -131,7 +131,7 @@ class _RecurringTransactionFormScreenState
       categoryHint: 'entertainment',
       keywords: 'dstv, multichoice, azam',
       icon: PesaFlowIcons.digitalSubscriptions,
-      accentColor: Color(0xFF8B5CF6),
+      accentColor: Color(0xFFEA580C),
     ),
     _RecurringStarter(
       title: 'House Rent',
@@ -143,7 +143,7 @@ class _RecurringTransactionFormScreenState
       categoryHint: 'housing',
       keywords: 'kodi, rent, landlord',
       icon: PesaFlowIcons.home,
-      accentColor: Color(0xFF10B981),
+      accentColor: Color(0xFF16A34A),
     ),
     _RecurringStarter(
       title: 'Salary / Retainer',
@@ -155,7 +155,7 @@ class _RecurringTransactionFormScreenState
       categoryHint: 'salary',
       keywords: 'salary, mshahara, payroll',
       icon: PesaFlowIcons.income,
-      accentColor: Color(0xFF059669),
+      accentColor: Color(0xFF16A34A),
     ),
   ];
 

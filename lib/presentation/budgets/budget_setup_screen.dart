@@ -381,7 +381,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Tsh ',
+                        CurrencyFormatter.currencyPrefix,
                         style: context.ts(
                           24,
                           fontWeight: FontWeight.w600,

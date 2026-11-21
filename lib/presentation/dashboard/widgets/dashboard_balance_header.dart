@@ -39,86 +39,17 @@ class DashboardBalanceHeader extends StatefulWidget {
   State<DashboardBalanceHeader> createState() => _DashboardBalanceHeaderState();
 }
 
-class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader>
-    with TickerProviderStateMixin {
+class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader> {
   bool _isHidden = false;
-
-  // Animated balance (odometer)
-  late final List<AnimationController> _digitControllers;
-  late final List<Animation<double>> _digitAnimations;
-  bool _isInitialBuild = true;
-
-  // Gradient shimmer
-  late final AnimationController _shimmerController;
-  late final Animation<double> _shimmerAnimation;
 
   @override
   void initState() {
     super.initState();
-
-    // Digit odometer controllers
-    _digitControllers = List.generate(20, (i) {
-      return AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 700 + (9 - (i % 10)) * 35),
-      );
-    });
-    _digitAnimations = List.generate(20, (i) {
-      return Tween<double>(begin: 0, end: 1).animate(
-        CurvedAnimation(
-          parent: _digitControllers[i],
-          curve: Curves.easeOutCubic,
-        ),
-      );
-    });
-
-    // Shimmer sweep — single forward sweep on change
-    _shimmerController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    );
-    _shimmerAnimation = Tween<double>(begin: -0.5, end: 1.5).animate(
-      CurvedAnimation(parent: _shimmerController, curve: Curves.easeInOut),
-    );
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initDigitAnimations(forceInitial: true);
-    });
   }
 
   @override
   void dispose() {
-    for (final c in _digitControllers) {
-      c.dispose();
-    }
-    _shimmerController.dispose();
     super.dispose();
-  }
-
-  void _initDigitAnimations({bool forceInitial = false}) {
-    if (context.isReducedMotion) return;
-    final digits = _balanceDigits(widget.balance);
-    for (var i = 0; i < digits.length && i < _digitControllers.length; i++) {
-      final d = digits[i];
-      if (forceInitial && !_isInitialBuild) {
-        _digitControllers[i].value = d / 9.0;
-      }
-      Future.delayed(Duration(milliseconds: 50 + i * 60), () {
-        if (mounted) {
-          _digitControllers[i].animateTo(
-            d / 9.0,
-            duration: Duration(milliseconds: 650 + (9 - d) * 35),
-          );
-        }
-      });
-    }
-    _isInitialBuild = false;
-    _startShimmer();
-  }
-
-  void _startShimmer() {
-    if (context.isReducedMotion) return;
-    _shimmerController.forward(from: 0.0);
   }
 
   List<int> _balanceDigits(int balance) {
@@ -141,12 +72,7 @@ class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader>
   @override
   void didUpdateWidget(covariant DashboardBalanceHeader oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.balance != widget.balance) {
-      _initDigitAnimations();
-      if (!_isInitialBuild && !context.isReducedMotion) {
-        _startShimmer();
-      }
-    }
+    // Balance renders instantly; no odometer/shimmer to trigger.
   }
 
   @override
@@ -216,32 +142,6 @@ class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader>
               ),
             ),
           ),
-          // Ambient gradient shimmer sweep (neutral, non-distracting)
-          if (!context.isReducedMotion)
-            AnimatedBuilder(
-              animation: _shimmerAnimation,
-              builder: (context, _) {
-                final t = _shimmerAnimation.value;
-                return Positioned.fill(
-                  child: IgnorePointer(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment(-1.0 + t * 2, -0.6),
-                          end: Alignment(-0.2 + t * 2, 0.6),
-                          colors: [
-                            Colors.transparent,
-                            context.appColors.textLow.withValues(alpha: 0.035),
-                            Colors.transparent,
-                          ],
-                          stops: const [0.0, 0.5, 1.0],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
           // Card content
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -362,16 +262,14 @@ class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader>
                           color: textColor,
                         ),
                       )
-                    : context.isReducedMotion
-                    ? Text(
+                    : Text(
                         isNegative
                             ? '- ${CurrencyFormatter.formatCents(widget.balance.abs())}'
                             : CurrencyFormatter.formatCents(widget.balance),
                         style: context.appTypography.posterHero.copyWith(
                           color: textColor,
                         ),
-                      )
-                    : _buildAnimatedDigits(theme, textColor),
+                      ),
               ),
               const SizedBox(height: kSpacing18),
 
@@ -525,78 +423,4 @@ class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader>
     );
   }
 
-  Widget _buildAnimatedDigits(ThemeData theme, Color textColor) {
-    return AnimatedBuilder(
-      animation: Listenable.merge(_digitControllers),
-      builder: (context, _) {
-        final chars = _formatBalanceDigits(widget.balance);
-        int digitIdx = 0;
-        final baseStyle = context.appTypography.posterHero.copyWith(
-          color: textColor,
-        );
-
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final char in chars)
-              Builder(
-                builder: (context) {
-                  final isDigit = RegExp(r'^\d$').hasMatch(char);
-                  final idx = isDigit ? digitIdx++ : -1;
-                  if (!isDigit) {
-                    return Text(
-                      char,
-                      style: baseStyle.copyWith(color: textColor),
-                    );
-                  }
-                  final animCtrl = idx < _digitControllers.length
-                      ? _digitControllers[idx]
-                      : null;
-                  final animVal = idx < _digitAnimations.length
-                      ? _digitAnimations[idx]
-                      : null;
-                  final isAnimating = animCtrl?.isAnimating ?? false;
-                  final isComplete = animCtrl?.isCompleted ?? false;
-                  if (!isAnimating && isComplete) {
-                    return Text(
-                      char,
-                      style: baseStyle.copyWith(color: textColor),
-                    );
-                  }
-                  return AnimatedBuilder(
-                    animation: animVal!,
-                    builder: (context, _) {
-                      final spinDigit = (animVal.value * 9).round();
-                      // Bebas advances every digit by 0.4em, so the glyph
-                      // itself sizes the cell. A fixed cell width would clip
-                      // the digit and then snap wider when the run completes.
-                      return ClipRect(
-                        child: SlideTransition(
-                          position: Tween<Offset>(
-                            begin: Offset(
-                              0,
-                              (spinDigit == 0 && isAnimating) ? -1 : 0,
-                            ),
-                            end: Offset.zero,
-                          ).animate(animVal),
-                          child: Text(
-                            '$spinDigit',
-                            style: baseStyle.copyWith(
-                              color: textColor,
-                              fontFeatures: const [
-                                FontFeature.tabularFigures(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-          ],
-        );
-      },
-    );
-  }
 }

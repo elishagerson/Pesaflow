@@ -532,7 +532,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                       const SizedBox(height: kSpacing2),
                                       Text(
                                         status.remaining <= 0
-                                            ? 'Tsh 0'
+                                            ? CurrencyFormatter.formatCents(0)
                                             : CurrencyFormatter.formatCents(
                                                 status.remaining ~/
                                                     (status.daysLeft > 0

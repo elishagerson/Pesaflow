@@ -974,15 +974,7 @@ class _OverviewTab extends ConsumerWidget {
                                     ),
                                     const SizedBox(height: kSpacing2),
                                     Text(
-                                      (() {
-                                        final double val = total / 100.0;
-                                        if (val >= 1000000) {
-                                          return '${(val / 1000000).toStringAsFixed(1)}M';
-                                        } else if (val >= 1000) {
-                                          return '${(val / 1000).toStringAsFixed(0)}k';
-                                        }
-                                        return val.toStringAsFixed(0);
-                                      })(),
+                                      CurrencyFormatter.formatCompact(total),
                                       style: AppTheme.getMonospaceStyle(
                                         context.ts(
                                           12,

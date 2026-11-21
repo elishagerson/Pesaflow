@@ -417,8 +417,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         ? hexToColor(selectedCat.color)
         : theme.colorScheme.primary;
 
-    final double amount = double.tryParse(_amountController.text) ?? 0.0;
-    final formattedVal = NumberFormat('#,###').format(amount);
+    final int amountCents = CurrencyFormatter.parseToCents(_amountController.text);
+    final String formattedVal = CurrencyFormatter.formatCents(amountCents);
 
     final now = DateTime.now();
     final daysInPeriod = () {
@@ -438,8 +438,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       }
     }();
 
-    final dailyAllowance = amount > 0 ? (amount / daysInPeriod).round() : 0;
-    final formattedDaily = NumberFormat('#,###').format(dailyAllowance);
+    final dailyAllowance = amountCents > 0
+        ? (amountCents / daysInPeriod).round()
+        : 0;
+    final formattedDaily = CurrencyFormatter.formatCents(dailyAllowance);
 
     return Container(
       width: double.infinity,
@@ -550,14 +552,14 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                 ),
               ),
               Text(
-                'TSh $formattedVal',
+                formattedVal,
                 style: AppTheme.getMonospaceStyle(
                   context.ts(24, fontWeight: FontWeight.w800),
                 ),
               ),
             ],
           ),
-          if (amount > 0) ...[
+          if (amountCents > 0) ...[
             const SizedBox(height: kSpacing10),
             Container(
               padding: const EdgeInsets.symmetric(
@@ -590,7 +592,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       ),
                     ),
                     Text(
-                      '~TSh $formattedDaily / day',
+                      '~$formattedDaily / day',
                       style: context.ts(
                         12,
                         fontWeight: FontWeight.w700,

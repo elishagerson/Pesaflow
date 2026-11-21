@@ -28,54 +28,13 @@ class IosTabBar extends StatefulWidget {
   State<IosTabBar> createState() => _IosTabBarState();
 }
 
-class _IosTabBarState extends State<IosTabBar>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _selController;
-  late Animation<double> _selAnim;
-  int _prevIndex = 0;
-
-  static const double _unselectedFlex = 162;
-  static const double _selectedFlex = 350;
-
+class _IosTabBarState extends State<IosTabBar> {
+  // Tabs are peers: no animated flex, no icon bounce, no per-tap haptic.
+  // Selection is expressed via color only, with a fixed layout so nothing
+  // shifts when the active tab changes.
   @override
   void initState() {
     super.initState();
-    _prevIndex = widget.selectedIndex;
-    _selController = AnimationController(
-      vsync: this,
-      value: 1.0,
-      duration: MotionTokens.durationNormal,
-    );
-    _selAnim = const AlwaysStoppedAnimation(1.0);
-  }
-
-  @override
-  void didUpdateWidget(covariant IosTabBar oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.selectedIndex != oldWidget.selectedIndex) {
-      _prevIndex = oldWidget.selectedIndex;
-      _animateToTab(widget.selectedIndex);
-    }
-  }
-
-  void _animateToTab(int newIndex) {
-    if (context.isReducedMotion) {
-      _selController.value = 1.0;
-      return;
-    }
-    _selAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _selController,
-        curve: MotionTokens.curveEntrance,
-      ),
-    );
-    _selController.forward(from: 0.0);
-  }
-
-  @override
-  void dispose() {
-    _selController.dispose();
-    super.dispose();
   }
 
   @override
@@ -113,7 +72,7 @@ class _IosTabBarState extends State<IosTabBar>
       ),
       _TabConfig(
         routeIndex: 4,
-        label: 'Account',
+        label: 'Settings',
         icon: PesaFlowIcons.personOutline,
         activeIcon: PesaFlowIcons.person,
       ),
@@ -144,16 +103,11 @@ class _IosTabBarState extends State<IosTabBar>
               horizontal: kSpacing8,
               vertical: kSpacing8,
             ),
-            child: AnimatedBuilder(
-              animation: _selController,
-              builder: (context, _) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: tabs.map((tab) {
-                    return _buildTab(context, tab, navFgColor, theme);
-                  }).toList(),
-                );
-              },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: tabs.map((tab) {
+                return _buildTab(context, tab, navFgColor, theme);
+              }).toList(),
             ),
           ),
         ),
@@ -168,59 +122,8 @@ class _IosTabBarState extends State<IosTabBar>
     ThemeData theme,
   ) {
     final isSelected = tab.routeIndex == widget.selectedIndex;
-    final isPrev = tab.routeIndex == _prevIndex;
-    final isAnimating = _selController.isAnimating;
-
-    // ── Flex animation (spring-driven via controller value) ──
-    double flex;
-    if (widget.minimized) {
-      flex = 200;
-    } else if (!isAnimating) {
-      flex = isSelected ? _selectedFlex : _unselectedFlex;
-    } else {
-      final t = _selAnim.value;
-      if (isSelected) {
-        flex = _unselectedFlex + (_selectedFlex - _unselectedFlex) * t;
-      } else if (isPrev) {
-        flex = _selectedFlex + (_unselectedFlex - _selectedFlex) * t;
-      } else {
-        flex = _unselectedFlex;
-      }
-    }
-
-    // ── Background highlight opacity (spring-driven) ──
-    double bgAlpha;
-    if (!isAnimating) {
-      bgAlpha = isSelected ? 0.15 : 0.0;
-    } else {
-      final t = _selAnim.value;
-      if (isSelected) {
-        bgAlpha = 0.15 * t;
-      } else if (isPrev) {
-        bgAlpha = 0.15 * (1.0 - t);
-      } else {
-        bgAlpha = 0.0;
-      }
-    }
-
-    // ── Icon spring bounce on selection ──
-    // Scale 1.0 → 1.15 → 1.0 with spring physics
-    double iconScale;
-    if (!isAnimating) {
-      iconScale = isSelected ? 1.0 : 1.0;
-    } else if (isSelected) {
-      // Bounce: overshoot to 1.15 then settle back to 1.0
-      // Using a sinusoidal envelope on the spring progress
-      final t = _selAnim.value;
-      iconScale = 1.0 + 0.15 * t * (1.0 - t) * 4.0;
-    } else {
-      iconScale = 1.0;
-    }
-
-    final iconSize = isSelected ? 26.0 : 22.0;
 
     return Expanded(
-      flex: flex.round(),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: kSpacing2),
         child: Semantics(
@@ -229,7 +132,6 @@ class _IosTabBarState extends State<IosTabBar>
           selected: isSelected,
           child: _ElasticTabButton(
             onTap: () {
-              PesaHaptics.selection();
               widget.onDestinationSelected(tab.routeIndex);
             },
             child: Container(
@@ -240,7 +142,7 @@ class _IosTabBarState extends State<IosTabBar>
                     ? context.appColors.brandColor.withValues(
                         alpha: context.appColors.badgeFillAlpha,
                       )
-                    : navFgColor.withValues(alpha: bgAlpha),
+                    : null,
                 borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                 border: isSelected
                     ? Border.all(
@@ -250,67 +152,34 @@ class _IosTabBarState extends State<IosTabBar>
                         width: 1,
                       )
                     : null,
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: context.appColors.brandColor.withValues(
-                            alpha: context.appColors.badgeFillAlpha,
-                          ),
-                          blurRadius: 10,
-                          offset: const Offset(0, 1),
-                        ),
-                      ]
-                    : null,
               ),
               alignment: Alignment.center,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                physics: const NeverScrollableScrollPhysics(),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AnimatedSwitcher(
-                      duration: MotionTokens.durationExit,
-                      switchInCurve: MotionTokens.curveEntrance,
-                      switchOutCurve: MotionTokens.curveExit,
-                      transitionBuilder: (child, anim) {
-                        return ScaleTransition(
-                          scale: Tween<double>(begin: 0.82, end: 1.0).animate(
-                            CurvedAnimation(
-                              parent: anim,
-                              curve: MotionTokens.curveEntrance,
-                            ),
-                          ),
-                          child: child,
-                        );
-                      },
-                      child: Transform.scale(
-                        scale: iconScale,
-                        child: Icon(
-                          isSelected ? tab.activeIcon : tab.icon,
-                          key: ValueKey('${tab.routeIndex}_$isSelected'),
-                          size: iconSize,
-                          color: isSelected
-                              ? context.appColors.brandColor
-                              : navFgColor.withValues(alpha: 0.7),
-                        ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    isSelected ? tab.activeIcon : tab.icon,
+                    size: 22,
+                    color: isSelected
+                        ? context.appColors.brandColor
+                        : navFgColor.withValues(alpha: 0.7),
+                  ),
+                  if (!widget.minimized) ...[
+                    const SizedBox(width: kSpacing6),
+                    Text(
+                      tab.label,
+                      style: context.ts(
+                        12,
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                        color: isSelected
+                            ? context.appColors.brandColor
+                            : navFgColor.withValues(alpha: 0.7),
                       ),
                     ),
-                    if (isSelected && !widget.minimized) ...[
-                      const SizedBox(width: kSpacing8),
-                      Text(
-                        tab.label,
-                        style: context.ts(
-                          14,
-                          fontWeight: FontWeight.w700,
-                          color: isSelected
-                              ? context.appColors.brandColor
-                              : navFgColor,
-                        ),
-                      ),
-                    ],
                   ],
-                ),
+                ],
               ),
             ),
           ),

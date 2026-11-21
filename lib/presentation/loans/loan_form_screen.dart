@@ -118,7 +118,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       defaultAmountCents: 150000000, // 1,500,000 Tsh
       termDays: 180,
       interestRate: 14.0,
-      color: Color(0xFF0284C7),
+      color: Color(0xFF0891B2),
       icon: PesaFlowIcons.loans,
     ),
     _LoanStarter(
@@ -128,7 +128,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       defaultAmountCents: 20000000, // 200,000 Tsh
       termDays: 60,
       interestRate: null,
-      color: Color(0xFF10B981),
+      color: Color(0xFF16A34A),
       icon: PesaFlowIcons.person,
     ),
   ];
@@ -1337,8 +1337,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     'NMB': kProviderBrandColors['NMB']!,
     'CRDB': kProviderBrandColors['CRDB']!,
     'NBC': kProviderBrandColors['NBC']!,
-    'Family': Color(0xFF10B981),
-    'SACCOS': Color(0xFF059669),
+    'Family': Color(0xFF16A34A),
+    'SACCOS': Color(0xFF16A34A),
   };
 
   Widget _buildInterestPresetsRow(ThemeData theme, double? currentRate) {
