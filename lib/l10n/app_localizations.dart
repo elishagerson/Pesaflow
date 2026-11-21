@@ -679,6 +679,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{year}'**
   String yearValue(int year);
+
+  /// No description provided for @enable_notification_access.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Notification Access'**
+  String get enable_notification_access;
+
+  /// No description provided for @notification_access_body.
+  ///
+  /// In en, this message translates to:
+  /// **'PesaFlow needs Notification Access to detect transaction SMS on Android 14+.\n\nTap \"Open Settings\" and toggle PesaFlow ON in the list.'**
+  String get notification_access_body;
+
+  /// No description provided for @dont_show_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show again'**
+  String get dont_show_again;
+
+  /// No description provided for @app_locked_title.
+  ///
+  /// In en, this message translates to:
+  /// **'PesaFlow Locked'**
+  String get app_locked_title;
+
+  /// No description provided for @auth_required_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication required to access offline data'**
+  String get auth_required_message;
 }
 
 class _AppLocalizationsDelegate

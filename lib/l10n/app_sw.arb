@@ -131,5 +131,10 @@
         "type": "int"
       }
     }
-  }
+  },
+  "enable_notification_access": "Wezesha Ufikiaji wa Arifa",
+  "notification_access_body": "PesaFlow inahitaji Ufikiaji wa Arifa kugundua SMS za miamala kwenye Android 14+.\n\nGusa \"Fungua Mipangilio\" na washa PesaFlow kwenye orodha.",
+  "dont_show_again": "Usionyeshe tena",
+  "app_locked_title": "PesaFlow Imefungwa",
+  "auth_required_message": "Uthibitishaji unahitajika kufikia data nje ya mtandao"
 }

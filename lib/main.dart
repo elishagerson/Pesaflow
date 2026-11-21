@@ -305,13 +305,12 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Enable Notification Access',
+                  context.l10n.enable_notification_access,
                   style: Theme.of(dialogCtx).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'PesaFlow needs Notification Access to detect transaction SMS on Android 14+.\n\n'
-                  'Tap "Open Settings" and toggle PesaFlow ON in the list.',
+                  context.l10n.notification_access_body,
                   style: Theme.of(dialogCtx).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 24),
@@ -332,7 +331,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                             );
                         if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
                       },
-                      child: const Text("Don't show again"),
+                      child: Text(context.l10n.dont_show_again),
                     ),
                     FilledButton(
                       onPressed: () async {
@@ -548,7 +547,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                         ),
                                         const SizedBox(height: kSpacing24),
                                         Text(
-                                          'PesaFlow Locked',
+                                          context.l10n.app_locked_title,
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleLarge!
@@ -559,7 +558,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                         ),
                                         const SizedBox(height: kSpacing8),
                                         Text(
-                                          'Authentication required to access offline data',
+                                          context.l10n.auth_required_message,
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodySmall!

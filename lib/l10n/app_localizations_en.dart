@@ -310,4 +310,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String yearValue(int year) {
     return '$year';
   }
+
+  @override
+  String get enable_notification_access => 'Enable Notification Access';
+
+  @override
+  String get notification_access_body =>
+      'PesaFlow needs Notification Access to detect transaction SMS on Android 14+.\n\nTap \"Open Settings\" and toggle PesaFlow ON in the list.';
+
+  @override
+  String get dont_show_again => 'Don\'t show again';
+
+  @override
+  String get app_locked_title => 'PesaFlow Locked';
+
+  @override
+  String get auth_required_message =>
+      'Authentication required to access offline data';
 }

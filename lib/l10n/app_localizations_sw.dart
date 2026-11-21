@@ -310,4 +310,21 @@ class AppLocalizationsSw extends AppLocalizations {
   String yearValue(int year) {
     return '$year';
   }
+
+  @override
+  String get enable_notification_access => 'Wezesha Ufikiaji wa Arifa';
+
+  @override
+  String get notification_access_body =>
+      'PesaFlow inahitaji Ufikiaji wa Arifa kugundua SMS za miamala kwenye Android 14+.\n\nGusa \"Fungua Mipangilio\" na washa PesaFlow kwenye orodha.';
+
+  @override
+  String get dont_show_again => 'Usionyeshe tena';
+
+  @override
+  String get app_locked_title => 'PesaFlow Imefungwa';
+
+  @override
+  String get auth_required_message =>
+      'Uthibitishaji unahitajika kufikia data nje ya mtandao';
 }

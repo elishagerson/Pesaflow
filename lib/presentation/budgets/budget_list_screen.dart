@@ -932,7 +932,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
         ),
         TextButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
-          child: Text('Save', style: TextStyle(color: brandColor)),
+          child: Text(context.l10n.save, style: TextStyle(color: brandColor)),
         ),
       ],
     );

@@ -131,5 +131,10 @@
         "type": "int"
       }
     }
-  }
+  },
+  "enable_notification_access": "Enable Notification Access",
+  "notification_access_body": "PesaFlow needs Notification Access to detect transaction SMS on Android 14+.\n\nTap \"Open Settings\" and toggle PesaFlow ON in the list.",
+  "dont_show_again": "Don't show again",
+  "app_locked_title": "PesaFlow Locked",
+  "auth_required_message": "Authentication required to access offline data"
 }
