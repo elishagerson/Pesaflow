@@ -306,6 +306,20 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
       );
     }
 
+    if (groupsAsync.hasError ||
+        standaloneAsync.hasError ||
+        allBudgetsAsync.hasError) {
+      return ErrorState(
+        title: 'Could not load budgets',
+        message: 'Something went wrong while loading your budgets.',
+        onRetry: () {
+          ref.invalidate(budgetGroupsProvider);
+          ref.invalidate(standaloneBudgetsProvider);
+          ref.invalidate(budgetProgressProvider);
+        },
+      );
+    }
+
     final groups = groupsAsync.value ?? [];
     final standaloneBudgets = standaloneAsync.value ?? [];
     final allBudgets = allBudgetsAsync.value ?? [];
@@ -549,7 +563,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       ),
                       const SizedBox(width: kSpacing4),
                       Text(
-                        'OVER BUDGET',
+                        'Over budget',
                         style: context.ts(
                           10,
                           fontWeight: FontWeight.w800,
@@ -588,7 +602,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       ),
                       const SizedBox(width: kSpacing4),
                       Text(
-                        'ON TRACK',
+                        'On track',
                         style: context.ts(
                           10,
                           fontWeight: FontWeight.w800,

@@ -102,11 +102,17 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
   }
 
   Severity _computeSeverity() {
-    final s = widget.data.subtitle.toLowerCase();
-    if (s.contains('higher') || s.contains('up ') || s.contains('increased')) {
+    final s = '${widget.data.title} ${widget.data.subtitle}'.toLowerCase();
+    if (s.contains('higher') ||
+        s.contains('up ') ||
+        s.contains('increased') ||
+        s.contains('over')) {
       return Severity.warning;
     }
-    if (s.contains('lower') || s.contains('down ') || s.contains('decreased')) {
+    if (s.contains('lower') ||
+        s.contains('down ') ||
+        s.contains('decreased') ||
+        s.contains('saved')) {
       return Severity.good;
     }
     return Severity.neutral;
@@ -259,34 +265,8 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                                 maxLines: _expanded ? 5 : 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              if (_expanded)
-                                FadeTransition(
-                                  opacity: _expandAnimation,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      top: kSpacing8,
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Divider(height: 1),
-                                        const SizedBox(height: kSpacing8),
-                                        _buildDetailRow(
-                                          PesaFlowIcons.income,
-                                          'Category trend',
-                                          'Based on your spending in this category',
-                                        ),
-                                        const SizedBox(height: kSpacing4),
-                                        _buildDetailRow(
-                                          PesaFlowIcons.calendar,
-                                          'Time period',
-                                          'This month vs last month',
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                              // Hardcoded detail rows removed: they were identical for every
+                              // insight type and misled users. Navigation is handled by onTap.
                             ],
                           ),
                         ),
@@ -299,37 +279,6 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
           );
         },
       ),
-    );
-  }
-
-  Widget _buildDetailRow(IconData icon, String label, String value) {
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        Icon(icon, size: 14, color: theme.colorScheme.onSurfaceVariant),
-        const SizedBox(width: kSpacing6),
-        Text(
-          label,
-          style: context.ts(
-            11,
-            fontWeight: FontWeight.w500,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(width: kSpacing8),
-        Expanded(
-          child: Text(
-            value,
-            style: context.ts(
-              11,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-            textAlign: TextAlign.end,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
     );
   }
 

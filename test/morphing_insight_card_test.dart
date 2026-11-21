@@ -4,7 +4,7 @@ import 'package:pesaflow/presentation/common/widgets/morphing_insight_card.dart'
 import 'package:pesaflow/presentation/state/insight_provider.dart';
 
 void main() {
-  testWidgets('MorphingInsightCard renders and expands without error', (
+  testWidgets('MorphingInsightCard renders without error', (
     WidgetTester tester,
   ) async {
     const data = InsightData(
@@ -23,25 +23,11 @@ void main() {
     // Verify initial state
     expect(find.text('Food & Drinks'), findsOneWidget);
     expect(find.text('25% higher than last month'), findsOneWidget);
-    expect(
-      find.text('Category trend'),
-      findsNothing,
-    ); // only visible when expanded
 
-    // Tap to expand
+    // Tapping no longer expands hardcoded detail rows (removed).
     await tester.tap(find.byType(MorphingInsightCard));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
-
-    // Verify expanded state
-    expect(find.text('Category trend'), findsOneWidget);
-
-    // Tap to collapse
-    await tester.tap(find.byType(MorphingInsightCard));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 500));
-
-    expect(find.text('Category trend'), findsNothing);
   });
 
   testWidgets(
@@ -79,8 +65,8 @@ void main() {
         ),
       );
 
-      // Initial state (collapsed)
-      expect(find.text('Category trend'), findsNothing);
+      // Initial state
+      expect(find.text('Food & Drinks'), findsOneWidget);
       expect(tapCount, 0);
 
       // Tap the card
@@ -88,18 +74,16 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
 
-      // Verify onTap triggered and card expanded
+      // Verify onTap triggered
       expect(tapCount, 1);
-      expect(find.text('Category trend'), findsOneWidget);
 
-      // Tap the card again to collapse
+      // Tap the card again
       await tester.tap(find.byType(MorphingInsightCard));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
 
-      // Verify onTap triggered again and card collapsed
+      // Verify onTap triggered again
       expect(tapCount, 2);
-      expect(find.text('Category trend'), findsNothing);
     },
   );
 }
