@@ -1359,8 +1359,23 @@ class _TrendsTab extends ConsumerWidget {
                             ),
                             gridData: const FlGridData(show: false),
                             titlesData: FlTitlesData(
-                              leftTitles: const AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 40,
+                                  getTitlesWidget: (val, _) {
+                                    if (val <= 0) return const SizedBox.shrink();
+                                    return Text(
+                                      CurrencyFormatter.formatCompact(
+                                        (val * 100).round(),
+                                      ),
+                                      style: context.ts(
+                                        8,
+                                        color: context.appColors.textMedium,
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                               rightTitles: const AxisTitles(
                                 sideTitles: SideTitles(showTitles: false),

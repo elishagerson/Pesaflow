@@ -850,13 +850,25 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                             dailyBudget * 1.5,
                                           ),
                                           barTouchData: BarTouchData(
-                                            enabled: false,
+                                            enabled: true,
                                           ),
                                           titlesData: FlTitlesData(
                                             show: true,
-                                            leftTitles: const AxisTitles(
+                                            leftTitles: AxisTitles(
                                               sideTitles: SideTitles(
-                                                showTitles: false,
+                                                showTitles: true,
+                                                reservedSize: 36,
+                                                getTitlesWidget: (value, meta) {
+                                                  if (value == 0) {
+                                                    return const SizedBox.shrink();
+                                                  }
+                                                  return Text(
+                                                    CurrencyFormatter.formatCompact(
+                                                      (value * 100).round(),
+                                                    ),
+                                                    style: context.ts(8),
+                                                  );
+                                                },
                                               ),
                                             ),
                                             topTitles: const AxisTitles(
