@@ -78,7 +78,7 @@ if ! grep -qE "^## \[$version\]" CHANGELOG.md; then
   exit 1
 fi
 
-unexpected="$(git status --porcelain | cut -c4- | awk '$0 != "CHANGELOG.md" && $0 != "pubspec.yaml"')"
+unexpected="$(git status --porcelain | cut -c4- | awk '$0 != "CHANGELOG.md" && $0 != "pubspec.yaml" && $0 != "lib/core/constants/app_version.dart"')"
 if [[ -n "$unexpected" ]]; then
   echo "Commit or stash unrelated changes first:" >&2
   printf '%s\n' "$unexpected" >&2
@@ -89,9 +89,15 @@ if (( same_version == 0 )); then
   new_build=$((current_build + 1))
   sed -E "s/^version:.*/version: ${version}+${new_build}/" pubspec.yaml > pubspec.yaml.tmp
   mv pubspec.yaml.tmp pubspec.yaml
+
+  if [[ -f "lib/core/constants/app_version.dart" ]]; then
+    sed -E "s/defaultValue:[[:space:]]*'[^']+'/defaultValue: '${version}'/" \
+      lib/core/constants/app_version.dart > lib/core/constants/app_version.dart.tmp
+    mv lib/core/constants/app_version.dart.tmp lib/core/constants/app_version.dart
+  fi
 fi
 
-git add pubspec.yaml CHANGELOG.md
+git add pubspec.yaml CHANGELOG.md lib/core/constants/app_version.dart
 if [[ -n "$(git diff --cached --name-only)" ]]; then
   git commit -m "release: v$version"
 else

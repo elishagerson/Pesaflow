@@ -35,6 +35,7 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'route_params.dart';
 
+import 'package:pesaflow/core/constants/app_version.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -302,7 +303,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
           Padding(
             padding: const EdgeInsets.all(kSpacing16),
             child: Text(
-              'PesaFlow v1.0.1',
+              'PesaFlow v$kAppVersion',
               style: context.ts(
                 13,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),

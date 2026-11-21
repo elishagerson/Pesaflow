@@ -91,10 +91,10 @@ jobs:
           fi
 
       - name: Build Universal APK
-        run: flutter build apk --release
+        run: flutter build apk --release --dart-define=APP_VERSION=${VERSION}
 
       - name: Build Split-per-ABI APKs
-        run: flutter build apk --release --split-per-abi
+        run: flutter build apk --release --split-per-abi --dart-define=APP_VERSION=${VERSION}
 
       - name: Organize and rename APK artifacts
         run: |
