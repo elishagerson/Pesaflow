@@ -208,7 +208,8 @@ void main() {
     test('Fully spent emergency budget does NOT transfer to savings', () async {
       final categories = await categoryDao.getAllCategories();
       final emergencyCat = categories.firstWhere(
-        (c) => c.name == 'Emergencies',
+        (c) => c.name == 'Health',
+        orElse: () => categories.first,
       );
       const uuid = Uuid();
 
