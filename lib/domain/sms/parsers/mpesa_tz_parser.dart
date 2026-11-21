@@ -93,6 +93,40 @@ class MpesaTzParser implements SmsParser {
     if (SmsClassifier.hasPromotionalLink(text)) return null;
 
     try {
+      // 0. Check for Transaction Reversals
+      // Swahili: "Muamala 5H8392HD wa Tsh 10,000.00 umerudishwa. Salio lako jipya la M-Pesa ni Tsh 45,000.00."
+      // English: "Transaction 5H8392HD of Tsh 10,000.00 has been reversed. New M-PESA balance is Tsh 45,000.00."
+      final revSwMatch = RegExp(
+        r'Muamala\s+(?:wa\s+)?([A-Za-z0-9]+)(?:\s+wa\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?))?.*?umerudishwa',
+        caseSensitive: false,
+      ).firstMatch(text);
+
+      final revEnMatch = RegExp(
+        r'(?:Transaction|Reversal of transaction)\s+([A-Za-z0-9]+)(?:\s+of\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?))?.*?(?:has been reversed|has been completed)',
+        caseSensitive: false,
+      ).firstMatch(text);
+
+      final revMatch = revSwMatch ?? revEnMatch;
+      if (revMatch != null) {
+        final origRef = (revMatch.group(1) ?? '').trim();
+        final amtStr = revMatch.group(2);
+        final amt = amtStr != null ? parseAmount(amtStr) : 0;
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'reversal',
+          senderOrRecipient: 'Reversal: $origRef',
+          reference: ref != 'MPESA-REF-UNKNOWN' ? ref : '$origRef-REV',
+          reversedReference: origRef,
+          provider: 'M-Pesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
       // 1. Check for Received Money (Income)
       // Example: "Pesa zimewekwa Tsh 50,000.00 na John Doe tarehe 15/5/2026... Rej: P65AB. Salio: Tsh 250,000.00"
       final receivedRegex = RegExp(
