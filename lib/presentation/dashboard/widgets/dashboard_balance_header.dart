@@ -241,7 +241,12 @@ class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader> {
                 child: _isHidden
                     ? Text(
                         '••••••',
-                        style: context.appTypography.posterHero.copyWith(
+                        style: context.appTypography.numeral.copyWith(
+                          // Hero money face: Inter's display cut with tabular
+                          // figures at the preserved posterHero size (76). Bebas
+                          // stays reserved for wordmarks/marketing only.
+                          fontSize: 76,
+                          height: 0.84,
                           color: textColor,
                         ),
                       )
@@ -249,7 +254,12 @@ class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader> {
                         isNegative
                             ? '- ${CurrencyFormatter.formatCents(widget.balance.abs())}'
                             : CurrencyFormatter.formatCents(widget.balance),
-                        style: context.appTypography.posterHero.copyWith(
+                        style: context.appTypography.numeral.copyWith(
+                          // Hero money face: Inter's display cut with tabular
+                          // figures at the preserved posterHero size (76). Bebas
+                          // stays reserved for wordmarks/marketing only.
+                          fontSize: 76,
+                          height: 0.84,
                           color: textColor,
                         ),
                       ),
