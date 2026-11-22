@@ -25,6 +25,7 @@ import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_hero_strip.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/notification_center_sheet.dart';
 import 'package:pesaflow/presentation/state/notification_providers.dart';
+import 'package:pesaflow/presentation/dashboard/home_widget_capture_scheduler.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -35,12 +36,17 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   String? _selectedAccountId;
-  Timer? _homeWidgetCaptureTimer;
+  final HomeWidgetCaptureScheduler _homeWidgetCaptureScheduler =
+      HomeWidgetCaptureScheduler();
   final ScrollController _scrollController = ScrollController();
+
+  /// Cached during build so the debounce timer never has to look up inherited
+  /// widgets outside the build phase.
+  bool _dashboardIsActive = false;
 
   @override
   void dispose() {
-    _homeWidgetCaptureTimer?.cancel();
+    _homeWidgetCaptureScheduler.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -72,13 +78,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   /// Debounces AppWidget captures so launcher widgets only refresh after data
-  /// settles, and only while the dashboard is the visible route.
+  /// settles, and only while the dashboard is actually on screen.
   void _scheduleHomeWidgetCaptures() {
-    if (!(ModalRoute.of(context)?.isCurrent ?? false)) return;
-    _homeWidgetCaptureTimer?.cancel();
-    _homeWidgetCaptureTimer = Timer(const Duration(milliseconds: 1200), () {
-      _captureHomeWidgets();
-    });
+    _homeWidgetCaptureScheduler.schedule(
+      canCapture: _dashboardIsActive,
+      stillCanCapture: () => mounted && _dashboardIsActive,
+      capture: _captureHomeWidgets,
+    );
   }
 
   Future<void> _captureHomeWidgets() async {
@@ -178,6 +184,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final heatmapAsync = ref.watch(spendingHeatmapProvider);
     final templatesAsync = ref.watch(transactionTemplatesStreamProvider);
     final activeLoansAsync = ref.watch(activeLoansStreamProvider);
+
+    // A StatefulShellRoute branch stays `isCurrent` while its tab is offstage —
+    // it is hidden with Visibility(visible: false, maintain*: true) — so the
+    // route check alone is not enough. Visibility.of also registers a dependency,
+    // so a tab switch rebuilds this screen and cancels any queued capture.
+    _dashboardIsActive =
+        Visibility.of(context) && (ModalRoute.of(context)?.isCurrent ?? false);
 
     // Debounce AppWidget captures
     _scheduleHomeWidgetCaptures();
