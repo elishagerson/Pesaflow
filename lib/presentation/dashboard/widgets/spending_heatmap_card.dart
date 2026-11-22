@@ -170,131 +170,168 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                   ],
                 ),
                 const SizedBox(height: kSpacing16),
-                // Scrollable Grid of blocks
+                // Scrollable grid of blocks with a fixed weekday gutter.
                 SizedBox(
                   height: 144,
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: weeks.length,
-                    itemBuilder: (context, wIndex) {
-                      final week = weeks[wIndex];
-
-                      // Calculate month label visibility
-                      bool showMonthLabel = false;
-                      String monthLabel = '';
-                      if (wIndex == 0) {
-                        showMonthLabel = true;
-                        monthLabel = DateFormat('MMM').format(week.first);
-                      } else {
-                        final prevWeek = weeks[wIndex - 1];
-                        if (week.first.month != prevWeek.first.month) {
-                          showMonthLabel = true;
-                          monthLabel = DateFormat('MMM').format(week.first);
-                        }
-                      }
-
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 6.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            // Month label header
-                            SizedBox(
-                              width: 13,
-                              height: 16,
-                              child: showMonthLabel
-                                  ? OverflowBox(
-                                      maxWidth: 40,
-                                      alignment: Alignment.bottomLeft,
-                                      child: Text(
-                                        monthLabel,
-                                        style: context.ts(
-                                          9,
-                                          color: theme.colorScheme.onSurface
-                                              .withValues(alpha: 0.45),
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        maxLines: 1,
-                                        softWrap: false,
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(),
-                            ),
-                            const SizedBox(height: kSpacing6),
-                            ...week.map((date) {
-                              final dateStr =
-                                  '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-                              final amount = data.dailyExpenses[dateStr] ?? 0;
-                              final cellColor = _getCellColor(
-                                context,
-                                amount,
-                                data.maxExpense,
-                                appColors,
-                              );
-                              final isSelected =
-                                  _selectedDate != null &&
-                                  _selectedDate!.year == date.year &&
-                                  _selectedDate!.month == date.month &&
-                                  _selectedDate!.day == date.day;
-
-                              return Semantics(
-                                label:
-                                    '$dateStr, spent ${CurrencyFormatter.formatCents(amount)}',
-                                button: true,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    triggerHaptic(HapticType.selection);
-                                    setState(() {
-                                      if (isSelected) {
-                                        _selectedDate = null;
-                                        _selectedAmount = null;
-                                      } else {
-                                        _selectedDate = date;
-                                        _selectedAmount = amount;
-                                      }
-                                    });
-                                  },
-                                  child: AnimatedContainer(
-                                    duration: MotionTokens.durationExit,
-                                    curve: Curves.easeOutCubic,
-                                    width: isSelected ? 15 : 13,
-                                    height: isSelected ? 15 : 13,
-                                    margin: EdgeInsets.symmetric(
-                                      vertical: isSelected ? 1.0 : 2.0,
-                                      horizontal: isSelected ? 0.0 : 1.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: cellColor,
-                                      borderRadius: BorderRadius.circular(
-                                        isSelected ? 4 : 3,
-                                      ),
-                                      border: Border.all(
-                                        color: isSelected
-                                            ? theme.colorScheme.onPrimary
-                                            : Colors.transparent,
-                                        width: isSelected ? 1.5 : 0.0,
-                                      ),
-                                      boxShadow: isSelected
-                                          ? [
-                                              BoxShadow(
-                                                color: cellColor.withValues(
-                                                  alpha: 0.4,
-                                                ),
-                                                blurRadius: 6,
-                                                spreadRadius: 1,
-                                              ),
-                                            ]
-                                          : null,
-                                    ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Weekday initials (Sun -> Sat) aligned with the 7 rows.
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          // Month-label header height (16) + gap (6).
+                          const SizedBox(height: 22),
+                          ...List.generate(7, (d) {
+                            return SizedBox(
+                              width: 18,
+                              height: 17,
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'][d],
+                                  style: context.ts(
+                                    8,
+                                    color: appColors.textMedium,
                                   ),
                                 ),
-                              );
-                            }),
-                          ],
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                      const SizedBox(width: kSpacing4),
+                      Expanded(
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: weeks.length,
+                          itemBuilder: (context, wIndex) {
+                            final week = weeks[wIndex];
+
+                            // Label the week that CONTAINS the 1st of a month,
+                            // not merely one that starts in a new month — a
+                            // Sunday-aligned week can straddle two months.
+                            final hasFirstOfMonth = week.any((d) => d.day == 1);
+                            final monthLabel = DateFormat('MMM').format(
+                              hasFirstOfMonth
+                                  ? week.firstWhere((d) => d.day == 1)
+                                  : week.first,
+                            );
+                            final showMonthLabel =
+                                wIndex == 0 || hasFirstOfMonth;
+
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 6.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  // Month label header
+                                  SizedBox(
+                                    width: 13,
+                                    height: 16,
+                                    child: showMonthLabel
+                                        ? OverflowBox(
+                                            maxWidth: 40,
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(
+                                              monthLabel,
+                                              style: context.ts(
+                                                9,
+                                                color: appColors.textMedium,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 1,
+                                              softWrap: false,
+                                            ),
+                                          )
+                                        : const SizedBox.shrink(),
+                                  ),
+                                  const SizedBox(height: kSpacing6),
+                                  ...week.map((date) {
+                                    final dateStr =
+                                        '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+                                    final amount =
+                                        data.dailyExpenses[dateStr] ?? 0;
+                                    final cellColor = _getCellColor(
+                                      context,
+                                      amount,
+                                      data.maxExpense,
+                                      appColors,
+                                    );
+                                    final isSelected =
+                                        _selectedDate != null &&
+                                        _selectedDate!.year == date.year &&
+                                        _selectedDate!.month == date.month &&
+                                        _selectedDate!.day == date.day;
+
+                                    return Tooltip(
+                                      message:
+                                          '${DateFormat('d MMM').format(date)}: ${CurrencyFormatter.formatCents(amount)}',
+                                      child: Semantics(
+                                        label:
+                                            '$dateStr, spent ${CurrencyFormatter.formatCents(amount)}',
+                                        button: true,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            triggerHaptic(HapticType.selection);
+                                            setState(() {
+                                              if (isSelected) {
+                                                _selectedDate = null;
+                                                _selectedAmount = null;
+                                              } else {
+                                                _selectedDate = date;
+                                                _selectedAmount = amount;
+                                              }
+                                            });
+                                          },
+                                          child: AnimatedContainer(
+                                            duration: MotionTokens.durationExit,
+                                            curve: Curves.easeOutCubic,
+                                            width: isSelected ? 15 : 13,
+                                            height: isSelected ? 15 : 13,
+                                            margin: EdgeInsets.symmetric(
+                                              vertical: isSelected ? 1.0 : 2.0,
+                                              horizontal:
+                                                  isSelected ? 0.0 : 1.0,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: cellColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                isSelected ? 4 : 3,
+                                              ),
+                                              border: Border.all(
+                                                color: isSelected
+                                                    ? theme.colorScheme.onPrimary
+                                                    : Colors.transparent,
+                                                width: isSelected ? 1.5 : 0.0,
+                                              ),
+                                              boxShadow: isSelected
+                                                  ? [
+                                                      BoxShadow(
+                                                        color: cellColor
+                                                            .withValues(
+                                                          alpha: 0.4,
+                                                        ),
+                                                        blurRadius: 6,
+                                                        spreadRadius: 1,
+                                                      ),
+                                                    ]
+                                                  : null,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ],
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: kSpacing8),
