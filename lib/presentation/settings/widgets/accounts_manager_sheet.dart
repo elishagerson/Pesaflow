@@ -125,23 +125,23 @@ void showAccountsManager(BuildContext context, WidgetRef ref) {
                           acc.name,
                           style: context.ts(15, fontWeight: FontWeight.bold),
                         ),
-                        subtitle: Text(
+                        subtitle: SelectableText(
                           acc.type.toUpperCase().replaceAll('_', ' ') +
                               (acc.phoneNumber != null
                                   ? ' • ${acc.phoneNumber}'
                                   : ''),
                           style: context.ts(
                             12,
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.5,
-                            ),
+                            color: context.appColors.textMedium,
                           ),
+                          maxLines: 1,
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             AmountText(
                               amountInCents: acc.balance,
+                              selectable: true,
                               style: context.ts(
                                 15,
                                 fontWeight: FontWeight.bold,

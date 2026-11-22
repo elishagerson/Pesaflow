@@ -307,6 +307,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                               : AmountType.expense,
                           animate: true,
                           useMonospace: false,
+                          selectable: true,
                           style: context.ts(
                             36,
                             fontWeight: FontWeight.w900,
