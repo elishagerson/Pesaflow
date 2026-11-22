@@ -108,13 +108,6 @@ int responsiveAccountColumns(BuildContext context) {
   return 4;
 }
 
-double responsiveFontSize(BuildContext context, {required double base}) {
-  final w = MediaQuery.sizeOf(context).width;
-  final scale = w / 375;
-  final clamped = scale.clamp(0.85, 1.25);
-  return base * clamped;
-}
-
 EdgeInsets responsiveHorizontalPadding(BuildContext context) {
   final s = getScreenSize(context);
   switch (s) {

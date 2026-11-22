@@ -108,36 +108,6 @@ extension PesaFlowContext on BuildContext {
     return xwide;
   }
 
-  TextStyle responsiveText(TextStyle style) {
-    final scale = (MediaQuery.sizeOf(this).width / 375).clamp(0.85, 1.25);
-    return style.copyWith(fontSize: (style.fontSize ?? 14) * scale);
-  }
-
-  TextStyle get displayLarge =>
-      responsiveText(Theme.of(this).textTheme.displayLarge!);
-  TextStyle get displayMedium =>
-      responsiveText(Theme.of(this).textTheme.displayMedium!);
-  TextStyle get displaySmall =>
-      responsiveText(Theme.of(this).textTheme.displaySmall!);
-  TextStyle get headlineLarge =>
-      responsiveText(Theme.of(this).textTheme.headlineLarge!);
-  TextStyle get headlineMedium =>
-      responsiveText(Theme.of(this).textTheme.headlineMedium!);
-  TextStyle get headlineSmall =>
-      responsiveText(Theme.of(this).textTheme.headlineSmall!);
-  TextStyle get titleLarge =>
-      responsiveText(Theme.of(this).textTheme.titleLarge!);
-  TextStyle get titleMedium =>
-      responsiveText(Theme.of(this).textTheme.titleMedium!);
-  TextStyle get titleSmall =>
-      responsiveText(Theme.of(this).textTheme.titleSmall!);
-  TextStyle get bodyLarge =>
-      responsiveText(Theme.of(this).textTheme.bodyLarge!);
-  TextStyle get bodyMedium =>
-      responsiveText(Theme.of(this).textTheme.bodyMedium!);
-  TextStyle get bodySmall =>
-      responsiveText(Theme.of(this).textTheme.bodySmall!);
-
   void dismissKeyboard() => FocusScope.of(this).unfocus();
 
   InputDecoration inputDecoration({
