@@ -143,6 +143,20 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       return;
     }
 
+    // A capped rollover without a cap silently falls back to uncapped in
+    // BudgetEngine.computeRollover — require an explicit positive cap.
+    if (_rollover &&
+        _rolloverType == 'capped' &&
+        (_capController.text.trim().isEmpty ||
+            CurrencyFormatter.parseToCents(_capController.text) <= 0)) {
+      CustomToast.show(
+        context,
+        message: 'Enter a rollover cap',
+        type: ToastType.error,
+      );
+      return;
+    }
+
     final repo = ref.read(budgetRepositoryProvider);
     int? rolloverCap;
     if (_rollover &&

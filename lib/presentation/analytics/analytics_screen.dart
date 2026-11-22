@@ -533,7 +533,7 @@ class _OverviewTab extends ConsumerWidget {
                                       ),
                                       const SizedBox(width: kSpacing4),
                                       Text(
-                                        'Total Inflow',
+                                        'Total Income',
                                         style: context.ts(
                                           11,
                                           fontWeight: FontWeight.w600,
@@ -579,7 +579,7 @@ class _OverviewTab extends ConsumerWidget {
                                         ),
                                         const SizedBox(width: kSpacing4),
                                         Text(
-                                          'Total Outflow',
+                                          'Total Expense',
                                           style: context.ts(
                                             11,
                                             fontWeight: FontWeight.w600,

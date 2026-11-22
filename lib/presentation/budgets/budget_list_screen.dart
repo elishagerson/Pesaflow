@@ -2273,12 +2273,16 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                                 )
                                               else
                                                 Text(
-                                                  '$daysLeft days remaining',
+                                                  daysLeft > 0
+                                                      ? '$daysLeft days remaining'
+                                                      : 'Overdue',
                                                   style: context.ts(
                                                     11,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onSurfaceVariant,
+                                                    color: daysLeft > 0
+                                                        ? theme.colorScheme
+                                                            .onSurfaceVariant
+                                                        : context.appColors
+                                                            .expenseColor,
                                                   ),
                                                 ),
                                               const SizedBox(height: kSpacing4),
