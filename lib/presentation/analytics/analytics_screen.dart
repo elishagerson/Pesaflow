@@ -945,9 +945,12 @@ class _OverviewTab extends ConsumerWidget {
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
-                                PieChart(
-                                  PieChartData(
-                                    sectionsSpace: 2,
+                                Semantics(
+                                  label:
+                                      'Spending by category. Total ${CurrencyFormatter.formatCompact(total)}.',
+                                  child: PieChart(
+                                    PieChartData(
+                                      sectionsSpace: 2,
                                     centerSpaceRadius: 36,
                                     sections: List.generate(cats.length, (i) {
                                       final cat = cats[i];
@@ -962,6 +965,7 @@ class _OverviewTab extends ConsumerWidget {
                                       );
                                     }),
                                   ),
+                                ),
                                 ),
                                 Column(
                                   mainAxisSize: MainAxisSize.min,
