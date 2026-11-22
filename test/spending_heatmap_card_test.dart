@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.dart';
 import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
+import 'package:pesaflow/presentation/state/state_providers.dart';
 
 HeatmapData _data() {
   final expenses = <String, int>{};
@@ -27,6 +28,7 @@ Widget _host(Widget child) {
   return ProviderScope(
     overrides: [
       spendingHeatmapProvider.overrideWith((ref) async => _data()),
+      currencyShowDecimalsProvider.overrideWith((ref) => Stream.value(false)),
     ],
     child: MaterialApp(
       theme: AppTheme.lightTheme,

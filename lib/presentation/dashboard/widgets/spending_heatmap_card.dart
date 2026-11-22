@@ -121,24 +121,27 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'SPENDING ACTIVITY',
-                      style: context.ts(
-                        11,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.6,
+                    Flexible(
+                      child: Text(
+                        'SPENDING ACTIVITY',
+                        style: context.ts(
+                          11,
+                          color: appColors.textMedium,
+                          letterSpacing: 1.2,
+                          fontWeight: FontWeight.bold,
                         ),
-                        letterSpacing: 1.2,
-                        fontWeight: FontWeight.bold,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Text(
-                      'Last 20 Weeks',
-                      style: context.ts(
-                        11,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.4,
-                        ),
+                    const SizedBox(width: kSpacing8),
+                    Flexible(
+                      child: Text(
+                        'Last 20 Weeks',
+                        textAlign: TextAlign.end,
+                        style: context.ts(11, color: appColors.textMedium),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
@@ -148,23 +151,25 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
                   children: [
-                    Text(
-                      'Total Spent: ',
-                      style: context.ts(
-                        13,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.6,
-                        ),
+                    Flexible(
+                      child: Text(
+                        'Total Spent: ',
+                        style: context.ts(13, color: appColors.textMedium),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    AmountText(
-                      amountInCents: data.totalExpenditure,
-                      animate: true,
-                      style: context.ts(
-                        20,
-                        color: appColors.expenseColor,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.3,
+                    Flexible(
+                      flex: 2,
+                      child: AmountText(
+                        amountInCents: data.totalExpenditure,
+                        animate: true,
+                        style: context.ts(
+                          20,
+                          color: appColors.expenseColor,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.3,
+                        ),
                       ),
                     ),
                   ],
