@@ -816,9 +816,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: PesaFlowIcons.bolt,
                         color: const Color(0xFFF59E0B),
                       ),
-                      title: const Text('Background SMS Reliability'),
-                      subtitle: const Text(
-                        'Keep SMS capture alive on Tecno, Infinix, Xiaomi & Samsung',
+                      title: Text(context.l10n.background_sms_reliability),
+                      subtitle: Text(
+                        context.l10n.background_sms_reliability_body,
                       ),
                       onTap: () {
                         PesaHaptics.light();

@@ -138,5 +138,7 @@
   "app_locked_title": "PesaFlow Imefungwa",
   "auth_required_message": "Uthibitishaji unahitajika kufikia data nje ya mtandao",
   "edit_category": "Hariri Kundi",
-  "add_custom_category": "Ongeza Kundi Maalum"
+  "add_custom_category": "Ongeza Kundi Maalum",
+  "background_sms_reliability": "Uaminifu wa SMS ya Mandharinyuma",
+  "background_sms_reliability_body": "Weka ukamataji wa SMS uendelee kufanya kazi kwenye Tecno, Infinix, Xiaomi na Samsung"
 }

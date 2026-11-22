@@ -333,4 +333,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get add_custom_category => 'Add Custom Category';
+
+  @override
+  String get background_sms_reliability => 'Background SMS Reliability';
+
+  @override
+  String get background_sms_reliability_body =>
+      'Keep SMS capture alive on Tecno, Infinix, Xiaomi & Samsung';
 }

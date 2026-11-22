@@ -721,6 +721,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add Custom Category'**
   String get add_custom_category;
+
+  /// No description provided for @background_sms_reliability.
+  ///
+  /// In en, this message translates to:
+  /// **'Background SMS Reliability'**
+  String get background_sms_reliability;
+
+  /// No description provided for @background_sms_reliability_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep SMS capture alive on Tecno, Infinix, Xiaomi & Samsung'**
+  String get background_sms_reliability_body;
 }
 
 class _AppLocalizationsDelegate

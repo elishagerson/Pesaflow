@@ -138,5 +138,7 @@
   "app_locked_title": "PesaFlow Locked",
   "auth_required_message": "Authentication required to access offline data",
   "edit_category": "Edit Category",
-  "add_custom_category": "Add Custom Category"
+  "add_custom_category": "Add Custom Category",
+  "background_sms_reliability": "Background SMS Reliability",
+  "background_sms_reliability_body": "Keep SMS capture alive on Tecno, Infinix, Xiaomi & Samsung"
 }

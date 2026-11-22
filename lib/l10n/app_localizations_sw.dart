@@ -333,4 +333,11 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get add_custom_category => 'Ongeza Kundi Maalum';
+
+  @override
+  String get background_sms_reliability => 'Uaminifu wa SMS ya Mandharinyuma';
+
+  @override
+  String get background_sms_reliability_body =>
+      'Weka ukamataji wa SMS uendelee kufanya kazi kwenye Tecno, Infinix, Xiaomi na Samsung';
 }
