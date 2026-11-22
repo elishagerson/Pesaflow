@@ -8,8 +8,11 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 /// A list view with spring-physics staggered item entrance.
 ///
 /// Each item fades + slides in with a 30ms stagger delay (capped at 300ms).
-/// Items animate only on first appearance — rebuilds are instant.
-class StaggeredList extends StatelessWidget {
+/// The entrance belongs to the **first load only**: once the opening stagger
+/// has settled, rows built by scrolling or by a filter change appear
+/// instantly. Re-animating on every scroll is decorative motion on a
+/// high-frequency surface and reads as jank, not polish.
+class StaggeredList extends StatefulWidget {
   final int itemCount;
   final IndexedWidgetBuilder itemBuilder;
   final double staggerDelay;
@@ -30,22 +33,52 @@ class StaggeredList extends StatelessWidget {
   });
 
   @override
+  State<StaggeredList> createState() => _StaggeredListState();
+}
+
+class _StaggeredListState extends State<StaggeredList> {
+  bool _firstLoad = true;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Keep the window just longer than the longest staggered entrance so the
+    // opening animation is never cut short, then stop animating new rows.
+    _timer = Timer(
+      MotionTokens.staggerMaxDelay +
+          MotionTokens.durationNormal +
+          const Duration(milliseconds: 100),
+      () {
+        if (mounted) setState(() => _firstLoad = false);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      controller: controller,
+      controller: widget.controller,
       physics:
-          physics ??
-          (shrinkWrap
+          widget.physics ??
+          (widget.shrinkWrap
               ? const NeverScrollableScrollPhysics()
               : const ClampingScrollPhysics()),
-      shrinkWrap: shrinkWrap,
-      padding: padding,
-      itemCount: itemCount,
+      shrinkWrap: widget.shrinkWrap,
+      padding: widget.padding,
+      itemCount: widget.itemCount,
       itemBuilder: (context, index) {
         return _StaggeredItem(
           index: index,
-          staggerDelay: staggerDelay,
-          child: itemBuilder(context, index),
+          staggerDelay: widget.staggerDelay,
+          animate: _firstLoad,
+          child: widget.itemBuilder(context, index),
         );
       },
     );
@@ -55,11 +88,13 @@ class StaggeredList extends StatelessWidget {
 class _StaggeredItem extends StatefulWidget {
   final int index;
   final double staggerDelay;
+  final bool animate;
   final Widget child;
 
   const _StaggeredItem({
     required this.index,
     required this.staggerDelay,
+    required this.animate,
     required this.child,
   });
 
@@ -91,8 +126,9 @@ class _StaggeredItemState extends State<_StaggeredItem>
   void _startAnimation() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      if (_hasAnimated) {
+      if (!widget.animate || _hasAnimated) {
         _controller.value = 1.0;
+        _hasAnimated = true;
         return;
       }
       if (context.isReducedMotion) {

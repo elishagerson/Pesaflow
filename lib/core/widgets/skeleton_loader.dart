@@ -75,6 +75,71 @@ class SkeletonCard extends StatelessWidget {
   }
 }
 
+/// A placeholder that mirrors a transaction row instead of being a generic
+/// card: 38px category mark, two lines of copy, amount + time on the right.
+/// A skeleton whose silhouette matches the real row avoids the layout jump
+/// when the data arrives.
+class SkeletonTransactionRow extends StatelessWidget {
+  const SkeletonTransactionRow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final bar = theme.colorScheme.onSurface.withValues(alpha: 0.10);
+    Widget pulse({required double width, required double height}) => Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: bar,
+        borderRadius: BorderRadius.circular(4),
+      ),
+    );
+
+    return _ShimmerEffect(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing16,
+          vertical: kSpacing12,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: bar,
+                borderRadius: BorderRadius.circular(
+                  AppTheme.squircleRadius(38),
+                ),
+              ),
+            ),
+            const SizedBox(width: kSpacing12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  pulse(width: 140, height: 12),
+                  const SizedBox(height: kSpacing6),
+                  pulse(width: 90, height: 10),
+                ],
+              ),
+            ),
+            const SizedBox(width: kSpacing12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                pulse(width: 72, height: 12),
+                const SizedBox(height: kSpacing6),
+                pulse(width: 32, height: 10),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class SkeletonRing extends StatelessWidget {
   final double size;
 
