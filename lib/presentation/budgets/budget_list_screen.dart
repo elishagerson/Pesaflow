@@ -540,37 +540,43 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
         children: [
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: kSpacing10,
-                  vertical: kSpacing4,
-                ),
-                decoration: BoxDecoration(
-                  color: onSurface.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                  border: Border.all(
-                    color: onSurface.withValues(alpha: 0.12),
-                    width: 0.8,
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kSpacing10,
+                    vertical: kSpacing4,
                   ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      PesaFlowIcons.settings,
-                      size: 13,
-                      color: onSurface.withValues(alpha: 0.8),
+                  decoration: BoxDecoration(
+                    color: onSurface.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                    border: Border.all(
+                      color: onSurface.withValues(alpha: 0.12),
+                      width: 0.8,
                     ),
-                    const SizedBox(width: kSpacing4),
-                    Text(
-                      ruleLabel,
-                      style: context.ts(
-                        11,
-                        fontWeight: FontWeight.w700,
-                        color: onSurface.withValues(alpha: 0.9),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        PesaFlowIcons.settings,
+                        size: 13,
+                        color: onSurface.withValues(alpha: 0.8),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: kSpacing4),
+                      Flexible(
+                        child: Text(
+                          ruleLabel,
+                          style: context.ts(
+                            11,
+                            fontWeight: FontWeight.w700,
+                            color: onSurface.withValues(alpha: 0.9),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(width: kSpacing8),
@@ -1304,19 +1310,23 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                 const SizedBox(height: kSpacing6),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      groupStatus.isOverBudget
-                          ? '${CurrencyFormatter.formatCents(groupStatus.spent - groupStatus.allocated)} over plan'
-                          : '${CurrencyFormatter.formatCents(groupStatus.remaining)} remaining',
-                      style: context.ts(
-                        11,
-                        fontWeight: FontWeight.w600,
-                        color: groupStatus.isOverBudget
-                            ? context.appColors.expenseColor
-                            : context.appColors.incomeColor,
+                    Flexible(
+                      child: Text(
+                        groupStatus.isOverBudget
+                            ? '${CurrencyFormatter.formatCents(groupStatus.spent - groupStatus.allocated)} over plan'
+                            : '${CurrencyFormatter.formatCents(groupStatus.remaining)} remaining',
+                        style: context.ts(
+                          11,
+                          fontWeight: FontWeight.w600,
+                          color: groupStatus.isOverBudget
+                              ? context.appColors.expenseColor
+                              : context.appColors.incomeColor,
+                        ),
                       ),
                     ),
+                    const SizedBox(width: kSpacing8),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

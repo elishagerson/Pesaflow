@@ -26,43 +26,45 @@ class _InsightsCarouselState extends ConsumerState<InsightsCarousel> {
         if (insights.isEmpty) {
           return const SizedBox.shrink();
         }
-        // Animated height between 114 (all collapsed) and 176 (any expanded)
-        final double height = _expandedIndices.isNotEmpty ? 176.0 : 114.0;
-
-        return AnimatedContainer(
+        // Height follows the content so large system text can grow the cards
+        // instead of being clipped by a fixed 114/176px viewport.
+        return AnimatedSize(
           duration: MotionTokens.durationNormal,
           curve: Curves.easeInOut,
-          height: height,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            clipBehavior: Clip.none,
-            itemCount: insights.length,
-            separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
-            itemBuilder: (_, i) {
-              final isExpanded = _expandedIndices.contains(i);
-              return Align(
-                alignment: Alignment.topCenter,
-                child: MorphingInsightCard(
-                  data: insights[i],
-                  index: i,
-                  expanded: isExpanded,
-                  onTap: () {
-                    final route = insights[i].route;
-                    if (route != null) {
-                      context.push(route);
-                      return;
-                    }
-                    setState(() {
-                      if (isExpanded) {
-                        _expandedIndices.remove(i);
-                      } else {
-                        _expandedIndices.add(i);
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 114),
+            child: ListView.separated(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              clipBehavior: Clip.none,
+              itemCount: insights.length,
+              separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
+              itemBuilder: (_, i) {
+                final isExpanded = _expandedIndices.contains(i);
+                return Align(
+                  alignment: Alignment.topCenter,
+                  child: MorphingInsightCard(
+                    data: insights[i],
+                    index: i,
+                    expanded: isExpanded,
+                    onTap: () {
+                      final route = insights[i].route;
+                      if (route != null) {
+                        context.push(route);
+                        return;
                       }
-                    });
-                  },
-                ),
-              );
-            },
+                      setState(() {
+                        if (isExpanded) {
+                          _expandedIndices.remove(i);
+                        } else {
+                          _expandedIndices.add(i);
+                        }
+                      });
+                    },
+                  ),
+                );
+              },
+            ),
           ),
         );
       },
