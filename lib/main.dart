@@ -64,6 +64,13 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
   bool _booted = false;
   Timer? _bootWatchdog;
 
+  /// Flips only after the whole boot sequence (seeding, SMS catch-up, all
+  /// reminder checks and biometric unlock) has finished. The SMS review
+  /// dialog is gated on this so it can never interrupt the splash, onboarding
+  /// or the lock screen — pending items stay reachable via the dashboard's
+  /// review badge in the meantime.
+  bool _readyForReviewPrompt = false;
+
   @override
   void initState() {
     super.initState();
@@ -222,6 +229,9 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
 
       // Trigger app lock if enabled
       await _triggerBiometricAuthIfNeeded();
+
+      // Boot is fully settled — only now may an SMS review dialog appear.
+      if (mounted) setState(() => _readyForReviewPrompt = true);
     });
   }
 
@@ -491,7 +501,9 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
               child: Stack(
                 children: [
                   child ?? const SizedBox.shrink(),
-                  _PendingReviewOverlay(),
+                  _PendingReviewOverlay(
+                    enabled: _readyForReviewPrompt && !showLockOverlay,
+                  ),
                   if (showLockOverlay)
                     Positioned.fill(
                       child: Container(
@@ -648,44 +660,89 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
   }
 }
 
-/// Overlay widget that listens for pending SMS transactions needing
-/// category assignment and shows a dialog immediately.
+/// Overlay widget that listens for pending SMS transactions needing category
+/// assignment. It stays inert until [enabled] is true (boot finished, user
+/// unlocked, onboarding bypassed), so a review prompt can never land on top of
+/// the splash, the onboarding flow or the lock screen. Pending items remain
+/// visible through the dashboard review badge in the meantime.
 class _PendingReviewOverlay extends ConsumerStatefulWidget {
+  final bool enabled;
+
+  const _PendingReviewOverlay({required this.enabled});
+
   @override
   ConsumerState<_PendingReviewOverlay> createState() =>
       _PendingReviewOverlayState();
 }
 
 class _PendingReviewOverlayState extends ConsumerState<_PendingReviewOverlay> {
+  Timer? _deferredShow;
+  bool _dialogOpen = false;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showReviewIfNeeded());
+    _scheduleShow(deferred: true);
+  }
+
+  @override
+  void didUpdateWidget(covariant _PendingReviewOverlay oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.enabled && !oldWidget.enabled) {
+      // Boot just settled: let the dashboard settle for one beat before the
+      // review prompt so the user sees where they are first.
+      _scheduleShow(deferred: true);
+    } else if (!widget.enabled && oldWidget.enabled) {
+      _deferredShow?.cancel();
+    }
+  }
+
+  @override
+  void dispose() {
+    _deferredShow?.cancel();
+    super.dispose();
+  }
+
+  void _scheduleShow({required bool deferred}) {
+    _deferredShow?.cancel();
+    if (!widget.enabled) return;
+    void show() {
+      if (!mounted || !widget.enabled) return;
+      _showReviewIfNeeded();
+    }
+
+    if (deferred) {
+      _deferredShow = Timer(
+        MotionTokens.durationNormal + const Duration(milliseconds: 300),
+        show,
+      );
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) => show());
+    }
   }
 
   void _showReviewIfNeeded() {
+    if (_dialogOpen || !widget.enabled || !mounted) return;
     final pendingItem = ref.read(pendingReviewProvider);
-    if (pendingItem != null && context.mounted) {
-      ModernDialog.showCustom(
-        context: context,
-        barrierDismissible: false,
-        child: SmsReviewDialog(item: pendingItem),
-      );
-    }
+    if (pendingItem == null) return;
+    _dialogOpen = true;
+    ModernDialog.showCustom(
+      context: context,
+      barrierDismissible: true,
+      child: SmsReviewDialog(item: pendingItem),
+    ).whenComplete(() {
+      _dialogOpen = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     ref.listen(pendingReviewProvider, (prev, next) {
       if (next != null && prev != next) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!context.mounted) return;
-          ModernDialog.showCustom(
-            context: context,
-            barrierDismissible: false,
-            child: SmsReviewDialog(item: next),
-          );
-        });
+        // A new SMS arrived while the app is live — prompt promptly, but only
+        // if boot has settled. At boot the deferred check handles existing
+        // items so they don't cut across the splash/onboarding.
+        _scheduleShow(deferred: false);
       }
     });
     return const SizedBox.shrink();
