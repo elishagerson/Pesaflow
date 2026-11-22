@@ -695,7 +695,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     const SizedBox(height: 2),
                     Text(
                       isOverBudget
-                          ? '+${CurrencyFormatter.formatCents(totalSpent - totalAllocated)} over plan'
+                          ? '${CurrencyFormatter.formatCents(totalSpent - totalAllocated)} over plan'
                           : '${CurrencyFormatter.formatCents(planStatus.remaining)} remaining${planStatus.daysLeft > 0 ? ' · ${planStatus.daysLeft} days left' : ''}',
                       style: context.ts(
                         12,
@@ -1307,7 +1307,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   children: [
                     Text(
                       groupStatus.isOverBudget
-                          ? '+${CurrencyFormatter.formatCents(groupStatus.spent - groupStatus.allocated)} over plan'
+                          ? '${CurrencyFormatter.formatCents(groupStatus.spent - groupStatus.allocated)} over plan'
                           : '${CurrencyFormatter.formatCents(groupStatus.remaining)} remaining',
                       style: context.ts(
                         11,

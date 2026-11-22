@@ -53,6 +53,16 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   bool _shakeFields = false;
   DateTime _startDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
 
+  /// Comma-grouped shilling amount for editable fields (no currency prefix,
+  /// because the field label already carries "Tsh"). Mirrors
+  /// `BudgetSetupScreen._incomeInputText`.
+  String _formatAmountInput(int cents) {
+    if (cents <= 0) return '';
+    return CurrencyFormatter.formatCents(
+      cents,
+    ).replaceFirst(CurrencyFormatter.currencyPrefix, '').trim();
+  }
+
   bool get _isDirty {
     if (_isSaving) return false;
     return _nameController.text.trim().isNotEmpty ||
@@ -81,7 +91,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
     if (budget != null && mounted) {
       setState(() {
         _nameController.text = budget.name;
-        _amountController.text = (budget.amount ~/ 100).toString();
+        _amountController.text = _formatAmountInput(budget.amount);
         _selectedCategoryId = budget.categoryId;
         _period = budget.period;
         _rollover = budget.rollover;
@@ -94,7 +104,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
           _selectedGroupId = budget.groupId;
         }
         if (budget.rolloverCap != null) {
-          _capController.text = (budget.rolloverCap! ~/ 100).toString();
+          _capController.text = _formatAmountInput(budget.rolloverCap!);
         }
       });
     }
@@ -759,7 +769,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         _InteractiveInputRow(
                                           controller: _amountController,
                                           label: 'Budget Amount (Tsh)',
-                                          hint: 'e.g. 300000',
+                                          hint: 'e.g. 300,000',
                                           icon: PesaFlowIcons.cash,
                                           keyboardType: TextInputType.number,
                                           validator: (v) {
@@ -803,15 +813,16 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                                   child: InkWell(
                                                     onTap: () {
                                                       PesaHaptics.selection();
-                                                      final current =
-                                                          int.tryParse(
-                                                            _amountController
-                                                                .text,
-                                                          ) ??
-                                                          0;
+                                                      final currentCents =
+                                                          CurrencyFormatter
+                                                              .parseToCents(
+                                                        _amountController.text,
+                                                      );
                                                       _amountController.text =
-                                                          (current + tsh)
-                                                              .toString();
+                                                          _formatAmountInput(
+                                                        currentCents +
+                                                            (tsh * 100),
+                                                      );
                                                       setState(() {});
                                                     },
                                                     borderRadius:
@@ -1227,7 +1238,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                                           _capController,
                                                       label:
                                                           'Max Rollover (Tsh)',
-                                                      hint: 'e.g. 50000',
+                                                      hint: 'e.g. 50,000',
                                                       icon: PesaFlowIcons
                                                           .upcoming,
                                                       keyboardType:
