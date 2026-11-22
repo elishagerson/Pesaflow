@@ -178,7 +178,7 @@ extension PesaFlowContext on BuildContext {
             vertical: kSpacing14,
           ),
       labelStyle: theme.textTheme.bodyMedium?.copyWith(
-        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+        color: appColors.textMedium,
       ),
       floatingLabelStyle: theme.textTheme.bodyMedium?.copyWith(
         color: theme.colorScheme.primary,
@@ -187,7 +187,7 @@ extension PesaFlowContext on BuildContext {
         color: theme.colorScheme.error,
       ),
       hintStyle: theme.textTheme.bodyMedium?.copyWith(
-        color: theme.colorScheme.onSurface.withValues(alpha: 0.38),
+        color: appColors.textLow,
       ),
     );
   }

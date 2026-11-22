@@ -356,7 +356,7 @@ class _OverviewTab extends ConsumerWidget {
                                   11,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.8,
-                                  color: onSurface.withValues(alpha: 0.6),
+                                  color: context.appColors.textMedium,
                                 ),
                               ),
                             ],
