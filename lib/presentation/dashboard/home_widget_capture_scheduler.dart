@@ -8,7 +8,9 @@ import 'dart:async';
 /// capture that was queued while the dashboard was visible from running after
 /// the user switched to another shell tab during the debounce window.
 class HomeWidgetCaptureScheduler {
-  HomeWidgetCaptureScheduler({this.debounce = const Duration(milliseconds: 1200)});
+  HomeWidgetCaptureScheduler({
+    this.debounce = const Duration(milliseconds: 1200),
+  });
 
   final Duration debounce;
   Timer? _timer;

@@ -16,10 +16,7 @@ void main() {
         AppTheme.radiusButton,
         AppTheme.radiusPill,
       };
-      expect(
-        radii,
-        equals(<double>{4, 8, 10, 12, 16, 20, 24, 28, 100}),
-      );
+      expect(radii, equals(<double>{4, 8, 10, 12, 16, 20, 24, 28, 100}));
     });
 
     test('spacing tokens are the 2px-grid scale with no off-grid values', () {
@@ -46,7 +43,24 @@ void main() {
       expect(
         spacings,
         equals(<double>{
-          2, 4, 5, 6, 8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 40, 48, 56, 80,
+          2,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          24,
+          28,
+          32,
+          40,
+          48,
+          56,
+          80,
         }),
       );
       // Every step is on the 2px grid (the 5px optical step is the sole

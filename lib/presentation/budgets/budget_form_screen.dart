@@ -571,10 +571,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
             children: [
               Text(
                 'Allocation: ',
-                style: context.ts(
-                  12,
-                  color: context.appColors.textMedium,
-                ),
+                style: context.ts(12, color: context.appColors.textMedium),
               ),
               Text(
                 formattedVal,
@@ -814,15 +811,15 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                                     onTap: () {
                                                       PesaHaptics.selection();
                                                       final currentCents =
-                                                          CurrencyFormatter
-                                                              .parseToCents(
-                                                        _amountController.text,
-                                                      );
+                                                          CurrencyFormatter.parseToCents(
+                                                            _amountController
+                                                                .text,
+                                                          );
                                                       _amountController.text =
                                                           _formatAmountInput(
-                                                        currentCents +
-                                                            (tsh * 100),
-                                                      );
+                                                            currentCents +
+                                                                (tsh * 100),
+                                                          );
                                                       setState(() {});
                                                     },
                                                     borderRadius:

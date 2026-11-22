@@ -304,10 +304,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
             padding: const EdgeInsets.all(kSpacing16),
             child: Text(
               'PesaFlow v$kAppVersion',
-              style: context.ts(
-                13,
-                color: context.appColors.textMedium,
-              ),
+              style: context.ts(13, color: context.appColors.textMedium),
             ),
           ),
         ],

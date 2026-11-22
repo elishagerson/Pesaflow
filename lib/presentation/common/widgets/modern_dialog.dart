@@ -178,10 +178,7 @@ class ModernDialog extends StatelessWidget {
                   physics: const ClampingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
                   child: DefaultTextStyle(
-                    style: context.ts(
-                      15,
-                      color: context.appColors.textMedium,
-                    ),
+                    style: context.ts(15, color: context.appColors.textMedium),
                     child: content,
                   ),
                 ),

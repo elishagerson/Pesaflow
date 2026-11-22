@@ -30,9 +30,7 @@ void main() {
         overrides: [
           dynamicInsightsProvider.overrideWith((ref) async => insights),
         ],
-        child: const MaterialApp(
-          home: Scaffold(body: InsightsCarousel()),
-        ),
+        child: const MaterialApp(home: Scaffold(body: InsightsCarousel())),
       ),
     );
 
@@ -66,9 +64,7 @@ void main() {
             size: const Size(400, 800),
             textScaler: TextScaler.linear(1.6),
           ),
-          child: const MaterialApp(
-            home: Scaffold(body: InsightsCarousel()),
-          ),
+          child: const MaterialApp(home: Scaffold(body: InsightsCarousel())),
         ),
       ),
     );

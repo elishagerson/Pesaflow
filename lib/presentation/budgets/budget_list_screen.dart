@@ -1705,10 +1705,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                 const SizedBox(height: 2),
                 Text(
                   'Organize into Needs, Wants & Investments',
-                  style: context.ts(
-                    12,
-                    color: context.appColors.textMedium,
-                  ),
+                  style: context.ts(12, color: context.appColors.textMedium),
                 ),
               ],
             ),
@@ -2289,10 +2286,12 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                                   style: context.ts(
                                                     11,
                                                     color: daysLeft > 0
-                                                        ? theme.colorScheme
-                                                            .onSurfaceVariant
-                                                        : context.appColors
-                                                            .expenseColor,
+                                                        ? theme
+                                                              .colorScheme
+                                                              .onSurfaceVariant
+                                                        : context
+                                                              .appColors
+                                                              .expenseColor,
                                                   ),
                                                 ),
                                               const SizedBox(height: kSpacing4),

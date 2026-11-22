@@ -475,9 +475,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                   final isSelected = activeType == type;
                   return TactileSpringContainer(
                     onTap: () {
-                      ref
-                              .read(transactionTypeFilterProvider.notifier)
-                              .state =
+                      ref.read(transactionTypeFilterProvider.notifier).state =
                           type;
                     },
                     child: AnimatedContainer(
@@ -1419,7 +1417,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
       ),
     );
   }
-
 }
 
 class _FilterChip extends StatelessWidget {

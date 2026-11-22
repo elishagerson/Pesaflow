@@ -815,10 +815,7 @@ class TransactionDetailScreen extends ConsumerWidget {
               children: [
                 Text(
                   label,
-                  style: context.ts(
-                    13,
-                    color: context.appColors.textMedium,
-                  ),
+                  style: context.ts(13, color: context.appColors.textMedium),
                 ),
                 const SizedBox(height: kSpacing2),
                 Text(

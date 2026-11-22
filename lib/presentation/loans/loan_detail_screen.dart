@@ -354,10 +354,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                 const SizedBox(height: kSpacing8),
                 Text(
                   '${(ratio * 100).round()}% remaining of ${CurrencyFormatter.formatCents(loan.amount)}',
-                  style: context.ts(
-                    11,
-                    color: context.appColors.textMedium,
-                  ),
+                  style: context.ts(11, color: context.appColors.textMedium),
                 ),
               ],
             ],
@@ -538,10 +535,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                   const SizedBox(height: kSpacing2),
                   Text(
                     event.subtitle,
-                    style: context.ts(
-                      12,
-                      color: context.appColors.textMedium,
-                    ),
+                    style: context.ts(12, color: context.appColors.textMedium),
                   ),
                   if (event.date != null) ...[
                     const SizedBox(height: kSpacing2),
@@ -891,10 +885,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                 ),
                 label: Text(
                   'Record Offline Payment',
-                  style: context.ts(
-                    13,
-                    color: context.appColors.textMedium,
-                  ),
+                  style: context.ts(13, color: context.appColors.textMedium),
                 ),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: kSpacing10),

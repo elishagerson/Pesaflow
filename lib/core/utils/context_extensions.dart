@@ -186,9 +186,7 @@ extension PesaFlowContext on BuildContext {
       errorStyle: theme.textTheme.bodySmall?.copyWith(
         color: theme.colorScheme.error,
       ),
-      hintStyle: theme.textTheme.bodyMedium?.copyWith(
-        color: appColors.textLow,
-      ),
+      hintStyle: theme.textTheme.bodyMedium?.copyWith(color: appColors.textLow),
     );
   }
 

@@ -73,10 +73,7 @@ class TransactionTile extends StatelessWidget {
                 const SizedBox(height: kSpacing2),
                 Text(
                   DateFormatter.shortDate(tx.createdAt),
-                  style: context.ts(
-                    11,
-                    color: context.appColors.textMedium,
-                  ),
+                  style: context.ts(11, color: context.appColors.textMedium),
                 ),
               ],
             ),

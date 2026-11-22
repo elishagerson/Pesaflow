@@ -17,6 +17,7 @@ class AmountText extends ConsumerStatefulWidget {
   final bool showDecimals;
   final bool useMonospace;
   final bool animate;
+
   /// Whether the rendered amount can be long-pressed and copied. Enable on
   /// standalone data values (e.g. a transaction's headline amount); leave off
   /// inside scrolling rows where selection fights with tap/scroll gestures.
@@ -89,11 +90,7 @@ class _AmountTextState extends ConsumerState<AmountText> {
       }
 
       final Widget amountWidget = widget.selectable
-          ? SelectableText(
-              displayString,
-              style: customStyle,
-              maxLines: 1,
-            )
+          ? SelectableText(displayString, style: customStyle, maxLines: 1)
           : Text(
               displayString,
               style: customStyle,

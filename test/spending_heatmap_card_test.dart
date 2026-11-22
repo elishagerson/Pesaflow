@@ -38,38 +38,44 @@ Widget _host(Widget child) {
 }
 
 void main() {
-  testWidgets('SpendingHeatmapCard shows weekday gutter, month labels and tooltips', (
-    tester,
-  ) async {
-    await tester.pumpWidget(_host(const SpendingHeatmapCard()));
-    await tester.pumpAndSettle();
+  testWidgets(
+    'SpendingHeatmapCard shows weekday gutter, month labels and tooltips',
+    (tester) async {
+      await tester.pumpWidget(_host(const SpendingHeatmapCard()));
+      await tester.pumpAndSettle();
 
-    // Weekday initials gutter (Sun -> Sat).
-    for (final label in ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']) {
-      expect(find.text(label), findsOneWidget, reason: 'Missing $label gutter');
-    }
-    // Week containing 1 Oct is labelled "Oct".
-    expect(find.text('Oct'), findsOneWidget);
-    // Each cell carries a hover tooltip with a formatted amount.
-    expect(find.byType(Tooltip), findsWidgets);
-    expect(tester.takeException(), isNull);
-  });
+      // Weekday initials gutter (Sun -> Sat).
+      for (final label in ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']) {
+        expect(
+          find.text(label),
+          findsOneWidget,
+          reason: 'Missing $label gutter',
+        );
+      }
+      // Week containing 1 Oct is labelled "Oct".
+      expect(find.text('Oct'), findsOneWidget);
+      // Each cell carries a hover tooltip with a formatted amount.
+      expect(find.byType(Tooltip), findsWidgets);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
-  testWidgets('SpendingHeatmapCard renders without overflow at 1.6x text scale', (
-    tester,
-  ) async {
-    await tester.binding.setSurfaceSize(const Size(360, 800));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
+  testWidgets(
+    'SpendingHeatmapCard renders without overflow at 1.6x text scale',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(360, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(
-      MediaQuery(
-        data: const MediaQueryData(textScaler: TextScaler.linear(1.6)),
-        child: _host(const SpendingHeatmapCard()),
-      ),
-    );
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(textScaler: TextScaler.linear(1.6)),
+          child: _host(const SpendingHeatmapCard()),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-    expect(find.byType(SpendingHeatmapCard), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+      expect(find.byType(SpendingHeatmapCard), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

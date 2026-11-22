@@ -433,10 +433,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
           Text(
             'Add category budgets to track spending within this group.',
             textAlign: TextAlign.center,
-            style: context.ts(
-              12,
-              color: context.appColors.textMedium,
-            ),
+            style: context.ts(12, color: context.appColors.textMedium),
           ),
           const SizedBox(height: kSpacing16),
           TactileSpringContainer(

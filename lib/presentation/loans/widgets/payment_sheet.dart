@@ -83,10 +83,7 @@ class LoanProgressRing extends StatelessWidget {
                 children: [
                   Text(
                     'Paid',
-                    style: context.ts(
-                      12,
-                      color: context.appColors.textMedium,
-                    ),
+                    style: context.ts(12, color: context.appColors.textMedium),
                   ),
                   Text(
                     CurrencyFormatter.formatCents(paidAmount),
@@ -104,10 +101,7 @@ class LoanProgressRing extends StatelessWidget {
                 children: [
                   Text(
                     'Remaining',
-                    style: context.ts(
-                      12,
-                      color: context.appColors.textMedium,
-                    ),
+                    style: context.ts(12, color: context.appColors.textMedium),
                   ),
                   Text(
                     CurrencyFormatter.formatCents(remainingCents),
@@ -266,10 +260,7 @@ class LoanPayoffSimulatorCard extends StatelessWidget {
                 children: [
                   Text(
                     'Paid: ${(currentFraction * 100).round()}%',
-                    style: context.ts(
-                      11,
-                      color: context.appColors.textMedium,
-                    ),
+                    style: context.ts(11, color: context.appColors.textMedium),
                   ),
                   const SizedBox(height: 2),
                   Text(

@@ -1532,10 +1532,7 @@ class _PaceInsight extends StatelessWidget {
                 const SizedBox(height: kSpacing2),
                 Text(
                   subtitle,
-                  style: context.ts(
-                    11,
-                    color: context.appColors.textMedium,
-                  ),
+                  style: context.ts(11, color: context.appColors.textMedium),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -1625,10 +1622,7 @@ class _PeriodRow extends StatelessWidget {
                 const SizedBox(height: kSpacing2),
                 Text(
                   '${_formatDate(period.periodStart)} – ${_formatDate(period.periodEnd)}',
-                  style: context.ts(
-                    10,
-                    color: context.appColors.textMedium,
-                  ),
+                  style: context.ts(10, color: context.appColors.textMedium),
                 ),
               ],
             ),

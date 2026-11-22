@@ -21,10 +21,7 @@ class InfoRow extends StatelessWidget {
         children: [
           Text(
             label,
-            style: context.ts(
-              12,
-              color: context.appColors.textMedium,
-            ),
+            style: context.ts(12, color: context.appColors.textMedium),
           ),
           Text(value, style: context.ts(12)),
         ],
@@ -63,10 +60,7 @@ class CopyableInfoRow extends StatelessWidget {
           children: [
             Text(
               label,
-              style: context.ts(
-                12,
-                color: context.appColors.textMedium,
-              ),
+              style: context.ts(12, color: context.appColors.textMedium),
             ),
             Row(
               mainAxisSize: MainAxisSize.min,

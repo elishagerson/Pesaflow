@@ -423,10 +423,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                   const SizedBox(height: kSpacing12),
                   Text(
                     'Monthly take-home pay',
-                    style: context.ts(
-                      12,
-                      color: context.appColors.textMedium,
-                    ),
+                    style: context.ts(12, color: context.appColors.textMedium),
                   ),
                 ],
               ),

@@ -297,18 +297,21 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                             height: isSelected ? 15 : 13,
                                             margin: EdgeInsets.symmetric(
                                               vertical: isSelected ? 1.0 : 2.0,
-                                              horizontal:
-                                                  isSelected ? 0.0 : 1.0,
+                                              horizontal: isSelected
+                                                  ? 0.0
+                                                  : 1.0,
                                             ),
                                             decoration: BoxDecoration(
                                               color: cellColor,
                                               borderRadius:
                                                   BorderRadius.circular(
-                                                isSelected ? 4 : 3,
-                                              ),
+                                                    isSelected ? 4 : 3,
+                                                  ),
                                               border: Border.all(
                                                 color: isSelected
-                                                    ? theme.colorScheme.onPrimary
+                                                    ? theme
+                                                          .colorScheme
+                                                          .onPrimary
                                                     : Colors.transparent,
                                                 width: isSelected ? 1.5 : 0.0,
                                               ),
@@ -317,8 +320,8 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                                       BoxShadow(
                                                         color: cellColor
                                                             .withValues(
-                                                          alpha: 0.4,
-                                                        ),
+                                                              alpha: 0.4,
+                                                            ),
                                                         blurRadius: 6,
                                                         spreadRadius: 1,
                                                       ),
