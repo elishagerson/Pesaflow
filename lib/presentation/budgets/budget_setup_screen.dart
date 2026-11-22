@@ -169,29 +169,34 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
             ),
 
             // Step indicator
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
-              child: Row(
-                children: List.generate(_totalSteps, (i) {
-                  final isActive = i <= _currentStep;
-                  return Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        right: i < _totalSteps - 1 ? kSpacing6 : 0,
-                      ),
-                      child: AnimatedContainer(
-                        duration: MotionTokens.durationNormal,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: isActive
-                              ? theme.colorScheme.primary
-                              : onSurface.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(kSpacing2),
+            Semantics(
+              label: 'Step ${_currentStep + 1} of $_totalSteps',
+              child: ExcludeSemantics(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
+                  child: Row(
+                    children: List.generate(_totalSteps, (i) {
+                      final isActive = i <= _currentStep;
+                      return Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            right: i < _totalSteps - 1 ? kSpacing6 : 0,
+                          ),
+                          child: AnimatedContainer(
+                            duration: MotionTokens.durationNormal,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: isActive
+                                  ? theme.colorScheme.primary
+                                  : onSurface.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(kSpacing2),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                }),
+                      );
+                    }),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: kSpacing8),

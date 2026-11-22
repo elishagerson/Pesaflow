@@ -89,6 +89,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                         padding: EdgeInsets.zero,
                         actions: [
                           TactileSpringContainer(
+                            semanticLabel: 'Delete group',
                             onTap: () {
                               PesaHaptics.heavy();
                               _deleteGroup(context, ref, groupData);
@@ -113,6 +114,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                           ),
                           const SizedBox(width: kSpacing8),
                           TactileSpringContainer(
+                            semanticLabel: 'Add envelope',
                             haptic: HapticType.soft,
                             onTap: () {
                               context.push('/budgets/groups/$groupId/add');

@@ -683,9 +683,12 @@ class _OverviewTab extends ConsumerWidget {
                                         child: Stack(
                                           alignment: Alignment.center,
                                           children: [
-                                            PieChart(
-                                              PieChartData(
-                                                startDegreeOffset: -90,
+                                            Semantics(
+                                              label:
+                                                  '${(goalPct * 100).round()}% of savings goal reached',
+                                              child: PieChart(
+                                                PieChartData(
+                                                  startDegreeOffset: -90,
                                                 sectionsSpace: 0,
                                                 centerSpaceRadius: 20,
                                                 sections: [
@@ -706,6 +709,7 @@ class _OverviewTab extends ConsumerWidget {
                                                   ),
                                                 ],
                                               ),
+                                            ),
                                             ),
                                             Icon(
                                               goal.icon == 'savings'
@@ -1258,6 +1262,12 @@ class _TrendsTab extends ConsumerWidget {
                 );
               }
 
+              // Spoken summary for the chart: screen-reader users get the
+              // totals even though the plot itself is only pixels.
+              final trendIncome = points.fold<double>(0, (s, p) => s + p.income);
+              final trendExpense =
+                  points.fold<double>(0, (s, p) => s + p.expense);
+
               final incomeSpots = List.generate(points.length, (i) {
                 return FlSpot(i.toDouble(), points[i].income);
               });
@@ -1330,8 +1340,11 @@ class _TrendsTab extends ConsumerWidget {
                       const SizedBox(height: kSpacing16),
                       SizedBox(
                         height: 240,
-                        child: LineChart(
-                          LineChartData(
+                        child: Semantics(
+                          label:
+                              'Income and expense trend. Total income ${CurrencyFormatter.formatCents((trendIncome * 100).round())}, total expense ${CurrencyFormatter.formatCents((trendExpense * 100).round())}.',
+                          child: LineChart(
+                            LineChartData(
                             lineTouchData: LineTouchData(
                               handleBuiltInTouches: true,
                               touchTooltipData: LineTouchTooltipData(
@@ -1525,6 +1538,7 @@ class _TrendsTab extends ConsumerWidget {
                               ),
                             ],
                           ),
+                        ),
                         ),
                       ),
                     ],

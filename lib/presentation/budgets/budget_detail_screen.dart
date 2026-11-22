@@ -152,6 +152,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                                 );
                               },
                               selectedColor: theme.colorScheme.onSurface,
+                              semanticLabel: 'Edit budget',
                               child: Container(
                                 padding: const EdgeInsets.all(kSpacing10),
                                 decoration: BoxDecoration(
@@ -172,6 +173,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                             const SizedBox(width: kSpacing8),
                             TactileSpringContainer(
                               selectedColor: theme.colorScheme.onSurface,
+                              semanticLabel: context.l10n.delete_budget,
                               onTap: () async {
                                 PesaHaptics.heavy();
                                 final confirm = await ModernDialog.show<bool>(
