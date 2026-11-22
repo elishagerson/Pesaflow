@@ -281,7 +281,7 @@ class IosMetricCard extends StatelessWidget {
             label,
             style: context.ts(
               11,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+              color: context.appColors.textMedium,
               fontWeight: FontWeight.w500,
             ),
           ),

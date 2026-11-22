@@ -42,7 +42,7 @@ class ActiveParserBadge extends StatelessWidget {
             style: context.ts(
               11,
               fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              color: context.appColors.textMedium,
             ),
           ),
         ],
@@ -91,7 +91,7 @@ class SmsReviewCard extends StatelessWidget {
                       10,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.2,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      color: context.appColors.textMedium,
                     ),
                   ),
                 ],
@@ -128,7 +128,7 @@ class SmsReviewCard extends StatelessWidget {
             style: context.ts(
               11,
               height: 1.3,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              color: context.appColors.textMedium,
               fontWeight: FontWeight.w500,
             ),
           ),

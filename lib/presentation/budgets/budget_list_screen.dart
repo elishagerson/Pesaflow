@@ -326,8 +326,6 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
     final monthlyIncome = monthlyIncomeAsync.value ?? 0;
     final budgetRule = budgetRuleAsync.value;
 
-    final onSurface = theme.colorScheme.onSurface;
-
     Future<void> onRefresh() async {
       ref.invalidate(budgetGroupsProvider);
       ref.invalidate(standaloneBudgetsProvider);
@@ -375,7 +373,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       style: context.ts(
                         12,
                         fontWeight: FontWeight.w700,
-                        color: onSurface.withValues(alpha: 0.5),
+                        color: context.appColors.textMedium,
                         letterSpacing: 1.0,
                       ),
                     ),
@@ -384,7 +382,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       style: context.ts(
                         12,
                         fontWeight: FontWeight.w600,
-                        color: onSurface.withValues(alpha: 0.4),
+                        color: context.appColors.textMedium,
                       ),
                     ),
                   ],
@@ -401,7 +399,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         style: context.ts(
                           12,
                           fontWeight: FontWeight.w700,
-                          color: onSurface.withValues(alpha: 0.5),
+                          color: context.appColors.textMedium,
                           letterSpacing: 1.0,
                         ),
                       ),
@@ -410,7 +408,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                         style: context.ts(
                           12,
                           fontWeight: FontWeight.w600,
-                          color: onSurface.withValues(alpha: 0.4),
+                          color: context.appColors.textMedium,
                         ),
                       ),
                     ],
@@ -677,7 +675,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                       style: context.ts(
                         11,
                         fontWeight: FontWeight.w700,
-                        color: onSurface.withValues(alpha: 0.5),
+                        color: context.appColors.textMedium,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -718,7 +716,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                     style: context.ts(
                       11,
                       fontWeight: FontWeight.w700,
-                      color: onSurface.withValues(alpha: 0.5),
+                      color: context.appColors.textMedium,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -769,7 +767,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                             style: context.ts(
                               11,
                               fontWeight: FontWeight.w500,
-                              color: onSurface.withValues(alpha: 0.6),
+                              color: context.appColors.textMedium,
                             ),
                           ),
                         ],
@@ -856,7 +854,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                 style: context.ts(
                   11,
                   fontWeight: FontWeight.w500,
-                  color: onSurface.withValues(alpha: 0.5),
+                  color: context.appColors.textMedium,
                 ),
               ),
               Text(
@@ -895,8 +893,6 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
       iconColor: context.appColors.incomeColor,
       content: Builder(
         builder: (context) {
-          final theme = Theme.of(context);
-          final onSurface = theme.colorScheme.onSurface;
           return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -905,7 +901,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                 'Group allocations are re-sized from this amount. Category budgets you set by hand are left untouched.',
                 style: context.ts(
                   12,
-                  color: onSurface.withValues(alpha: 0.6),
+                  color: context.appColors.textMedium,
                   height: 1.35,
                 ),
               ),
@@ -1220,7 +1216,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                 : '${g.subBudgets.length} envelopes',
                             style: context.ts(
                               12,
-                              color: onSurface.withValues(alpha: 0.5),
+                              color: context.appColors.textMedium,
                             ),
                           ),
                         ],
@@ -1279,7 +1275,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                           'of ${CurrencyFormatter.formatCents(allocated)}',
                           style: context.ts(
                             12,
-                            color: onSurface.withValues(alpha: 0.5),
+                            color: context.appColors.textMedium,
                           ),
                         ),
                       ],
@@ -1330,7 +1326,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                             style: context.ts(
                               11,
                               fontWeight: FontWeight.w500,
-                              color: onSurface.withValues(alpha: 0.5),
+                              color: context.appColors.textMedium,
                             ),
                           ),
                           const SizedBox(width: kSpacing8),
@@ -1399,7 +1395,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                 style: context.ts(
                                   10,
                                   fontWeight: FontWeight.w700,
-                                  color: onSurface.withValues(alpha: 0.5),
+                                  color: context.appColors.textMedium,
                                 ),
                               ),
                             ],
@@ -1595,7 +1591,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                     '${status.daysLeft} days left',
                                     style: context.ts(
                                       11,
-                                      color: onSurface.withValues(alpha: 0.5),
+                                      color: context.appColors.textMedium,
                                     ),
                                   ),
                                 ],
@@ -1625,7 +1621,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                 'of ',
                                 style: context.ts(
                                   12,
-                                  color: onSurface.withValues(alpha: 0.5),
+                                  color: context.appColors.textMedium,
                                 ),
                               ),
                               AmountText(
@@ -1701,7 +1697,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                   'Organize into Needs, Wants & Investments',
                   style: context.ts(
                     12,
-                    color: onSurface.withValues(alpha: 0.6),
+                    color: context.appColors.textMedium,
                   ),
                 ),
               ],
@@ -1959,7 +1955,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                   11,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.8,
-                                  color: onSurface.withValues(alpha: 0.6),
+                                  color: context.appColors.textMedium,
                                 ),
                               ),
                             ],
@@ -2009,7 +2005,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                 style: context.ts(
                                   11,
                                   fontWeight: FontWeight.w700,
-                                  color: onSurface.withValues(alpha: 0.5),
+                                  color: context.appColors.textMedium,
                                   letterSpacing: 0.5,
                                 ),
                               ),
@@ -2034,7 +2030,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                                 style: context.ts(
                                   11,
                                   fontWeight: FontWeight.w700,
-                                  color: onSurface.withValues(alpha: 0.5),
+                                  color: context.appColors.textMedium,
                                   letterSpacing: 0.5,
                                 ),
                               ),
@@ -2069,7 +2065,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
                             style: context.ts(
                               11,
                               fontWeight: FontWeight.w500,
-                              color: onSurface.withValues(alpha: 0.5),
+                              color: context.appColors.textMedium,
                             ),
                           ),
                           Text(

@@ -334,7 +334,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
                               '${groupData.subBudgets.length} categories',
                               style: context.ts(
                                 11,
-                                color: onSurface.withValues(alpha: 0.4),
+                                color: context.appColors.textMedium,
                               ),
                             ),
                           ],
@@ -424,7 +424,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
             style: context.ts(
               14,
               fontWeight: FontWeight.w600,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              color: context.appColors.textMedium,
             ),
           ),
           const SizedBox(height: kSpacing6),
@@ -433,7 +433,7 @@ class BudgetGroupDetailScreen extends ConsumerWidget {
             textAlign: TextAlign.center,
             style: context.ts(
               12,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+              color: context.appColors.textMedium,
             ),
           ),
           const SizedBox(height: kSpacing16),
@@ -745,7 +745,7 @@ class _SubBudgetCard extends ConsumerWidget {
                             '${CurrencyFormatter.formatCents(subBudget.spentInPeriod)} of ${CurrencyFormatter.formatCents(allocated)}',
                             style: context.ts(
                               11,
-                              color: onSurface.withValues(alpha: 0.5),
+                              color: context.appColors.textMedium,
                             ),
                           ),
                         ],

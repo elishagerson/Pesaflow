@@ -356,7 +356,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                   '${(ratio * 100).round()}% remaining of ${CurrencyFormatter.formatCents(loan.amount)}',
                   style: context.ts(
                     11,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    color: context.appColors.textMedium,
                   ),
                 ),
               ],
@@ -540,7 +540,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                     event.subtitle,
                     style: context.ts(
                       12,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      color: context.appColors.textMedium,
                     ),
                   ),
                   if (event.date != null) ...[
@@ -893,7 +893,7 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                   'Record Offline Payment',
                   style: context.ts(
                     13,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    color: context.appColors.textMedium,
                   ),
                 ),
                 style: TextButton.styleFrom(

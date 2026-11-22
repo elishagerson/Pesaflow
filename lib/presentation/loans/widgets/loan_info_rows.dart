@@ -14,7 +14,6 @@ class InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(kSpacing4),
       child: Row(
@@ -24,7 +23,7 @@ class InfoRow extends StatelessWidget {
             label,
             style: context.ts(
               12,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              color: context.appColors.textMedium,
             ),
           ),
           Text(value, style: context.ts(12)),
@@ -66,7 +65,7 @@ class CopyableInfoRow extends StatelessWidget {
               label,
               style: context.ts(
                 12,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                color: context.appColors.textMedium,
               ),
             ),
             Row(

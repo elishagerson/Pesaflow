@@ -363,7 +363,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                       11,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.8,
-                      color: onSurface.withValues(alpha: 0.6),
+                      color: context.appColors.textMedium,
                     ),
                   ),
                 ],
@@ -427,7 +427,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
             style: context.ts(
               11,
               fontWeight: FontWeight.w500,
-              color: onSurface.withValues(alpha: 0.5),
+              color: context.appColors.textMedium,
             ),
           ),
           const SizedBox(height: kSpacing14),
@@ -465,7 +465,6 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
     int index,
     int totalCount,
   ) {
-    final onSurface = theme.colorScheme.onSurface;
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 1.0;
     final progressColor = ratio > 0.5
         ? context.appColors.expenseColor
@@ -597,14 +596,14 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
                                 amountInCents: loan.remaining,
                                 style: context.ts(
                                   11,
-                                  color: onSurface.withValues(alpha: 0.6),
+                                  color: context.appColors.textMedium,
                                 ),
                               ),
                               Text(
                                 'left',
                                 style: context.ts(
                                   11,
-                                  color: onSurface.withValues(alpha: 0.6),
+                                  color: context.appColors.textMedium,
                                 ),
                               ),
                             ],

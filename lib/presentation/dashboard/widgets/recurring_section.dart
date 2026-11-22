@@ -35,7 +35,7 @@ class _CycleChip extends StatelessWidget {
         style: context.ts(
           11,
           fontWeight: FontWeight.w700,
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          color: context.appColors.textMedium,
         ),
       ),
     );

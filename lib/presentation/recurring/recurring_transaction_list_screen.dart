@@ -469,7 +469,7 @@ class _RecurringTransactionListScreenState
                         11,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.8,
-                        color: onSurface.withValues(alpha: 0.6),
+                        color: context.appColors.textMedium,
                       ),
                     ),
                   ],
@@ -561,7 +561,7 @@ class _RecurringTransactionListScreenState
                 'Calculated fixed obligations per month',
                 style: context.ts(
                   11,
-                  color: onSurface.withValues(alpha: 0.5),
+                  color: context.appColors.textMedium,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -642,7 +642,7 @@ class _RecurringTransactionListScreenState
           style: context.ts(
             11,
             fontWeight: FontWeight.w700,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+            color: context.appColors.textMedium,
           ),
         ),
       ],
@@ -664,7 +664,7 @@ class _RecurringTransactionListScreenState
         style: context.ts(
           10,
           fontWeight: FontWeight.w700,
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          color: context.appColors.textMedium,
         ),
       ),
     );

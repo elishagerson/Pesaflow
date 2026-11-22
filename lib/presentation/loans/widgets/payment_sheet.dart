@@ -85,7 +85,7 @@ class LoanProgressRing extends StatelessWidget {
                     'Paid',
                     style: context.ts(
                       12,
-                      color: onSurface.withValues(alpha: 0.6),
+                      color: context.appColors.textMedium,
                     ),
                   ),
                   Text(
@@ -106,7 +106,7 @@ class LoanProgressRing extends StatelessWidget {
                     'Remaining',
                     style: context.ts(
                       12,
-                      color: onSurface.withValues(alpha: 0.6),
+                      color: context.appColors.textMedium,
                     ),
                   ),
                   Text(
@@ -128,7 +128,7 @@ class LoanProgressRing extends StatelessWidget {
                       'Installments',
                       style: context.ts(
                         12,
-                        color: onSurface.withValues(alpha: 0.6),
+                        color: context.appColors.textMedium,
                       ),
                     ),
                     Text(
@@ -199,7 +199,7 @@ class LoanPayoffSimulatorCard extends StatelessWidget {
                 style: context.ts(
                   10,
                   fontWeight: FontWeight.w700,
-                  color: onSurface.withValues(alpha: 0.5),
+                  color: context.appColors.textMedium,
                   letterSpacing: 0.5,
                 ),
               ),
@@ -268,7 +268,7 @@ class LoanPayoffSimulatorCard extends StatelessWidget {
                     'Paid: ${(currentFraction * 100).round()}%',
                     style: context.ts(
                       11,
-                      color: onSurface.withValues(alpha: 0.6),
+                      color: context.appColors.textMedium,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -295,7 +295,7 @@ class LoanPayoffSimulatorCard extends StatelessWidget {
                       isFullPayoff ? 'Remaining: TSh 0' : 'New Remaining',
                       style: context.ts(
                         11,
-                        color: onSurface.withValues(alpha: 0.6),
+                        color: context.appColors.textMedium,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -319,7 +319,7 @@ class LoanPayoffSimulatorCard extends StatelessWidget {
                       'Remaining',
                       style: context.ts(
                         11,
-                        color: onSurface.withValues(alpha: 0.6),
+                        color: context.appColors.textMedium,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -396,7 +396,7 @@ class QuickAmountChip extends StatelessWidget {
                 style: context.ts(
                   10,
                   fontWeight: FontWeight.w500,
-                  color: onSurface.withValues(alpha: 0.38),
+                  color: context.appColors.textMedium,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -496,7 +496,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
                                       style: context.ts(
                                         12,
-                                        color: onSurface.withValues(alpha: 0.6),
+                                        color: context.appColors.textMedium,
                                       ),
                                     ),
                                   ],
@@ -1156,7 +1156,7 @@ Widget _buildAmountField({
           style: context.ts(
             16,
             fontWeight: FontWeight.w600,
-            color: onSurface.withValues(alpha: 0.55),
+            color: context.appColors.textMedium,
           ),
         ),
         const SizedBox(width: kSpacing12),

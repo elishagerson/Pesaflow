@@ -354,7 +354,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                   'We\'ll use this to calculate your budget allocations. You can always change this later.',
                   style: context.ts(
                     14,
-                    color: onSurface.withValues(alpha: 0.6),
+                    color: context.appColors.textMedium,
                     height: 1.4,
                   ),
                 ),
@@ -385,7 +385,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                         style: context.ts(
                           24,
                           fontWeight: FontWeight.w600,
-                          color: onSurface.withValues(alpha: 0.4),
+                          color: context.appColors.textMedium,
                         ),
                       ),
                       Expanded(
@@ -404,7 +404,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                             hintText: '0',
                             hintStyle: context.ts(
                               32,
-                              color: onSurface.withValues(alpha: 0.15),
+                              color: context.appColors.textMedium,
                               fontWeight: FontWeight.w800,
                             ),
                             border: InputBorder.none,
@@ -420,7 +420,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                     'Monthly take-home pay',
                     style: context.ts(
                       12,
-                      color: onSurface.withValues(alpha: 0.4),
+                      color: context.appColors.textMedium,
                     ),
                   ),
                 ],
@@ -477,7 +477,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                               'Last month you earned',
                               style: context.ts(
                                 12,
-                                color: onSurface.withValues(alpha: 0.5),
+                                color: context.appColors.textMedium,
                               ),
                             ),
                             Text(
@@ -540,7 +540,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                   'This determines how your income splits across Needs, Wants, and Investments.',
                   style: context.ts(
                     14,
-                    color: onSurface.withValues(alpha: 0.6),
+                    color: context.appColors.textMedium,
                     height: 1.4,
                   ),
                 ),
@@ -634,7 +634,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                             rule.subtitle,
                             style: context.ts(
                               12,
-                              color: onSurface.withValues(alpha: 0.5),
+                              color: context.appColors.textMedium,
                             ),
                           ),
                         ),
@@ -823,7 +823,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                   'Here\'s how your income will be allocated. You can add specific category budgets within each group after setup.',
                   style: context.ts(
                     14,
-                    color: onSurface.withValues(alpha: 0.6),
+                    color: context.appColors.textMedium,
                     height: 1.4,
                   ),
                 ),
@@ -865,7 +865,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                           'Monthly Income',
                           style: context.ts(
                             12,
-                            color: onSurface.withValues(alpha: 0.5),
+                            color: context.appColors.textMedium,
                           ),
                         ),
                         Text(
@@ -958,7 +958,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                               '${(alloc.percentage * 100).round()}% of income',
                               style: context.ts(
                                 12,
-                                color: onSurface.withValues(alpha: 0.5),
+                                color: context.appColors.textMedium,
                               ),
                             ),
                           ],
@@ -1004,7 +1004,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                       'After creating your plan, you can add specific category budgets (Food, Transport, etc.) within each group.',
                       style: context.ts(
                         12,
-                        color: onSurface.withValues(alpha: 0.6),
+                        color: context.appColors.textMedium,
                         height: 1.3,
                       ),
                     ),
@@ -1138,7 +1138,7 @@ class _SplitPreviewBar extends StatelessWidget {
           style: context.ts(
             11,
             fontWeight: FontWeight.w600,
-            color: onSurface.withValues(alpha: 0.6),
+            color: context.appColors.textMedium,
           ),
         ),
       ],

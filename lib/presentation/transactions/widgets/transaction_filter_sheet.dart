@@ -199,7 +199,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                             '—',
                             style: context.ts(
                               18,
-                              color: onSurface.withValues(alpha: 0.32),
+                              color: context.appColors.textMedium,
                             ),
                           ),
                         ),
@@ -357,7 +357,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                             'No categories for selected type',
                             style: context.ts(
                               13,
-                              color: onSurface.withValues(alpha: 0.38),
+                              color: context.appColors.textMedium,
                             ),
                           )
                         : Wrap(
@@ -600,7 +600,7 @@ class _DateButton extends StatelessWidget {
           children: [
             Text(
               label,
-              style: context.ts(11, color: onSurface.withValues(alpha: 0.38)),
+              style: context.ts(11, color: context.appColors.textMedium),
             ),
             const SizedBox(height: kSpacing4),
             Text(

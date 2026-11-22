@@ -274,7 +274,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
             style: context.ts(
               10,
               fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              color: context.appColors.textMedium,
               letterSpacing: 0.5,
             ),
           ),
@@ -549,7 +549,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                 'Allocation: ',
                 style: context.ts(
                   12,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  color: context.appColors.textMedium,
                 ),
               ),
               Text(
@@ -613,7 +613,6 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final onSurface = theme.colorScheme.onSurface;
     final categoriesAsync = ref.watch(categoriesFutureProvider);
     final isEditing = widget.budgetId != null;
 
@@ -630,7 +629,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
           style: context.ts(
             13,
             fontWeight: FontWeight.w600,
-            color: onSurface.withValues(alpha: 0.45),
+            color: context.appColors.textMedium,
             letterSpacing: 0.3,
           ),
         ),
@@ -1469,7 +1468,6 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
     List<BudgetGroupWithChildren> groups,
     ThemeData theme,
   ) {
-    final onSurface = theme.colorScheme.onSurface;
     return StaggeredFadeSlide(
       index: 1,
       child: Padding(
@@ -1529,7 +1527,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       'Group budget: ${CurrencyFormatter.formatCents(selectedGroup.group.allocatedAmount)} (${remaining >= 0 ? "${CurrencyFormatter.formatCents(remaining)} available" : "over-allocated"})',
                       style: context.ts(
                         11,
-                        color: onSurface.withValues(alpha: 0.6),
+                        color: context.appColors.textMedium,
                       ),
                     );
                   },
@@ -1671,7 +1669,7 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                   hintText: widget.hint,
                   hintStyle: context.ts(
                     14,
-                    color: onSurface.withValues(alpha: 0.3),
+                    color: context.appColors.textMedium,
                   ),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,

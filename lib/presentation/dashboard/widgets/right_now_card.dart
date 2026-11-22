@@ -186,7 +186,7 @@ class RightNowCard extends ConsumerWidget {
                                 item.subtitle,
                                 style: context.ts(
                                   11,
-                                  color: onSurface.withValues(alpha: 0.5),
+                                  color: context.appColors.textMedium,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

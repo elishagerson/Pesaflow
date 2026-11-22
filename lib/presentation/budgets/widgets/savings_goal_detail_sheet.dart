@@ -789,7 +789,7 @@ class _SavingsGoalDetailSheetState
                         'Target deadline: ${widget.goal.targetDate.day}/${widget.goal.targetDate.month}/${widget.goal.targetDate.year} ($remainingDays days remaining)',
                         style: context.ts(
                           11,
-                          color: onSurface.withValues(alpha: 0.6),
+                          color: context.appColors.textMedium,
                         ),
                       ),
                     ],

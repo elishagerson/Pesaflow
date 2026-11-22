@@ -103,7 +103,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       'No wallet account will be affected',
                                       style: context.ts(
                                         12,
-                                        color: onSurface.withValues(alpha: 0.6),
+                                        color: context.appColors.textMedium,
                                       ),
                                     ),
                                   ],

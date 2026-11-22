@@ -306,7 +306,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
               'PesaFlow v$kAppVersion',
               style: context.ts(
                 13,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                color: context.appColors.textMedium,
               ),
             ),
           ),

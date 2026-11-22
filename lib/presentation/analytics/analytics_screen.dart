@@ -448,7 +448,7 @@ class _OverviewTab extends ConsumerWidget {
                         style: context.ts(
                           11,
                           fontWeight: FontWeight.w700,
-                          color: onSurface.withValues(alpha: 0.5),
+                          color: context.appColors.textMedium,
                           letterSpacing: 0.5,
                         ),
                       ),
@@ -623,7 +623,7 @@ class _OverviewTab extends ConsumerWidget {
             'SPENDING HEATMAP',
             style: context.ts(
               11,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              color: context.appColors.textMedium,
               letterSpacing: 1.2,
               fontWeight: FontWeight.bold,
             ),
@@ -886,7 +886,7 @@ class _OverviewTab extends ConsumerWidget {
             'INSIGHTS',
             style: context.ts(
               11,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              color: context.appColors.textMedium,
               letterSpacing: 1.2,
               fontWeight: FontWeight.bold,
             ),
@@ -906,7 +906,7 @@ class _OverviewTab extends ConsumerWidget {
                   'TOP SPENDING CATEGORIES',
                   style: context.ts(
                     11,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    color: context.appColors.textMedium,
                     letterSpacing: 1.2,
                     fontWeight: FontWeight.bold,
                   ),

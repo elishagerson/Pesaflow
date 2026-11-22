@@ -141,7 +141,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                         style: context.ts(
                           11,
                           fontWeight: FontWeight.w500,
-                          color: onSurface.withValues(alpha: 0.6),
+                          color: context.appColors.textMedium,
                         ),
                       ),
                       const SizedBox(height: kSpacing2),

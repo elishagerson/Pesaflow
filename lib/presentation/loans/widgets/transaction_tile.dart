@@ -75,7 +75,7 @@ class TransactionTile extends StatelessWidget {
                   DateFormatter.shortDate(tx.createdAt),
                   style: context.ts(
                     11,
-                    color: onSurface.withValues(alpha: 0.5),
+                    color: context.appColors.textMedium,
                   ),
                 ),
               ],
@@ -115,7 +115,7 @@ class _OfflineBadge extends StatelessWidget {
         style: context.ts(
           9,
           fontWeight: FontWeight.w600,
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          color: context.appColors.textMedium,
         ),
       ),
     );

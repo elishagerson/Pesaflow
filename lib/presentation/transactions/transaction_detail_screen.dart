@@ -816,7 +816,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                   label,
                   style: context.ts(
                     13,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    color: context.appColors.textMedium,
                   ),
                 ),
                 const SizedBox(height: kSpacing2),
@@ -864,7 +864,7 @@ class TransactionDetailScreen extends ConsumerWidget {
           style: context.ts(
             10,
             fontWeight: FontWeight.w600,
-            color: onSurface.withValues(alpha: 0.38),
+            color: context.appColors.textMedium,
             letterSpacing: 2,
           ),
         ),

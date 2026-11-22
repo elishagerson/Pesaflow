@@ -1269,7 +1269,7 @@ class _TimelineProgressBar extends StatelessWidget {
                 style: context.ts(
                   12,
                   fontWeight: FontWeight.w500,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                  color: context.appColors.textMedium,
                 ),
               ),
             ],
@@ -1532,7 +1532,7 @@ class _PaceInsight extends StatelessWidget {
                   subtitle,
                   style: context.ts(
                     11,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                    color: context.appColors.textMedium,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -1625,7 +1625,7 @@ class _PeriodRow extends StatelessWidget {
                   '${_formatDate(period.periodStart)} – ${_formatDate(period.periodEnd)}',
                   style: context.ts(
                     10,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
+                    color: context.appColors.textMedium,
                   ),
                 ),
               ],
@@ -1654,7 +1654,7 @@ class _PeriodRow extends StatelessWidget {
                   style: context.ts(
                     10,
                     fontWeight: FontWeight.w500,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                    color: context.appColors.textMedium,
                   ),
                 ),
               ],

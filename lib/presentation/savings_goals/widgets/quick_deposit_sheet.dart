@@ -160,7 +160,7 @@ Future<void> showQuickDepositSheet(
                                   : 'Target completed',
                               style: sheetCtx.ts(
                                 12,
-                                color: onSurface.withValues(alpha: 0.55),
+                                color: sheetCtx.appColors.textMedium,
                               ),
                             ),
                           ],
@@ -192,7 +192,7 @@ Future<void> showQuickDepositSheet(
                               style: sheetCtx.ts(
                                 10,
                                 fontWeight: FontWeight.w700,
-                                color: onSurface.withValues(alpha: 0.5),
+                                color: sheetCtx.appColors.textMedium,
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -257,7 +257,7 @@ Future<void> showQuickDepositSheet(
                                   'Current: ${(currentFraction * 100).round()}%',
                                   style: sheetCtx.ts(
                                     11,
-                                    color: onSurface.withValues(alpha: 0.6),
+                                    color: sheetCtx.appColors.textMedium,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
@@ -286,7 +286,7 @@ Future<void> showQuickDepositSheet(
                                         : 'Projected: ${(projectedFraction * 100).round()}%',
                                     style: sheetCtx.ts(
                                       11,
-                                      color: onSurface.withValues(alpha: 0.6),
+                                      color: sheetCtx.appColors.textMedium,
                                     ),
                                   ),
                                   const SizedBox(height: 2),
@@ -308,7 +308,7 @@ Future<void> showQuickDepositSheet(
                                     'Target Goal',
                                     style: sheetCtx.ts(
                                       11,
-                                      color: onSurface.withValues(alpha: 0.6),
+                                      color: sheetCtx.appColors.textMedium,
                                     ),
                                   ),
                                   const SizedBox(height: 2),
@@ -334,7 +334,7 @@ Future<void> showQuickDepositSheet(
                     style: sheetCtx.ts(
                       10,
                       fontWeight: FontWeight.w700,
-                      color: onSurface.withValues(alpha: 0.5),
+                      color: sheetCtx.appColors.textMedium,
                       letterSpacing: 0.5,
                     ),
                   ),

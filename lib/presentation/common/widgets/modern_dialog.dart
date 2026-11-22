@@ -180,7 +180,7 @@ class ModernDialog extends StatelessWidget {
                   child: DefaultTextStyle(
                     style: context.ts(
                       15,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      color: context.appColors.textMedium,
                     ),
                     child: content,
                   ),

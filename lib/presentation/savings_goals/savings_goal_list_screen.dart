@@ -243,7 +243,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
             11,
             fontWeight: FontWeight.w700,
             letterSpacing: 0.8,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+            color: context.appColors.textMedium,
           ),
         ),
         Container(
@@ -345,7 +345,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                       11,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.8,
-                      color: onSurface.withValues(alpha: 0.6),
+                      color: context.appColors.textMedium,
                     ),
                   ),
                 ],
@@ -392,7 +392,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                       style: context.ts(
                         11,
                         fontWeight: FontWeight.w700,
-                        color: onSurface.withValues(alpha: 0.5),
+                        color: context.appColors.textMedium,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -424,7 +424,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                       style: context.ts(
                         11,
                         fontWeight: FontWeight.w700,
-                        color: onSurface.withValues(alpha: 0.5),
+                        color: context.appColors.textMedium,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -467,7 +467,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                   style: context.ts(
                     11,
                     fontWeight: FontWeight.w500,
-                    color: onSurface.withValues(alpha: 0.5),
+                    color: context.appColors.textMedium,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -606,7 +606,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                               '$countdownLabel • by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
                               style: context.ts(
                                 11,
-                                color: onSurface.withValues(alpha: 0.55),
+                                color: context.appColors.textMedium,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -687,7 +687,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                               style: context.ts(
                                 10,
                                 fontWeight: FontWeight.w700,
-                                color: onSurface.withValues(alpha: 0.5),
+                                color: context.appColors.textMedium,
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -718,7 +718,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                               style: context.ts(
                                 10,
                                 fontWeight: FontWeight.w700,
-                                color: onSurface.withValues(alpha: 0.5),
+                                color: context.appColors.textMedium,
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -909,7 +909,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                             style: context.ts(
                               11,
                               fontWeight: FontWeight.w600,
-                              color: onSurface.withValues(alpha: 0.45),
+                              color: context.appColors.textMedium,
                             ),
                           ),
                           const SizedBox(width: 2),
@@ -1018,7 +1018,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                       style: context.ts(
                         10,
                         fontWeight: FontWeight.w700,
-                        color: onSurface.withValues(alpha: 0.5),
+                        color: context.appColors.textMedium,
                         letterSpacing: 0.4,
                       ),
                     ),
@@ -1044,7 +1044,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                             style: context.ts(
                               12,
                               fontWeight: FontWeight.w600,
-                              color: onSurface.withValues(alpha: 0.5),
+                              color: context.appColors.textMedium,
                             ),
                           ),
                         ],
@@ -1071,7 +1071,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                         style: context.ts(
                           10,
                           fontWeight: FontWeight.w700,
-                          color: onSurface.withValues(alpha: 0.5),
+                          color: context.appColors.textMedium,
                           letterSpacing: 0.4,
                         ),
                       ),
@@ -1177,7 +1177,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
               style: context.ts(
                 11,
                 fontWeight: FontWeight.w700,
-                color: onSurface.withValues(alpha: 0.55),
+                color: context.appColors.textMedium,
                 letterSpacing: 0.8,
               ),
             ),
@@ -1257,7 +1257,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                             s['subtitle'] as String,
                             style: context.ts(
                               10,
-                              color: onSurface.withValues(alpha: 0.5),
+                              color: context.appColors.textMedium,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
