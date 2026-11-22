@@ -320,10 +320,11 @@ class _LoanDetailScreenState extends ConsumerState<LoanDetailScreen> {
                   // The optical display cut of Inter, not w900: at this size
                   // the two differ by less than a pixel of weight but a lot of
                   // colour, and this is the one number the screen is about.
-                  style: context.appTypography.numeral.copyWith(
-                    fontSize: 28,
+                  style: context.ts(
+                    28,
                     fontWeight: FontWeight.w800,
                     color: theme.colorScheme.onSurface,
+                    tabular: true,
                   ),
                 ),
               ),

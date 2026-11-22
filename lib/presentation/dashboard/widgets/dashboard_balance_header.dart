@@ -377,8 +377,10 @@ class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader> {
             children: [
               Text(
                 label,
-                style: context.appTypography.eyebrow.copyWith(
-                  fontSize: 10,
+                style: context.ts(
+                  10,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.4,
                   color: theme.colorScheme.onSurfaceVariant.withValues(
                     alpha: 0.8,
                   ),

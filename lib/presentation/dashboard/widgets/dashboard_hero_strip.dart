@@ -178,14 +178,13 @@ class _NextUpCell extends StatelessWidget {
                 child: Text(
                   isEmpty ? 'All clear' : countdown!,
                   maxLines: 1,
-                  style: context.appTypography.poster.copyWith(
-                    fontFamily: AppTheme.fontDisplay,
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                    fontSize: 30,
+                  style: context.ts(
+                    30,
+                    tabular: true,
                     color: isEmpty
                         ? theme.colorScheme.onSurfaceVariant
                         : theme.colorScheme.onSurface,
-                  ),
+                  ).copyWith(fontFamily: AppTheme.fontDisplay),
                 ),
               ),
             ),
@@ -276,12 +275,11 @@ class _SafeToSpendCell extends StatelessWidget {
                       // Same poster scale as the countdown beside it. The two
                       // footer cells are peers, so their values share a size;
                       // only the hero balance is allowed to break the scale.
-                      style: context.appTypography.poster.copyWith(
-                        fontFamily: AppTheme.fontDisplay,
-                        fontFeatures: const [FontFeature.tabularFigures()],
-                        fontSize: 30,
+                      style: context.ts(
+                        30,
+                        tabular: true,
                         color: tone,
-                      ),
+                      ).copyWith(fontFamily: AppTheme.fontDisplay),
                     ),
                   ),
                 ],
