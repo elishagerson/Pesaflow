@@ -689,27 +689,28 @@ class _OverviewTab extends ConsumerWidget {
                                               child: PieChart(
                                                 PieChartData(
                                                   startDegreeOffset: -90,
-                                                sectionsSpace: 0,
-                                                centerSpaceRadius: 20,
-                                                sections: [
-                                                  PieChartSectionData(
-                                                    value: goalPct * 100,
-                                                    color: goalColor,
-                                                    radius: 4,
-                                                    showTitle: false,
-                                                  ),
-                                                  PieChartSectionData(
-                                                    value:
-                                                        (1.0 - goalPct) * 100,
-                                                    color: goalColor.withValues(
-                                                      alpha: 0.12,
+                                                  sectionsSpace: 0,
+                                                  centerSpaceRadius: 20,
+                                                  sections: [
+                                                    PieChartSectionData(
+                                                      value: goalPct * 100,
+                                                      color: goalColor,
+                                                      radius: 4,
+                                                      showTitle: false,
                                                     ),
-                                                    radius: 4,
-                                                    showTitle: false,
-                                                  ),
-                                                ],
+                                                    PieChartSectionData(
+                                                      value:
+                                                          (1.0 - goalPct) * 100,
+                                                      color: goalColor
+                                                          .withValues(
+                                                            alpha: 0.12,
+                                                          ),
+                                                      radius: 4,
+                                                      showTitle: false,
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
                                             ),
                                             Icon(
                                               goal.icon == 'savings'
@@ -951,21 +952,21 @@ class _OverviewTab extends ConsumerWidget {
                                   child: PieChart(
                                     PieChartData(
                                       sectionsSpace: 2,
-                                    centerSpaceRadius: 36,
-                                    sections: List.generate(cats.length, (i) {
-                                      final cat = cats[i];
-                                      final color = i < colors.length
-                                          ? colors[i]
-                                          : hexToColor(cat.categoryColor);
-                                      return PieChartSectionData(
-                                        value: cat.amount.toDouble(),
-                                        gradient: _categoryGradient(color),
-                                        radius: 14,
-                                        showTitle: false,
-                                      );
-                                    }),
+                                      centerSpaceRadius: 36,
+                                      sections: List.generate(cats.length, (i) {
+                                        final cat = cats[i];
+                                        final color = i < colors.length
+                                            ? colors[i]
+                                            : hexToColor(cat.categoryColor);
+                                        return PieChartSectionData(
+                                          value: cat.amount.toDouble(),
+                                          gradient: _categoryGradient(color),
+                                          radius: 14,
+                                          showTitle: false,
+                                        );
+                                      }),
+                                    ),
                                   ),
-                                ),
                                 ),
                                 Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -1268,9 +1269,14 @@ class _TrendsTab extends ConsumerWidget {
 
               // Spoken summary for the chart: screen-reader users get the
               // totals even though the plot itself is only pixels.
-              final trendIncome = points.fold<double>(0, (s, p) => s + p.income);
-              final trendExpense =
-                  points.fold<double>(0, (s, p) => s + p.expense);
+              final trendIncome = points.fold<double>(
+                0,
+                (s, p) => s + p.income,
+              );
+              final trendExpense = points.fold<double>(
+                0,
+                (s, p) => s + p.expense,
+              );
 
               final incomeSpots = List.generate(points.length, (i) {
                 return FlSpot(i.toDouble(), points[i].income);
@@ -1349,200 +1355,210 @@ class _TrendsTab extends ConsumerWidget {
                               'Income and expense trend. Total income ${CurrencyFormatter.formatCents((trendIncome * 100).round())}, total expense ${CurrencyFormatter.formatCents((trendExpense * 100).round())}.',
                           child: LineChart(
                             LineChartData(
-                            lineTouchData: LineTouchData(
-                              handleBuiltInTouches: true,
-                              touchTooltipData: LineTouchTooltipData(
-                                getTooltipColor: (touchedSpot) {
-                                  return theme.colorScheme.surfaceContainerHigh
-                                      .withValues(alpha: 0.96);
-                                },
-                                tooltipBorderRadius: BorderRadius.circular(
-                                  AppTheme.radiusInput,
-                                ),
-                                tooltipBorder: BorderSide(
-                                  color: theme.colorScheme.onSurface.withValues(
-                                    alpha: 0.09,
+                              lineTouchData: LineTouchData(
+                                handleBuiltInTouches: true,
+                                touchTooltipData: LineTouchTooltipData(
+                                  getTooltipColor: (touchedSpot) {
+                                    return theme
+                                        .colorScheme
+                                        .surfaceContainerHigh
+                                        .withValues(alpha: 0.96);
+                                  },
+                                  tooltipBorderRadius: BorderRadius.circular(
+                                    AppTheme.radiusInput,
                                   ),
-                                  width: 1,
+                                  tooltipBorder: BorderSide(
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.09),
+                                    width: 1,
+                                  ),
+                                  getTooltipItems:
+                                      (List<LineBarSpot> touchedSpots) {
+                                        return touchedSpots.map((spot) {
+                                          final isIncome = spot.barIndex == 0;
+                                          return LineTooltipItem(
+                                            '${isIncome ? "Income" : "Expense"}\n${CurrencyFormatter.formatCents((spot.y.round() * 100))}',
+                                            context.ts(
+                                              12,
+                                              color: isIncome
+                                                  ? context
+                                                        .appColors
+                                                        .incomeColor
+                                                  : context
+                                                        .appColors
+                                                        .expenseColor,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        }).toList();
+                                      },
                                 ),
-                                getTooltipItems: (List<LineBarSpot> touchedSpots) {
-                                  return touchedSpots.map((spot) {
-                                    final isIncome = spot.barIndex == 0;
-                                    return LineTooltipItem(
-                                      '${isIncome ? "Income" : "Expense"}\n${CurrencyFormatter.formatCents((spot.y.round() * 100))}',
-                                      context.ts(
-                                        12,
-                                        color: isIncome
-                                            ? context.appColors.incomeColor
-                                            : context.appColors.expenseColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    );
-                                  }).toList();
-                                },
+                                getTouchedSpotIndicator:
+                                    (
+                                      LineChartBarData barData,
+                                      List<int> spotIndexes,
+                                    ) {
+                                      return spotIndexes.map((spotIndex) {
+                                        return TouchedSpotIndicatorData(
+                                          FlLine(
+                                            color:
+                                                (barData
+                                                            .gradient
+                                                            ?.colors
+                                                            .first ??
+                                                        context
+                                                            .appColors
+                                                            .textMedium)
+                                                    .withValues(alpha: 0.3),
+                                            strokeWidth: 2,
+                                            dashArray: [4, 4],
+                                          ),
+                                          FlDotData(
+                                            show: true,
+                                            getDotPainter:
+                                                (
+                                                  spot,
+                                                  percent,
+                                                  barData,
+                                                  index,
+                                                ) {
+                                                  return FlDotCirclePainter(
+                                                    radius: 6,
+                                                    color:
+                                                        barData
+                                                            .gradient
+                                                            ?.colors
+                                                            .first ??
+                                                        context
+                                                            .appColors
+                                                            .textMedium,
+                                                    strokeWidth: 2,
+                                                    strokeColor: context
+                                                        .appColors
+                                                        .onBgColor,
+                                                  );
+                                                },
+                                          ),
+                                        );
+                                      }).toList();
+                                    },
                               ),
-                              getTouchedSpotIndicator:
-                                  (
-                                    LineChartBarData barData,
-                                    List<int> spotIndexes,
-                                  ) {
-                                    return spotIndexes.map((spotIndex) {
-                                      return TouchedSpotIndicatorData(
-                                        FlLine(
-                                          color:
-                                              (barData.gradient?.colors.first ??
-                                                      context
-                                                          .appColors
-                                                          .textMedium)
-                                                  .withValues(alpha: 0.3),
-                                          strokeWidth: 2,
-                                          dashArray: [4, 4],
+                              gridData: const FlGridData(show: false),
+                              titlesData: FlTitlesData(
+                                leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 40,
+                                    getTitlesWidget: (val, _) {
+                                      if (val <= 0) {
+                                        return const SizedBox.shrink();
+                                      }
+                                      return Text(
+                                        CurrencyFormatter.formatCompact(
+                                          (val * 100).round(),
                                         ),
-                                        FlDotData(
-                                          show: true,
-                                          getDotPainter:
-                                              (spot, percent, barData, index) {
-                                                return FlDotCirclePainter(
-                                                  radius: 6,
-                                                  color:
-                                                      barData
-                                                          .gradient
-                                                          ?.colors
-                                                          .first ??
-                                                      context
-                                                          .appColors
-                                                          .textMedium,
-                                                  strokeWidth: 2,
-                                                  strokeColor: context
-                                                      .appColors
-                                                      .onBgColor,
-                                                );
-                                              },
-                                        ),
-                                      );
-                                    }).toList();
-                                  },
-                            ),
-                            gridData: const FlGridData(show: false),
-                            titlesData: FlTitlesData(
-                              leftTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  reservedSize: 40,
-                                  getTitlesWidget: (val, _) {
-                                    if (val <= 0) {
-                                      return const SizedBox.shrink();
-                                    }
-                                    return Text(
-                                      CurrencyFormatter.formatCompact(
-                                        (val * 100).round(),
-                                      ),
-                                      style: context.ts(
-                                        8,
-                                        color: context.appColors.textMedium,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              rightTitles: const AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
-                              ),
-                              topTitles: const AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
-                              ),
-                              bottomTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  interval: 1,
-                                  getTitlesWidget: (val, _) {
-                                    final idx = val.toInt();
-                                    if (idx < 0 || idx >= points.length) {
-                                      return const SizedBox();
-                                    }
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: kSpacing8,
-                                      ),
-                                      child: Text(
-                                        points[idx].label,
-                                        textAlign: TextAlign.center,
                                         style: context.ts(
-                                          10,
+                                          8,
                                           color: context.appColors.textMedium,
                                         ),
-                                      ),
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
+                                ),
+                                rightTitles: const AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                topTitles: const AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    interval: 1,
+                                    getTitlesWidget: (val, _) {
+                                      final idx = val.toInt();
+                                      if (idx < 0 || idx >= points.length) {
+                                        return const SizedBox();
+                                      }
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: kSpacing8,
+                                        ),
+                                        child: Text(
+                                          points[idx].label,
+                                          textAlign: TextAlign.center,
+                                          style: context.ts(
+                                            10,
+                                            color: context.appColors.textMedium,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
+                              borderData: FlBorderData(show: false),
+                              minX: 0,
+                              maxX: (points.length - 1).toDouble(),
+                              minY: 0,
+                              maxY: maxVal * 1.15,
+                              lineBarsData: [
+                                LineChartBarData(
+                                  spots: incomeSpots,
+                                  isCurved: true,
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      context.appColors.incomeColor,
+                                      context.appColors.incomeColor,
+                                    ],
+                                  ),
+                                  barWidth: 3.5,
+                                  isStrokeCapRound: true,
+                                  dotData: const FlDotData(show: false),
+                                  belowBarData: BarAreaData(
+                                    show: true,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        context.appColors.incomeColor
+                                            .withValues(alpha: 0.16),
+                                        context.appColors.incomeColor
+                                            .withValues(alpha: 0.0),
+                                      ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                  ),
+                                ),
+                                LineChartBarData(
+                                  spots: expenseSpots,
+                                  isCurved: true,
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      context.appColors.expenseColor,
+                                      context.appColors.expenseColor,
+                                    ],
+                                  ),
+                                  barWidth: 3.5,
+                                  isStrokeCapRound: true,
+                                  dashArray: const [6, 4],
+                                  dotData: const FlDotData(show: false),
+                                  belowBarData: BarAreaData(
+                                    show: true,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        context.appColors.expenseColor
+                                            .withValues(alpha: 0.16),
+                                        context.appColors.expenseColor
+                                            .withValues(alpha: 0.0),
+                                      ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            borderData: FlBorderData(show: false),
-                            minX: 0,
-                            maxX: (points.length - 1).toDouble(),
-                            minY: 0,
-                            maxY: maxVal * 1.15,
-                            lineBarsData: [
-                              LineChartBarData(
-                                spots: incomeSpots,
-                                isCurved: true,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    context.appColors.incomeColor,
-                                    context.appColors.incomeColor,
-                                  ],
-                                ),
-                                barWidth: 3.5,
-                                isStrokeCapRound: true,
-                                dotData: const FlDotData(show: false),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      context.appColors.incomeColor.withValues(
-                                        alpha: 0.16,
-                                      ),
-                                      context.appColors.incomeColor.withValues(
-                                        alpha: 0.0,
-                                      ),
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ),
-                                ),
-                              ),
-                              LineChartBarData(
-                                spots: expenseSpots,
-                                isCurved: true,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    context.appColors.expenseColor,
-                                    context.appColors.expenseColor,
-                                  ],
-                                ),
-                                barWidth: 3.5,
-                                isStrokeCapRound: true,
-                                dashArray: const [6, 4],
-                                dotData: const FlDotData(show: false),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      context.appColors.expenseColor.withValues(
-                                        alpha: 0.16,
-                                      ),
-                                      context.appColors.expenseColor.withValues(
-                                        alpha: 0.0,
-                                      ),
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ),
-                                ),
-                              ),
-                            ],
                           ),
-                        ),
                         ),
                       ),
                     ],
