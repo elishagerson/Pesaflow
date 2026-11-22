@@ -189,9 +189,10 @@ void main() {
         expect(find.text('Dinner with friends'), findsOneWidget);
         expect(find.text('M-Pesa'), findsOneWidget);
 
-        // Insight card at the end of the list
-        expect(find.text('SPENDING INSIGHT'), findsOneWidget);
-        expect(find.text('High Dining Expenses'), findsOneWidget);
+        // Insights live in Analytics now; the transaction list must stay focused
+        // on transactions even when insight data is available.
+        expect(find.text('SPENDING INSIGHT'), findsNothing);
+        expect(find.text('High Dining Expenses'), findsNothing);
       },
     );
   });

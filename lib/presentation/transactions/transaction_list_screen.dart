@@ -20,7 +20,6 @@ import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
-import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
@@ -37,7 +36,6 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/transactions/transaction_detail_screen.dart';
 import 'package:pesaflow/presentation/transactions/widgets/transaction_filter_sheet.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
-import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 
 class TransactionListScreen extends ConsumerStatefulWidget {
   const TransactionListScreen({super.key});
@@ -462,68 +460,66 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
             ),
 
             // ── TYPE FILTER BAR ──
+            // All four type filters are short, fixed labels. A Wrap keeps every
+            // option visible without a hidden horizontal scroll region.
             Padding(
-              padding: const EdgeInsets.only(top: kSpacing4, bottom: kSpacing6),
-              child: SizedBox(
-                height: 38,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  physics: const ClampingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
-                  children: ['All', 'Income', 'Expense', 'Transfer'].map((
-                    type,
-                  ) {
-                    final isSelected = activeType == type;
-                    return Padding(
-                      padding: const EdgeInsets.only(right: kSpacing8),
-                      child: TactileSpringContainer(
-                        onTap: () {
-                          ref
-                                  .read(transactionTypeFilterProvider.notifier)
-                                  .state =
-                              type;
-                        },
-                        child: AnimatedContainer(
-                          duration: MotionTokens.durationFast,
-                          curve: Curves.easeOutCubic,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kSpacing16,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? theme.colorScheme.primary
-                                : theme.colorScheme.surfaceContainerHighest
-                                      .withValues(alpha: 0.35),
-                            borderRadius: BorderRadius.circular(
-                              AppTheme.radiusPill,
-                            ),
-                            border: Border.all(
-                              color: isSelected
-                                  ? theme.colorScheme.primary
-                                  : theme.colorScheme.outlineVariant.withValues(
-                                      alpha: 0.25,
-                                    ),
-                              width: 1.0,
-                            ),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            type,
-                            style: context.ts(
-                              13,
-                              color: isSelected
-                                  ? theme.colorScheme.onPrimary
-                                  : theme.colorScheme.onSurfaceVariant,
-                              fontWeight: isSelected
-                                  ? FontWeight.bold
-                                  : FontWeight.w600,
-                            ),
-                          ),
+              padding: const EdgeInsets.fromLTRB(
+                kSpacing16,
+                kSpacing4,
+                kSpacing16,
+                kSpacing6,
+              ),
+              child: Wrap(
+                spacing: kSpacing8,
+                children: ['All', 'Income', 'Expense', 'Transfer'].map((type) {
+                  final isSelected = activeType == type;
+                  return TactileSpringContainer(
+                    onTap: () {
+                      ref
+                              .read(transactionTypeFilterProvider.notifier)
+                              .state =
+                          type;
+                    },
+                    child: AnimatedContainer(
+                      duration: MotionTokens.durationFast,
+                      curve: Curves.easeOutCubic,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing16,
+                        vertical: kSpacing8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.surfaceContainerHighest
+                                  .withValues(alpha: 0.35),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusPill,
+                        ),
+                        border: Border.all(
+                          color: isSelected
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.outlineVariant.withValues(
+                                  alpha: 0.25,
+                                ),
+                          width: 1.0,
                         ),
                       ),
-                    );
-                  }).toList(),
-                ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        type,
+                        style: context.ts(
+                          13,
+                          color: isSelected
+                              ? theme.colorScheme.onPrimary
+                              : theme.colorScheme.onSurfaceVariant,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
 
@@ -767,13 +763,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                           kSpacing16,
                           110.0,
                         ),
-                        itemCount: sortedDays.length + 1,
+                        itemCount: sortedDays.length,
                         itemBuilder: (context, dayIndex) {
-                          // Append insights card at the end of the transactions list
-                          if (dayIndex == sortedDays.length) {
-                            return _buildInsightsCard(context, ref);
-                          }
-
                           final dayStr = sortedDays[dayIndex];
                           final dayItems = grouped[dayStr]!;
                           final firstItemDate =
@@ -1426,142 +1417,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
     );
   }
 
-  // ── INSIGHTS CARD BUILDER ──
-  Widget _buildInsightsCard(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final insightsAsync = ref.watch(insightsProvider);
-    final monthlyTotalsAsync = ref.watch(monthlyTotalsProvider);
-
-    return insightsAsync.maybeWhen(
-      data: (insights) {
-        final String title;
-        final String message;
-        final InsightSeverity severity;
-
-        if (insights.isNotEmpty) {
-          title = insights.first.title;
-          message = insights.first.message;
-          severity = insights.first.severity;
-        } else {
-          title = 'Spend Analysis Complete';
-          message =
-              "You saved 12% more than last month in the 'Dining' category.";
-          severity = InsightSeverity.positive;
-        }
-
-        final Color accentColor = switch (severity) {
-          InsightSeverity.positive => context.appColors.incomeColor,
-          InsightSeverity.neutral => context.appColors.transferColor,
-          InsightSeverity.warning => context.appColors.expenseColor,
-          InsightSeverity.critical => context.appColors.expenseColor,
-        };
-
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(0, kSpacing20, 0, kSpacing24),
-          child: PesaSurface.bleed(
-            fill: theme.colorScheme.surfaceContainerHigh,
-            radius: AppTheme.radiusDialog,
-            padding: const EdgeInsets.all(kSpacing20),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing8,
-                          vertical: kSpacing2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: accentColor.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusPill,
-                          ),
-                        ),
-                        child: Text(
-                          'SPENDING INSIGHT',
-                          style: context.ts(
-                            9,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 1.2,
-                            color: accentColor,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: kSpacing8),
-                      Text(
-                        title,
-                        style: context.ts(
-                          17,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: -0.4,
-                          color: theme.colorScheme.onSurface,
-                          height: 1.2,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: kSpacing6),
-                      Text(
-                        message,
-                        style: context.ts(
-                          12,
-                          color: theme.colorScheme.onSurfaceVariant,
-                          height: 1.35,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: kSpacing16),
-                Expanded(
-                  flex: 2,
-                  child: monthlyTotalsAsync.when(
-                    data: (totals) {
-                      final incomeCents = totals['income'] ?? 0;
-                      final expenseCents = totals['expense'] ?? 0;
-                      final maxCents = [
-                        incomeCents,
-                        expenseCents,
-                        1,
-                      ].reduce((a, b) => a > b ? a : b);
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _MiniBar(
-                            label: 'Income',
-                            valueCents: incomeCents,
-                            maxCents: maxCents,
-                            color: context.appColors.incomeColor,
-                          ),
-                          const SizedBox(height: kSpacing10),
-                          _MiniBar(
-                            label: 'Expense',
-                            valueCents: expenseCents,
-                            maxCents: maxCents,
-                            color: accentColor,
-                          ),
-                        ],
-                      );
-                    },
-                    loading: () => const SizedBox.shrink(),
-                    error: (_, _) => const SizedBox.shrink(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-      orElse: () => const SizedBox.shrink(),
-    );
-  }
 }
 
 class _FilterChip extends StatelessWidget {
@@ -1686,84 +1541,6 @@ class _FilterButton extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _MiniBar extends StatelessWidget {
-  final String label;
-  final int valueCents;
-  final int maxCents;
-  final Color color;
-
-  const _MiniBar({
-    required this.label,
-    required this.valueCents,
-    required this.maxCents,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final fraction = maxCents > 0
-        ? (valueCents / maxCents).clamp(0.0, 1.0)
-        : 0.0;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          children: [
-            Text(
-              label,
-              style: context.ts(
-                11,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const Spacer(),
-            Text(
-              CurrencyFormatter.formatCompact(valueCents),
-              style: context.ts(
-                11,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: kSpacing4),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
-          child: TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0, end: fraction),
-            duration: MotionTokens.durationNormal,
-            curve: Curves.easeOutCubic,
-            builder: (context, val, _) {
-              return Container(
-                height: 6,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
-                  borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
-                ),
-                child: FractionallySizedBox(
-                  alignment: Alignment.centerLeft,
-                  widthFactor: val,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: color,
-                      borderRadius: BorderRadius.circular(AppTheme.radiusTiny),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 }
