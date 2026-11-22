@@ -45,6 +45,9 @@ android {
             val storeFileVal = keystoreProperties.getProperty("storeFile") ?: System.getenv("KEYSTORE_FILE")
             val storePasswordVal = keystoreProperties.getProperty("storePassword") ?: System.getenv("KEYSTORE_PASSWORD")
 
+            val fallbackKeystore = file("pesaflow-release.jks").takeIf { it.exists() }
+                ?: rootProject.file("app/pesaflow-release.jks").takeIf { it.exists() }
+
             if (storeFileVal != null) {
                 val candidateFiles = listOf(
                     file(storeFileVal),
@@ -58,6 +61,11 @@ android {
                     storeFile = resolvedStoreFile
                     storePassword = storePasswordVal
                 }
+            } else if (fallbackKeystore != null) {
+                keyAlias = "pesaflow"
+                keyPassword = "pesaflowapp"
+                storeFile = fallbackKeystore
+                storePassword = "pesaflowapp"
             }
         }
     }

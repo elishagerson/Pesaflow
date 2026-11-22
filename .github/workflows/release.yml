@@ -87,14 +87,14 @@ jobs:
               "$KEYSTORE_PASSWORD" "$KEY_PASSWORD" "$KEY_ALIAS" > android/key.properties
             echo "Release keystore configured successfully."
           else
-            echo "::warning::Release signing secrets not found. Falling back to debug keystore signing."
+            echo "Release signing secrets not found. Using bundled pesaflow-release.jks for consistent release signing."
           fi
 
       - name: Build Universal APK
-        run: flutter build apk --release --dart-define=APP_VERSION=${VERSION}
+        run: flutter build apk --release --build-name=${VERSION} --build-number=${{ github.run_number }} --dart-define=APP_VERSION=${VERSION}
 
       - name: Build Split-per-ABI APKs
-        run: flutter build apk --release --split-per-abi --dart-define=APP_VERSION=${VERSION}
+        run: flutter build apk --release --split-per-abi --build-name=${VERSION} --build-number=${{ github.run_number }} --dart-define=APP_VERSION=${VERSION}
 
       - name: Organize and rename APK artifacts
         run: |
