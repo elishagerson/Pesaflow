@@ -125,6 +125,31 @@ void main() {
       expect(find.text('SAFE TO SPEND'), findsOneWidget);
     });
 
+    testWidgets('safe to spend is the hero; net worth is demoted', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _host(balance: 9_000_000, remainingBudget: 2_500_000),
+      );
+      await tester.pumpAndSettle();
+
+      // The 76px anchor is the spendable amount, not net worth.
+      final heroAmount = find.text('Tsh 25,000');
+      expect(heroAmount, findsOneWidget);
+      final heroStyle = tester.widget<Text>(heroAmount).style;
+      expect(heroStyle?.fontSize, 76);
+
+      // The label sits above the hero figure, and net worth now lives in a
+      // footer cell with the account name.
+      expect(find.text('SAFE TO SPEND'), findsOneWidget);
+      expect(find.text('NET WORTH · M-PESA'), findsOneWidget);
+      expect(find.text('Tsh 90,000'), findsOneWidget);
+      expect(
+        tester.getRect(heroAmount).top,
+        greaterThan(tester.getRect(find.text('SAFE TO SPEND')).top),
+      );
+    });
+
     testWidgets('the two footer cells sit side by side, not stacked', (
       tester,
     ) async {
