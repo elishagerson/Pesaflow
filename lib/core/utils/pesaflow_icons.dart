@@ -25,14 +25,14 @@ class PesaFlowIcons {
   static const IconData edit = Icons.edit_rounded;
   static const IconData delete = Icons.delete_rounded;
   static const IconData close = Icons.close;
-  static const IconData back = Icons.arrow_back_ios_new_rounded;
+  static const IconData back = Icons.arrow_back_rounded;
   static const IconData more = Icons.more_horiz_rounded;
   static const IconData search = Icons.search_rounded;
   static const IconData menu = Icons.menu_rounded;
   static const IconData filter = Icons.tune_rounded;
   static const IconData visibility = Icons.visibility_rounded;
   static const IconData visibilityOff = Icons.visibility_off_rounded;
-  static const IconData share = Icons.ios_share_rounded;
+  static const IconData share = Icons.share_rounded;
   static const IconData upload = Icons.cloud_upload_rounded;
   static const IconData download = Icons.cloud_download_rounded;
 
