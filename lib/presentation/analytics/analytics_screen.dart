@@ -1278,7 +1278,56 @@ class _TrendsTab extends ConsumerWidget {
                   radius: AppTheme.radiusCard,
                   padding: const EdgeInsets.all(kSpacing20),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      // Series legend inside the card, so the chart and its key
+                      // read as one unit. Income/Expense are distinguished by
+                      // dash pattern (solid vs dashed) in addition to color.
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: context.appColors.incomeColor,
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.squircleRadius(8),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing6),
+                          Text(
+                            'Income',
+                            style: context.ts(
+                              12,
+                              fontWeight: FontWeight.bold,
+                              color: context.appColors.textLow,
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing24),
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: context.appColors.expenseColor,
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.squircleRadius(8),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing6),
+                          Text(
+                            'Expense',
+                            style: context.ts(
+                              12,
+                              fontWeight: FontWeight.bold,
+                              color: context.appColors.textLow,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: kSpacing16),
                       SizedBox(
                         height: 240,
                         child: LineChart(
@@ -1456,6 +1505,7 @@ class _TrendsTab extends ConsumerWidget {
                                 ),
                                 barWidth: 3.5,
                                 isStrokeCapRound: true,
+                                dashArray: const [6, 4],
                                 dotData: const FlDotData(show: false),
                                 belowBarData: BarAreaData(
                                   show: true,
@@ -1490,53 +1540,6 @@ class _TrendsTab extends ConsumerWidget {
                 ErrorState(title: 'Could not load data', message: '$e'),
           ),
           const SizedBox(height: kSpacing20),
-          StaggeredFadeSlide(
-            index: 2,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: context.appColors.incomeColor,
-                    borderRadius: BorderRadius.circular(
-                      AppTheme.squircleRadius(8),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: kSpacing6),
-                Text(
-                  'Income',
-                  style: context.ts(
-                    12,
-                    fontWeight: FontWeight.bold,
-                    color: context.appColors.textLow,
-                  ),
-                ),
-                const SizedBox(width: kSpacing24),
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: context.appColors.expenseColor,
-                    borderRadius: BorderRadius.circular(
-                      AppTheme.squircleRadius(8),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: kSpacing6),
-                Text(
-                  'Expense',
-                  style: context.ts(
-                    12,
-                    fontWeight: FontWeight.bold,
-                    color: context.appColors.textLow,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
