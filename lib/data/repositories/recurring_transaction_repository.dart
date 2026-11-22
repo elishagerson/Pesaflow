@@ -83,4 +83,44 @@ class RecurringTransactionRepository {
       }
     });
   }
+
+  /// Retrieves past payments matching keywords or category for receipt timeline.
+  Future<List<Transaction>> getPaymentsForKeywords(
+    List<String> keywords, {
+    String? categoryId,
+    int limit = 10,
+  }) => _transactionDao.getPaymentsForKeywords(
+    keywords,
+    categoryId: categoryId,
+    limit: limit,
+  );
+
+  /// Discovers recurring candidate bills from past SMS expense history.
+  Future<List<RecurringCandidate>> findRecurringCandidates({
+    int minOccurrences = 2,
+    int lookbackDays = 90,
+  }) async {
+    final active = await _recurringTransactionDao.getAll();
+    final Set<String> existingKeywords = {};
+    for (final r in active) {
+      if (r.merchantKeywords != null && r.merchantKeywords!.isNotEmpty) {
+        existingKeywords.addAll(
+          r.merchantKeywords!
+              .toLowerCase()
+              .split(',')
+              .map((s) => s.trim())
+              .where((s) => s.isNotEmpty),
+        );
+      }
+      if (r.description != null && r.description!.isNotEmpty) {
+        existingKeywords.add(r.description!.toLowerCase().trim());
+      }
+    }
+
+    return _transactionDao.findRecurringCandidates(
+      minOccurrences: minOccurrences,
+      lookbackDays: lookbackDays,
+      existingKeywords: existingKeywords,
+    );
+  }
 }

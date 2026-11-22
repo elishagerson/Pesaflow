@@ -600,6 +600,49 @@ final upcomingRecurringExpensesProvider = Provider<List<RecurringTransaction>>((
   );
 });
 
+/// Discovers candidate recurring bills from past SMS expense transactions.
+final discoveredRecurringCandidatesProvider =
+    FutureProvider.autoDispose<List<RecurringCandidate>>((ref) async {
+      // Re-evaluate whenever transactions or recurring flows change
+      ref.watch(dataChangesStreamProvider);
+      final repo = ref.watch(recurringTransactionRepositoryProvider);
+      return repo.findRecurringCandidates();
+    });
+
+/// Calculates upcoming recurring commitments due within the next 7 days.
+final upcomingRecurringCommitmentsProvider =
+    Provider<
+      ({int count, int totalAmountCents, List<RecurringTransaction> bills})
+    >((ref) {
+      final recAsync = ref.watch(recurringTransactionsStreamProvider);
+      return recAsync.when(
+        data: (recs) {
+          final now = DateTime.now();
+          final startWindow = now.subtract(const Duration(days: 1));
+          final endWindow = now.add(const Duration(days: 7));
+          final dueSoon = recs
+              .where(
+                (r) =>
+                    r.status == 'active' &&
+                    r.type == 'expense' &&
+                    r.nextDate.isAfter(startWindow) &&
+                    r.nextDate.isBefore(endWindow),
+              )
+              .toList();
+          final total = dueSoon.fold<int>(0, (sum, r) => sum + r.amount);
+          return (
+            count: dueSoon.length,
+            totalAmountCents: total,
+            bills: dueSoon,
+          );
+        },
+        loading: () =>
+            (count: 0, totalAmountCents: 0, bills: <RecurringTransaction>[]),
+        error: (_, _) =>
+            (count: 0, totalAmountCents: 0, bills: <RecurringTransaction>[]),
+      );
+    });
+
 class ThemeModeNotifier extends Notifier<ThemeMode> {
   @override
   ThemeMode build() {

@@ -57,8 +57,13 @@ class _RecurringStarter {
 
 class RecurringTransactionFormScreen extends ConsumerStatefulWidget {
   final String? recurringId;
+  final Map<String, dynamic>? initialData;
 
-  const RecurringTransactionFormScreen({super.key, this.recurringId});
+  const RecurringTransactionFormScreen({
+    super.key,
+    this.recurringId,
+    this.initialData,
+  });
 
   @override
   ConsumerState<RecurringTransactionFormScreen> createState() =>
@@ -83,11 +88,14 @@ class _RecurringTransactionFormScreenState
   bool _isLoading = false;
   bool _isEditing = false;
   bool _shakeFields = false;
+  bool _isFlexibleAmount = false;
+  List<Transaction> _paymentHistory = [];
+  bool _isLoadingHistory = false;
 
   static const List<_RecurringStarter> _starters = [
     _RecurringStarter(
       title: 'LUKU Electricity',
-      subtitle: 'Monthly power tokens',
+      subtitle: 'Tanesco power tokens',
       amount: 50000,
       type: 'expense',
       frequency: 'monthly',
@@ -99,42 +107,90 @@ class _RecurringTransactionFormScreenState
     ),
     _RecurringStarter(
       title: 'DAWASA Water',
-      subtitle: 'Clean water utility',
+      subtitle: 'Water & sewerage utility',
       amount: 25000,
       type: 'expense',
       frequency: 'monthly',
       interval: 1,
       categoryHint: 'utilities',
-      keywords: 'dawasa',
+      keywords: 'dawasa, maji',
       icon: PesaFlowIcons.personalCare,
       accentColor: Color(0xFF0891B2),
     ),
     _RecurringStarter(
-      title: 'Fiber Internet',
-      subtitle: 'Broadband / Wi-Fi',
+      title: 'Zuku Fiber',
+      subtitle: 'Home broadband Wi-Fi',
+      amount: 59000,
+      type: 'expense',
+      frequency: 'monthly',
+      interval: 1,
+      categoryHint: 'utilities',
+      keywords: 'zuku, wananchi',
+      icon: PesaFlowIcons.wifi,
+      accentColor: Color(0xFF2563EB),
+    ),
+    _RecurringStarter(
+      title: 'DStv / GOtv',
+      subtitle: 'MultiChoice decoder',
+      amount: 44000,
+      type: 'expense',
+      frequency: 'monthly',
+      interval: 1,
+      categoryHint: 'entertainment',
+      keywords: 'dstv, multichoice, gotv',
+      icon: PesaFlowIcons.digitalSubscriptions,
+      accentColor: Color(0xFF0284C7),
+    ),
+    _RecurringStarter(
+      title: 'Azam TV',
+      subtitle: 'Monthly decoder package',
+      amount: 25000,
+      type: 'expense',
+      frequency: 'monthly',
+      interval: 1,
+      categoryHint: 'entertainment',
+      keywords: 'azam, azamtv',
+      icon: PesaFlowIcons.digitalSubscriptions,
+      accentColor: Color(0xFFEA580C),
+    ),
+    _RecurringStarter(
+      title: 'StarTimes',
+      subtitle: 'Decoder bouquet fee',
+      amount: 21000,
+      type: 'expense',
+      frequency: 'monthly',
+      interval: 1,
+      categoryHint: 'entertainment',
+      keywords: 'startimes',
+      icon: PesaFlowIcons.digitalSubscriptions,
+      accentColor: Color(0xFF9333EA),
+    ),
+    _RecurringStarter(
+      title: 'Smile 4G LTE',
+      subtitle: 'Router data bundle',
       amount: 50000,
       type: 'expense',
       frequency: 'monthly',
       interval: 1,
       categoryHint: 'utilities',
-      keywords: 'fiber, zuku, ttcl, airtel broadband',
+      keywords: 'smile, smilecom',
       icon: PesaFlowIcons.wifi,
-      accentColor: Color(0xFF2563EB),
+      accentColor: Color(0xFFE11D48),
     ),
     _RecurringStarter(
-      title: 'Azam / DStv',
-      subtitle: 'Cable & entertainment',
-      amount: 35000,
+      title: 'TTCL Broadband',
+      subtitle: 'Fiber internet service',
+      amount: 50000,
       type: 'expense',
       frequency: 'monthly',
       interval: 1,
-      categoryHint: 'entertainment',
-      keywords: 'dstv, multichoice, azam',
-      icon: PesaFlowIcons.digitalSubscriptions,
-      accentColor: Color(0xFFEA580C),
+      categoryHint: 'utilities',
+      keywords: 'ttcl',
+      icon: PesaFlowIcons.wifi,
+      accentColor: Color(0xFF16A34A),
     ),
     _RecurringStarter(
-      title: 'House Rent',
+      title: 'House Rent (Kodi)',
       subtitle: 'Monthly/quarterly rent',
       amount: 300000,
       type: 'expense',
@@ -143,7 +199,31 @@ class _RecurringTransactionFormScreenState
       categoryHint: 'housing',
       keywords: 'kodi, rent, landlord',
       icon: PesaFlowIcons.home,
-      accentColor: Color(0xFF16A34A),
+      accentColor: Color(0xFF0D9488),
+    ),
+    _RecurringStarter(
+      title: 'Netflix',
+      subtitle: 'Streaming subscription',
+      amount: 25000,
+      type: 'expense',
+      frequency: 'monthly',
+      interval: 1,
+      categoryHint: 'entertainment',
+      keywords: 'netflix',
+      icon: PesaFlowIcons.subscriptions,
+      accentColor: Color(0xFFDC2626),
+    ),
+    _RecurringStarter(
+      title: 'Spotify',
+      subtitle: 'Music subscription',
+      amount: 8000,
+      type: 'expense',
+      frequency: 'monthly',
+      interval: 1,
+      categoryHint: 'entertainment',
+      keywords: 'spotify',
+      icon: PesaFlowIcons.subscriptions,
+      accentColor: Color(0xFF10B981),
     ),
     _RecurringStarter(
       title: 'Salary / Retainer',
@@ -189,6 +269,40 @@ class _RecurringTransactionFormScreenState
     if (widget.recurringId != null) {
       _isEditing = true;
       _loadExisting();
+    } else if (widget.initialData != null) {
+      _applyInitialData(widget.initialData!);
+    }
+  }
+
+  void _applyInitialData(Map<String, dynamic> data) {
+    if (data['title'] != null) {
+      _descriptionController.text = data['title'] as String;
+    }
+    if (data['amount'] != null) {
+      final a = data['amount'];
+      _amountController.text = (a is int && a >= 100000 ? (a ~/ 100) : a)
+          .toString();
+    }
+    if (data['keywords'] != null) {
+      _keywordsController.text = data['keywords'] as String;
+    }
+    if (data['frequency'] != null) {
+      _frequency = data['frequency'] as String;
+    }
+    if (data['interval'] != null) {
+      _intervalController.text = data['interval'].toString();
+    }
+    if (data['categoryId'] != null) {
+      _selectedCategoryId = data['categoryId'] as String;
+    }
+    if (data['accountId'] != null) {
+      _selectedAccountId = data['accountId'] as String;
+    }
+    if (data['isFlexible'] == true) {
+      _isFlexibleAmount = true;
+    }
+    if (data['nextDate'] is DateTime) {
+      _nextDate = data['nextDate'] as DateTime;
     }
   }
 
@@ -207,7 +321,39 @@ class _RecurringTransactionFormScreenState
       _nextDate = existing.nextDate;
       _endDate = existing.endDate;
       _keywordsController.text = existing.merchantKeywords ?? '';
+      final desc = (existing.description ?? '').toLowerCase();
+      final kw = (existing.merchantKeywords ?? '').toLowerCase();
+      _isFlexibleAmount =
+          desc.contains('luku') ||
+          desc.contains('dawasa') ||
+          kw.contains('luku') ||
+          kw.contains('dawasa');
     });
+
+    // Load past payment history
+    final keywords = (existing.merchantKeywords ?? '')
+        .split(',')
+        .map((k) => k.trim())
+        .where((k) => k.isNotEmpty)
+        .toList();
+    if (keywords.isNotEmpty || existing.categoryId != null) {
+      setState(() => _isLoadingHistory = true);
+      try {
+        final history = await repo.getPaymentsForKeywords(
+          keywords,
+          categoryId: existing.categoryId,
+          limit: 10,
+        );
+        if (mounted) {
+          setState(() {
+            _paymentHistory = history;
+            _isLoadingHistory = false;
+          });
+        }
+      } catch (_) {
+        if (mounted) setState(() => _isLoadingHistory = false);
+      }
+    }
   }
 
   @override
@@ -1069,9 +1215,15 @@ class _RecurringTransactionFormScreenState
                       ),
                       const SizedBox(height: kSpacing10),
                       _buildCadenceCard(context),
-                      const SizedBox(height: kSpacing32),
+                      const SizedBox(height: kSpacing20),
 
-                      // 8. Submit button
+                      // 8. PAYMENT RECEIPTS HISTORY (If editing)
+                      if (_isEditing) ...[
+                        _buildPaymentHistorySection(context),
+                        const SizedBox(height: kSpacing20),
+                      ],
+
+                      // 9. Submit button
                       _buildSubmitButton(context),
                       const SizedBox(height: kSpacing32),
                     ],
@@ -1816,8 +1968,179 @@ class _RecurringTransactionFormScreenState
               ),
             ),
           ],
+          if (_type == 'expense') ...[
+            const SizedBox(height: kSpacing16),
+            Divider(height: 1, color: context.appColors.hairline),
+            const SizedBox(height: kSpacing12),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Flexible / Utility Bill',
+                        style: context.ts(13, fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'For variable bills (LUKU, DAWASA). Amount acts as monthly budget.',
+                        style: context.ts(
+                          11,
+                          color: theme.colorScheme.onSurfaceVariant.withValues(
+                            alpha: 0.7,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Switch.adaptive(
+                  value: _isFlexibleAmount,
+                  onChanged: (val) {
+                    PesaHaptics.selection();
+                    setState(() => _isFlexibleAmount = val);
+                  },
+                ),
+              ],
+            ),
+          ],
         ],
       ),
+    );
+  }
+
+  Widget _buildPaymentHistorySection(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader(
+          context,
+          title: 'PAYMENT RECEIPTS HISTORY',
+          subtitle:
+              'Past transactions matched or recorded for this recurring flow',
+          icon: PesaFlowIcons.transactions,
+        ),
+        const SizedBox(height: kSpacing10),
+        Container(
+          padding: const EdgeInsets.all(kSpacing16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHigh,
+            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+            border: Border.all(color: context.appColors.hairline, width: 1.0),
+          ),
+          child: _isLoadingHistory
+              ? const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(kSpacing16),
+                    child: CircularProgressIndicator.adaptive(),
+                  ),
+                )
+              : _paymentHistory.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: kSpacing12),
+                  child: Center(
+                    child: Text(
+                      'No past payments recorded yet for this bill.',
+                      style: context.ts(
+                        12,
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.7,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _paymentHistory.length,
+                  separatorBuilder: (_, _) => Divider(
+                    height: kSpacing16,
+                    color: context.appColors.hairline,
+                  ),
+                  itemBuilder: (context, index) {
+                    final tx = _paymentHistory[index];
+                    final dateStr = DateFormat(
+                      'd MMM yyyy, HH:mm',
+                    ).format(tx.createdAt);
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: context.appColors.expenseColor.withValues(
+                              alpha: 0.12,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.squircleRadius(32),
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                          child: Icon(
+                            PesaFlowIcons.arrowUp,
+                            size: 15,
+                            color: context.appColors.expenseColor,
+                          ),
+                        ),
+                        const SizedBox(width: kSpacing12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                CurrencyFormatter.formatCents(tx.amount),
+                                style: context.ts(
+                                  13,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                tx.reference != null && tx.reference!.isNotEmpty
+                                    ? '$dateStr · Ref: ${tx.reference}'
+                                    : dateStr,
+                                style: context.ts(
+                                  11,
+                                  color: theme.colorScheme.onSurfaceVariant
+                                      .withValues(alpha: 0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (tx.source == 'sms_auto')
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.12,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusPill,
+                              ),
+                            ),
+                            child: Text(
+                              'SMS',
+                              style: context.ts(
+                                9,
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
+        ),
+      ],
     );
   }
 

@@ -11,6 +11,7 @@ import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
@@ -42,6 +43,7 @@ class RecurringTransactionListScreen extends ConsumerStatefulWidget {
 class _RecurringTransactionListScreenState
     extends ConsumerState<RecurringTransactionListScreen> {
   final _scrollController = ScrollController();
+  final Set<String> _dismissedCandidates = {};
   _RecurringFilter _activeFilter = _RecurringFilter.all;
 
   @override
@@ -73,6 +75,7 @@ class _RecurringTransactionListScreenState
     final totals = ref.watch(recurringTotalsProvider);
     final categoriesAsync = ref.watch(categoriesFutureProvider);
     final accountsAsync = ref.watch(accountsStreamProvider);
+    final candidatesAsync = ref.watch(discoveredRecurringCandidatesProvider);
 
     final dueIds = dueAsync.asData?.value.map((d) => d.id).toSet() ?? {};
     final categories = categoriesAsync.asData?.value ?? [];
@@ -142,6 +145,37 @@ class _RecurringTransactionListScreenState
                                     recurring,
                                     dueIds,
                                   ),
+                                ),
+                              ),
+
+                              // ── Discovered Recurring Patterns ──
+                              candidatesAsync.when(
+                                data: (candidates) {
+                                  final activeCandidates = candidates
+                                      .where(
+                                        (c) => !_dismissedCandidates.contains(
+                                          c.keyword,
+                                        ),
+                                      )
+                                      .toList();
+                                  if (activeCandidates.isEmpty) {
+                                    return const SliverToBoxAdapter(
+                                      child: SizedBox.shrink(),
+                                    );
+                                  }
+                                  return SliverToBoxAdapter(
+                                    child: _buildDiscoveredSection(
+                                      context,
+                                      theme,
+                                      activeCandidates,
+                                    ),
+                                  );
+                                },
+                                loading: () => const SliverToBoxAdapter(
+                                  child: SizedBox.shrink(),
+                                ),
+                                error: (_, _) => const SliverToBoxAdapter(
+                                  child: SizedBox.shrink(),
                                 ),
                               ),
 
@@ -676,6 +710,190 @@ class _RecurringTransactionListScreenState
     return raw.startsWith('Tsh ') ? raw.substring(4) : raw;
   }
 
+  // ── Discovered Candidates Banner ────────────────────────────────────────
+  Widget _buildDiscoveredSection(
+    BuildContext context,
+    ThemeData theme,
+    List<RecurringCandidate> candidates,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        kSpacing16,
+        kSpacing8,
+        kSpacing16,
+        kSpacing4,
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(kSpacing14),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primary.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+          border: Border.all(
+            color: theme.colorScheme.primary.withValues(alpha: 0.25),
+            width: 1.0,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  PesaFlowIcons.lightbulb,
+                  size: 16,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: kSpacing8),
+                Expanded(
+                  child: Text(
+                    'DISCOVERED RECURRING BILLS (${candidates.length})',
+                    style: context.ts(
+                      11,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.5,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+                Text(
+                  'From past SMS',
+                  style: context.ts(
+                    10,
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.6,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: kSpacing10),
+            SizedBox(
+              height: 104,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: candidates.length,
+                separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
+                itemBuilder: (context, idx) {
+                  final cand = candidates[idx];
+                  final formattedAmt = CurrencyFormatter.formatCents(
+                    cand.averageAmountCents,
+                  );
+                  return Container(
+                    width: 220,
+                    padding: const EdgeInsets.all(kSpacing10),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                      border: Border.all(color: context.appColors.hairline),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                cand.title,
+                                style: context.ts(
+                                  13,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                PesaHaptics.light();
+                                setState(
+                                  () => _dismissedCandidates.add(cand.keyword),
+                                );
+                              },
+                              child: Icon(
+                                PesaFlowIcons.close,
+                                size: 14,
+                                color: theme.colorScheme.onSurfaceVariant
+                                    .withValues(alpha: 0.5),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          '$formattedAmt · ${cand.frequency}',
+                          style: context.ts(
+                            12,
+                            fontWeight: FontWeight.w700,
+                            color: context.appColors.expenseColor,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Paid ${cand.occurrenceCount}x recently',
+                              style: context.ts(
+                                10,
+                                color: theme.colorScheme.onSurfaceVariant
+                                    .withValues(alpha: 0.7),
+                              ),
+                            ),
+                            TactileSpringContainer(
+                              onTap: () {
+                                PesaHaptics.medium();
+                                context.push(
+                                  '/recurring/add',
+                                  extra: {
+                                    'title': cand.title,
+                                    'amount': cand.averageAmountCents,
+                                    'keywords': cand.keyword,
+                                    'frequency': cand.frequency,
+                                    'interval': cand.intervalValue,
+                                    'categoryId': cand.categoryId,
+                                    'accountId': cand.accountId,
+                                    'nextDate': cand.suggestedNextDate,
+                                    'isFlexible':
+                                        cand.keyword == 'luku' ||
+                                        cand.keyword == 'dawasa',
+                                  },
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: kSpacing8,
+                                  vertical: 3,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusPill,
+                                  ),
+                                ),
+                                child: Text(
+                                  'Set Up',
+                                  style: context.ts(
+                                    11,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // ── Segmented Filter ────────────────────────────────────────────────────
   Widget _buildSegmentedFilter(
     ThemeData theme,
@@ -1188,6 +1406,39 @@ class _RecurringTransactionListScreenState
         ),
       ),
     );
+
+    final desc = (recurring.description ?? '').toLowerCase();
+    final kw = (recurring.merchantKeywords ?? '').toLowerCase();
+    final isFlex =
+        desc.contains('luku') ||
+        desc.contains('dawasa') ||
+        kw.contains('luku') ||
+        kw.contains('dawasa');
+    if (isFlex) {
+      badges.add(
+        Container(
+          margin: const EdgeInsets.only(left: kSpacing4),
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing6,
+            vertical: kSpacing2,
+          ),
+          decoration: BoxDecoration(
+            color: const Color(
+              0xFFF59E0B,
+            ).withValues(alpha: context.appColors.badgeFillAlpha),
+            borderRadius: BorderRadius.circular(AppTheme.squircleRadius(14)),
+          ),
+          child: Text(
+            'Flex',
+            style: context.ts(
+              10,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFFF59E0B),
+            ),
+          ),
+        ),
+      );
+    }
 
     return badges;
   }

@@ -489,8 +489,11 @@ final GoRouter appRouter = GoRouter(
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
-                      pageBuilder: (context, state) =>
-                          swipeBackPage(const RecurringTransactionFormScreen()),
+                      pageBuilder: (context, state) => swipeBackPage(
+                        RecurringTransactionFormScreen(
+                          initialData: state.extra as Map<String, dynamic>?,
+                        ),
+                      ),
                     ),
                     GoRoute(
                       path: ':id/edit',

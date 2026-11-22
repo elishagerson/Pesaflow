@@ -559,4 +559,239 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
     final results = await query.get();
     return results.isNotEmpty ? results.first : null;
   }
+
+  /// Finds historical payments matching a recurring plan's keywords or description.
+  Future<List<Transaction>> getPaymentsForKeywords(
+    List<String> keywords, {
+    String? categoryId,
+    int limit = 10,
+  }) async {
+    if (keywords.isEmpty && categoryId == null) return [];
+
+    final cleanKeywords = keywords
+        .map((k) => k.trim().toLowerCase())
+        .where((k) => k.isNotEmpty)
+        .toList();
+
+    final query = select(transactions)
+      ..where((t) => t.type.equals('expense'))
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+      ..limit(limit * 3);
+
+    final candidates = await query.get();
+
+    final filtered = candidates
+        .where((tx) {
+          if (categoryId != null && tx.categoryId == categoryId) return true;
+          final text =
+              '${tx.description} ${tx.sender ?? ''} ${tx.recipient ?? ''}'
+                  .toLowerCase();
+          return cleanKeywords.any((kw) => text.contains(kw));
+        })
+        .take(limit)
+        .toList();
+
+    return filtered;
+  }
+
+  /// Automatically scans past expense transactions to detect recurring payment patterns
+  /// (e.g. paying Zuku Fiber, LUKU, Rent, or DAWASA around the same cadence).
+  Future<List<RecurringCandidate>> findRecurringCandidates({
+    int minOccurrences = 2,
+    int lookbackDays = 90,
+    Set<String> existingKeywords = const {},
+  }) async {
+    final cutoff = DateTime.now().subtract(Duration(days: lookbackDays));
+
+    final query = select(transactions)
+      ..where(
+        (t) =>
+            t.type.equals('expense') &
+            t.createdAt.isBiggerOrEqual(Constant(cutoff)),
+      )
+      ..orderBy([(t) => OrderingTerm.asc(t.createdAt)]);
+
+    final rows = await query.get();
+    if (rows.length < minOccurrences) return [];
+
+    // Group transactions by a normalized merchant key
+    final Map<String, List<Transaction>> groups = {};
+    for (final tx in rows) {
+      final key = _extractNormalizedMerchant(tx.description, tx.recipient);
+      if (key == null || key.length < 3) continue;
+
+      // Skip if matches already tracked recurring keywords
+      final isTracked = existingKeywords.any(
+        (kw) => kw.isNotEmpty && (key.contains(kw) || kw.contains(key)),
+      );
+      if (isTracked) continue;
+
+      groups.putIfAbsent(key, () => []).add(tx);
+    }
+
+    final List<RecurringCandidate> candidates = [];
+
+    for (final entry in groups.entries) {
+      final txs = entry.value;
+      if (txs.length < minOccurrences) continue;
+
+      // Check interval between consecutive transactions
+      int totalDays = 0;
+      for (int i = 1; i < txs.length; i++) {
+        totalDays += txs[i].createdAt
+            .difference(txs[i - 1].createdAt)
+            .inDays
+            .abs();
+      }
+      final avgInterval = totalDays / (txs.length - 1);
+
+      String frequency = 'monthly';
+      int intervalValue = 1;
+
+      if (avgInterval >= 5 && avgInterval <= 10) {
+        frequency = 'weekly';
+      } else if (avgInterval >= 11 && avgInterval <= 18) {
+        frequency = 'biweekly';
+      } else if (avgInterval >= 22 && avgInterval <= 40) {
+        frequency = 'monthly';
+      } else {
+        // Irregular or utility cadence (e.g., LUKU tokens bought twice a month)
+        frequency = 'monthly';
+      }
+
+      final totalAmount = txs.fold<int>(0, (sum, t) => sum + t.amount);
+      final avgAmount = totalAmount ~/ txs.length;
+
+      final lastTx = txs.last;
+      final suggestedNext = frequency == 'weekly'
+          ? lastTx.createdAt.add(const Duration(days: 7))
+          : frequency == 'biweekly'
+          ? lastTx.createdAt.add(const Duration(days: 14))
+          : DateTime(
+              lastTx.createdAt.year,
+              lastTx.createdAt.month + 1,
+              lastTx.createdAt.day.clamp(1, 28),
+            );
+
+      // Clean title
+      final cleanTitle = _formatMerchantTitle(lastTx.description, entry.key);
+
+      candidates.add(
+        RecurringCandidate(
+          title: cleanTitle,
+          averageAmountCents: avgAmount,
+          frequency: frequency,
+          intervalValue: intervalValue,
+          categoryId: lastTx.categoryId,
+          accountId: lastTx.accountId,
+          keyword: entry.key,
+          occurrenceCount: txs.length,
+          lastDate: lastTx.createdAt,
+          suggestedNextDate: suggestedNext,
+        ),
+      );
+    }
+
+    // Sort by latest transaction date and limit to top 5
+    candidates.sort((a, b) => b.lastDate.compareTo(a.lastDate));
+    return candidates.take(5).toList();
+  }
+
+  String? _extractNormalizedMerchant(String description, String? recipient) {
+    String raw = (recipient != null && recipient.trim().isNotEmpty)
+        ? recipient
+        : description;
+
+    raw = raw.toLowerCase().trim();
+
+    // Strip common carrier prefixes
+    raw = raw
+        .replaceAll(
+          RegExp(r'^(?:sent to|kwa|kwenda|paid to|payment to)\s+'),
+          '',
+        )
+        .trim();
+
+    // Remove phone numbers or digits
+    raw = raw.replaceAll(RegExp(r'\b(?:255\d{9}|0\d{9}|\d+)\b'), '').trim();
+
+    // Clean punctuation
+    raw = raw.replaceAll(RegExp(r'[^\w\s]'), ' ').trim();
+
+    // Common Tanzanian merchant keywords mapping
+    if (raw.contains('luku') ||
+        raw.contains('tanesco') ||
+        raw.contains('gecl')) {
+      return 'luku';
+    }
+    if (raw.contains('dawasa') || raw.contains('maji')) {
+      return 'dawasa';
+    }
+    if (raw.contains('zuku')) return 'zuku';
+    if (raw.contains('dstv') ||
+        raw.contains('multichoice') ||
+        raw.contains('gotv')) {
+      return 'dstv';
+    }
+    if (raw.contains('azam')) return 'azam';
+    if (raw.contains('startimes')) return 'startimes';
+    if (raw.contains('smile')) return 'smile';
+    if (raw.contains('ttcl')) return 'ttcl';
+    if (raw.contains('netflix')) return 'netflix';
+    if (raw.contains('spotify')) return 'spotify';
+    if (raw.contains('kodi') || raw.contains('rent')) return 'rent';
+    if (raw.contains('gym') || raw.contains('fitness')) return 'gym';
+
+    final words = raw.split(RegExp(r'\s+')).where((w) => w.length > 2).toList();
+    if (words.isEmpty) return null;
+    return words.take(2).join(' ');
+  }
+
+  String _formatMerchantTitle(String description, String key) {
+    return switch (key) {
+      'luku' => 'LUKU Electricity',
+      'dawasa' => 'DAWASA Water',
+      'zuku' => 'Zuku Fiber',
+      'dstv' => 'DStv / MultiChoice',
+      'azam' => 'Azam TV',
+      'startimes' => 'StarTimes',
+      'smile' => 'Smile 4G',
+      'ttcl' => 'TTCL Fiber',
+      'netflix' => 'Netflix',
+      'spotify' => 'Spotify',
+      'rent' => 'House Rent',
+      'gym' => 'Gym Membership',
+      _ =>
+        description.trim().isNotEmpty
+            ? description.trim()
+            : key[0].toUpperCase() + key.substring(1),
+    };
+  }
+}
+
+/// Represents a potential recurring bill discovered from historical SMS transactions.
+class RecurringCandidate {
+  final String title;
+  final int averageAmountCents;
+  final String frequency;
+  final int intervalValue;
+  final String? categoryId;
+  final String? accountId;
+  final String keyword;
+  final int occurrenceCount;
+  final DateTime lastDate;
+  final DateTime suggestedNextDate;
+
+  const RecurringCandidate({
+    required this.title,
+    required this.averageAmountCents,
+    required this.frequency,
+    required this.intervalValue,
+    this.categoryId,
+    this.accountId,
+    required this.keyword,
+    required this.occurrenceCount,
+    required this.lastDate,
+    required this.suggestedNextDate,
+  });
 }
