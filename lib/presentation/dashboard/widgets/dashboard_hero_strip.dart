@@ -86,7 +86,9 @@ class DashboardHeroStrip extends ConsumerWidget {
             ),
           ),
           const _CellDivider(),
-          Expanded(child: _NetWorthCell(amount: balance, label: label)),
+          Expanded(
+            child: _NetWorthCell(amount: balance, label: label),
+          ),
         ],
       ),
     );
@@ -192,13 +194,15 @@ class _NextUpCell extends StatelessWidget {
                 child: Text(
                   isEmpty ? 'All clear' : countdown!,
                   maxLines: 1,
-                  style: context.ts(
-                    30,
-                    tabular: true,
-                    color: isEmpty
-                        ? theme.colorScheme.onSurfaceVariant
-                        : theme.colorScheme.onSurface,
-                  ).copyWith(fontFamily: AppTheme.fontDisplay),
+                  style: context
+                      .ts(
+                        30,
+                        tabular: true,
+                        color: isEmpty
+                            ? theme.colorScheme.onSurfaceVariant
+                            : theme.colorScheme.onSurface,
+                      )
+                      .copyWith(fontFamily: AppTheme.fontDisplay),
                 ),
               ),
             ),
@@ -238,7 +242,9 @@ class _NetWorthCell extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            label.trim().isEmpty ? 'NET WORTH' : 'NET WORTH · ${label.toUpperCase()}',
+            label.trim().isEmpty
+                ? 'NET WORTH'
+                : 'NET WORTH · ${label.toUpperCase()}',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: context.appTypography.eyebrow.copyWith(
@@ -255,13 +261,15 @@ class _NetWorthCell extends StatelessWidget {
                 maxLines: 1,
                 // Two tiers below the 76px hero: this is context, not the
                 // answer. Peer scale with the "Next up" countdown.
-                style: context.ts(
-                  30,
-                  tabular: true,
-                  color: isNegative
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.onSurface,
-                ).copyWith(fontFamily: AppTheme.fontDisplay),
+                style: context
+                    .ts(
+                      30,
+                      tabular: true,
+                      color: isNegative
+                          ? theme.colorScheme.error
+                          : theme.colorScheme.onSurface,
+                    )
+                    .copyWith(fontFamily: AppTheme.fontDisplay),
               ),
             ),
           ),

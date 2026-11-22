@@ -132,17 +132,19 @@ void main() {
       await tester.pumpAndSettle();
 
       final nextUp = tester.getRect(find.text('NEXT UP'));
-      final safeToSpend = tester.getRect(find.text('SAFE TO SPEND'));
+      // Safe to spend was promoted to the hero; net worth now takes its old
+      // footer slot beside "Next up".
+      final netWorth = tester.getRect(find.text('NET WORTH · M-PESA'));
 
       // Side by side: no horizontal overlap between the two labels, and both
       // sit inside the same vertical band rather than one above the other.
-      expect(safeToSpend.left, greaterThanOrEqualTo(nextUp.right));
-      expect(safeToSpend.top, lessThan(nextUp.bottom));
-      expect(nextUp.top, lessThan(safeToSpend.bottom));
+      expect(netWorth.left, greaterThanOrEqualTo(nextUp.right));
+      expect(netWorth.top, lessThan(nextUp.bottom));
+      expect(nextUp.top, lessThan(netWorth.bottom));
 
-      // And they share one baseline. One cell leads with a ring, the other
-      // with a headline, so centring them left the labels a few pixels apart.
-      expect((safeToSpend.top - nextUp.top).abs(), lessThan(0.5));
+      // And they share one baseline. Both cells lead with an eyebrow label,
+      // so centring them left the labels a few pixels apart at most.
+      expect((netWorth.top - nextUp.top).abs(), lessThan(0.5));
     });
 
     testWidgets('is one card, not one card per metric', (tester) async {
