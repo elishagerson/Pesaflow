@@ -978,8 +978,11 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                               context,
                                               item,
                                             ),
+                                        // List rows highlight on press; they never
+                                        // scale (a scaled row clips its siblings).
                                         selectedColor:
                                             theme.colorScheme.onSurface,
+                                        highlightOnly: true,
                                         child: Hero(
                                           tag: 'transaction_${trans.id}',
                                           child: Semantics(

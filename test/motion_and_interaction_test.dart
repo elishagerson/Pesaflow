@@ -234,6 +234,85 @@ void main() {
       expect(tapCount, 1);
       expect(longPressCount, 1);
     });
+
+    testWidgets(
+      'highlightOnly rows show a press tint but never scale',
+      (tester) async {
+        final highlight = Colors.blue.withValues(alpha: 0.08);
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: TactileSpringContainer(
+                  highlightOnly: true,
+                  selectedColor: Colors.blue,
+                  onTap: () {},
+                  child: const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text('List Row'),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        // A default tactile container scales; a list row must not. Scope the
+        // finder to the container subtree (MaterialApp has its own page
+        // transition ScaleTransition).
+        expect(
+          find.descendant(
+            of: find.byType(TactileSpringContainer),
+            matching: find.byType(ScaleTransition),
+          ),
+          findsNothing,
+        );
+
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.text('List Row')),
+        );
+        await tester.pump();
+        expect(
+          find.byWidgetPredicate(
+            (w) => w is ColoredBox && w.color == highlight,
+          ),
+          findsOneWidget,
+        );
+        await gesture.up();
+        await tester.pumpAndSettle();
+        expect(
+          find.byWidgetPredicate(
+            (w) => w is ColoredBox && w.color == highlight,
+          ),
+          findsNothing,
+        );
+      },
+    );
+
+    testWidgets('default tactile container still scales on press', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: TactileSpringContainer(
+                onTap: () {},
+                child: const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text('Card Button'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(
+        find.descendant(
+          of: find.byType(TactileSpringContainer),
+          matching: find.byType(ScaleTransition),
+        ),
+        findsOneWidget,
+      );
+    });
   });
 
   group('ModernDialog Entrance & Exit Tests', () {

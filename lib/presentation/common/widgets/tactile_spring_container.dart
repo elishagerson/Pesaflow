@@ -33,6 +33,12 @@ class TactileSpringContainer extends StatefulWidget {
   /// Opacity of the selection highlight. Defaults to 0.08 (Apple's default).
   final double selectedOpacity;
 
+  /// When true, press feedback is a [selectedColor] background highlight only —
+  /// no scale and no opacity dim. Use for full-width list rows, which must not
+  /// scale (it clips siblings and reads as a card, not a row). Buttons and
+  /// cards keep the default spring scale. Defaults to false.
+  final bool highlightOnly;
+
   /// Minimum edge length of the touch target, in logical pixels.
   ///
   /// Apple HIG requires interactive targets to be at least 44pt. The visual
@@ -54,6 +60,7 @@ class TactileSpringContainer extends StatefulWidget {
     this.semanticButton,
     this.selectedColor,
     this.selectedOpacity = 0.08,
+    this.highlightOnly = false,
     this.minTapSize = 44,
   });
 
@@ -148,18 +155,17 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
+          final highlight = _isPressed && widget.selectedColor != null
+              ? widget.selectedColor!.withValues(alpha: widget.selectedOpacity)
+              : null;
+          if (widget.highlightOnly) {
+            return Container(color: highlight, child: child);
+          }
           return Opacity(
             opacity: _opacityAnimation.value,
             child: ScaleTransition(
               scale: _scaleAnimation,
-              child: Container(
-                color: _isPressed && widget.selectedColor != null
-                    ? widget.selectedColor!.withValues(
-                        alpha: widget.selectedOpacity,
-                      )
-                    : null,
-                child: child,
-              ),
+              child: Container(color: highlight, child: child),
             ),
           );
         },
