@@ -1024,8 +1024,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 RepaintBoundary(
                   key: HomeWidgetsRenderer.safeToSpendKey,
                   child: WidgetSafeToSpend(
-                    remainingCents: (remainingBudget * 100).toInt(),
-                    limitCents: (budgetTotal * 100).toInt(),
+                    // `remainingBudget`/`budgetTotal` are already integer cents
+                    // (budget allocations and spend are stored in cents) — the
+                    // widget divides by 100 when rendering shillings.
+                    remainingCents: remainingBudget,
+                    limitCents: budgetTotal,
                     percentage: overallPct,
                     theme: theme,
                   ),

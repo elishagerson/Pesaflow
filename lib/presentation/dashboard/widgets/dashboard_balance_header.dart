@@ -14,6 +14,11 @@ class DashboardBalanceHeader extends StatefulWidget {
   final int expense;
   final VoidCallback? onAccountTap;
 
+  /// Optional gauge rendered beside the hero figure. The hero answers the
+  /// user's first question ("what can I spend?"); the ring gives that number
+  /// its budget context without competing with it for size.
+  final Widget? heroBadge;
+
   /// Optional block rendered under the cash-flow row, inside the same card.
   final Widget? footer;
 
@@ -27,6 +32,7 @@ class DashboardBalanceHeader extends StatefulWidget {
     required this.income,
     required this.expense,
     this.onAccountTap,
+    this.heroBadge,
     this.footer,
     this.footerHeight = 0,
   });
@@ -95,7 +101,7 @@ class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader> {
       ),
       // A screen reader should meet one labelled region rather than a pile of
       // unrelated text nodes.
-      semanticLabel: 'Account balance and monthly cash flow',
+      semanticLabel: 'Safe to spend and monthly cash flow',
       child: Stack(
         children: [
           // Ambient glow behind the balance number
@@ -234,35 +240,47 @@ class _DashboardBalanceHeaderState extends State<DashboardBalanceHeader> {
               ),
               const SizedBox(height: kSpacing12),
 
-              // Center: Balance reflecting reality
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: _isHidden
-                    ? Text(
-                        '••••••',
-                        style: context.appTypography.numeral.copyWith(
-                          // Hero money face: Inter's display cut with tabular
-                          // figures at the preserved posterHero size (76). Bebas
-                          // stays reserved for wordmarks/marketing only.
-                          fontSize: 76,
-                          height: 0.84,
-                          color: textColor,
-                        ),
-                      )
-                    : Text(
-                        isNegative
-                            ? '- ${CurrencyFormatter.formatCents(widget.balance.abs())}'
-                            : CurrencyFormatter.formatCents(widget.balance),
-                        style: context.appTypography.numeral.copyWith(
-                          // Hero money face: Inter's display cut with tabular
-                          // figures at the preserved posterHero size (76). Bebas
-                          // stays reserved for wordmarks/marketing only.
-                          fontSize: 76,
-                          height: 0.84,
-                          color: textColor,
-                        ),
-                      ),
+              // Center: the hero answers the user's first question. The
+              // optional gauge sits beside the figure rather than above it so
+              // the number stays the anchor at every text scale.
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: _isHidden
+                          ? Text(
+                              '••••••',
+                              style: context.appTypography.numeral.copyWith(
+                                // Hero money face: Inter's display cut with
+                                // tabular figures at 76. Bebas stays reserved
+                                // for wordmarks/marketing only.
+                                fontSize: 76,
+                                height: 0.84,
+                                color: textColor,
+                              ),
+                            )
+                          : Text(
+                              isNegative
+                                  ? '- ${CurrencyFormatter.formatCents(widget.balance.abs())}'
+                                  : CurrencyFormatter.formatCents(
+                                      widget.balance,
+                                    ),
+                              style: context.appTypography.numeral.copyWith(
+                                fontSize: 76,
+                                height: 0.84,
+                                color: textColor,
+                              ),
+                            ),
+                    ),
+                  ),
+                  if (widget.heroBadge != null) ...[
+                    const SizedBox(width: kSpacing12),
+                    widget.heroBadge!,
+                  ],
+                ],
               ),
               const SizedBox(height: kSpacing18),
 

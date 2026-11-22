@@ -42,9 +42,29 @@ class DashboardHeroStrip extends ConsumerWidget {
     final upcoming = ref.watch(recurringTransactionsStreamProvider).value;
     final event = _nextEvent(upcoming);
 
+    // The hero answers "can I spend today?" first. Net worth is still here,
+    // but one tier down in the footer next to the next bill.
+    final isOver = remainingBudget < 0;
+    final fraction = budgetPct.clamp(0.0, 1.0);
+    final tone = isOver
+        ? Theme.of(context).colorScheme.error
+        : remainingBudget == 0
+        ? context.appColors.textMedium
+        : context.appColors.brandColor;
+
     return DashboardBalanceHeader(
-      balance: balance,
-      label: label,
+      balance: remainingBudget,
+      label: 'SAFE TO SPEND',
+      heroBadge: TrackRing(
+        value: fraction,
+        size: 52,
+        thickness: 4,
+        color: tone,
+        trackColor: context.appColors.hairlineStrong,
+        semanticsLabel: budgetTotal > 0
+            ? '${(fraction * 100).round()} percent of budget used'
+            : 'No budget limit set',
+      ),
       income: income,
       expense: expense,
       footerHeight: 80,
@@ -53,7 +73,7 @@ class DashboardHeroStrip extends ConsumerWidget {
         children: [
           // The two cells split the width evenly. Expanded rather than a
           // measured fraction so a long countdown string cannot steal width
-          // from the ring beside it.
+          // from its neighbour.
           Expanded(
             child: _NextUpCell(
               label: event?.label,
@@ -66,13 +86,7 @@ class DashboardHeroStrip extends ConsumerWidget {
             ),
           ),
           const _CellDivider(),
-          Expanded(
-            child: _SafeToSpendCell(
-              remaining: remainingBudget,
-              pct: budgetPct,
-              total: budgetTotal,
-            ),
-          ),
+          Expanded(child: _NetWorthCell(amount: balance, label: label)),
         ],
       ),
     );
@@ -204,89 +218,54 @@ class _NextUpCell extends StatelessWidget {
   }
 }
 
-class _SafeToSpendCell extends StatelessWidget {
-  final int remaining;
-  final double pct;
-  final int total;
+/// Net worth used to own the hero. It now sits in the footer: useful context,
+/// but not the answer to "am I okay today?".
+class _NetWorthCell extends StatelessWidget {
+  final int amount;
+  final String label;
 
-  const _SafeToSpendCell({
-    required this.remaining,
-    required this.pct,
-    required this.total,
-  });
+  const _NetWorthCell({required this.amount, required this.label});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // Over budget is a fact, not an error state: it gets the error colour, but
-    // the cell keeps the same shape and weight as every other cell.
-    final isOver = remaining < 0;
-    final fraction = (total <= 0 ? 0.0 : 1.0 - (remaining / total)).clamp(
-      0.0,
-      1.0,
-    );
-    final tone = isOver
-        ? theme.colorScheme.error
-        : remaining == 0
-        ? context.appColors.textMedium
-        : context.appColors.brandColor;
+    final isNegative = amount < 0;
 
     return Semantics(
-      label: isOver
-          ? 'Over budget by ${CurrencyFormatter.formatCents(remaining.abs())}'
-          : 'Safe to spend ${CurrencyFormatter.formatCents(remaining)}',
-      button: true,
-      child: InkWell(
-        onTap: () => context.push('/budgets'),
-        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TrackRing(
-              value: fraction,
-              size: 44,
-              thickness: 3.5,
-              color: tone,
-              trackColor: context.appColors.hairlineStrong,
+      label: 'Net worth ${CurrencyFormatter.formatCents(amount)}',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label.trim().isEmpty ? 'NET WORTH' : 'NET WORTH · ${label.toUpperCase()}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: context.appTypography.eyebrow.copyWith(
+              color: context.appColors.textMedium,
             ),
-            const SizedBox(width: kSpacing10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'SAFE TO SPEND',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.appTypography.eyebrow.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: kSpacing4),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      isOver
-                          ? '- ${CurrencyFormatter.formatCents(remaining.abs())}'
-                          : CurrencyFormatter.formatCents(remaining),
-                      maxLines: 1,
-                      // Same poster scale as the countdown beside it. The two
-                      // footer cells are peers, so their values share a size;
-                      // only the hero balance is allowed to break the scale.
-                      style: context.ts(
-                        30,
-                        tabular: true,
-                        color: tone,
-                      ).copyWith(fontFamily: AppTheme.fontDisplay),
-                    ),
-                  ),
-                ],
+          ),
+          const SizedBox(height: kSpacing6),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                CurrencyFormatter.formatCents(amount),
+                maxLines: 1,
+                // Two tiers below the 76px hero: this is context, not the
+                // answer. Peer scale with the "Next up" countdown.
+                style: context.ts(
+                  30,
+                  tabular: true,
+                  color: isNegative
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.onSurface,
+                ).copyWith(fontFamily: AppTheme.fontDisplay),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
