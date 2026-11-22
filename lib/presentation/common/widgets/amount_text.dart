@@ -93,7 +93,6 @@ class _AmountTextState extends ConsumerState<AmountText> {
               displayString,
               style: customStyle,
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             )
           : Text(
               displayString,
