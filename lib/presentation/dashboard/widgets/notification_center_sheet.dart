@@ -332,56 +332,46 @@ class _NotificationCenterSheetState
                       filter: NotificationFilter.all,
                       accentColor: theme.colorScheme.primary,
                     ),
-                    if (counts.pendingSmsCount > 0) ...[
-                      const SizedBox(width: kSpacing8),
-                      _buildFilterPill(
-                        context: context,
-                        label: 'Carrier SMS',
-                        count: counts.pendingSmsCount,
-                        filter: NotificationFilter.sms,
-                        accentColor: context.appColors.transferColor,
-                      ),
-                    ],
-                    if (counts.dueBillsCount > 0) ...[
-                      const SizedBox(width: kSpacing8),
-                      _buildFilterPill(
-                        context: context,
-                        label: 'Bills Due',
-                        count: counts.dueBillsCount,
-                        filter: NotificationFilter.bills,
-                        accentColor: context.appColors.expenseColor,
-                      ),
-                    ],
-                    if (counts.savingsRemindersCount > 0) ...[
-                      const SizedBox(width: kSpacing8),
-                      _buildFilterPill(
-                        context: context,
-                        label: 'Savings',
-                        count: counts.savingsRemindersCount,
-                        filter: NotificationFilter.savings,
-                        accentColor: context.appColors.incomeColor,
-                      ),
-                    ],
-                    if (counts.budgetAlertsCount > 0) ...[
-                      const SizedBox(width: kSpacing8),
-                      _buildFilterPill(
-                        context: context,
-                        label: 'Budgets',
-                        count: counts.budgetAlertsCount,
-                        filter: NotificationFilter.budgets,
-                        accentColor: theme.colorScheme.error,
-                      ),
-                    ],
-                    if (counts.dueLoansCount > 0) ...[
-                      const SizedBox(width: kSpacing8),
-                      _buildFilterPill(
-                        context: context,
-                        label: 'Loans',
-                        count: counts.dueLoansCount,
-                        filter: NotificationFilter.loans,
-                        accentColor: theme.colorScheme.primary,
-                      ),
-                    ],
+                    const SizedBox(width: kSpacing8),
+                    _buildFilterPill(
+                      context: context,
+                      label: 'Carrier SMS',
+                      count: counts.pendingSmsCount,
+                      filter: NotificationFilter.sms,
+                      accentColor: context.appColors.transferColor,
+                    ),
+                    const SizedBox(width: kSpacing8),
+                    _buildFilterPill(
+                      context: context,
+                      label: 'Bills Due',
+                      count: counts.dueBillsCount,
+                      filter: NotificationFilter.bills,
+                      accentColor: context.appColors.expenseColor,
+                    ),
+                    const SizedBox(width: kSpacing8),
+                    _buildFilterPill(
+                      context: context,
+                      label: 'Savings',
+                      count: counts.savingsRemindersCount,
+                      filter: NotificationFilter.savings,
+                      accentColor: context.appColors.incomeColor,
+                    ),
+                    const SizedBox(width: kSpacing8),
+                    _buildFilterPill(
+                      context: context,
+                      label: 'Budgets',
+                      count: counts.budgetAlertsCount,
+                      filter: NotificationFilter.budgets,
+                      accentColor: theme.colorScheme.error,
+                    ),
+                    const SizedBox(width: kSpacing8),
+                    _buildFilterPill(
+                      context: context,
+                      label: 'Loans',
+                      count: counts.dueLoansCount,
+                      filter: NotificationFilter.loans,
+                      accentColor: theme.colorScheme.primary,
+                    ),
                   ],
                 ),
               ),
@@ -1313,7 +1303,7 @@ class _NotificationCenterSheetState
                       children: [
                         Flexible(
                           child: Text(
-                            progress.budget.name,
+                            '${progress.budget.name} Alert',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: context.ts(
