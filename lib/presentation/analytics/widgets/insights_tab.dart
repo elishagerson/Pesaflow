@@ -58,21 +58,40 @@ class InsightsTab extends ConsumerWidget {
     return insightsAsync.when(
       data: (insights) {
         if (insights.isEmpty) {
-          return const EmptyState(
-            icon: PesaFlowIcons.lightbulb,
-            title: 'No Insights Yet',
-            subtitle:
-                'Insights will appear after you have transactions recorded.',
+          return RefreshIndicator(
+            color: theme.colorScheme.primary,
+            backgroundColor: theme.colorScheme.surface,
+            onRefresh: () async {
+              ref.invalidate(insightsProvider);
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: SizedBox(
+                height: MediaQuery.sizeOf(context).height * 0.6,
+                child: const EmptyState(
+                  icon: PesaFlowIcons.lightbulb,
+                  title: 'No Insights Yet',
+                  subtitle:
+                      'Insights will appear after you have transactions recorded.',
+                ),
+              ),
+            ),
           );
         }
-        return ListView.builder(
-          physics: const ClampingScrollPhysics(),
-          padding: EdgeInsets.fromLTRB(
-            kSpacing16,
-            kSpacing16,
-            kSpacing16,
-            IosTabBar.navBarHeight + kSpacing32,
-          ),
+        return RefreshIndicator(
+          color: theme.colorScheme.primary,
+          backgroundColor: theme.colorScheme.surface,
+          onRefresh: () async {
+            ref.invalidate(insightsProvider);
+          },
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(
+              kSpacing16,
+              kSpacing16,
+              kSpacing16,
+              IosTabBar.navBarHeight + kSpacing32,
+            ),
           itemCount: insights.length,
           itemBuilder: (context, index) {
             final insight = insights[index];
@@ -159,7 +178,8 @@ class InsightsTab extends ConsumerWidget {
               ),
             );
           },
-        );
+        ),
+      );
       },
       loading: () => const ShimmerCard(),
       error: (e, _) => ErrorState(

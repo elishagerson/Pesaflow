@@ -294,14 +294,23 @@ class _OverviewTab extends ConsumerWidget {
     final totalsAsync = ref.watch(monthlyTotalsProvider);
     final categoriesAsync = ref.watch(topCategoriesProvider);
 
-    return SingleChildScrollView(
-      physics: const ClampingScrollPhysics(),
-      padding: EdgeInsets.fromLTRB(
-        kSpacing16,
-        kSpacing16,
-        kSpacing16,
-        IosTabBar.navBarHeight + kSpacing32,
-      ),
+    return RefreshIndicator(
+      color: theme.colorScheme.primary,
+      backgroundColor: theme.colorScheme.surface,
+      onRefresh: () async {
+        ref.invalidate(monthlyTotalsProvider);
+        ref.invalidate(topCategoriesProvider);
+        ref.invalidate(dailyAveragesProvider);
+        ref.invalidate(recurringStatsProvider);
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.fromLTRB(
+          kSpacing16,
+          kSpacing16,
+          kSpacing16,
+          IosTabBar.navBarHeight + kSpacing32,
+        ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1116,7 +1125,8 @@ class _OverviewTab extends ConsumerWidget {
           ),
         ],
       ),
-    );
+    ),
+  );
   }
 }
 
@@ -1169,14 +1179,20 @@ class _TrendsTab extends ConsumerWidget {
     final currentRange = ref.watch(trendRangeProvider);
     final trendPointsAsync = ref.watch(trendPointsProvider);
 
-    return SingleChildScrollView(
-      physics: const ClampingScrollPhysics(),
-      padding: EdgeInsets.fromLTRB(
-        kSpacing16,
-        kSpacing16,
-        kSpacing16,
-        IosTabBar.navBarHeight + kSpacing32,
-      ),
+    return RefreshIndicator(
+      color: theme.colorScheme.primary,
+      backgroundColor: theme.colorScheme.surface,
+      onRefresh: () async {
+        ref.invalidate(trendPointsProvider);
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.fromLTRB(
+          kSpacing16,
+          kSpacing16,
+          kSpacing16,
+          IosTabBar.navBarHeight + kSpacing32,
+        ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1576,6 +1592,7 @@ class _TrendsTab extends ConsumerWidget {
           const SizedBox(height: kSpacing20),
         ],
       ),
-    );
+    ),
+  );
   }
 }

@@ -736,11 +736,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                     );
                                   }),
                                   if (_amountController.text.isNotEmpty)
-                                    InkWell(
+                                    TactileSpringContainer(
                                       onTap: _clearAmount,
-                                      borderRadius: BorderRadius.circular(
-                                        AppTheme.radiusPill,
-                                      ),
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 10,
