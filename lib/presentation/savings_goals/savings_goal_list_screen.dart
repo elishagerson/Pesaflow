@@ -564,20 +564,16 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
       child: PesaSurface.bleed(
         fill: theme.colorScheme.surfaceContainerHigh,
         radius: AppTheme.radiusHero,
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () {
-              PesaHaptics.light();
-              pushHeroCard(
-                context,
-                SavingsGoalDetailScreen(goalId: goal.id),
-                'goal_${goal.id}',
-              );
-            },
-            borderRadius: BorderRadius.circular(AppTheme.radiusHero),
-            child: Padding(
-              padding: const EdgeInsets.all(kSpacing16),
+        child: TactileSpringContainer(
+          onTap: () {
+            pushHeroCard(
+              context,
+              SavingsGoalDetailScreen(goalId: goal.id),
+              'goal_${goal.id}',
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(kSpacing16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -945,8 +941,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildStrategyInsightCard(

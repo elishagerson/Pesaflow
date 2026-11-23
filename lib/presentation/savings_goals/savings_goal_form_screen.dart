@@ -528,11 +528,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                               itemBuilder: (context, i) {
                                 final p = _presetTemplates[i];
                                 final pCol = hexToColor(p['color'] as String);
-                                return InkWell(
+                                return TactileSpringContainer(
                                   onTap: () => _applyPreset(p),
-                                  borderRadius: BorderRadius.circular(
-                                    AppTheme.radiusPill,
-                                  ),
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: kSpacing12,
@@ -708,11 +705,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                     final label = amt >= 1000000
                                         ? '+${amt ~/ 1000000}M'
                                         : '+${amt ~/ 1000}K';
-                                    return InkWell(
+                                    return TactileSpringContainer(
                                       onTap: () => _adjustAmount(amt),
-                                      borderRadius: BorderRadius.circular(
-                                        AppTheme.radiusPill,
-                                      ),
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 10,
@@ -814,11 +808,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                                 days)
                                             .abs() <=
                                         2;
-                                    return InkWell(
+                                    return TactileSpringContainer(
                                       onTap: () => _setDateHorizon(days),
-                                      borderRadius: BorderRadius.circular(
-                                        AppTheme.radiusPill,
-                                      ),
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 10,

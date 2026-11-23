@@ -414,52 +414,43 @@ class TransactionDetailScreen extends ConsumerWidget {
                         // Extra Details
                         Padding(
                           padding: const EdgeInsets.only(top: kSpacing20),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () {},
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.05,
+                              ),
                               borderRadius: BorderRadius.circular(
                                 AppTheme.radiusSmall,
                               ),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 5,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withValues(
-                                    alpha: 0.05,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    AppTheme.radiusSmall,
-                                  ),
-                                  border: Border.all(
-                                    color: theme.colorScheme.primary.withValues(
-                                      alpha: 0.15,
-                                    ),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text('📨', style: context.ts(12)),
-                                    const SizedBox(width: kSpacing6),
-                                    Text(
-                                      t.source.startsWith('sms')
-                                          ? 'Auto-imported via SMS'
-                                          : t.source == 'transfer'
-                                          ? 'Transfer'
-                                          : 'Manual entry',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall!
-                                          .copyWith(
-                                            color: theme.colorScheme.primary,
-                                          ),
-                                    ),
-                                  ],
+                              border: Border.all(
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.15,
                                 ),
                               ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('📨', style: context.ts(12)),
+                                const SizedBox(width: kSpacing6),
+                                Text(
+                                  t.source.startsWith('sms')
+                                      ? 'Auto-imported via SMS'
+                                      : t.source == 'transfer'
+                                      ? 'Transfer'
+                                      : 'Manual entry',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .copyWith(
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -710,20 +701,16 @@ class TransactionDetailScreen extends ConsumerWidget {
           width: 0.5,
         ),
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            Clipboard.setData(ClipboardData(text: value));
-            PesaHaptics.light();
-            CustomToast.show(
-              context,
-              message: 'Copied $label to clipboard',
-              type: ToastType.success,
-            );
-          },
-          borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-          child: Padding(
+      child: TactileSpringContainer(
+        onTap: () {
+          Clipboard.setData(ClipboardData(text: value));
+          CustomToast.show(
+            context,
+            message: 'Copied $label to clipboard',
+            type: ToastType.success,
+          );
+        },
+        child: Padding(
             padding: const EdgeInsets.symmetric(
               vertical: kSpacing10,
               horizontal: kSpacing12,
@@ -782,8 +769,7 @@ class TransactionDetailScreen extends ConsumerWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _detailRow(
