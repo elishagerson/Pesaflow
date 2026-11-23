@@ -1083,286 +1083,261 @@ class _NotificationCenterSheetState
     );
   }
 
-  Widget _buildBudgetCard(BuildContext context, dynamic progress) {
+  Widget _buildBudgetRow(BuildContext context, dynamic progress) {
     final theme = Theme.of(context);
     final isExceeded = progress.remaining < 0;
     final diffAmount = CurrencyFormatter.formatCents(progress.remaining.abs());
     final pct = progress.percentage as double;
     final pctInt = (pct * 100).toInt();
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: kSpacing8),
-      padding: const EdgeInsets.all(kSpacing10),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(
-          color: theme.colorScheme.error.withValues(
-            alpha: isExceeded ? 0.35 : 0.20,
-          ),
-          width: 1,
+    return TactileSpringContainer(
+      onTap: () {
+        Navigator.of(context).pop();
+        context.push('/budgets');
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing12,
+          vertical: kSpacing10,
         ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.error.withValues(
-                    alpha: context.appColors.badgeFillAlpha,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    AppTheme.squircleRadius(36),
-                  ),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.error.withValues(
+                  alpha: context.appColors.badgeFillAlpha,
                 ),
-                alignment: Alignment.center,
-                child: Icon(
-                  PesaFlowIcons.budgets,
-                  color: theme.colorScheme.error,
-                  size: 17,
+                borderRadius: BorderRadius.circular(
+                  AppTheme.squircleRadius(34),
                 ),
               ),
-              const SizedBox(width: kSpacing10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            '${progress.budget.name} Alert',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: context.ts(
-                              13,
-                              fontWeight: FontWeight.w700,
-                              color: theme.colorScheme.onSurface,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: kSpacing6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4.5,
-                            vertical: 1.5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.error.withValues(
-                              alpha: context.appColors.badgeFillAlpha,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              AppTheme.radiusPill,
-                            ),
-                          ),
-                          child: Text(
-                            isExceeded ? '$pctInt% EXCEEDED' : '$pctInt% LIMIT',
-                            style: context.ts(
-                              8.5,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 0.3,
-                              color: theme.colorScheme.error,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      isExceeded
-                          ? 'Over budget by $diffAmount'
-                          : 'Near limit: ${CurrencyFormatter.formatCents(progress.spentInPeriod)} spent',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.ts(
-                        11,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.error,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: kSpacing10),
-              TactileSpringContainer(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  context.push('/budgets');
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing12,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.error.withValues(
-                      alpha: context.appColors.badgeFillAlpha,
-                    ),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                    border: Border.all(
-                      color: theme.colorScheme.error.withValues(
-                        alpha: context.appColors.badgeBorderAlpha,
-                      ),
-                      width: 0.8,
-                    ),
-                  ),
-                  child: Text(
-                    'Adjust',
-                    style: context.ts(
-                      10.5,
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.error,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: kSpacing6),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-            child: LinearProgressIndicator(
-              value: pct.clamp(0.0, 1.0),
-              minHeight: 3.5,
-              backgroundColor: theme.colorScheme.surface,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                theme.colorScheme.error,
+              alignment: Alignment.center,
+              child: Icon(
+                PesaFlowIcons.budgets,
+                color: theme.colorScheme.error,
+                size: 16,
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: kSpacing10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          progress.budget.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.ts(
+                            13,
+                            fontWeight: FontWeight.w700,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: kSpacing6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4.5,
+                          vertical: 1.5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.error.withValues(
+                            alpha: context.appColors.badgeFillAlpha,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
+                        ),
+                        child: Text(
+                          isExceeded ? '$pctInt% EXCEEDED' : '$pctInt% LIMIT',
+                          style: context.ts(
+                            8.5,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.3,
+                            color: theme.colorScheme.error,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    isExceeded
+                        ? 'Over budget by $diffAmount'
+                        : 'Near limit: ${CurrencyFormatter.formatCents(progress.spentInPeriod)} spent',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.ts(
+                      11,
+                      fontWeight: FontWeight.w500,
+                      color: isExceeded
+                          ? theme.colorScheme.error
+                          : theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: kSpacing10),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kSpacing12,
+                vertical: 4,
+              ),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.error.withValues(
+                  alpha: context.appColors.badgeFillAlpha,
+                ),
+                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                border: Border.all(
+                  color: theme.colorScheme.error.withValues(
+                    alpha: context.appColors.badgeBorderAlpha,
+                  ),
+                  width: 0.8,
+                ),
+              ),
+              child: Text(
+                'Adjust',
+                style: context.ts(
+                  10.5,
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.error,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildLoanCard(BuildContext context, dynamic loan) {
+  Widget _buildLoanRow(BuildContext context, dynamic loan) {
     final theme = Theme.of(context);
     final isOverdue =
         loan.dueAt != null && loan.dueAt!.isBefore(DateTime.now());
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: kSpacing8),
-      padding: const EdgeInsets.all(kSpacing10),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: context.appColors.hairline, width: 1),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(
-                alpha: context.appColors.badgeFillAlpha,
+    return TactileSpringContainer(
+      onTap: () {
+        Navigator.of(context).pop();
+        context.push('/loans');
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing12,
+          vertical: kSpacing10,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withValues(
+                  alpha: context.appColors.badgeFillAlpha,
+                ),
+                borderRadius: BorderRadius.circular(
+                  AppTheme.squircleRadius(34),
+                ),
               ),
-              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
+              alignment: Alignment.center,
+              child: Icon(
+                PesaFlowIcons.loans,
+                color: theme.colorScheme.primary,
+                size: 16,
+              ),
             ),
-            alignment: Alignment.center,
-            child: Icon(
-              PesaFlowIcons.loans,
-              color: theme.colorScheme.primary,
-              size: 17,
+            const SizedBox(width: kSpacing10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          loan.description ?? 'Active Loan',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.ts(
+                            13,
+                            fontWeight: FontWeight.w700,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: kSpacing6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4.5,
+                          vertical: 1.5,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              (isOverdue
+                                      ? theme.colorScheme.error
+                                      : theme.colorScheme.primary)
+                                  .withValues(
+                                    alpha: context.appColors.badgeFillAlpha,
+                                  ),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
+                        ),
+                        child: Text(
+                          isOverdue ? 'OVERDUE' : 'DUE SOON',
+                          style: context.ts(
+                            8.5,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.3,
+                            color: isOverdue
+                                ? theme.colorScheme.error
+                                : theme.colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    isOverdue ? 'Repayment Overdue' : 'Due Soon',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.ts(
+                      11,
+                      fontWeight: FontWeight.w600,
+                      color: isOverdue
+                          ? theme.colorScheme.error
+                          : theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: kSpacing10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(width: kSpacing10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        loan.description ?? 'Active Loan',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.ts(
-                          13,
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4.5,
-                        vertical: 1.5,
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                            (isOverdue
-                                    ? theme.colorScheme.error
-                                    : theme.colorScheme.primary)
-                                .withValues(
-                                  alpha: context.appColors.badgeFillAlpha,
-                                ),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusPill,
-                        ),
-                      ),
-                      child: Text(
-                        isOverdue ? 'OVERDUE' : 'DUE SOON',
-                        style: context.ts(
-                          8.5,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.3,
-                          color: isOverdue
-                              ? theme.colorScheme.error
-                              : theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
                 Text(
-                  isOverdue ? 'Repayment Overdue' : 'Due Soon',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  CurrencyFormatter.formatCents(loan.remaining),
                   style: context.ts(
-                    11,
-                    fontWeight: FontWeight.w600,
-                    color: isOverdue
-                        ? theme.colorScheme.error
-                        : theme.colorScheme.primary,
+                    12.5,
+                    fontWeight: FontWeight.w800,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(width: kSpacing10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                CurrencyFormatter.formatCents(loan.remaining),
-                style: context.ts(
-                  13,
-                  fontWeight: FontWeight.w800,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: 5),
-              TactileSpringContainer(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  context.push('/loans');
-                },
-                child: Container(
+                const SizedBox(height: 4),
+                Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing12,
-                    vertical: 3.5,
+                    horizontal: kSpacing10,
+                    vertical: 3,
                   ),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary.withValues(
@@ -1379,16 +1354,16 @@ class _NotificationCenterSheetState
                   child: Text(
                     'Details',
                     style: context.ts(
-                      10.5,
+                      10,
                       fontWeight: FontWeight.w700,
                       color: theme.colorScheme.primary,
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
