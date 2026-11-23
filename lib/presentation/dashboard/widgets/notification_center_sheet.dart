@@ -623,7 +623,31 @@ class _NotificationCenterSheetState
     );
   }
 
-  Widget _buildSmsCard(BuildContext context, dynamic item) {
+  Widget _buildGroupedSection({required List<Widget> children}) {
+    final theme = Theme.of(context);
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+        border: Border.all(color: context.appColors.hairline, width: 1),
+      ),
+      child: Column(
+        children: [
+          for (int i = 0; i < children.length; i++) ...[
+            if (i > 0)
+              Divider(
+                height: 1,
+                thickness: 0.5,
+                color: context.appColors.hairline,
+              ),
+            children[i],
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSmsRow(BuildContext context, dynamic item) {
     final theme = Theme.of(context);
     final tx = item.transaction;
     final accountName = item.account?.name ?? 'Carrier SMS';
@@ -642,115 +666,114 @@ class _NotificationCenterSheetState
       carrierTag = 'CRDB';
     }
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: kSpacing8),
-      padding: const EdgeInsets.all(kSpacing10),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: context.appColors.hairline, width: 1),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: context.appColors.transferColor.withValues(
-                alpha: context.appColors.badgeFillAlpha,
+    return TactileSpringContainer(
+      onTap: () {
+        Navigator.of(context).pop();
+        context.push('/sms-review');
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing12,
+          vertical: kSpacing10,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                color: context.appColors.transferColor.withValues(
+                  alpha: context.appColors.badgeFillAlpha,
+                ),
+                borderRadius: BorderRadius.circular(
+                  AppTheme.squircleRadius(34),
+                ),
               ),
-              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
+              alignment: Alignment.center,
+              child: Icon(
+                PesaFlowIcons.sms,
+                color: context.appColors.transferColor,
+                size: 16,
+              ),
             ),
-            alignment: Alignment.center,
-            child: Icon(
-              PesaFlowIcons.sms,
-              color: context.appColors.transferColor,
-              size: 17,
+            const SizedBox(width: kSpacing10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          tx.description ?? 'Carrier Transaction',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.ts(
+                            13,
+                            fontWeight: FontWeight.w700,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: kSpacing6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4.5,
+                          vertical: 1.5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: context.appColors.transferColor.withValues(
+                            alpha: context.appColors.badgeFillAlpha,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
+                        ),
+                        child: Text(
+                          carrierTag,
+                          style: context.ts(
+                            8.5,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.3,
+                            color: context.appColors.transferColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    accountName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.ts(
+                      11,
+                      fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: kSpacing10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(width: kSpacing10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        tx.description ?? 'Carrier Transaction',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.ts(
-                          13,
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4.5,
-                        vertical: 1.5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: context.appColors.transferColor.withValues(
-                          alpha: context.appColors.badgeFillAlpha,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusPill,
-                        ),
-                      ),
-                      child: Text(
-                        carrierTag,
-                        style: context.ts(
-                          8.5,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.3,
-                          color: context.appColors.transferColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
                 Text(
-                  accountName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  CurrencyFormatter.formatCents(tx.amount),
                   style: context.ts(
-                    11,
-                    fontWeight: FontWeight.w500,
-                    color: theme.colorScheme.onSurfaceVariant,
+                    12.5,
+                    fontWeight: FontWeight.w800,
+                    color: context.appColors.incomeColor,
                   ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(width: kSpacing10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                CurrencyFormatter.formatCents(tx.amount),
-                style: context.ts(
-                  13,
-                  fontWeight: FontWeight.w800,
-                  color: context.appColors.incomeColor,
-                ),
-              ),
-              const SizedBox(height: 5),
-              TactileSpringContainer(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  context.push('/sms-review');
-                },
-                child: Container(
+                const SizedBox(height: 4),
+                Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: kSpacing10,
-                    vertical: 3.5,
+                    vertical: 3,
                   ),
                   decoration: BoxDecoration(
                     color: context.appColors.transferColor.withValues(
@@ -764,146 +787,133 @@ class _NotificationCenterSheetState
                       width: 0.8,
                     ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Review',
-                        style: context.ts(
-                          10.5,
-                          fontWeight: FontWeight.w700,
-                          color: context.appColors.transferColor,
-                        ),
-                      ),
-                      const SizedBox(width: 3),
-                      Icon(
-                        PesaFlowIcons.arrowForward,
-                        size: 10,
-                        color: context.appColors.transferColor,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBillCard(BuildContext context, dynamic bill) {
-    final theme = Theme.of(context);
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: kSpacing8),
-      padding: const EdgeInsets.all(kSpacing10),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: context.appColors.hairline, width: 1),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: context.appColors.expenseColor.withValues(
-                alpha: context.appColors.badgeFillAlpha,
-              ),
-              borderRadius: BorderRadius.circular(AppTheme.squircleRadius(36)),
-            ),
-            alignment: Alignment.center,
-            child: Icon(
-              PesaFlowIcons.subscriptions,
-              color: context.appColors.expenseColor,
-              size: 17,
-            ),
-          ),
-          const SizedBox(width: kSpacing10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        bill.description ?? 'Recurring Bill',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.ts(
-                          13,
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      ),
+                  child: Text(
+                    'Review',
+                    style: context.ts(
+                      10,
+                      fontWeight: FontWeight.w700,
+                      color: context.appColors.transferColor,
                     ),
-                    const SizedBox(width: kSpacing6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4.5,
-                        vertical: 1.5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: context.appColors.expenseColor.withValues(
-                          alpha: context.appColors.badgeFillAlpha,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusPill,
-                        ),
-                      ),
-                      child: Text(
-                        'Due Today',
-                        style: context.ts(
-                          8.5,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.3,
-                          color: context.appColors.expenseColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '${bill.frequency.toUpperCase()} • Interval: ${bill.intervalValue}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.ts(
-                    11,
-                    fontWeight: FontWeight.w500,
-                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(width: kSpacing10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                CurrencyFormatter.formatCents(bill.amount),
-                style: context.ts(
-                  13,
-                  fontWeight: FontWeight.w800,
-                  color: context.appColors.expenseColor,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBillRow(BuildContext context, dynamic bill) {
+    final theme = Theme.of(context);
+    return TactileSpringContainer(
+      onTap: () {
+        Navigator.of(context).pop();
+        context.push('/recurring');
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing12,
+          vertical: kSpacing10,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                color: context.appColors.expenseColor.withValues(
+                  alpha: context.appColors.badgeFillAlpha,
+                ),
+                borderRadius: BorderRadius.circular(
+                  AppTheme.squircleRadius(34),
                 ),
               ),
-              const SizedBox(height: 5),
-              TactileSpringContainer(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  context.push('/recurring');
-                },
-                child: Container(
+              alignment: Alignment.center,
+              child: Icon(
+                PesaFlowIcons.subscriptions,
+                color: context.appColors.expenseColor,
+                size: 16,
+              ),
+            ),
+            const SizedBox(width: kSpacing10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          bill.description ?? 'Recurring Bill',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.ts(
+                            13,
+                            fontWeight: FontWeight.w700,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: kSpacing6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4.5,
+                          vertical: 1.5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: context.appColors.expenseColor.withValues(
+                            alpha: context.appColors.badgeFillAlpha,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
+                        ),
+                        child: Text(
+                          'Due Today',
+                          style: context.ts(
+                            8.5,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.3,
+                            color: context.appColors.expenseColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${bill.frequency.toUpperCase()} • Interval: ${bill.intervalValue}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.ts(
+                      11,
+                      fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: kSpacing10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  CurrencyFormatter.formatCents(bill.amount),
+                  style: context.ts(
+                    12.5,
+                    fontWeight: FontWeight.w800,
+                    color: context.appColors.expenseColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing12,
-                    vertical: 3.5,
+                    horizontal: kSpacing10,
+                    vertical: 3,
                   ),
                   decoration: BoxDecoration(
                     color: context.appColors.expenseColor.withValues(
@@ -920,21 +930,21 @@ class _NotificationCenterSheetState
                   child: Text(
                     'Pay Now',
                     style: context.ts(
-                      10.5,
+                      10,
                       fontWeight: FontWeight.w700,
                       color: context.appColors.expenseColor,
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildSavingsCard(BuildContext context, dynamic goal) {
+  Widget _buildSavingsRow(BuildContext context, dynamic goal) {
     final theme = Theme.of(context);
     final goalColor = hexToColor(goal.color);
     final now = DateTime.now();
@@ -955,156 +965,120 @@ class _NotificationCenterSheetState
       statusColor = goalColor;
     }
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: kSpacing8),
-      padding: const EdgeInsets.all(kSpacing10),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: context.appColors.hairline, width: 1),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: goalColor.withValues(
-                    alpha: context.appColors.badgeFillAlpha,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    AppTheme.squircleRadius(36),
-                  ),
+    return TactileSpringContainer(
+      onTap: () {
+        showQuickDepositSheet(context, ref, goal);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing12,
+          vertical: kSpacing10,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                color: goalColor.withValues(
+                  alpha: context.appColors.badgeFillAlpha,
                 ),
-                alignment: Alignment.center,
-                child: Icon(getGoalIcon(goal.icon), color: goalColor, size: 17),
-              ),
-              const SizedBox(width: kSpacing10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            goal.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: context.ts(
-                              13,
-                              fontWeight: FontWeight.w700,
-                              color: theme.colorScheme.onSurface,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: kSpacing6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4.5,
-                            vertical: 1.5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: statusColor.withValues(
-                              alpha: context.appColors.badgeFillAlpha,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              AppTheme.radiusPill,
-                            ),
-                          ),
-                          child: Text(
-                            statusLabel,
-                            style: context.ts(
-                              8.5,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 0.3,
-                              color: statusColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${CurrencyFormatter.formatCents(goal.currentAmount)} of ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.ts(
-                        11,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                borderRadius: BorderRadius.circular(
+                  AppTheme.squircleRadius(34),
                 ),
               ),
-              const SizedBox(width: kSpacing10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              alignment: Alignment.center,
+              child: Icon(getGoalIcon(goal.icon), color: goalColor, size: 16),
+            ),
+            const SizedBox(width: kSpacing10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    '$pctInt% Saved',
-                    style: context.ts(
-                      13,
-                      fontWeight: FontWeight.w800,
-                      color: goalColor,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  TactileSpringContainer(
-                    onTap: () {
-                      showQuickDepositSheet(context, ref, goal);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: kSpacing12,
-                        vertical: 3.5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: goalColor.withValues(
-                          alpha: context.appColors.badgeFillAlpha,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusPill,
-                        ),
-                        border: Border.all(
-                          color: goalColor.withValues(
-                            alpha: context.appColors.badgeBorderAlpha,
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          goal.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.ts(
+                            13,
+                            fontWeight: FontWeight.w700,
+                            color: theme.colorScheme.onSurface,
                           ),
-                          width: 0.8,
                         ),
                       ),
-                      child: Text(
-                        'Deposit',
-                        style: context.ts(
-                          10.5,
-                          fontWeight: FontWeight.w700,
-                          color: goalColor,
+                      const SizedBox(width: kSpacing6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4.5,
+                          vertical: 1.5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: statusColor.withValues(
+                            alpha: context.appColors.badgeFillAlpha,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
+                        ),
+                        child: Text(
+                          statusLabel,
+                          style: context.ts(
+                            8.5,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.3,
+                            color: statusColor,
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${CurrencyFormatter.formatCents(goal.currentAmount)} of ${CurrencyFormatter.formatCents(goal.targetAmount)} • $pctInt% saved',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.ts(
+                      11,
+                      fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
-          const SizedBox(height: kSpacing6),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-            child: LinearProgressIndicator(
-              value: pct,
-              minHeight: 3.5,
-              backgroundColor: theme.colorScheme.surface,
-              valueColor: AlwaysStoppedAnimation<Color>(goalColor),
             ),
-          ),
-        ],
+            const SizedBox(width: kSpacing10),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kSpacing12,
+                vertical: 4,
+              ),
+              decoration: BoxDecoration(
+                color: goalColor.withValues(
+                  alpha: context.appColors.badgeFillAlpha,
+                ),
+                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                border: Border.all(
+                  color: goalColor.withValues(
+                    alpha: context.appColors.badgeBorderAlpha,
+                  ),
+                  width: 0.8,
+                ),
+              ),
+              child: Text(
+                'Deposit',
+                style: context.ts(
+                  10.5,
+                  fontWeight: FontWeight.w700,
+                  color: goalColor,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
