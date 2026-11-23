@@ -51,16 +51,27 @@ class _NotificationCenterSheetState
     final budgets = (ref.watch(budgetProgressProvider).value ?? [])
         .where((b) => b.remaining < 0 || b.percentage >= 0.9)
         .toList();
+    final now = DateTime.now();
     final activeLoans = (ref.watch(activeLoansStreamProvider).value ?? [])
         .where((l) {
           if (l.remaining <= 0 || l.dueAt == null) return false;
-          final diff = l.dueAt!.difference(DateTime.now()).inDays;
+          final diff = l.dueAt!.difference(now).inDays;
           return diff <= 3;
         })
         .toList();
-    final activeSavings = (ref.watch(savingsGoalsStreamProvider).value ?? [])
-        .where((g) => !g.isCompleted && g.currentAmount < g.targetAmount)
-        .toList();
+    final allSavings = ref.watch(savingsGoalsStreamProvider).value ?? [];
+    final urgentSavings = allSavings.where((g) {
+      if (g.isCompleted || g.currentAmount >= g.targetAmount) return false;
+      return g.targetDate.difference(now).inDays <= 30;
+    }).toList();
+    final List<dynamic> activeSavings = urgentSavings.isNotEmpty
+        ? urgentSavings
+        : (allSavings
+              .where((g) => !g.isCompleted && g.currentAmount < g.targetAmount)
+              .toList()
+            ..sort((a, b) => a.targetDate.compareTo(b.targetDate)))
+          .take(1)
+          .toList();
 
     return DraggableScrollableSheet(
       initialChildSize: 0.78,
