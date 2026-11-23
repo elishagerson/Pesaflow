@@ -460,60 +460,74 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                   : const SizedBox.shrink(),
             ),
 
-            // ── TYPE FILTER BAR ──
-            // All four type filters are short, fixed labels. A Wrap keeps every
-            // option visible without a hidden horizontal scroll region.
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
+            // ── TYPE FILTER BAR (Compact iOS Segmented Control) ──
+            Container(
+              height: 38,
+              margin: const EdgeInsets.fromLTRB(
                 kSpacing16,
-                kSpacing4,
+                kSpacing2,
                 kSpacing16,
                 kSpacing6,
               ),
-              child: Wrap(
-                spacing: kSpacing8,
+              padding: const EdgeInsets.all(kSpacing4),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.45,
+                ),
+                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+              ),
+              child: Row(
                 children: ['All', 'Income', 'Expense', 'Transfer'].map((type) {
                   final isSelected = activeType == type;
-                  return TactileSpringContainer(
-                    onTap: () {
-                      ref.read(transactionTypeFilterProvider.notifier).state =
-                          type;
-                    },
-                    child: AnimatedContainer(
-                      duration: MotionTokens.durationFast,
-                      curve: Curves.easeOutCubic,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: kSpacing16,
-                        vertical: kSpacing8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? theme.colorScheme.primary
-                            : theme.colorScheme.surfaceContainerHighest
-                                  .withValues(alpha: 0.35),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusPill,
-                        ),
-                        border: Border.all(
+                  final Color typeColor = switch (type) {
+                    'Income' => context.appColors.incomeColor,
+                    'Expense' => context.appColors.expenseColor,
+                    'Transfer' => context.appColors.transferColor,
+                    _ => theme.colorScheme.onSurface,
+                  };
+                  return Expanded(
+                    child: TactileSpringContainer(
+                      onTap: () {
+                        PesaHaptics.selection();
+                        ref.read(transactionTypeFilterProvider.notifier).state =
+                            type;
+                      },
+                      child: AnimatedContainer(
+                        duration: MotionTokens.durationFast,
+                        curve: Curves.easeOutCubic,
+                        decoration: BoxDecoration(
                           color: isSelected
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.outlineVariant.withValues(
-                                  alpha: 0.25,
-                                ),
-                          width: 1.0,
+                              ? theme.colorScheme.surface
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.08),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ]
+                              : null,
                         ),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        type,
-                        style: context.ts(
-                          13,
-                          color: isSelected
-                              ? theme.colorScheme.onPrimary
-                              : theme.colorScheme.onSurfaceVariant,
-                          fontWeight: isSelected
-                              ? FontWeight.bold
-                              : FontWeight.w600,
+                        alignment: Alignment.center,
+                        child: Text(
+                          type,
+                          style: context.ts(
+                            12.5,
+                            color: isSelected
+                                ? (type == 'All'
+                                      ? theme.colorScheme.onSurface
+                                      : typeColor)
+                                : theme.colorScheme.onSurfaceVariant.withValues(
+                                    alpha: 0.7,
+                                  ),
+                            fontWeight: isSelected
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
