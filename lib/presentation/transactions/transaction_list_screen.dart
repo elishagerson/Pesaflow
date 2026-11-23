@@ -22,6 +22,7 @@ import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/hero_card_route.dart';
 import 'package:pesaflow/presentation/common/widgets/ios_large_title_header.dart';
@@ -1245,10 +1246,30 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                         },
                       );
                     },
-                    loading: () => const SizedBox.shrink(),
-                    error: (err, _) => Center(
-                      child: Text(
-                        context.l10n.errorLoadingTransactions(err.toString()),
+                    loading: () => const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: kSpacing16,
+                        vertical: kSpacing8,
+                      ),
+                      child: Column(
+                        children: [
+                          SkeletonCard(height: 72),
+                          SizedBox(height: kSpacing8),
+                          SkeletonCard(height: 72),
+                          SizedBox(height: kSpacing8),
+                          SkeletonCard(height: 72),
+                          SizedBox(height: kSpacing8),
+                          SkeletonCard(height: 72),
+                          SizedBox(height: kSpacing8),
+                          SkeletonCard(height: 72),
+                        ],
+                      ),
+                    ),
+                    error: (err, _) => ErrorState(
+                      title: 'Failed to load transactions',
+                      message: err.toString(),
+                      onRetry: () => ref.invalidate(
+                        filteredTransactionsStreamProvider,
                       ),
                     ),
                   ),

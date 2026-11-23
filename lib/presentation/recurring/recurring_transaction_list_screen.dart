@@ -91,7 +91,7 @@ class _RecurringTransactionListScreenState
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: kSpacing80),
+        padding: const EdgeInsets.only(bottom: kSpacing16),
         child: AppExtendedFab(
           label: 'New Recurring',
           onPressed: () {

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -990,12 +991,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 ),
                               );
                             },
-                            loading: () => const SizedBox.shrink(),
-                            error: (err, _) => Center(
-                              child: Text(
-                                context.l10n.errorLoadingActivity(
-                                  err.toString(),
-                                ),
+                            loading: () => const Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: kSpacing16,
+                                vertical: kSpacing8,
+                              ),
+                              child: Column(
+                                children: [
+                                  SkeletonCard(height: 64),
+                                  SizedBox(height: kSpacing8),
+                                  SkeletonCard(height: 64),
+                                  SizedBox(height: kSpacing8),
+                                  SkeletonCard(height: 64),
+                                ],
+                              ),
+                            ),
+                            error: (err, _) => ErrorState(
+                              title: 'Failed to load recent activity',
+                              message: err.toString(),
+                              onRetry: () => ref.invalidate(
+                                dashboardTransactionsStreamProvider,
                               ),
                             ),
                           ),

@@ -53,7 +53,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: kSpacing80),
+        padding: const EdgeInsets.only(bottom: kSpacing16),
         child: AppExtendedFab(
           label: 'New Loan',
           onPressed: () {
@@ -85,7 +85,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // ── Floating Top Bar ──
-                const FloatingTopBar(title: 'Loans', padding: EdgeInsets.zero),
+                const FloatingTopBar(title: 'Loans'),
                 const SizedBox(height: kSpacing16),
                 ...staggerEntrance([
                   // Outstanding header

@@ -206,7 +206,21 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
                       ),
                     );
                   },
-                  loading: () => const SizedBox.shrink(),
+                  loading: () => const Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: kSpacing4,
+                      vertical: kSpacing8,
+                    ),
+                    child: Column(
+                      children: [
+                        SkeletonCard(height: 140),
+                        SizedBox(height: kSpacing12),
+                        SkeletonCard(height: 140),
+                        SizedBox(height: kSpacing12),
+                        SkeletonCard(height: 140),
+                      ],
+                    ),
+                  ),
                   error: (err, _) => ErrorState(
                     title: 'Could not load savings goals',
                     message: '$err',
@@ -218,12 +232,16 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
           ],
         ),
       ),
-      floatingActionButton: AppExtendedFab(
-        onPressed: () {
-          PesaHaptics.medium();
-          context.push('/savings-goals/add');
-        },
-        label: 'New Goal',
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: kSpacing16),
+        child: AppExtendedFab(
+          onPressed: () {
+            PesaHaptics.medium();
+            context.push('/savings-goals/add');
+          },
+          label: 'New Goal',
+        ),
       ),
     );
   }
