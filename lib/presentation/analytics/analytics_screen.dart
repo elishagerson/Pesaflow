@@ -310,284 +310,237 @@ class _OverviewTab extends ConsumerWidget {
           kSpacing16,
           IosTabBar.navBarHeight + kSpacing32,
         ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Monthly Summary
-          totalsAsync.when(
-            data: (totals) {
-              final income = totals['income'] ?? 0;
-              final expense = totals['expense'] ?? 0;
-              final net = income - expense;
-              final savingsRate = income > 0
-                  ? ((net / income) * 100).round()
-                  : 0;
-              final incomeColorVal = context.appColors.incomeColor;
-              final expenseColorVal = context.appColors.expenseColor;
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Monthly Summary
+            totalsAsync.when(
+              data: (totals) {
+                final income = totals['income'] ?? 0;
+                final expense = totals['expense'] ?? 0;
+                final net = income - expense;
+                final savingsRate = income > 0
+                    ? ((net / income) * 100).round()
+                    : 0;
+                final incomeColorVal = context.appColors.incomeColor;
+                final expenseColorVal = context.appColors.expenseColor;
 
-              final isDeficit = net < 0;
-              final onSurface = theme.colorScheme.onSurface;
+                final isDeficit = net < 0;
+                final onSurface = theme.colorScheme.onSurface;
 
-              return StaggeredFadeSlide(
-                index: 0,
-                child: PesaSurface.bleed(
-                  fill: theme.colorScheme.surfaceContainerHigh,
-                  radius: AppTheme.radiusDialog,
-                  padding: const EdgeInsets.all(kSpacing20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(kSpacing6),
-                                decoration: BoxDecoration(
-                                  color: onSurface.withValues(alpha: 0.08),
-                                  borderRadius: BorderRadius.circular(
-                                    AppTheme.squircleRadius(27),
-                                  ),
-                                ),
-                                child: Icon(
-                                  PesaFlowIcons.analytics,
-                                  size: 15,
-                                  color: onSurface.withValues(alpha: 0.8),
-                                ),
-                              ),
-                              const SizedBox(width: kSpacing8),
-                              Text(
-                                'CASH FLOW PERFORMANCE',
-                                style: context.ts(
-                                  11,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.8,
-                                  color: context.appColors.textMedium,
-                                ),
-                              ),
-                            ],
-                          ),
-                          if (isDeficit)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: kSpacing8,
-                                vertical: kSpacing4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: context.appColors.expenseColor
-                                    .withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(
-                                  AppTheme.radiusPill,
-                                ),
-                                border: Border.all(
-                                  color: context.appColors.expenseColor
-                                      .withValues(alpha: 0.25),
-                                  width: 0.8,
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    PesaFlowIcons.error,
-                                    size: 11,
-                                    color: context.appColors.expenseColor,
-                                  ),
-                                  const SizedBox(width: kSpacing4),
-                                  Text(
-                                    'DEFICIT',
-                                    style: context.ts(
-                                      10,
-                                      fontWeight: FontWeight.w800,
-                                      color: context.appColors.expenseColor,
-                                      letterSpacing: 0.4,
+                return StaggeredFadeSlide(
+                  index: 0,
+                  child: PesaSurface.bleed(
+                    fill: theme.colorScheme.surfaceContainerHigh,
+                    radius: AppTheme.radiusDialog,
+                    padding: const EdgeInsets.all(kSpacing20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(kSpacing6),
+                                  decoration: BoxDecoration(
+                                    color: onSurface.withValues(alpha: 0.08),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.squircleRadius(27),
                                     ),
                                   ),
-                                ],
-                              ),
-                            )
-                          else
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: kSpacing8,
-                                vertical: kSpacing4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: context.appColors.incomeColor.withValues(
-                                  alpha: 0.10,
-                                ),
-                                borderRadius: BorderRadius.circular(
-                                  AppTheme.radiusPill,
-                                ),
-                                border: Border.all(
-                                  color: context.appColors.incomeColor
-                                      .withValues(alpha: 0.20),
-                                  width: 0.8,
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    PesaFlowIcons.check,
-                                    size: 11,
-                                    color: context.appColors.incomeColor,
+                                  child: Icon(
+                                    PesaFlowIcons.analytics,
+                                    size: 15,
+                                    color: onSurface.withValues(alpha: 0.8),
                                   ),
-                                  const SizedBox(width: kSpacing4),
-                                  Text(
-                                    'SURPLUS',
-                                    style: context.ts(
-                                      10,
-                                      fontWeight: FontWeight.w800,
-                                      color: context.appColors.incomeColor,
-                                      letterSpacing: 0.4,
-                                    ),
+                                ),
+                                const SizedBox(width: kSpacing8),
+                                Text(
+                                  'CASH FLOW PERFORMANCE',
+                                  style: context.ts(
+                                    11,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 0.8,
+                                    color: context.appColors.textMedium,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                        ],
-                      ),
-                      const SizedBox(height: kSpacing18),
-                      Text(
-                        'NET CASH FLOW',
-                        style: context.ts(
-                          11,
-                          fontWeight: FontWeight.w700,
-                          color: context.appColors.textMedium,
-                          letterSpacing: 0.5,
+                            if (isDeficit)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: kSpacing8,
+                                  vertical: kSpacing4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: context.appColors.expenseColor
+                                      .withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusPill,
+                                  ),
+                                  border: Border.all(
+                                    color: context.appColors.expenseColor
+                                        .withValues(alpha: 0.25),
+                                    width: 0.8,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      PesaFlowIcons.error,
+                                      size: 11,
+                                      color: context.appColors.expenseColor,
+                                    ),
+                                    const SizedBox(width: kSpacing4),
+                                    Text(
+                                      'DEFICIT',
+                                      style: context.ts(
+                                        10,
+                                        fontWeight: FontWeight.w800,
+                                        color: context.appColors.expenseColor,
+                                        letterSpacing: 0.4,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            else
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: kSpacing8,
+                                  vertical: kSpacing4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: context.appColors.incomeColor
+                                      .withValues(alpha: 0.10),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusPill,
+                                  ),
+                                  border: Border.all(
+                                    color: context.appColors.incomeColor
+                                        .withValues(alpha: 0.20),
+                                    width: 0.8,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      PesaFlowIcons.check,
+                                      size: 11,
+                                      color: context.appColors.incomeColor,
+                                    ),
+                                    const SizedBox(width: kSpacing4),
+                                    Text(
+                                      'SURPLUS',
+                                      style: context.ts(
+                                        10,
+                                        fontWeight: FontWeight.w800,
+                                        color: context.appColors.incomeColor,
+                                        letterSpacing: 0.4,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: kSpacing4),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          if (isDeficit)
-                            Text(
-                              '-',
+                        const SizedBox(height: kSpacing18),
+                        Text(
+                          'NET CASH FLOW',
+                          style: context.ts(
+                            11,
+                            fontWeight: FontWeight.w700,
+                            color: context.appColors.textMedium,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing4),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            if (isDeficit)
+                              Text(
+                                '-',
+                                style: context.ts(
+                                  28,
+                                  fontWeight: FontWeight.w900,
+                                  color: context.appColors.expenseColor,
+                                ),
+                              ),
+                            AmountText(
+                              amountInCents: net.abs(),
+                              animate: true,
                               style: context.ts(
                                 28,
                                 fontWeight: FontWeight.w900,
-                                color: context.appColors.expenseColor,
-                              ),
-                            ),
-                          AmountText(
-                            amountInCents: net.abs(),
-                            animate: true,
-                            style: context.ts(
-                              28,
-                              fontWeight: FontWeight.w900,
-                              color: isDeficit
-                                  ? context.appColors.expenseColor
-                                  : onSurface,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                          const Spacer(),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kSpacing10,
-                              vertical: kSpacing4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: onSurface.withValues(alpha: 0.05),
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusPill,
-                              ),
-                            ),
-                            child: Text(
-                              'Savings Rate: $savingsRate%',
-                              style: context.ts(
-                                11,
-                                fontWeight: FontWeight.w700,
                                 color: isDeficit
                                     ? context.appColors.expenseColor
-                                    : context.appColors.incomeColor,
+                                    : onSurface,
+                                letterSpacing: -0.5,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: kSpacing16),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing14,
-                          vertical: kSpacing10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: onSurface.withValues(alpha: 0.04),
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusCard,
-                          ),
-                          border: Border.all(
-                            color: onSurface.withValues(alpha: 0.06),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        PesaFlowIcons.income,
-                                        size: 13,
-                                        color: incomeColorVal,
-                                      ),
-                                      const SizedBox(width: kSpacing4),
-                                      Text(
-                                        'Total Income',
-                                        style: context.ts(
-                                          11,
-                                          fontWeight: FontWeight.w600,
-                                          color: onSurface.withValues(
-                                            alpha: 0.6,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 2),
-                                  AmountText(
-                                    amountInCents: income,
-                                    animate: true,
-                                    style: context.ts(
-                                      16,
-                                      fontWeight: FontWeight.w700,
-                                      color: incomeColorVal,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            const Spacer(),
                             Container(
-                              height: 32,
-                              width: 1,
-                              color: onSurface.withValues(alpha: 0.08),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: kSpacing14,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: kSpacing10,
+                                vertical: kSpacing4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: onSurface.withValues(alpha: 0.05),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusPill,
                                 ),
+                              ),
+                              child: Text(
+                                'Savings Rate: $savingsRate%',
+                                style: context.ts(
+                                  11,
+                                  fontWeight: FontWeight.w700,
+                                  color: isDeficit
+                                      ? context.appColors.expenseColor
+                                      : context.appColors.incomeColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: kSpacing16),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing14,
+                            vertical: kSpacing10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: onSurface.withValues(alpha: 0.04),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusCard,
+                            ),
+                            border: Border.all(
+                              color: onSurface.withValues(alpha: 0.06),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       children: [
                                         Icon(
-                                          PesaFlowIcons.expense,
+                                          PesaFlowIcons.income,
                                           size: 13,
-                                          color: expenseColorVal,
+                                          color: incomeColorVal,
                                         ),
                                         const SizedBox(width: kSpacing4),
                                         Text(
-                                          'Total Expense',
+                                          'Total Income',
                                           style: context.ts(
                                             11,
                                             fontWeight: FontWeight.w600,
@@ -600,532 +553,588 @@ class _OverviewTab extends ConsumerWidget {
                                     ),
                                     const SizedBox(height: 2),
                                     AmountText(
-                                      amountInCents: expense,
+                                      amountInCents: income,
                                       animate: true,
                                       style: context.ts(
                                         16,
                                         fontWeight: FontWeight.w700,
-                                        color: expenseColorVal,
+                                        color: incomeColorVal,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-            loading: () => ShimmerCard(height: 160),
-            error: (e, _) =>
-                ErrorState(title: 'Could not load data', message: '$e'),
-          ),
-          const SizedBox(height: kSpacing24),
-          const MonthlyOverviewSection(),
-          const SizedBox(height: kSpacing24),
-          Text(
-            'SPENDING HEATMAP',
-            style: context.ts(
-              11,
-              color: context.appColors.textMedium,
-              letterSpacing: 1.2,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: kSpacing12),
-          const SpendingHeatmapCard(),
-          const SizedBox(height: kSpacing20),
-
-          // Savings Goal Bento Box
-          ref
-              .watch(savingsGoalsStreamProvider)
-              .when(
-                data: (goals) {
-                  if (goals.isNotEmpty) {
-                    return SizedBox(
-                      height: 125,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        physics: const ClampingScrollPhysics(),
-                        itemCount: goals.length,
-                        separatorBuilder: (_, _) =>
-                            const SizedBox(width: kSpacing12),
-                        itemBuilder: (context, index) {
-                          final goal = goals[index];
-                          final goalColor = hexToColor(goal.color);
-                          final goalPct = goal.targetAmount > 0
-                              ? (goal.currentAmount / goal.targetAmount).clamp(
-                                  0.0,
-                                  1.0,
-                                )
-                              : 0.0;
-                          final percentInt = (goalPct * 100).round();
-
-                          return StaggeredFadeSlide(
-                            index: index,
-                            child: GestureDetector(
-                              onTap: () {
-                                PesaHaptics.light();
-                                showSpringSheet(
-                                  context,
-                                  isScrollControlled: true,
-                                  builder: (context) =>
-                                      SavingsGoalDetailSheet(goal: goal),
-                                );
-                              },
-                              child: SizedBox(
-                                width: 250,
-                                child: PesaSurface.bleed(
-                                  fill: theme.colorScheme.surfaceContainerHigh,
-                                  radius: AppTheme.radiusCard,
-                                  padding: const EdgeInsets.all(kSpacing16),
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        height: 56,
-                                        width: 56,
-                                        child: Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Semantics(
-                                              label:
-                                                  '${(goalPct * 100).round()}% of savings goal reached',
-                                              child: PieChart(
-                                                PieChartData(
-                                                  startDegreeOffset: -90,
-                                                  sectionsSpace: 0,
-                                                  centerSpaceRadius: 20,
-                                                  sections: [
-                                                    PieChartSectionData(
-                                                      value: goalPct * 100,
-                                                      color: goalColor,
-                                                      radius: 4,
-                                                      showTitle: false,
-                                                    ),
-                                                    PieChartSectionData(
-                                                      value:
-                                                          (1.0 - goalPct) * 100,
-                                                      color: goalColor
-                                                          .withValues(
-                                                            alpha: 0.12,
-                                                          ),
-                                                      radius: 4,
-                                                      showTitle: false,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            Icon(
-                                              goal.icon == 'savings'
-                                                  ? PesaFlowIcons.savings
-                                                  : goal.icon == 'laptop'
-                                                  ? PesaFlowIcons.laptop
-                                                  : goal.icon == 'flight'
-                                                  ? PesaFlowIcons.flight
-                                                  : goal.icon == 'home'
-                                                  ? PesaFlowIcons.home
-                                                  : goal.icon == 'car'
-                                                  ? PesaFlowIcons.car
-                                                  : goal.icon == 'school'
-                                                  ? PesaFlowIcons.school
-                                                  : goal.icon == 'heart'
-                                                  ? PesaFlowIcons.heart
-                                                  : PesaFlowIcons.savings,
-                                              color: goalColor,
-                                              size: 18,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(width: kSpacing16),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              goal.name,
-                                              style: context.ts(
-                                                13,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            const SizedBox(height: kSpacing4),
-                                            Text(
-                                              '$percentInt% Completed',
-                                              style: context.ts(
-                                                12,
-                                                fontWeight: FontWeight.bold,
-                                                color: goalColor,
-                                              ),
-                                            ),
-                                            const SizedBox(height: kSpacing2),
-                                            Text(
-                                              'Saved ${CurrencyFormatter.formatCents(goal.currentAmount)}',
-                                              style: Theme.of(context)
-                                                  .extension<
-                                                    AppTypographyTheme
-                                                  >()!
-                                                  .labelMicro
-                                                  .copyWith(
-                                                    color: context
-                                                        .appColors
-                                                        .textLow,
-                                                  ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  } else {
-                    final totals = totalsAsync.value ?? {};
-                    final income = totals['income'] ?? 0;
-                    final expense = totals['expense'] ?? 0;
-                    final netSavings = income - expense;
-
-                    return PesaSurface.bleed(
-                      fill: theme.colorScheme.onSurface.withValues(alpha: 0.03),
-                      radius: AppTheme.radiusCard,
-                      padding: const EdgeInsets.all(kSpacing20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
                               Container(
-                                padding: const EdgeInsets.all(kSpacing8),
-                                decoration: BoxDecoration(
-                                  color: AppTheme.transferColorDark.withValues(
-                                    alpha: 0.12,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    AppTheme.squircleRadius(36),
-                                  ),
-                                ),
-                                child: Icon(
-                                  PesaFlowIcons.savings,
-                                  color: AppTheme.transferColorDark,
-                                  size: 20,
-                                ),
+                                height: 32,
+                                width: 1,
+                                color: onSurface.withValues(alpha: 0.08),
                               ),
-                              const SizedBox(width: kSpacing12),
                               Expanded(
-                                child: Text(
-                                  'SET A SAVINGS GOAL',
-                                  style: context.ts(
-                                    11,
-                                    color: context.appColors.textMedium,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1.1,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: kSpacing14),
-                          Text(
-                            netSavings > 0
-                                ? 'You\'ve saved ${CurrencyFormatter.formatCents(netSavings)} this month! Let\'s build a target habit.'
-                                : 'You\'re spending more than you\'re earning (${CurrencyFormatter.formatCents(-netSavings)} deficit). Let\'s review your budget.',
-                            style: context.ts(
-                              12,
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.78,
-                              ),
-                              height: 1.4,
-                            ),
-                          ),
-                          const SizedBox(height: kSpacing16),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 44,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                PesaHaptics.light();
-                                showSpringSheet(
-                                  context,
-                                  isScrollControlled: true,
-                                  builder: (context) =>
-                                      const SavingsGoalFormSheet(),
-                                );
-                              },
-                              icon: Icon(PesaFlowIcons.add, size: 16),
-                              label: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  'Set Monthly Savings Goal',
-                                  style: context.ts(
-                                    13,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                },
-                loading: () => const SizedBox(
-                  height: 100,
-                  child: Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
-                error: (_, _) => const SizedBox(),
-              ),
-          const SizedBox(height: kSpacing24),
-          Text(
-            'INSIGHTS',
-            style: context.ts(
-              11,
-              color: context.appColors.textMedium,
-              letterSpacing: 1.2,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: kSpacing12),
-          const InsightsCarousel(),
-          const SizedBox(height: kSpacing24),
-
-          PesaSurface.bleed(
-            fill: theme.colorScheme.surfaceContainerHigh,
-            radius: AppTheme.radiusCard,
-            padding: const EdgeInsets.all(kSpacing20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'TOP SPENDING CATEGORIES',
-                  style: context.ts(
-                    11,
-                    color: context.appColors.textMedium,
-                    letterSpacing: 1.2,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: kSpacing20),
-                categoriesAsync.when(
-                  data: (cats) {
-                    if (cats.isEmpty) {
-                      return EmptyState(
-                        icon: PesaFlowIcons.budgets,
-                        title: 'No Spending Data Yet',
-                        subtitle:
-                            'Log some transactions to see your category breakdown.',
-                      );
-                    }
-                    final total = cats.fold<int>(0, (s, c) => s + c.amount);
-                    final colors = [
-                      theme.colorScheme.primary,
-                      context.appColors.transferColor,
-                      theme.colorScheme.tertiary,
-                      theme.colorScheme.secondary,
-                      context.appColors.expenseColor,
-                    ];
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        StaggeredFadeSlide(
-                          index: 1,
-                          child: SizedBox(
-                            height: 120,
-                            width: 120,
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Semantics(
-                                  label:
-                                      'Spending by category. Total ${CurrencyFormatter.formatCompact(total)}.',
-                                  child: PieChart(
-                                    PieChartData(
-                                      sectionsSpace: 2,
-                                      centerSpaceRadius: 36,
-                                      sections: List.generate(cats.length, (i) {
-                                        final cat = cats[i];
-                                        final color = i < colors.length
-                                            ? colors[i]
-                                            : hexToColor(cat.categoryColor);
-                                        return PieChartSectionData(
-                                          value: cat.amount.toDouble(),
-                                          gradient: _categoryGradient(color),
-                                          radius: 14,
-                                          showTitle: false,
-                                        );
-                                      }),
-                                    ),
-                                  ),
-                                ),
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'SPENT',
-                                      style: context.ts(
-                                        8,
-                                        fontWeight: FontWeight.w700,
-                                        color: theme.colorScheme.onSurface
-                                            .withValues(alpha: 0.4),
-                                        letterSpacing: 1.0,
-                                      ),
-                                    ),
-                                    const SizedBox(height: kSpacing2),
-                                    Text(
-                                      CurrencyFormatter.formatCompact(total),
-                                      style: AppTheme.getMonospaceStyle(
-                                        context.ts(
-                                          12,
-                                          fontWeight: FontWeight.bold,
-                                          color: theme.colorScheme.onSurface,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: kSpacing20),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: List.generate(cats.length, (i) {
-                              final cat = cats[i];
-                              final color = i < colors.length
-                                  ? colors[i]
-                                  : hexToColor(cat.categoryColor);
-                              final pct = total > 0
-                                  ? (cat.amount / total * 100).round()
-                                  : 0;
-                              final double pctFactor = total > 0
-                                  ? (cat.amount / total)
-                                  : 0.0;
-
-                              return StaggeredFadeSlide(
-                                index: i,
                                 child: Padding(
                                   padding: const EdgeInsets.only(
-                                    bottom: kSpacing10,
+                                    left: kSpacing14,
                                   ),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                width: 10,
-                                                height: 4,
-                                                decoration: BoxDecoration(
-                                                  gradient: _categoryGradient(
-                                                    color,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(2),
-                                                ),
-                                              ),
-                                              const SizedBox(width: kSpacing8),
-                                              Text(
-                                                cat.categoryName,
-                                                style: context.ts(
-                                                  12,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ],
+                                          Icon(
+                                            PesaFlowIcons.expense,
+                                            size: 13,
+                                            color: expenseColorVal,
                                           ),
+                                          const SizedBox(width: kSpacing4),
                                           Text(
-                                            '$pct%',
+                                            'Total Expense',
                                             style: context.ts(
                                               11,
-                                              fontWeight: FontWeight.bold,
-                                              color: context.appColors.textLow,
+                                              fontWeight: FontWeight.w600,
+                                              color: onSurface.withValues(
+                                                alpha: 0.6,
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: kSpacing4),
-                                      // Curved progress track
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(
-                                          AppTheme.radiusPill,
-                                        ),
-                                        child: Container(
-                                          height: 5,
-                                          width: double.infinity,
-                                          color: context.appColors.onBgColor
-                                              .withValues(alpha: 0.06),
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: FractionallySizedBox(
-                                              widthFactor: pctFactor,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  gradient: _categoryGradient(
-                                                    color,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        AppTheme.radiusPill,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                      const SizedBox(height: 2),
+                                      AmountText(
+                                        amountInCents: expense,
+                                        animate: true,
+                                        style: context.ts(
+                                          16,
+                                          fontWeight: FontWeight.w700,
+                                          color: expenseColorVal,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              );
-                            }),
+                              ),
+                            ],
                           ),
                         ),
                       ],
-                    );
+                    ),
+                  ),
+                );
+              },
+              loading: () => ShimmerCard(height: 160),
+              error: (e, _) =>
+                  ErrorState(title: 'Could not load data', message: '$e'),
+            ),
+            const SizedBox(height: kSpacing24),
+            const MonthlyOverviewSection(),
+            const SizedBox(height: kSpacing24),
+            Text(
+              'SPENDING HEATMAP',
+              style: context.ts(
+                11,
+                color: context.appColors.textMedium,
+                letterSpacing: 1.2,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: kSpacing12),
+            const SpendingHeatmapCard(),
+            const SizedBox(height: kSpacing20),
+
+            // Savings Goal Bento Box
+            ref
+                .watch(savingsGoalsStreamProvider)
+                .when(
+                  data: (goals) {
+                    if (goals.isNotEmpty) {
+                      return SizedBox(
+                        height: 125,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: goals.length,
+                          separatorBuilder: (_, _) =>
+                              const SizedBox(width: kSpacing12),
+                          itemBuilder: (context, index) {
+                            final goal = goals[index];
+                            final goalColor = hexToColor(goal.color);
+                            final goalPct = goal.targetAmount > 0
+                                ? (goal.currentAmount / goal.targetAmount)
+                                      .clamp(0.0, 1.0)
+                                : 0.0;
+                            final percentInt = (goalPct * 100).round();
+
+                            return StaggeredFadeSlide(
+                              index: index,
+                              child: GestureDetector(
+                                onTap: () {
+                                  PesaHaptics.light();
+                                  showSpringSheet(
+                                    context,
+                                    isScrollControlled: true,
+                                    builder: (context) =>
+                                        SavingsGoalDetailSheet(goal: goal),
+                                  );
+                                },
+                                child: SizedBox(
+                                  width: 250,
+                                  child: PesaSurface.bleed(
+                                    fill:
+                                        theme.colorScheme.surfaceContainerHigh,
+                                    radius: AppTheme.radiusCard,
+                                    padding: const EdgeInsets.all(kSpacing16),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 56,
+                                          width: 56,
+                                          child: Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              Semantics(
+                                                label:
+                                                    '${(goalPct * 100).round()}% of savings goal reached',
+                                                child: PieChart(
+                                                  PieChartData(
+                                                    startDegreeOffset: -90,
+                                                    sectionsSpace: 0,
+                                                    centerSpaceRadius: 20,
+                                                    sections: [
+                                                      PieChartSectionData(
+                                                        value: goalPct * 100,
+                                                        color: goalColor,
+                                                        radius: 4,
+                                                        showTitle: false,
+                                                      ),
+                                                      PieChartSectionData(
+                                                        value:
+                                                            (1.0 - goalPct) *
+                                                            100,
+                                                        color: goalColor
+                                                            .withValues(
+                                                              alpha: 0.12,
+                                                            ),
+                                                        radius: 4,
+                                                        showTitle: false,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Icon(
+                                                goal.icon == 'savings'
+                                                    ? PesaFlowIcons.savings
+                                                    : goal.icon == 'laptop'
+                                                    ? PesaFlowIcons.laptop
+                                                    : goal.icon == 'flight'
+                                                    ? PesaFlowIcons.flight
+                                                    : goal.icon == 'home'
+                                                    ? PesaFlowIcons.home
+                                                    : goal.icon == 'car'
+                                                    ? PesaFlowIcons.car
+                                                    : goal.icon == 'school'
+                                                    ? PesaFlowIcons.school
+                                                    : goal.icon == 'heart'
+                                                    ? PesaFlowIcons.heart
+                                                    : PesaFlowIcons.savings,
+                                                color: goalColor,
+                                                size: 18,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: kSpacing16),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                goal.name,
+                                                style: context.ts(
+                                                  13,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              const SizedBox(height: kSpacing4),
+                                              Text(
+                                                '$percentInt% Completed',
+                                                style: context.ts(
+                                                  12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: goalColor,
+                                                ),
+                                              ),
+                                              const SizedBox(height: kSpacing2),
+                                              Text(
+                                                'Saved ${CurrencyFormatter.formatCents(goal.currentAmount)}',
+                                                style: Theme.of(context)
+                                                    .extension<
+                                                      AppTypographyTheme
+                                                    >()!
+                                                    .labelMicro
+                                                    .copyWith(
+                                                      color: context
+                                                          .appColors
+                                                          .textLow,
+                                                    ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    } else {
+                      final totals = totalsAsync.value ?? {};
+                      final income = totals['income'] ?? 0;
+                      final expense = totals['expense'] ?? 0;
+                      final netSavings = income - expense;
+
+                      return PesaSurface.bleed(
+                        fill: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.03,
+                        ),
+                        radius: AppTheme.radiusCard,
+                        padding: const EdgeInsets.all(kSpacing20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(kSpacing8),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.transferColorDark
+                                        .withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.squircleRadius(36),
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    PesaFlowIcons.savings,
+                                    color: AppTheme.transferColorDark,
+                                    size: 20,
+                                  ),
+                                ),
+                                const SizedBox(width: kSpacing12),
+                                Expanded(
+                                  child: Text(
+                                    'SET A SAVINGS GOAL',
+                                    style: context.ts(
+                                      11,
+                                      color: context.appColors.textMedium,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 1.1,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: kSpacing14),
+                            Text(
+                              netSavings > 0
+                                  ? 'You\'ve saved ${CurrencyFormatter.formatCents(netSavings)} this month! Let\'s build a target habit.'
+                                  : 'You\'re spending more than you\'re earning (${CurrencyFormatter.formatCents(-netSavings)} deficit). Let\'s review your budget.',
+                              style: context.ts(
+                                12,
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.78,
+                                ),
+                                height: 1.4,
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing16),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 44,
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  PesaHaptics.light();
+                                  showSpringSheet(
+                                    context,
+                                    isScrollControlled: true,
+                                    builder: (context) =>
+                                        const SavingsGoalFormSheet(),
+                                  );
+                                },
+                                icon: Icon(PesaFlowIcons.add, size: 16),
+                                label: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    'Set Monthly Savings Goal',
+                                    style: context.ts(
+                                      13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   },
                   loading: () => const SizedBox(
-                    height: 120,
+                    height: 100,
                     child: Center(
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                   ),
-                  error: (e, _) =>
-                      ErrorState(title: 'Could not load data', message: '$e'),
+                  error: (_, _) => const SizedBox(),
                 ),
-              ],
+            const SizedBox(height: kSpacing24),
+            Text(
+              'INSIGHTS',
+              style: context.ts(
+                11,
+                color: context.appColors.textMedium,
+                letterSpacing: 1.2,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: kSpacing12),
+            const InsightsCarousel(),
+            const SizedBox(height: kSpacing24),
+
+            PesaSurface.bleed(
+              fill: theme.colorScheme.surfaceContainerHigh,
+              radius: AppTheme.radiusCard,
+              padding: const EdgeInsets.all(kSpacing20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'TOP SPENDING CATEGORIES',
+                    style: context.ts(
+                      11,
+                      color: context.appColors.textMedium,
+                      letterSpacing: 1.2,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: kSpacing20),
+                  categoriesAsync.when(
+                    data: (cats) {
+                      if (cats.isEmpty) {
+                        return EmptyState(
+                          icon: PesaFlowIcons.budgets,
+                          title: 'No Spending Data Yet',
+                          subtitle:
+                              'Log some transactions to see your category breakdown.',
+                        );
+                      }
+                      final total = cats.fold<int>(0, (s, c) => s + c.amount);
+                      final colors = [
+                        theme.colorScheme.primary,
+                        context.appColors.transferColor,
+                        theme.colorScheme.tertiary,
+                        theme.colorScheme.secondary,
+                        context.appColors.expenseColor,
+                      ];
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StaggeredFadeSlide(
+                            index: 1,
+                            child: SizedBox(
+                              height: 120,
+                              width: 120,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Semantics(
+                                    label:
+                                        'Spending by category. Total ${CurrencyFormatter.formatCompact(total)}.',
+                                    child: PieChart(
+                                      PieChartData(
+                                        sectionsSpace: 2,
+                                        centerSpaceRadius: 36,
+                                        sections: List.generate(cats.length, (
+                                          i,
+                                        ) {
+                                          final cat = cats[i];
+                                          final color = i < colors.length
+                                              ? colors[i]
+                                              : hexToColor(cat.categoryColor);
+                                          return PieChartSectionData(
+                                            value: cat.amount.toDouble(),
+                                            gradient: _categoryGradient(color),
+                                            radius: 14,
+                                            showTitle: false,
+                                          );
+                                        }),
+                                      ),
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        'SPENT',
+                                        style: context.ts(
+                                          8,
+                                          fontWeight: FontWeight.w700,
+                                          color: theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.4),
+                                          letterSpacing: 1.0,
+                                        ),
+                                      ),
+                                      const SizedBox(height: kSpacing2),
+                                      Text(
+                                        CurrencyFormatter.formatCompact(total),
+                                        style: AppTheme.getMonospaceStyle(
+                                          context.ts(
+                                            12,
+                                            fontWeight: FontWeight.bold,
+                                            color: theme.colorScheme.onSurface,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing20),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: List.generate(cats.length, (i) {
+                                final cat = cats[i];
+                                final color = i < colors.length
+                                    ? colors[i]
+                                    : hexToColor(cat.categoryColor);
+                                final pct = total > 0
+                                    ? (cat.amount / total * 100).round()
+                                    : 0;
+                                final double pctFactor = total > 0
+                                    ? (cat.amount / total)
+                                    : 0.0;
+
+                                return StaggeredFadeSlide(
+                                  index: i,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: kSpacing10,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 10,
+                                                  height: 4,
+                                                  decoration: BoxDecoration(
+                                                    gradient: _categoryGradient(
+                                                      color,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          2,
+                                                        ),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: kSpacing8,
+                                                ),
+                                                Text(
+                                                  cat.categoryName,
+                                                  style: context.ts(
+                                                    12,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              '$pct%',
+                                              style: context.ts(
+                                                11,
+                                                fontWeight: FontWeight.bold,
+                                                color:
+                                                    context.appColors.textLow,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: kSpacing4),
+                                        // Curved progress track
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.radiusPill,
+                                          ),
+                                          child: Container(
+                                            height: 5,
+                                            width: double.infinity,
+                                            color: context.appColors.onBgColor
+                                                .withValues(alpha: 0.06),
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: FractionallySizedBox(
+                                                widthFactor: pctFactor,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    gradient: _categoryGradient(
+                                                      color,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          AppTheme.radiusPill,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                    loading: () => const SizedBox(
+                      height: 120,
+                      child: Center(
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    ),
+                    error: (e, _) =>
+                        ErrorState(title: 'Could not load data', message: '$e'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
   }
 }
 
@@ -1192,406 +1201,410 @@ class _TrendsTab extends ConsumerWidget {
           kSpacing16,
           IosTabBar.navBarHeight + kSpacing32,
         ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          StaggeredFadeSlide(
-            index: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Income & Expense Trends',
-                        style: context.ts(16, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: kSpacing4),
-                      Text(
-                        currentRange == TrendRange.days
-                            ? 'Curved trend waves over the last 14 days'
-                            : (currentRange == TrendRange.weeks
-                                  ? 'Curved trend waves over the last 8 weeks'
-                                  : 'Curved trend waves over the last 6 months'),
-                        style: context.ts(
-                          13,
-                          color: theme.colorScheme.onSurfaceVariant,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            StaggeredFadeSlide(
+              index: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Income & Expense Trends',
+                          style: context.ts(16, fontWeight: FontWeight.bold),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(kSpacing2),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.04),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                    border: Border.all(
-                      color: theme.colorScheme.onSurface.withValues(
-                        alpha: 0.06,
-                      ),
-                      width: 0.8,
+                        const SizedBox(height: kSpacing4),
+                        Text(
+                          currentRange == TrendRange.days
+                              ? 'Curved trend waves over the last 14 days'
+                              : (currentRange == TrendRange.weeks
+                                    ? 'Curved trend waves over the last 8 weeks'
+                                    : 'Curved trend waves over the last 6 months'),
+                          style: context.ts(
+                            13,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildRangeButton(
-                        context,
-                        TrendRange.days,
-                        'Days',
-                        currentRange,
-                        theme,
-                        ref,
+                  Container(
+                    padding: const EdgeInsets.all(kSpacing2),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.04,
                       ),
-                      _buildRangeButton(
-                        context,
-                        TrendRange.weeks,
-                        'Weeks',
-                        currentRange,
-                        theme,
-                        ref,
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                      border: Border.all(
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.06,
+                        ),
+                        width: 0.8,
                       ),
-                      _buildRangeButton(
-                        context,
-                        TrendRange.months,
-                        'Months',
-                        currentRange,
-                        theme,
-                        ref,
-                      ),
-                    ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildRangeButton(
+                          context,
+                          TrendRange.days,
+                          'Days',
+                          currentRange,
+                          theme,
+                          ref,
+                        ),
+                        _buildRangeButton(
+                          context,
+                          TrendRange.weeks,
+                          'Weeks',
+                          currentRange,
+                          theme,
+                          ref,
+                        ),
+                        _buildRangeButton(
+                          context,
+                          TrendRange.months,
+                          'Months',
+                          currentRange,
+                          theme,
+                          ref,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: kSpacing20),
-          trendPointsAsync.when(
-            data: (points) {
-              if (points.isEmpty) {
-                return SizedBox(
-                  height: 200,
-                  child: EmptyState(
-                    icon: PesaFlowIcons.transactions,
-                    title: 'No Data Yet',
-                    subtitle: 'Transaction history is required to plot trends.',
-                  ),
+            const SizedBox(height: kSpacing20),
+            trendPointsAsync.when(
+              data: (points) {
+                if (points.isEmpty) {
+                  return SizedBox(
+                    height: 200,
+                    child: EmptyState(
+                      icon: PesaFlowIcons.transactions,
+                      title: 'No Data Yet',
+                      subtitle:
+                          'Transaction history is required to plot trends.',
+                    ),
+                  );
+                }
+
+                // Spoken summary for the chart: screen-reader users get the
+                // totals even though the plot itself is only pixels.
+                final trendIncome = points.fold<double>(
+                  0,
+                  (s, p) => s + p.income,
                 );
-              }
+                final trendExpense = points.fold<double>(
+                  0,
+                  (s, p) => s + p.expense,
+                );
 
-              // Spoken summary for the chart: screen-reader users get the
-              // totals even though the plot itself is only pixels.
-              final trendIncome = points.fold<double>(
-                0,
-                (s, p) => s + p.income,
-              );
-              final trendExpense = points.fold<double>(
-                0,
-                (s, p) => s + p.expense,
-              );
+                final incomeSpots = List.generate(points.length, (i) {
+                  return FlSpot(i.toDouble(), points[i].income);
+                });
+                final expenseSpots = List.generate(points.length, (i) {
+                  return FlSpot(i.toDouble(), points[i].expense);
+                });
 
-              final incomeSpots = List.generate(points.length, (i) {
-                return FlSpot(i.toDouble(), points[i].income);
-              });
-              final expenseSpots = List.generate(points.length, (i) {
-                return FlSpot(i.toDouble(), points[i].expense);
-              });
+                double maxVal = 1000.0;
+                for (final p in points) {
+                  if (p.income > maxVal) maxVal = p.income;
+                  if (p.expense > maxVal) maxVal = p.expense;
+                }
 
-              double maxVal = 1000.0;
-              for (final p in points) {
-                if (p.income > maxVal) maxVal = p.income;
-                if (p.expense > maxVal) maxVal = p.expense;
-              }
-
-              return StaggeredFadeSlide(
-                index: 1,
-                child: PesaSurface.bleed(
-                  fill: theme.colorScheme.surfaceContainerHigh,
-                  radius: AppTheme.radiusCard,
-                  padding: const EdgeInsets.all(kSpacing20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Series legend inside the card, so the chart and its key
-                      // read as one unit. Income/Expense are distinguished by
-                      // dash pattern (solid vs dashed) in addition to color.
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: context.appColors.incomeColor,
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.squircleRadius(8),
+                return StaggeredFadeSlide(
+                  index: 1,
+                  child: PesaSurface.bleed(
+                    fill: theme.colorScheme.surfaceContainerHigh,
+                    radius: AppTheme.radiusCard,
+                    padding: const EdgeInsets.all(kSpacing20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Series legend inside the card, so the chart and its key
+                        // read as one unit. Income/Expense are distinguished by
+                        // dash pattern (solid vs dashed) in addition to color.
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: context.appColors.incomeColor,
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.squircleRadius(8),
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: kSpacing6),
-                          Text(
-                            'Income',
-                            style: context.ts(
-                              12,
-                              fontWeight: FontWeight.bold,
-                              color: context.appColors.textLow,
-                            ),
-                          ),
-                          const SizedBox(width: kSpacing24),
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: context.appColors.expenseColor,
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.squircleRadius(8),
+                            const SizedBox(width: kSpacing6),
+                            Text(
+                              'Income',
+                              style: context.ts(
+                                12,
+                                fontWeight: FontWeight.bold,
+                                color: context.appColors.textLow,
                               ),
                             ),
-                          ),
-                          const SizedBox(width: kSpacing6),
-                          Text(
-                            'Expense',
-                            style: context.ts(
-                              12,
-                              fontWeight: FontWeight.bold,
-                              color: context.appColors.textLow,
+                            const SizedBox(width: kSpacing24),
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: context.appColors.expenseColor,
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.squircleRadius(8),
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: kSpacing16),
-                      SizedBox(
-                        height: 240,
-                        child: Semantics(
-                          label:
-                              'Income and expense trend. Total income ${CurrencyFormatter.formatCents((trendIncome * 100).round())}, total expense ${CurrencyFormatter.formatCents((trendExpense * 100).round())}.',
-                          child: LineChart(
-                            LineChartData(
-                              lineTouchData: LineTouchData(
-                                handleBuiltInTouches: true,
-                                touchTooltipData: LineTouchTooltipData(
-                                  getTooltipColor: (touchedSpot) {
-                                    return theme
-                                        .colorScheme
-                                        .surfaceContainerHigh
-                                        .withValues(alpha: 0.96);
-                                  },
-                                  tooltipBorderRadius: BorderRadius.circular(
-                                    AppTheme.radiusInput,
+                            const SizedBox(width: kSpacing6),
+                            Text(
+                              'Expense',
+                              style: context.ts(
+                                12,
+                                fontWeight: FontWeight.bold,
+                                color: context.appColors.textLow,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: kSpacing16),
+                        SizedBox(
+                          height: 240,
+                          child: Semantics(
+                            label:
+                                'Income and expense trend. Total income ${CurrencyFormatter.formatCents((trendIncome * 100).round())}, total expense ${CurrencyFormatter.formatCents((trendExpense * 100).round())}.',
+                            child: LineChart(
+                              LineChartData(
+                                lineTouchData: LineTouchData(
+                                  handleBuiltInTouches: true,
+                                  touchTooltipData: LineTouchTooltipData(
+                                    getTooltipColor: (touchedSpot) {
+                                      return theme
+                                          .colorScheme
+                                          .surfaceContainerHigh
+                                          .withValues(alpha: 0.96);
+                                    },
+                                    tooltipBorderRadius: BorderRadius.circular(
+                                      AppTheme.radiusInput,
+                                    ),
+                                    tooltipBorder: BorderSide(
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.09),
+                                      width: 1,
+                                    ),
+                                    getTooltipItems:
+                                        (List<LineBarSpot> touchedSpots) {
+                                          return touchedSpots.map((spot) {
+                                            final isIncome = spot.barIndex == 0;
+                                            return LineTooltipItem(
+                                              '${isIncome ? "Income" : "Expense"}\n${CurrencyFormatter.formatCents((spot.y.round() * 100))}',
+                                              context.ts(
+                                                12,
+                                                color: isIncome
+                                                    ? context
+                                                          .appColors
+                                                          .incomeColor
+                                                    : context
+                                                          .appColors
+                                                          .expenseColor,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            );
+                                          }).toList();
+                                        },
                                   ),
-                                  tooltipBorder: BorderSide(
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.09),
-                                    width: 1,
-                                  ),
-                                  getTooltipItems:
-                                      (List<LineBarSpot> touchedSpots) {
-                                        return touchedSpots.map((spot) {
-                                          final isIncome = spot.barIndex == 0;
-                                          return LineTooltipItem(
-                                            '${isIncome ? "Income" : "Expense"}\n${CurrencyFormatter.formatCents((spot.y.round() * 100))}',
-                                            context.ts(
-                                              12,
-                                              color: isIncome
-                                                  ? context
-                                                        .appColors
-                                                        .incomeColor
-                                                  : context
-                                                        .appColors
-                                                        .expenseColor,
-                                              fontWeight: FontWeight.bold,
+                                  getTouchedSpotIndicator:
+                                      (
+                                        LineChartBarData barData,
+                                        List<int> spotIndexes,
+                                      ) {
+                                        return spotIndexes.map((spotIndex) {
+                                          return TouchedSpotIndicatorData(
+                                            FlLine(
+                                              color:
+                                                  (barData
+                                                              .gradient
+                                                              ?.colors
+                                                              .first ??
+                                                          context
+                                                              .appColors
+                                                              .textMedium)
+                                                      .withValues(alpha: 0.3),
+                                              strokeWidth: 2,
+                                              dashArray: [4, 4],
+                                            ),
+                                            FlDotData(
+                                              show: true,
+                                              getDotPainter:
+                                                  (
+                                                    spot,
+                                                    percent,
+                                                    barData,
+                                                    index,
+                                                  ) {
+                                                    return FlDotCirclePainter(
+                                                      radius: 6,
+                                                      color:
+                                                          barData
+                                                              .gradient
+                                                              ?.colors
+                                                              .first ??
+                                                          context
+                                                              .appColors
+                                                              .textMedium,
+                                                      strokeWidth: 2,
+                                                      strokeColor: context
+                                                          .appColors
+                                                          .onBgColor,
+                                                    );
+                                                  },
                                             ),
                                           );
                                         }).toList();
                                       },
                                 ),
-                                getTouchedSpotIndicator:
-                                    (
-                                      LineChartBarData barData,
-                                      List<int> spotIndexes,
-                                    ) {
-                                      return spotIndexes.map((spotIndex) {
-                                        return TouchedSpotIndicatorData(
-                                          FlLine(
-                                            color:
-                                                (barData
-                                                            .gradient
-                                                            ?.colors
-                                                            .first ??
-                                                        context
-                                                            .appColors
-                                                            .textMedium)
-                                                    .withValues(alpha: 0.3),
-                                            strokeWidth: 2,
-                                            dashArray: [4, 4],
+                                gridData: const FlGridData(show: false),
+                                titlesData: FlTitlesData(
+                                  leftTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      reservedSize: 40,
+                                      getTitlesWidget: (val, _) {
+                                        if (val <= 0) {
+                                          return const SizedBox.shrink();
+                                        }
+                                        return Text(
+                                          CurrencyFormatter.formatCompact(
+                                            (val * 100).round(),
                                           ),
-                                          FlDotData(
-                                            show: true,
-                                            getDotPainter:
-                                                (
-                                                  spot,
-                                                  percent,
-                                                  barData,
-                                                  index,
-                                                ) {
-                                                  return FlDotCirclePainter(
-                                                    radius: 6,
-                                                    color:
-                                                        barData
-                                                            .gradient
-                                                            ?.colors
-                                                            .first ??
-                                                        context
-                                                            .appColors
-                                                            .textMedium,
-                                                    strokeWidth: 2,
-                                                    strokeColor: context
-                                                        .appColors
-                                                        .onBgColor,
-                                                  );
-                                                },
-                                          ),
-                                        );
-                                      }).toList();
-                                    },
-                              ),
-                              gridData: const FlGridData(show: false),
-                              titlesData: FlTitlesData(
-                                leftTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-                                    reservedSize: 40,
-                                    getTitlesWidget: (val, _) {
-                                      if (val <= 0) {
-                                        return const SizedBox.shrink();
-                                      }
-                                      return Text(
-                                        CurrencyFormatter.formatCompact(
-                                          (val * 100).round(),
-                                        ),
-                                        style: context.ts(
-                                          8,
-                                          color: context.appColors.textMedium,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                rightTitles: const AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                ),
-                                topTitles: const AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                ),
-                                bottomTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-                                    interval: 1,
-                                    getTitlesWidget: (val, _) {
-                                      final idx = val.toInt();
-                                      if (idx < 0 || idx >= points.length) {
-                                        return const SizedBox();
-                                      }
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                          top: kSpacing8,
-                                        ),
-                                        child: Text(
-                                          points[idx].label,
-                                          textAlign: TextAlign.center,
                                           style: context.ts(
-                                            10,
+                                            8,
                                             color: context.appColors.textMedium,
                                           ),
-                                        ),
-                                      );
-                                    },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  rightTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                  topTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      interval: 1,
+                                      getTitlesWidget: (val, _) {
+                                        final idx = val.toInt();
+                                        if (idx < 0 || idx >= points.length) {
+                                          return const SizedBox();
+                                        }
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: kSpacing8,
+                                          ),
+                                          child: Text(
+                                            points[idx].label,
+                                            textAlign: TextAlign.center,
+                                            style: context.ts(
+                                              10,
+                                              color:
+                                                  context.appColors.textMedium,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
+                                borderData: FlBorderData(show: false),
+                                minX: 0,
+                                maxX: (points.length - 1).toDouble(),
+                                minY: 0,
+                                maxY: maxVal * 1.15,
+                                lineBarsData: [
+                                  LineChartBarData(
+                                    spots: incomeSpots,
+                                    isCurved: true,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        context.appColors.incomeColor,
+                                        context.appColors.incomeColor,
+                                      ],
+                                    ),
+                                    barWidth: 3.5,
+                                    isStrokeCapRound: true,
+                                    dotData: const FlDotData(show: false),
+                                    belowBarData: BarAreaData(
+                                      show: true,
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          context.appColors.incomeColor
+                                              .withValues(alpha: 0.16),
+                                          context.appColors.incomeColor
+                                              .withValues(alpha: 0.0),
+                                        ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                      ),
+                                    ),
+                                  ),
+                                  LineChartBarData(
+                                    spots: expenseSpots,
+                                    isCurved: true,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        context.appColors.expenseColor,
+                                        context.appColors.expenseColor,
+                                      ],
+                                    ),
+                                    barWidth: 3.5,
+                                    isStrokeCapRound: true,
+                                    dashArray: const [6, 4],
+                                    dotData: const FlDotData(show: false),
+                                    belowBarData: BarAreaData(
+                                      show: true,
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          context.appColors.expenseColor
+                                              .withValues(alpha: 0.16),
+                                          context.appColors.expenseColor
+                                              .withValues(alpha: 0.0),
+                                        ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              borderData: FlBorderData(show: false),
-                              minX: 0,
-                              maxX: (points.length - 1).toDouble(),
-                              minY: 0,
-                              maxY: maxVal * 1.15,
-                              lineBarsData: [
-                                LineChartBarData(
-                                  spots: incomeSpots,
-                                  isCurved: true,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      context.appColors.incomeColor,
-                                      context.appColors.incomeColor,
-                                    ],
-                                  ),
-                                  barWidth: 3.5,
-                                  isStrokeCapRound: true,
-                                  dotData: const FlDotData(show: false),
-                                  belowBarData: BarAreaData(
-                                    show: true,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        context.appColors.incomeColor
-                                            .withValues(alpha: 0.16),
-                                        context.appColors.incomeColor
-                                            .withValues(alpha: 0.0),
-                                      ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                    ),
-                                  ),
-                                ),
-                                LineChartBarData(
-                                  spots: expenseSpots,
-                                  isCurved: true,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      context.appColors.expenseColor,
-                                      context.appColors.expenseColor,
-                                    ],
-                                  ),
-                                  barWidth: 3.5,
-                                  isStrokeCapRound: true,
-                                  dashArray: const [6, 4],
-                                  dotData: const FlDotData(show: false),
-                                  belowBarData: BarAreaData(
-                                    show: true,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        context.appColors.expenseColor
-                                            .withValues(alpha: 0.16),
-                                        context.appColors.expenseColor
-                                            .withValues(alpha: 0.0),
-                                      ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-            loading: () => const SizedBox(
-              height: 200,
-              child: Center(child: CircularProgressIndicator()),
+                );
+              },
+              loading: () => const SizedBox(
+                height: 200,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              error: (e, _) =>
+                  ErrorState(title: 'Could not load data', message: '$e'),
             ),
-            error: (e, _) =>
-                ErrorState(title: 'Could not load data', message: '$e'),
-          ),
-          const SizedBox(height: kSpacing20),
-        ],
+            const SizedBox(height: kSpacing20),
+          ],
+        ),
       ),
-    ),
-  );
+    );
   }
 }

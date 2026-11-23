@@ -1282,9 +1282,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                     error: (err, _) => ErrorState(
                       title: 'Failed to load transactions',
                       message: err.toString(),
-                      onRetry: () => ref.invalidate(
-                        filteredTransactionsStreamProvider,
-                      ),
+                      onRetry: () =>
+                          ref.invalidate(filteredTransactionsStreamProvider),
                     ),
                   ),
                 ),

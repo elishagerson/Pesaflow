@@ -52,8 +52,8 @@ class DismissedNotificationsNotifier extends Notifier<Set<String>> {
 
 final dismissedNotificationsProvider =
     NotifierProvider<DismissedNotificationsNotifier, Set<String>>(
-  DismissedNotificationsNotifier.new,
-);
+      DismissedNotificationsNotifier.new,
+    );
 
 class NotificationCounts {
   final int pendingSmsCount;

@@ -443,9 +443,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                       : t.source == 'transfer'
                                       ? 'Transfer'
                                       : 'Manual entry',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelSmall!
+                                  style: Theme.of(context).textTheme.labelSmall!
                                       .copyWith(
                                         color: theme.colorScheme.primary,
                                       ),
@@ -711,65 +709,65 @@ class TransactionDetailScreen extends ConsumerWidget {
           );
         },
         child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: kSpacing10,
-              horizontal: kSpacing12,
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(kSpacing8),
-                  decoration: BoxDecoration(
-                    color: onSurface.withValues(alpha: 0.04),
-                    borderRadius: BorderRadius.circular(
-                      AppTheme.squircleRadius(32),
-                    ),
-                  ),
-                  child: Icon(
-                    icon,
-                    size: 16,
-                    color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: 0.8,
-                    ),
+          padding: const EdgeInsets.symmetric(
+            vertical: kSpacing10,
+            horizontal: kSpacing12,
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(kSpacing8),
+                decoration: BoxDecoration(
+                  color: onSurface.withValues(alpha: 0.04),
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.squircleRadius(32),
                   ),
                 ),
-                const SizedBox(width: kSpacing12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        label,
-                        style: Theme.of(context)
-                            .extension<AppTypographyTheme>()!
-                            .labelMicro
-                            .copyWith(color: context.appColors.textMedium),
-                      ),
-                      const SizedBox(height: kSpacing2),
-                      Text(
-                        value,
-                        style: context.ts(
-                          14,
-                          fontWeight: FontWeight.w700,
-                          color: onSurface,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: kSpacing12),
-                Icon(
-                  PesaFlowIcons.copy,
-                  size: 14,
+                child: Icon(
+                  icon,
+                  size: 16,
                   color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: 0.5,
+                    alpha: 0.8,
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: kSpacing12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: Theme.of(context)
+                          .extension<AppTypographyTheme>()!
+                          .labelMicro
+                          .copyWith(color: context.appColors.textMedium),
+                    ),
+                    const SizedBox(height: kSpacing2),
+                    Text(
+                      value,
+                      style: context.ts(
+                        14,
+                        fontWeight: FontWeight.w700,
+                        color: onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: kSpacing12),
+              Icon(
+                PesaFlowIcons.copy,
+                size: 14,
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.5,
+                ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 
   Widget _detailRow(

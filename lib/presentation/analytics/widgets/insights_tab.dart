@@ -92,94 +92,95 @@ class InsightsTab extends ConsumerWidget {
               kSpacing16,
               IosTabBar.navBarHeight + kSpacing32,
             ),
-          itemCount: insights.length,
-          itemBuilder: (context, index) {
-            final insight = insights[index];
-            final color = _getSeverityColor(context, insight.severity);
+            itemCount: insights.length,
+            itemBuilder: (context, index) {
+              final insight = insights[index];
+              final color = _getSeverityColor(context, insight.severity);
 
-            return StaggeredFadeSlide(
-              index: index,
-              child: GlassCard(
-                margin: const EdgeInsets.only(bottom: kSpacing14),
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Left colored accent border strip with glowing shadow
-                      Container(
-                        width: 5,
-                        decoration: BoxDecoration(
-                          color: color,
-                          boxShadow: [
-                            BoxShadow(
-                              color: color.withValues(alpha: 0.4),
-                              blurRadius: 6,
-                              spreadRadius: 1,
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Content Row
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(kSpacing18),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(kSpacing10),
-                                decoration: BoxDecoration(
-                                  color: color.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(
-                                    AppTheme.squircleRadius(40),
-                                  ),
-                                ),
-                                child: Icon(
-                                  _getInsightIcon(insight.icon),
-                                  color: color,
-                                  size: 20,
-                                ),
-                              ),
-                              const SizedBox(width: kSpacing14),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      insight.title,
-                                      style: context.ts(
-                                        14,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: -0.2,
-                                      ),
-                                    ),
-                                    const SizedBox(height: kSpacing6),
-                                    Text(
-                                      insight.message,
-                                      style: context.ts(
-                                        12,
-                                        color: theme
-                                            .colorScheme
-                                            .onSurfaceVariant
-                                            .withValues(alpha: 0.85),
-                                        height: 1.4,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+              return StaggeredFadeSlide(
+                index: index,
+                child: GlassCard(
+                  margin: const EdgeInsets.only(bottom: kSpacing14),
+                  child: IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Left colored accent border strip with glowing shadow
+                        Container(
+                          width: 5,
+                          decoration: BoxDecoration(
+                            color: color,
+                            boxShadow: [
+                              BoxShadow(
+                                color: color.withValues(alpha: 0.4),
+                                blurRadius: 6,
+                                spreadRadius: 1,
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                        // Content Row
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(kSpacing18),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(kSpacing10),
+                                  decoration: BoxDecoration(
+                                    color: color.withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.squircleRadius(40),
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    _getInsightIcon(insight.icon),
+                                    color: color,
+                                    size: 20,
+                                  ),
+                                ),
+                                const SizedBox(width: kSpacing14),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        insight.title,
+                                        style: context.ts(
+                                          14,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: -0.2,
+                                        ),
+                                      ),
+                                      const SizedBox(height: kSpacing6),
+                                      Text(
+                                        insight.message,
+                                        style: context.ts(
+                                          12,
+                                          color: theme
+                                              .colorScheme
+                                              .onSurfaceVariant
+                                              .withValues(alpha: 0.85),
+                                          height: 1.4,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
-        ),
-      );
+              );
+            },
+          ),
+        );
       },
       loading: () => const ShimmerCard(),
       error: (e, _) => ErrorState(

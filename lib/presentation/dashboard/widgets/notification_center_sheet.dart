@@ -80,11 +80,13 @@ class _NotificationCenterSheetState
     final List<dynamic> activeSavings = urgentSavings.isNotEmpty
         ? urgentSavings
         : (allSavings
-              .where((g) => !g.isCompleted && g.currentAmount < g.targetAmount)
-              .toList()
-            ..sort((a, b) => a.targetDate.compareTo(b.targetDate)))
-          .take(1)
-          .toList();
+                  .where(
+                    (g) => !g.isCompleted && g.currentAmount < g.targetAmount,
+                  )
+                  .toList()
+                ..sort((a, b) => a.targetDate.compareTo(b.targetDate)))
+              .take(1)
+              .toList();
 
     return DraggableScrollableSheet(
       initialChildSize: 0.78,
@@ -465,7 +467,10 @@ class _NotificationCenterSheetState
                         ),
                         _buildGroupedSection(
                           children: budgets
-                              .map((progress) => _buildBudgetRow(context, progress))
+                              .map(
+                                (progress) =>
+                                    _buildBudgetRow(context, progress),
+                              )
                               .toList(),
                         ),
                         const SizedBox(height: kSpacing16),
@@ -711,8 +716,9 @@ class _NotificationCenterSheetState
           context,
           message: 'Reminder dismissed',
           actionLabel: 'Undo',
-          onAction: () =>
-              ref.read(dismissedNotificationsProvider.notifier).undismiss(keyId),
+          onAction: () => ref
+              .read(dismissedNotificationsProvider.notifier)
+              .undismiss(keyId),
         );
       },
       background: Container(
@@ -752,8 +758,9 @@ class _NotificationCenterSheetState
           context,
           message: 'Reminder dismissed',
           actionLabel: 'Undo',
-          onAction: () =>
-              ref.read(dismissedNotificationsProvider.notifier).undismiss(keyId),
+          onAction: () => ref
+              .read(dismissedNotificationsProvider.notifier)
+              .undismiss(keyId),
         );
       },
       child: Padding(
