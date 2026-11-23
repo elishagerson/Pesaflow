@@ -300,8 +300,7 @@ class _OverviewTab extends ConsumerWidget {
       onRefresh: () async {
         ref.invalidate(monthlyTotalsProvider);
         ref.invalidate(topCategoriesProvider);
-        ref.invalidate(dailyAveragesProvider);
-        ref.invalidate(recurringStatsProvider);
+        ref.invalidate(trendPointsProvider);
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),

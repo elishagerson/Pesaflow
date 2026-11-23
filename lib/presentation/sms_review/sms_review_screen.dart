@@ -1313,7 +1313,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                 error: (err, _) => ErrorState(
                   title: 'Failed to load reviews',
                   message: err.toString(),
-                  onRetry: () => ref.invalidate(pendingSmsStreamProvider),
+                  onRetry: () => ref.invalidate(reviewQueueStreamProvider),
                 ),
               ),
             ),

@@ -1010,7 +1010,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               title: 'Failed to load recent activity',
                               message: err.toString(),
                               onRetry: () => ref.invalidate(
-                                dashboardTransactionsStreamProvider,
+                                recentTransactionsStreamProvider,
                               ),
                             ),
                           ),
