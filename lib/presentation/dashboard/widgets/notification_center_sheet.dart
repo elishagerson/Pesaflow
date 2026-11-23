@@ -705,6 +705,78 @@ class _NotificationCenterSheetState
     );
   }
 
+  Widget _buildDismissibleItem({
+    required BuildContext context,
+    required String keyId,
+    required Widget child,
+  }) {
+    final theme = Theme.of(context);
+    return Dismissible(
+      key: Key(keyId),
+      direction: DismissDirection.endToStart,
+      onDismissed: (_) {
+        ref.read(dismissedNotificationsProvider.notifier).dismiss(keyId);
+        PesaHaptics.light();
+        CustomToast.show(
+          context,
+          message: 'Reminder dismissed',
+          actionLabel: 'Undo',
+          onAction: () =>
+              ref.read(dismissedNotificationsProvider.notifier).undismiss(keyId),
+        );
+      },
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: kSpacing16),
+        color: theme.colorScheme.error.withValues(alpha: 0.15),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(PesaFlowIcons.close, color: theme.colorScheme.error, size: 14),
+            const SizedBox(width: kSpacing4),
+            Text(
+              'Dismiss',
+              style: context.ts(
+                11.5,
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.error,
+              ),
+            ),
+          ],
+        ),
+      ),
+      child: child,
+    );
+  }
+
+  Widget _buildDismissButton({
+    required BuildContext context,
+    required String keyId,
+  }) {
+    final theme = Theme.of(context);
+    return TactileSpringContainer(
+      onTap: () {
+        ref.read(dismissedNotificationsProvider.notifier).dismiss(keyId);
+        PesaHaptics.light();
+        CustomToast.show(
+          context,
+          message: 'Reminder dismissed',
+          actionLabel: 'Undo',
+          onAction: () =>
+              ref.read(dismissedNotificationsProvider.notifier).undismiss(keyId),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(kSpacing4),
+        child: Icon(
+          PesaFlowIcons.close,
+          size: 13,
+          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.40),
+        ),
+      ),
+    );
+  }
+
   Widget _buildGroupedSection({required List<Widget> children}) {
     final theme = Theme.of(context);
     return Container(
@@ -713,18 +785,21 @@ class _NotificationCenterSheetState
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         border: Border.all(color: context.appColors.hairline, width: 1),
       ),
-      child: Column(
-        children: [
-          for (int i = 0; i < children.length; i++) ...[
-            if (i > 0)
-              Divider(
-                height: 1,
-                thickness: 0.5,
-                color: context.appColors.hairline,
-              ),
-            children[i],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+        child: Column(
+          children: [
+            for (int i = 0; i < children.length; i++) ...[
+              if (i > 0)
+                Divider(
+                  height: 1,
+                  thickness: 0.5,
+                  color: context.appColors.hairline,
+                ),
+              children[i],
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -733,6 +808,7 @@ class _NotificationCenterSheetState
     final theme = Theme.of(context);
     final tx = item.transaction;
     final accountName = item.account?.name ?? 'Carrier SMS';
+    final keyId = 'sms_${tx.id}';
 
     final desc = tx.description?.toUpperCase() ?? '';
     String carrierTag = 'MOBILE MONEY';
@@ -748,139 +824,145 @@ class _NotificationCenterSheetState
       carrierTag = 'CRDB';
     }
 
-    return TactileSpringContainer(
-      onTap: () {
-        Navigator.of(context).pop();
-        context.push('/sms-review');
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: kSpacing12,
-          vertical: kSpacing10,
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 34,
-              height: 34,
-              decoration: BoxDecoration(
-                color: context.appColors.transferColor.withValues(
-                  alpha: context.appColors.badgeFillAlpha,
+    return _buildDismissibleItem(
+      context: context,
+      keyId: keyId,
+      child: TactileSpringContainer(
+        onTap: () {
+          Navigator.of(context).pop();
+          context.push('/sms-review');
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing12,
+            vertical: kSpacing10,
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: context.appColors.transferColor.withValues(
+                    alpha: context.appColors.badgeFillAlpha,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.squircleRadius(34),
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(
-                  AppTheme.squircleRadius(34),
+                alignment: Alignment.center,
+                child: Icon(
+                  PesaFlowIcons.sms,
+                  color: context.appColors.transferColor,
+                  size: 16,
                 ),
               ),
-              alignment: Alignment.center,
-              child: Icon(
-                PesaFlowIcons.sms,
-                color: context.appColors.transferColor,
-                size: 16,
+              const SizedBox(width: kSpacing10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            tx.description ?? 'Carrier Transaction',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.ts(
+                              13,
+                              fontWeight: FontWeight.w700,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: kSpacing6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4.5,
+                            vertical: 1.5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: context.appColors.transferColor.withValues(
+                              alpha: context.appColors.badgeFillAlpha,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusPill,
+                            ),
+                          ),
+                          child: Text(
+                            carrierTag,
+                            style: context.ts(
+                              8.5,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.3,
+                              color: context.appColors.transferColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      accountName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.ts(
+                        11,
+                        fontWeight: FontWeight.w500,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: kSpacing10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(width: kSpacing8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          tx.description ?? 'Carrier Transaction',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.ts(
-                            13,
-                            fontWeight: FontWeight.w700,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: kSpacing6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4.5,
-                          vertical: 1.5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: context.appColors.transferColor.withValues(
-                            alpha: context.appColors.badgeFillAlpha,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusPill,
-                          ),
-                        ),
-                        child: Text(
-                          carrierTag,
-                          style: context.ts(
-                            8.5,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 0.3,
-                            color: context.appColors.transferColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
                   Text(
-                    accountName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    CurrencyFormatter.formatCents(tx.amount),
                     style: context.ts(
-                      11,
-                      fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.onSurfaceVariant,
+                      12.5,
+                      fontWeight: FontWeight.w800,
+                      color: context.appColors.incomeColor,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: kSpacing10,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: context.appColors.transferColor.withValues(
+                        alpha: context.appColors.badgeFillAlpha,
+                      ),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                      border: Border.all(
+                        color: context.appColors.transferColor.withValues(
+                          alpha: context.appColors.badgeBorderAlpha,
+                        ),
+                        width: 0.8,
+                      ),
+                    ),
+                    child: Text(
+                      'Review',
+                      style: context.ts(
+                        10,
+                        fontWeight: FontWeight.w700,
+                        color: context.appColors.transferColor,
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(width: kSpacing10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  CurrencyFormatter.formatCents(tx.amount),
-                  style: context.ts(
-                    12.5,
-                    fontWeight: FontWeight.w800,
-                    color: context.appColors.incomeColor,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing10,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: context.appColors.transferColor.withValues(
-                      alpha: context.appColors.badgeFillAlpha,
-                    ),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                    border: Border.all(
-                      color: context.appColors.transferColor.withValues(
-                        alpha: context.appColors.badgeBorderAlpha,
-                      ),
-                      width: 0.8,
-                    ),
-                  ),
-                  child: Text(
-                    'Review',
-                    style: context.ts(
-                      10,
-                      fontWeight: FontWeight.w700,
-                      color: context.appColors.transferColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+              const SizedBox(width: kSpacing4),
+              _buildDismissButton(context: context, keyId: keyId),
+            ],
+          ),
         ),
       ),
     );
@@ -888,139 +970,147 @@ class _NotificationCenterSheetState
 
   Widget _buildBillRow(BuildContext context, dynamic bill) {
     final theme = Theme.of(context);
-    return TactileSpringContainer(
-      onTap: () {
-        Navigator.of(context).pop();
-        context.push('/recurring');
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: kSpacing12,
-          vertical: kSpacing10,
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 34,
-              height: 34,
-              decoration: BoxDecoration(
-                color: context.appColors.expenseColor.withValues(
-                  alpha: context.appColors.badgeFillAlpha,
+    final keyId = 'bill_${bill.id}';
+
+    return _buildDismissibleItem(
+      context: context,
+      keyId: keyId,
+      child: TactileSpringContainer(
+        onTap: () {
+          Navigator.of(context).pop();
+          context.push('/recurring');
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing12,
+            vertical: kSpacing10,
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: context.appColors.expenseColor.withValues(
+                    alpha: context.appColors.badgeFillAlpha,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.squircleRadius(34),
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(
-                  AppTheme.squircleRadius(34),
+                alignment: Alignment.center,
+                child: Icon(
+                  PesaFlowIcons.subscriptions,
+                  color: context.appColors.expenseColor,
+                  size: 16,
                 ),
               ),
-              alignment: Alignment.center,
-              child: Icon(
-                PesaFlowIcons.subscriptions,
-                color: context.appColors.expenseColor,
-                size: 16,
+              const SizedBox(width: kSpacing10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            bill.description ?? 'Recurring Bill',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.ts(
+                              13,
+                              fontWeight: FontWeight.w700,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: kSpacing6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4.5,
+                            vertical: 1.5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: context.appColors.expenseColor.withValues(
+                              alpha: context.appColors.badgeFillAlpha,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusPill,
+                            ),
+                          ),
+                          child: Text(
+                            'Due Today',
+                            style: context.ts(
+                              8.5,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.3,
+                              color: context.appColors.expenseColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${bill.frequency.toUpperCase()} • Interval: ${bill.intervalValue}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.ts(
+                        11,
+                        fontWeight: FontWeight.w500,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: kSpacing10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(width: kSpacing8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          bill.description ?? 'Recurring Bill',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.ts(
-                            13,
-                            fontWeight: FontWeight.w700,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: kSpacing6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4.5,
-                          vertical: 1.5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: context.appColors.expenseColor.withValues(
-                            alpha: context.appColors.badgeFillAlpha,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusPill,
-                          ),
-                        ),
-                        child: Text(
-                          'Due Today',
-                          style: context.ts(
-                            8.5,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 0.3,
-                            color: context.appColors.expenseColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
                   Text(
-                    '${bill.frequency.toUpperCase()} • Interval: ${bill.intervalValue}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    CurrencyFormatter.formatCents(bill.amount),
                     style: context.ts(
-                      11,
-                      fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.onSurfaceVariant,
+                      12.5,
+                      fontWeight: FontWeight.w800,
+                      color: context.appColors.expenseColor,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: kSpacing10,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: context.appColors.expenseColor.withValues(
+                        alpha: context.appColors.badgeFillAlpha,
+                      ),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                      border: Border.all(
+                        color: context.appColors.expenseColor.withValues(
+                          alpha: context.appColors.badgeBorderAlpha,
+                        ),
+                        width: 0.8,
+                      ),
+                    ),
+                    child: Text(
+                      'Pay Now',
+                      style: context.ts(
+                        10,
+                        fontWeight: FontWeight.w700,
+                        color: context.appColors.expenseColor,
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(width: kSpacing10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  CurrencyFormatter.formatCents(bill.amount),
-                  style: context.ts(
-                    12.5,
-                    fontWeight: FontWeight.w800,
-                    color: context.appColors.expenseColor,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing10,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: context.appColors.expenseColor.withValues(
-                      alpha: context.appColors.badgeFillAlpha,
-                    ),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                    border: Border.all(
-                      color: context.appColors.expenseColor.withValues(
-                        alpha: context.appColors.badgeBorderAlpha,
-                      ),
-                      width: 0.8,
-                    ),
-                  ),
-                  child: Text(
-                    'Pay Now',
-                    style: context.ts(
-                      10,
-                      fontWeight: FontWeight.w700,
-                      color: context.appColors.expenseColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+              const SizedBox(width: kSpacing4),
+              _buildDismissButton(context: context, keyId: keyId),
+            ],
+          ),
         ),
       ),
     );
@@ -1036,6 +1126,7 @@ class _NotificationCenterSheetState
         ? (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0)
         : 0.0;
     final pctInt = (pct * 100).toInt();
+    final keyId = 'savings_${goal.id}';
 
     String statusLabel = 'SAVINGS PACE';
     Color statusColor = context.appColors.incomeColor;
@@ -1047,119 +1138,125 @@ class _NotificationCenterSheetState
       statusColor = goalColor;
     }
 
-    return TactileSpringContainer(
-      onTap: () {
-        showQuickDepositSheet(context, ref, goal);
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: kSpacing12,
-          vertical: kSpacing10,
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 34,
-              height: 34,
-              decoration: BoxDecoration(
-                color: goalColor.withValues(
-                  alpha: context.appColors.badgeFillAlpha,
-                ),
-                borderRadius: BorderRadius.circular(
-                  AppTheme.squircleRadius(34),
-                ),
-              ),
-              alignment: Alignment.center,
-              child: Icon(getGoalIcon(goal.icon), color: goalColor, size: 16),
-            ),
-            const SizedBox(width: kSpacing10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          goal.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.ts(
-                            13,
-                            fontWeight: FontWeight.w700,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: kSpacing6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4.5,
-                          vertical: 1.5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: statusColor.withValues(
-                            alpha: context.appColors.badgeFillAlpha,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusPill,
-                          ),
-                        ),
-                        child: Text(
-                          statusLabel,
-                          style: context.ts(
-                            8.5,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 0.3,
-                            color: statusColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${CurrencyFormatter.formatCents(goal.currentAmount)} of ${CurrencyFormatter.formatCents(goal.targetAmount)} • $pctInt% saved',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.ts(
-                      11,
-                      fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: kSpacing10),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: kSpacing12,
-                vertical: 4,
-              ),
-              decoration: BoxDecoration(
-                color: goalColor.withValues(
-                  alpha: context.appColors.badgeFillAlpha,
-                ),
-                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                border: Border.all(
+    return _buildDismissibleItem(
+      context: context,
+      keyId: keyId,
+      child: TactileSpringContainer(
+        onTap: () {
+          showQuickDepositSheet(context, ref, goal);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing12,
+            vertical: kSpacing10,
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
                   color: goalColor.withValues(
-                    alpha: context.appColors.badgeBorderAlpha,
+                    alpha: context.appColors.badgeFillAlpha,
                   ),
-                  width: 0.8,
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.squircleRadius(34),
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: Icon(getGoalIcon(goal.icon), color: goalColor, size: 16),
+              ),
+              const SizedBox(width: kSpacing10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            goal.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.ts(
+                              13,
+                              fontWeight: FontWeight.w700,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: kSpacing6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4.5,
+                            vertical: 1.5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: statusColor.withValues(
+                              alpha: context.appColors.badgeFillAlpha,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusPill,
+                            ),
+                          ),
+                          child: Text(
+                            statusLabel,
+                            style: context.ts(
+                              8.5,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.3,
+                              color: statusColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${CurrencyFormatter.formatCents(goal.currentAmount)} of ${CurrencyFormatter.formatCents(goal.targetAmount)} • $pctInt% saved',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.ts(
+                        11,
+                        fontWeight: FontWeight.w500,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Text(
-                'Deposit',
-                style: context.ts(
-                  10.5,
-                  fontWeight: FontWeight.w700,
-                  color: goalColor,
+              const SizedBox(width: kSpacing8),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kSpacing12,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: goalColor.withValues(
+                    alpha: context.appColors.badgeFillAlpha,
+                  ),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                  border: Border.all(
+                    color: goalColor.withValues(
+                      alpha: context.appColors.badgeBorderAlpha,
+                    ),
+                    width: 0.8,
+                  ),
+                ),
+                child: Text(
+                  'Deposit',
+                  style: context.ts(
+                    10.5,
+                    fontWeight: FontWeight.w700,
+                    color: goalColor,
+                  ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: kSpacing4),
+              _buildDismissButton(context: context, keyId: keyId),
+            ],
+          ),
         ),
       ),
     );
@@ -1171,129 +1268,136 @@ class _NotificationCenterSheetState
     final diffAmount = CurrencyFormatter.formatCents(progress.remaining.abs());
     final pct = progress.percentage as double;
     final pctInt = (pct * 100).toInt();
+    final keyId = 'budget_${progress.budget.id}';
 
-    return TactileSpringContainer(
-      onTap: () {
-        Navigator.of(context).pop();
-        context.push('/budgets');
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: kSpacing12,
-          vertical: kSpacing10,
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 34,
-              height: 34,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.error.withValues(
-                  alpha: context.appColors.badgeFillAlpha,
-                ),
-                borderRadius: BorderRadius.circular(
-                  AppTheme.squircleRadius(34),
-                ),
-              ),
-              alignment: Alignment.center,
-              child: Icon(
-                PesaFlowIcons.budgets,
-                color: theme.colorScheme.error,
-                size: 16,
-              ),
-            ),
-            const SizedBox(width: kSpacing10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          progress.budget.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.ts(
-                            13,
-                            fontWeight: FontWeight.w700,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: kSpacing6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4.5,
-                          vertical: 1.5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.error.withValues(
-                            alpha: context.appColors.badgeFillAlpha,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusPill,
-                          ),
-                        ),
-                        child: Text(
-                          isExceeded ? '$pctInt% EXCEEDED' : '$pctInt% LIMIT',
-                          style: context.ts(
-                            8.5,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 0.3,
-                            color: theme.colorScheme.error,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    isExceeded
-                        ? 'Over budget by $diffAmount'
-                        : 'Near limit: ${CurrencyFormatter.formatCents(progress.spentInPeriod)} spent',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.ts(
-                      11,
-                      fontWeight: FontWeight.w500,
-                      color: isExceeded
-                          ? theme.colorScheme.error
-                          : theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: kSpacing10),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: kSpacing12,
-                vertical: 4,
-              ),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.error.withValues(
-                  alpha: context.appColors.badgeFillAlpha,
-                ),
-                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                border: Border.all(
+    return _buildDismissibleItem(
+      context: context,
+      keyId: keyId,
+      child: TactileSpringContainer(
+        onTap: () {
+          Navigator.of(context).pop();
+          context.push('/budgets');
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing12,
+            vertical: kSpacing10,
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
                   color: theme.colorScheme.error.withValues(
-                    alpha: context.appColors.badgeBorderAlpha,
+                    alpha: context.appColors.badgeFillAlpha,
                   ),
-                  width: 0.8,
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.squircleRadius(34),
+                  ),
                 ),
-              ),
-              child: Text(
-                'Adjust',
-                style: context.ts(
-                  10.5,
-                  fontWeight: FontWeight.w700,
+                alignment: Alignment.center,
+                child: Icon(
+                  PesaFlowIcons.budgets,
                   color: theme.colorScheme.error,
+                  size: 16,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: kSpacing10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            progress.budget.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.ts(
+                              13,
+                              fontWeight: FontWeight.w700,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: kSpacing6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4.5,
+                            vertical: 1.5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.error.withValues(
+                              alpha: context.appColors.badgeFillAlpha,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusPill,
+                            ),
+                          ),
+                          child: Text(
+                            isExceeded ? '$pctInt% EXCEEDED' : '$pctInt% LIMIT',
+                            style: context.ts(
+                              8.5,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.3,
+                              color: theme.colorScheme.error,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      isExceeded
+                          ? 'Over budget by $diffAmount'
+                          : 'Near limit: ${CurrencyFormatter.formatCents(progress.spentInPeriod)} spent',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.ts(
+                        11,
+                        fontWeight: FontWeight.w500,
+                        color: isExceeded
+                            ? theme.colorScheme.error
+                            : theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: kSpacing8),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kSpacing12,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.error.withValues(
+                    alpha: context.appColors.badgeFillAlpha,
+                  ),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                  border: Border.all(
+                    color: theme.colorScheme.error.withValues(
+                      alpha: context.appColors.badgeBorderAlpha,
+                    ),
+                    width: 0.8,
+                  ),
+                ),
+                child: Text(
+                  'Adjust',
+                  style: context.ts(
+                    10.5,
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+              ),
+              const SizedBox(width: kSpacing4),
+              _buildDismissButton(context: context, keyId: keyId),
+            ],
+          ),
         ),
       ),
     );
@@ -1303,148 +1407,155 @@ class _NotificationCenterSheetState
     final theme = Theme.of(context);
     final isOverdue =
         loan.dueAt != null && loan.dueAt!.isBefore(DateTime.now());
+    final keyId = 'loan_${loan.id}';
 
-    return TactileSpringContainer(
-      onTap: () {
-        Navigator.of(context).pop();
-        context.push('/loans');
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: kSpacing12,
-          vertical: kSpacing10,
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 34,
-              height: 34,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(
-                  alpha: context.appColors.badgeFillAlpha,
+    return _buildDismissibleItem(
+      context: context,
+      keyId: keyId,
+      child: TactileSpringContainer(
+        onTap: () {
+          Navigator.of(context).pop();
+          context.push('/loans');
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing12,
+            vertical: kSpacing10,
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(
+                    alpha: context.appColors.badgeFillAlpha,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.squircleRadius(34),
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(
-                  AppTheme.squircleRadius(34),
+                alignment: Alignment.center,
+                child: Icon(
+                  PesaFlowIcons.loans,
+                  color: theme.colorScheme.primary,
+                  size: 16,
                 ),
               ),
-              alignment: Alignment.center,
-              child: Icon(
-                PesaFlowIcons.loans,
-                color: theme.colorScheme.primary,
-                size: 16,
+              const SizedBox(width: kSpacing10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            loan.description ?? 'Active Loan',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.ts(
+                              13,
+                              fontWeight: FontWeight.w700,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: kSpacing6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4.5,
+                            vertical: 1.5,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                (isOverdue
+                                        ? theme.colorScheme.error
+                                        : theme.colorScheme.primary)
+                                    .withValues(
+                                      alpha: context.appColors.badgeFillAlpha,
+                                    ),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusPill,
+                            ),
+                          ),
+                          child: Text(
+                            isOverdue ? 'OVERDUE' : 'DUE SOON',
+                            style: context.ts(
+                              8.5,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.3,
+                              color: isOverdue
+                                  ? theme.colorScheme.error
+                                  : theme.colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      isOverdue ? 'Repayment Overdue' : 'Due Soon',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.ts(
+                        11,
+                        fontWeight: FontWeight.w600,
+                        color: isOverdue
+                            ? theme.colorScheme.error
+                            : theme.colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: kSpacing10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(width: kSpacing8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          loan.description ?? 'Active Loan',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.ts(
-                            13,
-                            fontWeight: FontWeight.w700,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: kSpacing6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4.5,
-                          vertical: 1.5,
-                        ),
-                        decoration: BoxDecoration(
-                          color:
-                              (isOverdue
-                                      ? theme.colorScheme.error
-                                      : theme.colorScheme.primary)
-                                  .withValues(
-                                    alpha: context.appColors.badgeFillAlpha,
-                                  ),
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusPill,
-                          ),
-                        ),
-                        child: Text(
-                          isOverdue ? 'OVERDUE' : 'DUE SOON',
-                          style: context.ts(
-                            8.5,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 0.3,
-                            color: isOverdue
-                                ? theme.colorScheme.error
-                                : theme.colorScheme.primary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
                   Text(
-                    isOverdue ? 'Repayment Overdue' : 'Due Soon',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    CurrencyFormatter.formatCents(loan.remaining),
                     style: context.ts(
-                      11,
-                      fontWeight: FontWeight.w600,
-                      color: isOverdue
-                          ? theme.colorScheme.error
-                          : theme.colorScheme.primary,
+                      12.5,
+                      fontWeight: FontWeight.w800,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: kSpacing10,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withValues(
+                        alpha: context.appColors.badgeFillAlpha,
+                      ),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                      border: Border.all(
+                        color: theme.colorScheme.primary.withValues(
+                          alpha: context.appColors.badgeBorderAlpha,
+                        ),
+                        width: 0.8,
+                      ),
+                    ),
+                    child: Text(
+                      'Details',
+                      style: context.ts(
+                        10,
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(width: kSpacing10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  CurrencyFormatter.formatCents(loan.remaining),
-                  style: context.ts(
-                    12.5,
-                    fontWeight: FontWeight.w800,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing10,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withValues(
-                      alpha: context.appColors.badgeFillAlpha,
-                    ),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                    border: Border.all(
-                      color: theme.colorScheme.primary.withValues(
-                        alpha: context.appColors.badgeBorderAlpha,
-                      ),
-                      width: 0.8,
-                    ),
-                  ),
-                  child: Text(
-                    'Details',
-                    style: context.ts(
-                      10,
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+              const SizedBox(width: kSpacing4),
+              _buildDismissButton(context: context, keyId: keyId),
+            ],
+          ),
         ),
       ),
     );
