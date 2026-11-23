@@ -15,6 +15,7 @@ import 'package:pesaflow/presentation/savings_goals/widgets/quick_deposit_sheet.
 import 'package:pesaflow/presentation/state/notification_providers.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 
 /// Opens the unified notification center sheet.
 Future<void> showNotificationCenterSheet(BuildContext context) {
@@ -43,23 +44,35 @@ class _NotificationCenterSheetState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final counts = ref.watch(notificationCountsProvider);
+    final dismissed = ref.watch(dismissedNotificationsProvider);
 
-    final reviewQueue = ref.watch(reviewQueueStreamProvider).value ?? [];
+    final reviewQueue = (ref.watch(reviewQueueStreamProvider).value ?? [])
+        .where((item) => !dismissed.contains('sms_${item.transaction.id}'))
+        .toList();
     final dueBills = (ref.watch(dueRecurringTransactionsProvider).value ?? [])
-        .where((b) => b.type == 'expense')
+        .where(
+          (b) => b.type == 'expense' && !dismissed.contains('bill_${b.id}'),
+        )
         .toList();
     final budgets = (ref.watch(budgetProgressProvider).value ?? [])
-        .where((b) => b.remaining < 0 || b.percentage >= 0.9)
+        .where(
+          (b) =>
+              (b.remaining < 0 || b.percentage >= 0.9) &&
+              !dismissed.contains('budget_${b.budget.id}'),
+        )
         .toList();
     final now = DateTime.now();
     final activeLoans = (ref.watch(activeLoansStreamProvider).value ?? [])
         .where((l) {
           if (l.remaining <= 0 || l.dueAt == null) return false;
+          if (dismissed.contains('loan_${l.id}')) return false;
           final diff = l.dueAt!.difference(now).inDays;
           return diff <= 3;
         })
         .toList();
-    final allSavings = ref.watch(savingsGoalsStreamProvider).value ?? [];
+    final allSavings = (ref.watch(savingsGoalsStreamProvider).value ?? [])
+        .where((g) => !dismissed.contains('savings_${g.id}'))
+        .toList();
     final urgentSavings = allSavings.where((g) {
       if (g.isCompleted || g.currentAmount >= g.targetAmount) return false;
       return g.targetDate.difference(now).inDays <= 30;
@@ -208,6 +221,75 @@ class _NotificationCenterSheetState
                         ],
                       ),
                     ),
+                    if (counts.total > 0) ...[
+                      TactileSpringContainer(
+                        onTap: () {
+                          final allIds = [
+                            ...reviewQueue.map(
+                              (i) => 'sms_${i.transaction.id}',
+                            ),
+                            ...dueBills.map((b) => 'bill_${b.id}'),
+                            ...budgets.map((b) => 'budget_${b.budget.id}'),
+                            ...activeLoans.map((l) => 'loan_${l.id}'),
+                            ...activeSavings.map((g) => 'savings_${g.id}'),
+                          ];
+                          ref
+                              .read(dismissedNotificationsProvider.notifier)
+                              .dismissAll(allIds);
+                          PesaHaptics.medium();
+                          CustomToast.show(
+                            context,
+                            message: 'All reminders dismissed',
+                            actionLabel: 'Undo',
+                            onAction: () {
+                              for (final id in allIds) {
+                                ref
+                                    .read(
+                                      dismissedNotificationsProvider.notifier,
+                                    )
+                                    .undismiss(id);
+                              }
+                            },
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 9,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceContainerHigh,
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusPill,
+                            ),
+                            border: Border.all(
+                              color: context.appColors.hairline,
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                PesaFlowIcons.clearAll,
+                                size: 12,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Dismiss All',
+                                style: context.ts(
+                                  11,
+                                  fontWeight: FontWeight.w600,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: kSpacing8),
+                    ],
                     TactileSpringContainer(
                       onTap: () => Navigator.of(context).pop(),
                       child: Container(

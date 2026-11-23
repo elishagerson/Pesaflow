@@ -1,5 +1,59 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+
+class DismissedNotificationsNotifier extends Notifier<Set<String>> {
+  static const _prefKey = 'dismissed_notification_ids';
+
+  @override
+  Set<String> build() {
+    _loadFromPrefs();
+    return {};
+  }
+
+  Future<void> _loadFromPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final list = prefs.getStringList(_prefKey) ?? [];
+      state = list.toSet();
+    } catch (_) {}
+  }
+
+  Future<void> dismiss(String id) async {
+    if (state.contains(id)) return;
+    state = {...state, id};
+    _saveToPrefs();
+  }
+
+  Future<void> dismissAll(Iterable<String> ids) async {
+    state = {...state, ...ids};
+    _saveToPrefs();
+  }
+
+  Future<void> undismiss(String id) async {
+    if (!state.contains(id)) return;
+    final updated = Set<String>.from(state)..remove(id);
+    state = updated;
+    _saveToPrefs();
+  }
+
+  Future<void> clearAll() async {
+    state = {};
+    _saveToPrefs();
+  }
+
+  Future<void> _saveToPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(_prefKey, state.toList());
+    } catch (_) {}
+  }
+}
+
+final dismissedNotificationsProvider =
+    NotifierProvider<DismissedNotificationsNotifier, Set<String>>(
+  DismissedNotificationsNotifier.new,
+);
 
 class NotificationCounts {
   final int pendingSmsCount;
@@ -25,11 +79,22 @@ class NotificationCounts {
 }
 
 final notificationCountsProvider = Provider<NotificationCounts>((ref) {
-  final reviewQueue = ref.watch(reviewQueueStreamProvider).value ?? [];
-  final dueBills = ref.watch(dueRecurringTransactionsProvider).value ?? [];
-  final budgets = ref.watch(budgetProgressProvider).value ?? [];
-  final activeLoans = ref.watch(activeLoansStreamProvider).value ?? [];
-  final savingsGoals = ref.watch(savingsGoalsStreamProvider).value ?? [];
+  final dismissed = ref.watch(dismissedNotificationsProvider);
+  final reviewQueue = (ref.watch(reviewQueueStreamProvider).value ?? [])
+      .where((item) => !dismissed.contains('sms_${item.transaction.id}'))
+      .toList();
+  final dueBills = (ref.watch(dueRecurringTransactionsProvider).value ?? [])
+      .where((b) => !dismissed.contains('bill_${b.id}'))
+      .toList();
+  final budgets = (ref.watch(budgetProgressProvider).value ?? [])
+      .where((b) => !dismissed.contains('budget_${b.budget.id}'))
+      .toList();
+  final activeLoans = (ref.watch(activeLoansStreamProvider).value ?? [])
+      .where((l) => !dismissed.contains('loan_${l.id}'))
+      .toList();
+  final savingsGoals = (ref.watch(savingsGoalsStreamProvider).value ?? [])
+      .where((g) => !dismissed.contains('savings_${g.id}'))
+      .toList();
 
   final overBudget = budgets.where((b) {
     if (b.remaining < 0) return true;
