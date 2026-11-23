@@ -21,6 +21,7 @@ import 'package:pesaflow/presentation/common/widgets/motion/spring_rect_tween.da
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
+import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -124,8 +125,21 @@ class TransactionDetailScreen extends ConsumerWidget {
                       }
                       return _buildDetail(context, ref, theme, onSurface, item);
                     },
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
+                    loading: () => const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: kSpacing16,
+                        vertical: kSpacing24,
+                      ),
+                      child: Column(
+                        children: [
+                          SkeletonCard(height: 180),
+                          SizedBox(height: kSpacing16),
+                          SkeletonCard(height: 120),
+                          SizedBox(height: kSpacing16),
+                          SkeletonCard(height: 100),
+                        ],
+                      ),
+                    ),
                     error: (err, _) => ErrorState(
                       title: 'Error Loading Transaction',
                       message: err.toString(),

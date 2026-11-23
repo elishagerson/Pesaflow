@@ -21,6 +21,7 @@ import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
@@ -1309,34 +1310,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                 loading: () => const Center(
                   child: CircularProgressIndicator(strokeWidth: 3),
                 ),
-                error: (err, _) => Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(kSpacing32),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          PesaFlowIcons.error,
-                          size: 48,
-                          color: theme.colorScheme.error,
-                        ),
-                        const SizedBox(height: kSpacing16),
-                        Text(
-                          'Failed to load reviews',
-                          style: context.ts(14, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: kSpacing8),
-                        Text(
-                          '$err',
-                          textAlign: TextAlign.center,
-                          style: context.ts(
-                            14,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                error: (err, _) => ErrorState(
+                  title: 'Failed to load reviews',
+                  message: err.toString(),
+                  onRetry: () => ref.invalidate(pendingSmsStreamProvider),
                 ),
               ),
             ),
