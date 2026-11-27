@@ -7,6 +7,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/data/database/daos/analytics_dao.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/presentation/recurring/utils/recurring_schedule_helpers.dart';
@@ -443,7 +444,7 @@ class _SpendingBehaviorCard extends StatelessWidget {
   final int dailyBurn30dCents;
   final int safeDailyCents;
   final int savingsRatePct;
-  final Map<String, dynamic>? topCategory;
+  final CategorySpending? topCategory;
   final int monthlyExpenseCents;
 
   const _SpendingBehaviorCard({
@@ -463,8 +464,8 @@ class _SpendingBehaviorCard extends StatelessWidget {
         ? context.appColors.incomeColor
         : context.appColors.warningColor;
 
-    final topCatName = (topCategory?['name'] as String?) ?? 'None yet';
-    final topCatAmount = (topCategory?['total'] as int?) ?? 0;
+    final topCatName = topCategory?.categoryName ?? 'None yet';
+    final topCatAmount = topCategory?.amount ?? 0;
     final topCatPct = monthlyExpenseCents > 0 && topCatAmount > 0
         ? '${((topCatAmount / monthlyExpenseCents) * 100).round()}%'
         : '—';
