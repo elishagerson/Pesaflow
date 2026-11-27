@@ -37,7 +37,8 @@ import 'package:pesaflow/presentation/recurring/widgets/payday_view.dart';
 enum _RecurringFilter { bills, payday, check, all }
 
 class RecurringTransactionListScreen extends ConsumerStatefulWidget {
-  const RecurringTransactionListScreen({super.key});
+  final String? initialTab;
+  const RecurringTransactionListScreen({super.key, this.initialTab});
 
   @override
   ConsumerState<RecurringTransactionListScreen> createState() =>
@@ -48,7 +49,18 @@ class _RecurringTransactionListScreenState
     extends ConsumerState<RecurringTransactionListScreen> {
   final _scrollController = ScrollController();
   final Set<String> _dismissedCandidates = {};
-  _RecurringFilter _activeFilter = _RecurringFilter.bills;
+  late _RecurringFilter _activeFilter;
+
+  @override
+  void initState() {
+    super.initState();
+    _activeFilter = switch (widget.initialTab?.toLowerCase()) {
+      'payday' => _RecurringFilter.payday,
+      'check' => _RecurringFilter.check,
+      'all' => _RecurringFilter.all,
+      _ => _RecurringFilter.bills,
+    };
+  }
 
   @override
   void dispose() {
@@ -973,7 +985,7 @@ class _RecurringTransactionListScreenState
         _buildSectionHeader(
           context,
           headerLabel,
-          color: const Color(0xFFB45309),
+          color: context.appColors.warningColor,
           icon: PesaFlowIcons.calendar,
         ),
       );
@@ -1294,14 +1306,18 @@ class _RecurringTransactionListScreenState
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                label,
-                style: context.ts(
-                  12,
-                  fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                  color: isActive
-                      ? theme.colorScheme.onSurface
-                      : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.ts(
+                    12,
+                    fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+                    color: isActive
+                        ? theme.colorScheme.onSurface
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
                 ),
               ),
               if (count > 0) ...[
@@ -1389,7 +1405,7 @@ class _RecurringTransactionListScreenState
       child: Container(
         decoration: highlightUpcoming
             ? BoxDecoration(
-                color: const Color(0xFFB45309).withValues(alpha: 0.08),
+                color: context.appColors.warningColor.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(AppTheme.radiusCard),
               )
             : null,
