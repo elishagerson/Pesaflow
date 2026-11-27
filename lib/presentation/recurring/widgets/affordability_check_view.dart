@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -60,7 +60,7 @@ class _AffordabilityCheckViewState
     if (_pickingPhoto) return;
     setState(() => _pickingPhoto = true);
     try {
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         type: FileType.image,
       );
       final pickedPath = result?.files.single.path;
@@ -105,7 +105,8 @@ class _AffordabilityCheckViewState
     final remainingBudgetCents = budgetsAsync.when(
       data: (budgets) => budgets.fold<int>(
         0,
-        (sum, b) => sum + (b.budget.amount - b.spent).clamp(0, 1 << 62),
+        (sum, b) =>
+            sum + (b.budget.amount - b.spentInPeriod).clamp(0, 1 << 62).toInt(),
       ),
       loading: () => 0,
       error: (_, _) => 0,
