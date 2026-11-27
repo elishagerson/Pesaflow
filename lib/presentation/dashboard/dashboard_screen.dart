@@ -648,7 +648,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       '/transactions/add?type=Expense',
                                     ),
                                   ),
-                                  const SizedBox(width: kSpacing10),
+                                  const SizedBox(width: kSpacing8),
                                   _QuickActionButton(
                                     icon: PesaFlowIcons.income,
                                     label: 'Income',
@@ -657,13 +657,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       '/transactions/add?type=Income',
                                     ),
                                   ),
-                                  const SizedBox(width: kSpacing10),
+                                  const SizedBox(width: kSpacing8),
                                   _QuickActionButton(
                                     icon: PesaFlowIcons.transfer,
                                     label: 'Transfer',
                                     color: context.appColors.transferColor,
                                     onTap: () => context.push(
                                       '/transactions/add?type=Transfer',
+                                    ),
+                                  ),
+                                  const SizedBox(width: kSpacing8),
+                                  _QuickActionButton(
+                                    icon: PesaFlowIcons.lightbulb,
+                                    label: 'Afford?',
+                                    color: context.appColors.warningColor,
+                                    onTap: () => context.push(
+                                      '/recurring?tab=check',
                                     ),
                                   ),
                                 ],
