@@ -408,74 +408,75 @@ void main() {
   });
 
   group('SwipeBackRoute Secondary Parallax Tests', () {
-    testWidgets('secondaryAnimation causes underlying screen to shift and dim', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder: (context) {
-                return ElevatedButton(
-                  onPressed: () {
-                    pushSwipeBack(
-                      context,
-                      Scaffold(
-                        body: Center(
-                          child: Builder(
-                            builder: (innerContext) {
-                              return ElevatedButton(
-                                onPressed: () {
-                                  pushSwipeBack(
-                                    innerContext,
-                                    const Scaffold(
-                                      body: Center(
-                                        child: Text('Tertiary Screen'),
+    testWidgets(
+      'secondaryAnimation causes underlying screen to shift and dim',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      pushSwipeBack(
+                        context,
+                        Scaffold(
+                          body: Center(
+                            child: Builder(
+                              builder: (innerContext) {
+                                return ElevatedButton(
+                                  onPressed: () {
+                                    pushSwipeBack(
+                                      innerContext,
+                                      const Scaffold(
+                                        body: Center(
+                                          child: Text('Tertiary Screen'),
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                child: const Text('Push Tertiary'),
-                              );
-                            },
+                                    );
+                                  },
+                                  child: const Text('Push Tertiary'),
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                  child: const Text('Push Secondary'),
-                );
-              },
+                      );
+                    },
+                    child: const Text('Push Secondary'),
+                  );
+                },
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.text('Push Secondary'));
-      await tester.pumpAndSettle();
-      expect(find.text('Push Tertiary'), findsOneWidget);
+        await tester.tap(find.text('Push Secondary'));
+        await tester.pumpAndSettle();
+        expect(find.text('Push Tertiary'), findsOneWidget);
 
-      // Push tertiary screen: secondary screen now becomes the underlying screen
-      await tester.tap(find.text('Push Tertiary'));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 150));
+        // Push tertiary screen: secondary screen now becomes the underlying screen
+        await tester.tap(find.text('Push Tertiary'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 150));
 
-      // Both tertiary and underlying secondary are in the tree
-      expect(find.text('Tertiary Screen'), findsOneWidget);
-      expect(find.text('Push Tertiary'), findsOneWidget);
+        // Both tertiary and underlying secondary are in the tree
+        expect(find.text('Tertiary Screen'), findsOneWidget);
+        expect(find.text('Push Tertiary'), findsOneWidget);
 
-      await tester.pumpAndSettle();
-      expect(find.text('Tertiary Screen'), findsOneWidget);
+        await tester.pumpAndSettle();
+        expect(find.text('Tertiary Screen'), findsOneWidget);
 
-      // Pop tertiary
-      final nav = tester.state<NavigatorState>(find.byType(Navigator));
-      nav.pop();
-      await tester.pump();
-      await tester.pumpAndSettle();
+        // Pop tertiary
+        final nav = tester.state<NavigatorState>(find.byType(Navigator));
+        nav.pop();
+        await tester.pump();
+        await tester.pumpAndSettle();
 
-      expect(find.text('Tertiary Screen'), findsNothing);
-      expect(find.text('Push Tertiary'), findsOneWidget);
-    });
+        expect(find.text('Tertiary Screen'), findsNothing);
+        expect(find.text('Push Tertiary'), findsOneWidget);
+      },
+    );
   });
 
   group('CommandPalette', () {

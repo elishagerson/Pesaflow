@@ -27,6 +27,7 @@ import 'package:pesaflow/presentation/dashboard/widgets/workspace_dialogs.dart';
 import 'package:pesaflow/services/backup_service.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/ios_large_title_header.dart';
+
 import 'widgets/accounts_manager_sheet.dart';
 import 'widgets/categories_manager_sheet.dart';
 import 'widgets/background_protection_sheet.dart';
@@ -245,9 +246,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             horizontal: kSpacing20,
           ),
           decoration: BoxDecoration(
-            color: Theme.of(
-              context,
-            ).colorScheme.surface.withValues(alpha: 0.94),
+            color: Theme.of(context).colorScheme.surface
+                .withValues(alpha: 0.94),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -259,9 +259,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: kSpacing20),
                   decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant
+                        .withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   ),
                 ),
@@ -843,16 +842,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         color: theme.colorScheme.primary,
                       ),
                       title: const Text('Your Name'),
-                      subtitle: Text(
-                        switch (ref.watch(cardholderNameProvider).value) {
-                          final n?
-                              when n.isNotEmpty &&
-                                  n != 'TOTAL NET WORTH' &&
-                                  n != 'Your accounts' =>
-                            n,
-                          _ => 'Tap to personalize your greeting',
-                        },
-                      ),
+                      subtitle: Text(switch (ref
+                          .watch(cardholderNameProvider)
+                          .value) {
+                        final n?
+                            when n.isNotEmpty &&
+                                n != 'TOTAL NET WORTH' &&
+                                n != 'Your accounts' =>
+                          n,
+                        _ => 'Tap to personalize your greeting',
+                      }),
                       trailing: Icon(
                         PesaFlowIcons.chevronRight,
                         size: 18,

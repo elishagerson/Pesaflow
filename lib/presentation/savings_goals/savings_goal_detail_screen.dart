@@ -852,8 +852,7 @@ class _SavingsGoalDetailScreenState
                     child: EmptyState(
                       icon: PesaFlowIcons.savings,
                       title: 'Goal Not Found',
-                      subtitle:
-                          'The requested savings goal details could not be located.',
+                      subtitle: 'The requested savings goal details could not be located.',
                     ),
                   ),
                 ],
@@ -1394,18 +1393,16 @@ class _SavingsGoalDetailScreenState
                                                   actions: [
                                                     TextButton(
                                                       onPressed: () =>
-                                                          Navigator.of(
-                                                            context,
-                                                          ).pop(false),
+                                                          Navigator.of(context)
+                                                              .pop(false),
                                                       child: const Text(
                                                         'Cancel',
                                                       ),
                                                     ),
                                                     TextButton(
                                                       onPressed: () =>
-                                                          Navigator.of(
-                                                            context,
-                                                          ).pop(true),
+                                                          Navigator.of(context)
+                                                              .pop(true),
                                                       child: Text(
                                                         'Delete',
                                                         style: context.ts(

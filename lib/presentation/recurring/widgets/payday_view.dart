@@ -49,8 +49,7 @@ class PaydayView extends StatelessWidget {
         child: EmptyState(
           icon: PesaFlowIcons.income,
           title: 'No Payday Schedule',
-          subtitle:
-              'Add your salary or recurring income stream to track your countdown to payday and upcoming bills.',
+          subtitle: 'Add your salary or recurring income stream to track your countdown to payday and upcoming bills.',
           action: FilledButton.icon(
             onPressed: () {
               PesaHaptics.medium();
@@ -71,8 +70,9 @@ class PaydayView extends StatelessWidget {
       now: now,
     );
     final subtitle = paydayScheduleSubtitle(activeIncomes);
-    final daysToPayday =
-        nextPayday != null ? nextPayday.difference(now).inDays : 0;
+    final daysToPayday = nextPayday != null
+        ? nextPayday.difference(now).inDays
+        : 0;
 
     final remainingAfterBills =
         (currentBalanceCents - billsDueBeforePaydayCents).clamp(0, 1 << 62);
@@ -127,10 +127,7 @@ class PaydayView extends StatelessWidget {
 
           // Card 2: Next Paydays Timeline
           if (upcomingPaydays.isNotEmpty) ...[
-            _NextPaydaysCard(
-              today: now,
-              occurrences: upcomingPaydays,
-            ),
+            _NextPaydaysCard(today: now, occurrences: upcomingPaydays),
             const SizedBox(height: kSpacing12),
           ],
 
@@ -162,8 +159,8 @@ class PaydayView extends StatelessWidget {
                             daysToPayday == 0
                                 ? 'available today'
                                 : daysToPayday == 1
-                                    ? 'to last 1 day'
-                                    : 'to last $daysToPayday days',
+                                ? 'to last 1 day'
+                                : 'to last $daysToPayday days',
                             style: context.ts(
                               13,
                               fontWeight: FontWeight.w500,
@@ -239,8 +236,8 @@ class _CountdownCalendarCard extends StatelessWidget {
                 daysToPayday == 0
                     ? 'Payday'
                     : daysToPayday == 1
-                        ? '1 day'
-                        : '$daysToPayday days',
+                    ? '1 day'
+                    : '$daysToPayday days',
                 style: context.ts(
                   30,
                   fontWeight: FontWeight.w900,
@@ -290,7 +287,8 @@ class _CountdownCalendarCard extends StatelessWidget {
                 final d = days[row * 7 + col];
                 final isToday = d == today;
                 final isPayday = projectedDates.contains(d);
-                final isCountdown = nextPayday != null &&
+                final isCountdown =
+                    nextPayday != null &&
                     d.isAfter(today) &&
                     d.isBefore(nextPayday!);
                 final isPast = d.isBefore(today);
@@ -355,10 +353,7 @@ class _NextPaydaysCard extends StatelessWidget {
   final DateTime today;
   final List<PaydayOccurrence> occurrences;
 
-  const _NextPaydaysCard({
-    required this.today,
-    required this.occurrences,
-  });
+  const _NextPaydaysCard({required this.today, required this.occurrences});
 
   @override
   Widget build(BuildContext context) {

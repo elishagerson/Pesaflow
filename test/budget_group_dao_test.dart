@@ -458,31 +458,28 @@ void main() {
       },
     );
 
-    test(
-      'reconfiguring budget plan updates existing groups without creating duplicates',
-      () async {
-        await groupRepo.createBudgetPlan(
-          rule: BudgetRuleType.rule503020,
-          monthlyIncomeCents: 100000000, // 1,000,000 TZS
-        );
+    test('reconfiguring budget plan updates existing groups without creating duplicates', () async {
+      await groupRepo.createBudgetPlan(
+        rule: BudgetRuleType.rule503020,
+        monthlyIncomeCents: 100000000, // 1,000,000 TZS
+      );
 
-        var groups = await groupDao.getAllActiveGroups();
-        expect(groups.length, equals(3));
+      var groups = await groupDao.getAllActiveGroups();
+      expect(groups.length, equals(3));
 
-        // Reconfigure plan with different income and rule
-        await groupRepo.createBudgetPlan(
-          rule: BudgetRuleType.rule702010,
-          monthlyIncomeCents: 200000000, // 2,000,000 TZS
-        );
+      // Reconfigure plan with different income and rule
+      await groupRepo.createBudgetPlan(
+        rule: BudgetRuleType.rule702010,
+        monthlyIncomeCents: 200000000, // 2,000,000 TZS
+      );
 
-        groups = await groupDao.getAllActiveGroups();
-        // Still exactly 3 groups, not 6
-        expect(groups.length, equals(3));
+      groups = await groupDao.getAllActiveGroups();
+      // Still exactly 3 groups, not 6
+      expect(groups.length, equals(3));
 
-        final needs = groups.firstWhere((g) => g.groupType == 'needs');
-        expect(needs.percentage, equals(0.70));
-        expect(needs.allocatedAmount, equals(140000000));
-      },
-    );
+      final needs = groups.firstWhere((g) => g.groupType == 'needs');
+      expect(needs.percentage, equals(0.70));
+      expect(needs.allocatedAmount, equals(140000000));
+    });
   });
 }

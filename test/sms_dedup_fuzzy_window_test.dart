@@ -123,29 +123,26 @@ void main() {
   });
 
   group('fuzzy window must not discard distinct payments', () {
-    test(
-      'a second DISTINCT same-amount transfer 30s later is admitted',
-      () async {
-        await insertExisting(id: 'a', reference: 'MPX-111', smsTimestamp: t0);
+    test('a second DISTINCT same-amount transfer 30s later is admitted', () async {
+      await insertExisting(id: 'a', reference: 'MPX-111', smsTimestamp: t0);
 
-        // Genuinely different reference, different money movement, 30s apart.
-        final isDup = await dedup.isDuplicate(
-          sms(
-            reference: 'MPX-999',
-            timestamp: t0.add(const Duration(seconds: 30)),
-          ),
-        );
+      // Genuinely different reference, different money movement, 30s apart.
+      final isDup = await dedup.isDuplicate(
+        sms(
+          reference: 'MPX-999',
+          timestamp: t0.add(const Duration(seconds: 30)),
+        ),
+      );
 
-        expect(
-          isDup,
-          isFalse,
-          reason:
-              'MPX-999 was never seen, so it is a genuinely new payment and must '
-              'not be discarded just because an unrelated same-amount transfer '
-              'happened to land 30s earlier.',
-        );
-      },
-    );
+      expect(
+        isDup,
+        isFalse,
+        reason:
+            'MPX-999 was never seen, so it is a genuinely new payment and must '
+            'not be discarded just because an unrelated same-amount transfer '
+            'happened to land 30s earlier.',
+      );
+    });
 
     test('two identical airtime top-ups 20s apart are both kept', () async {
       await insertExisting(
@@ -163,8 +160,7 @@ void main() {
           ),
         ),
         isFalse,
-        reason:
-            'Buying two bundles back-to-back must not silently lose one of them.',
+        reason: 'Buying two bundles back-to-back must not silently lose one of them.',
       );
     });
 

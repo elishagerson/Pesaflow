@@ -245,8 +245,10 @@ class _BillsStepChartPainter extends CustomPainter {
     const double bottomAxisHeight = 22;
     const double labelDropClearance = 18;
     final chartHeight =
-        (size.height - topPad - bottomAxisHeight - labelDropClearance)
-            .clamp(24.0, size.height);
+        (size.height - topPad - bottomAxisHeight - labelDropClearance).clamp(
+          24.0,
+          size.height,
+        );
     final totalDays = end.difference(start).inDays.clamp(1, 365);
 
     // Compute min/max balance for Y scaling.
@@ -374,7 +376,10 @@ class _BillsStepChartPainter extends CustomPainter {
       final rawX = tickCount == 1
           ? 0.0
           : (dayOffset / totalDays) * size.width - tp.width / 2;
-      final dx = rawX.clamp(0.0, (size.width - tp.width).clamp(0.0, size.width));
+      final dx = rawX.clamp(
+        0.0,
+        (size.width - tp.width).clamp(0.0, size.width),
+      );
       tp.paint(canvas, Offset(dx, axisY + 5));
     }
   }

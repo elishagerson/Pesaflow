@@ -60,7 +60,6 @@ Future<T?> pushHeroCard<T>(BuildContext context, Widget page, String heroTag) {
       ),
     );
   }
-  return Navigator.of(
-    context,
-  ).push<T>(HeroCardRoute<T>(page: page, heroTag: heroTag));
+  return Navigator.of(context)
+      .push<T>(HeroCardRoute<T>(page: page, heroTag: heroTag));
 }

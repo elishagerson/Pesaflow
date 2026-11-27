@@ -753,9 +753,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                       final Map<String, List<TransactionWithCategoryAndAccount>>
                       grouped = {};
                       for (final item in visibleTransactions) {
-                        final dayStr = DateFormat(
-                          'yyyy-MM-dd',
-                        ).format(item.transaction.createdAt);
+                        final dayStr = DateFormat('yyyy-MM-dd')
+                            .format(item.transaction.createdAt);
                         if (grouped[dayStr] == null) {
                           grouped[dayStr] = [];
                         }
@@ -885,9 +884,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     final categoryColor = hexToColor(
                                       item.category.color,
                                     );
-                                    final formattedTime = DateFormat(
-                                      'HH:mm',
-                                    ).format(trans.createdAt);
+                                    final formattedTime = DateFormat('HH:mm')
+                                        .format(trans.createdAt);
                                     final isNewRow = newIds.contains(trans.id);
 
                                     final Widget row = Dismissible(

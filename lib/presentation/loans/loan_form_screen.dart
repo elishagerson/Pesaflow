@@ -1013,9 +1013,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
           vertical: kSpacing6,
         ),
         decoration: BoxDecoration(
-          color: Theme.of(
-            context,
-          ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+          color: Theme.of(context).colorScheme.surfaceContainerHighest
+              .withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
           border: Border.all(color: context.appColors.hairline),
         ),

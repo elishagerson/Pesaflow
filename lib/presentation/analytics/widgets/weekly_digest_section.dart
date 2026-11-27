@@ -26,8 +26,8 @@ class WeeklyDigestSection extends ConsumerWidget {
     final base = hour < 12
         ? 'Good morning'
         : hour < 17
-            ? 'Good afternoon'
-            : 'Good evening';
+        ? 'Good afternoon'
+        : 'Good evening';
     if (userName != null &&
         userName.isNotEmpty &&
         userName != 'TOTAL NET WORTH' &&
@@ -54,10 +54,8 @@ class WeeklyDigestSection extends ConsumerWidget {
     final goals = ref.watch(savingsGoalsStreamProvider).asData?.value ?? [];
     final dailyBurn30d =
         ref.watch(thirtyDayDailyBurnRateProvider).asData?.value ?? 0;
-    final monthlyTotals =
-        ref.watch(monthlyTotalsProvider).asData?.value ?? {};
-    final topCategories =
-        ref.watch(topCategoriesProvider).asData?.value ?? [];
+    final monthlyTotals = ref.watch(monthlyTotalsProvider).asData?.value ?? {};
+    final topCategories = ref.watch(topCategoriesProvider).asData?.value ?? [];
 
     final nextPayday = nextPaydayFor(recurring, now: today);
     final classified = classifyUpcomingBills(
@@ -93,13 +91,12 @@ class WeeklyDigestSection extends ConsumerWidget {
     // Allocation breakdown: Bills, Savings, Safe to spend.
     final monthlyIncome = monthlyTotals['income'] ?? 0;
     final monthlyExpense = monthlyTotals['expense'] ?? 0;
-    final monthlySavings =
-        (monthlyIncome - monthlyExpense).clamp(0, 1 << 62);
-    final savingsSliceCents =
-        monthlySavings > 0 ? monthlySavings : goalsSavedCents;
+    final monthlySavings = (monthlyIncome - monthlyExpense).clamp(0, 1 << 62);
+    final savingsSliceCents = monthlySavings > 0
+        ? monthlySavings
+        : goalsSavedCents;
 
-    final totalPoolCents =
-        billsCents + savingsSliceCents + safeToSpendCents;
+    final totalPoolCents = billsCents + savingsSliceCents + safeToSpendCents;
 
     final savingsRatePct = monthlyIncome > 0
         ? (((monthlyIncome - monthlyExpense) / monthlyIncome) * 100).round()
@@ -364,10 +361,7 @@ class _SegmentedGoalCard extends StatelessWidget {
   final SavingsGoal goal;
   final Color incomeColor;
 
-  const _SegmentedGoalCard({
-    required this.goal,
-    required this.incomeColor,
-  });
+  const _SegmentedGoalCard({required this.goal, required this.incomeColor});
 
   @override
   Widget build(BuildContext context) {
@@ -542,7 +536,11 @@ class _SpendingBehaviorCard extends StatelessWidget {
                 : 'last 30 days',
             onSurface: onSurface,
           ),
-          Divider(height: kSpacing16, thickness: 0.5, color: context.appColors.hairline),
+          Divider(
+            height: kSpacing16,
+            thickness: 0.5,
+            color: context.appColors.hairline,
+          ),
           _behaviorRow(
             context,
             label: 'Top spending category',
@@ -552,7 +550,11 @@ class _SpendingBehaviorCard extends StatelessWidget {
                 : 'No expenses this month',
             onSurface: onSurface,
           ),
-          Divider(height: kSpacing16, thickness: 0.5, color: context.appColors.hairline),
+          Divider(
+            height: kSpacing16,
+            thickness: 0.5,
+            color: context.appColors.hairline,
+          ),
           _behaviorRow(
             context,
             label: 'Monthly savings rate',
@@ -560,8 +562,8 @@ class _SpendingBehaviorCard extends StatelessWidget {
             detail: savingsRatePct >= 20
                 ? 'Healthy cushion'
                 : savingsRatePct > 0
-                    ? 'Building momentum'
-                    : 'Expenses exceed income',
+                ? 'Building momentum'
+                : 'Expenses exceed income',
             onSurface: onSurface,
           ),
         ],
@@ -593,10 +595,7 @@ class _SpendingBehaviorCard extends StatelessWidget {
               ),
               Text(
                 detail,
-                style: context.ts(
-                  11,
-                  color: context.appColors.textMedium,
-                ),
+                style: context.ts(11, color: context.appColors.textMedium),
               ),
             ],
           ),
@@ -604,11 +603,7 @@ class _SpendingBehaviorCard extends StatelessWidget {
         const SizedBox(width: kSpacing12),
         Text(
           value,
-          style: context.ts(
-            14,
-            fontWeight: FontWeight.w800,
-            color: onSurface,
-          ),
+          style: context.ts(14, fontWeight: FontWeight.w800, color: onSurface),
         ),
       ],
     );

@@ -316,10 +316,7 @@ class _OverviewTab extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Weekly & Behavioral Digest
-            const StaggeredFadeSlide(
-              index: 0,
-              child: WeeklyDigestSection(),
-            ),
+            const StaggeredFadeSlide(index: 0, child: WeeklyDigestSection()),
 
             // Monthly Summary
             totalsAsync.when(
@@ -940,8 +937,7 @@ class _OverviewTab extends ConsumerWidget {
                         return EmptyState(
                           icon: PesaFlowIcons.budgets,
                           title: 'No Spending Data Yet',
-                          subtitle:
-                              'Log some transactions to see your category breakdown.',
+                          subtitle: 'Log some transactions to see your category breakdown.',
                         );
                       }
                       final total = cats.fold<int>(0, (s, c) => s + c.amount);

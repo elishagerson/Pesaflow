@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -683,9 +684,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     icon: PesaFlowIcons.lightbulb,
                                     label: 'Afford?',
                                     color: context.appColors.warningColor,
-                                    onTap: () => context.push(
-                                      '/recurring?tab=check',
-                                    ),
+                                    onTap: () =>
+                                        context.push('/recurring?tab=check'),
                                   ),
                                 ],
                               ),
@@ -963,11 +963,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                         width: kSpacing6,
                                                       ),
                                                       Text(
-                                                        DateFormat(
-                                                          'MMM d',
-                                                        ).format(
-                                                          trans.createdAt,
-                                                        ),
+                                                        DateFormat('MMM d')
+                                                            .format(
+                                                              trans.createdAt,
+                                                            ),
                                                         style: context.ts(
                                                           10,
                                                           color: theme

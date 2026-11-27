@@ -178,92 +178,89 @@ void main() {
       await db.close();
     });
 
-    test(
-      'Reversal creates offsetting income transaction and updates account balance',
-      () async {
-        const uuid = Uuid();
-        // 1. Seed Account
-        final accountId = uuid.v4();
-        await accountDao.insertAccount(
-          Account(
-            id: accountId,
-            name: 'M-Pesa Wallet',
-            type: 'mobile_money',
-            provider: 'M-Pesa_TZ',
-            balance: 5000000, // 50,000 TZS
-            icon: 'phone',
-            sortOrder: 1,
-            isArchived: false,
-            createdAt: DateTime.now(),
-          ),
-        );
+    test('Reversal creates offsetting income transaction and updates account balance', () async {
+      const uuid = Uuid();
+      // 1. Seed Account
+      final accountId = uuid.v4();
+      await accountDao.insertAccount(
+        Account(
+          id: accountId,
+          name: 'M-Pesa Wallet',
+          type: 'mobile_money',
+          provider: 'M-Pesa_TZ',
+          balance: 5000000, // 50,000 TZS
+          icon: 'phone',
+          sortOrder: 1,
+          isArchived: false,
+          createdAt: DateTime.now(),
+        ),
+      );
 
-        // 2. Seed Category
-        final categoryId = uuid.v4();
-        await categoryDao.insertCategory(
-          Category(
-            id: categoryId,
-            name: 'Shopping',
-            icon: 'shopping-bag',
-            color: '#00BCD4',
-            type: 'expense',
-            sortOrder: 1,
-            isSystem: true,
-            createdAt: DateTime.now(),
-          ),
-        );
+      // 2. Seed Category
+      final categoryId = uuid.v4();
+      await categoryDao.insertCategory(
+        Category(
+          id: categoryId,
+          name: 'Shopping',
+          icon: 'shopping-bag',
+          color: '#00BCD4',
+          type: 'expense',
+          sortOrder: 1,
+          isSystem: true,
+          createdAt: DateTime.now(),
+        ),
+      );
 
-        // 3. Create an original expense transaction that will later be reversed
-        const originalRef = '5H8392HD';
-        await transactionRepo.createTransaction(
-          Transaction(
-            id: uuid.v4(),
-            accountId: accountId,
-            categoryId: categoryId,
-            amount: 1000000, // 10,000 TZS
-            type: 'expense',
-            description: 'Supermarket shopping',
-            provider: 'M-Pesa_TZ',
-            reference: originalRef,
-            rawSms: 'Sent Tsh 10,000 to Supermarket',
-            source: 'sms_auto',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ),
-        );
+      // 3. Create an original expense transaction that will later be reversed
+      const originalRef = '5H8392HD';
+      await transactionRepo.createTransaction(
+        Transaction(
+          id: uuid.v4(),
+          accountId: accountId,
+          categoryId: categoryId,
+          amount: 1000000, // 10,000 TZS
+          type: 'expense',
+          description: 'Supermarket shopping',
+          provider: 'M-Pesa_TZ',
+          reference: originalRef,
+          rawSms: 'Sent Tsh 10,000 to Supermarket',
+          source: 'sms_auto',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
-        // 4. Process incoming reversal SMS
-        const reversalSms =
-            'Muamala 5H8392HD wa Tsh 10,000.00 umerudishwa. Salio lako jipya la M-Pesa ni Tsh 50,000.00.';
-        final success = await processor.processSms(
-          'M-PESA',
-          reversalSms,
-          DateTime.now(),
-        );
+      // 4. Process incoming reversal SMS
+      const reversalSms =
+          'Muamala 5H8392HD wa Tsh 10,000.00 umerudishwa. Salio lako jipya la M-Pesa ni Tsh 50,000.00.';
+      final success = await processor.processSms(
+        'M-PESA',
+        reversalSms,
+        DateTime.now(),
+      );
 
-        expect(success, isTrue);
+      expect(success, isTrue);
 
-        // 5. Verify the reversal transaction was created
-        final txs = await db.select(db.transactions).get();
-        expect(txs.length, 2);
+      // 5. Verify the reversal transaction was created
+      final txs = await db.select(db.transactions).get();
+      expect(txs.length, 2);
 
-        final reversalTx = txs.firstWhere((t) => t.reference != originalRef);
-        expect(reversalTx.type, 'income'); // Credited back
-        expect(reversalTx.amount, 1000000);
-        expect(
-          reversalTx.description,
-          contains('Reversal: Supermarket shopping'),
-        );
-        expect(reversalTx.balanceAfter, 5000000);
+      final reversalTx = txs.firstWhere((t) => t.reference != originalRef);
+      expect(reversalTx.type, 'income'); // Credited back
+      expect(reversalTx.amount, 1000000);
+      expect(
+        reversalTx.description,
+        contains('Reversal: Supermarket shopping'),
+      );
+      expect(reversalTx.balanceAfter, 5000000);
 
-        // 6. Verify account balance was updated to carrier reported balance
-        final account = await accountRepo.getAccountById(accountId);
-        expect(account?.balance, 5000000);
+      // 6. Verify account balance was updated to carrier reported balance
+      final account = await accountRepo.getAccountById(accountId);
+      expect(account?.balance, 5000000);
 
-        // 7. Verify notification was sent
-        expect(mockNotificationService.lastTitle, 'Transaction Reversed');
-        expect(mockNotificationService.lastBody, contains('5H8392HD'));
-      },
-    );
+      // 7. Verify notification was sent
+      expect(mockNotificationService.lastTitle, 'Transaction Reversed');
+      expect(mockNotificationService.lastBody, contains('5H8392HD'));
+    });
   });
 }

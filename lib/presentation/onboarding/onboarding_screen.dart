@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+
 import 'package:material_ui/material_ui.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -381,10 +382,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 class _WelcomePage extends StatelessWidget {
   final ThemeData theme;
   final TextEditingController nameController;
-  const _WelcomePage({
-    required this.theme,
-    required this.nameController,
-  });
+  const _WelcomePage({required this.theme, required this.nameController});
   @override
   Widget build(BuildContext context) {
     return StaggeredFadeSlide(

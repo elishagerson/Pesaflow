@@ -198,7 +198,10 @@ void main() {
       expect(relativeDayLabel(DateTime(2026, 11, 21), now: today), 'Today');
       expect(relativeDayLabel(DateTime(2026, 11, 22), now: today), 'Tomorrow');
       expect(relativeDayLabel(DateTime(2026, 11, 27), now: today), 'in 6 days');
-      expect(relativeDayLabel(DateTime(2026, 11, 19), now: today), '2d overdue');
+      expect(
+        relativeDayLabel(DateTime(2026, 11, 19), now: today),
+        '2d overdue',
+      );
     });
   });
 }

@@ -107,7 +107,8 @@ AffordabilityResult evaluateAffordability({
           label: i == 0 ? dateFmt.format(p.date) : fullDateFmt.format(p.date),
           date: p.date,
           spareCents: runningSpare,
-          isHighlighted: i == 0 && todaySpare < priceCents && runningSpare >= priceCents,
+          isHighlighted:
+              i == 0 && todaySpare < priceCents && runningSpare >= priceCents,
         ),
       );
       cursorDate = p.date;
@@ -129,7 +130,11 @@ AffordabilityResult evaluateAffordability({
     // No recurring income configured: show +14d and +30d estimates.
     final d14 = today.add(const Duration(days: 14));
     final d30 = today.add(const Duration(days: 30));
-    final bills14 = _billsInRange(activeExpenses, today.add(const Duration(days: 7)), d14);
+    final bills14 = _billsInRange(
+      activeExpenses,
+      today.add(const Duration(days: 7)),
+      d14,
+    );
     final bills30 = _billsInRange(activeExpenses, d14, d30);
     final spare14 = todaySpare - bills14 - (estimatedDailySpendCents * 14);
     final spare30 = spare14 - bills30 - (estimatedDailySpendCents * 16);
@@ -193,7 +198,9 @@ AffordabilityResult evaluateAffordability({
         }
         return AffordabilityResult(
           status: AffordabilityStatus.bestAfterPayday,
-          headline: i == 1 ? 'Best after payday' : 'Best after ${dateFmt.format(target.date)}',
+          headline: i == 1
+              ? 'Best after payday'
+              : 'Best after ${dateFmt.format(target.date)}',
           subtitle:
               'After $dayName you will have ${CurrencyFormatter.formatCompact(target.spareCents)} spare.',
           milestones: milestones,
@@ -205,7 +212,9 @@ AffordabilityResult evaluateAffordability({
   }
 
   // Case 3: Needs adjustment (shortfall is bridgeable or no payday yet but positive balance).
-  final bestFuture = milestones.skip(1).fold<SpareMilestone>(
+  final bestFuture = milestones
+      .skip(1)
+      .fold<SpareMilestone>(
         milestones.first,
         (a, b) => b.spareCents > a.spareCents ? b : a,
       );
@@ -228,8 +237,7 @@ AffordabilityResult evaluateAffordability({
     return AffordabilityResult(
       status: AffordabilityStatus.notSupported,
       headline: 'Not supported right now',
-      subtitle:
-          'Current balance and upcoming income are fully committed to bills and daily spending.',
+      subtitle: 'Current balance and upcoming income are fully committed to bills and daily spending.',
       milestones: milestones,
       suggestions: [
         'Upcoming bills leave ${CurrencyFormatter.formatCompact(todaySpare)} spare today.',

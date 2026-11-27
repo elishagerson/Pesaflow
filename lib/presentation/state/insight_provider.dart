@@ -4,6 +4,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
+
 import 'state_providers.dart';
 
 class InsightData {

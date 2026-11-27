@@ -1,6 +1,8 @@
 import 'package:pesaflow/presentation/common/widgets/pesa_progress_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
+
 import 'dart:math' as math;
+
 import 'package:material_ui/material_ui.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -108,8 +110,7 @@ class _BudgetDetailScreenState extends ConsumerState<BudgetDetailScreen> {
                       child: EmptyState(
                         icon: PesaFlowIcons.budgets,
                         title: 'Budget Not Found',
-                        subtitle:
-                            'The requested envelope budget could not be located.',
+                        subtitle: 'The requested envelope budget could not be located.',
                       ),
                     ),
                   ],
@@ -1415,9 +1416,8 @@ class _ChartLegend extends StatelessWidget {
           style: context.ts(
             10,
             fontWeight: FontWeight.w500,
-            color: Theme.of(
-              context,
-            ).colorScheme.onSurface.withValues(alpha: 0.5),
+            color: Theme.of(context).colorScheme.onSurface
+                .withValues(alpha: 0.5),
           ),
         ),
       ],
@@ -1718,9 +1718,8 @@ class _LegendRow extends StatelessWidget {
                     item.label,
                     style: context.ts(
                       10,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.45),
+                      color: Theme.of(context).colorScheme.onSurface
+                          .withValues(alpha: 0.45),
                     ),
                   ),
                 ],

@@ -9211,34 +9211,32 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   ];
 }
 
-typedef $$AccountsTableCreateCompanionBuilder =
-    AccountsCompanion Function({
-      required String id,
-      required String name,
-      required String type,
-      required int balance,
-      Value<String?> provider,
-      Value<String?> phoneNumber,
-      required String icon,
-      Value<int> sortOrder,
-      Value<bool> isArchived,
-      Value<DateTime> createdAt,
-      Value<int> rowid,
-    });
-typedef $$AccountsTableUpdateCompanionBuilder =
-    AccountsCompanion Function({
-      Value<String> id,
-      Value<String> name,
-      Value<String> type,
-      Value<int> balance,
-      Value<String?> provider,
-      Value<String?> phoneNumber,
-      Value<String> icon,
-      Value<int> sortOrder,
-      Value<bool> isArchived,
-      Value<DateTime> createdAt,
-      Value<int> rowid,
-    });
+typedef $$AccountsTableCreateCompanionBuilder = AccountsCompanion Function({
+  required String id,
+  required String name,
+  required String type,
+  required int balance,
+  Value<String?> provider,
+  Value<String?> phoneNumber,
+  required String icon,
+  Value<int> sortOrder,
+  Value<bool> isArchived,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$AccountsTableUpdateCompanionBuilder = AccountsCompanion Function({
+  Value<String> id,
+  Value<String> name,
+  Value<String> type,
+  Value<int> balance,
+  Value<String?> provider,
+  Value<String?> phoneNumber,
+  Value<String> icon,
+  Value<int> sortOrder,
+  Value<bool> isArchived,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
 
 class $$AccountsTableFilterComposer
     extends Composer<_$AppDatabase, $AccountsTable> {
@@ -9513,32 +9511,30 @@ typedef $$AccountsTableProcessedTableManager =
       Account,
       PrefetchHooks Function()
     >;
-typedef $$CategoriesTableCreateCompanionBuilder =
-    CategoriesCompanion Function({
-      required String id,
-      required String name,
-      required String icon,
-      required String color,
-      required String type,
-      Value<String?> parentId,
-      Value<bool> isSystem,
-      Value<int> sortOrder,
-      Value<DateTime> createdAt,
-      Value<int> rowid,
-    });
-typedef $$CategoriesTableUpdateCompanionBuilder =
-    CategoriesCompanion Function({
-      Value<String> id,
-      Value<String> name,
-      Value<String> icon,
-      Value<String> color,
-      Value<String> type,
-      Value<String?> parentId,
-      Value<bool> isSystem,
-      Value<int> sortOrder,
-      Value<DateTime> createdAt,
-      Value<int> rowid,
-    });
+typedef $$CategoriesTableCreateCompanionBuilder = CategoriesCompanion Function({
+  required String id,
+  required String name,
+  required String icon,
+  required String color,
+  required String type,
+  Value<String?> parentId,
+  Value<bool> isSystem,
+  Value<int> sortOrder,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$CategoriesTableUpdateCompanionBuilder = CategoriesCompanion Function({
+  Value<String> id,
+  Value<String> name,
+  Value<String> icon,
+  Value<String> color,
+  Value<String> type,
+  Value<String?> parentId,
+  Value<bool> isSystem,
+  Value<int> sortOrder,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
 
 class $$CategoriesTableFilterComposer
     extends Composer<_$AppDatabase, $CategoriesTable> {
@@ -10277,42 +10273,40 @@ typedef $$TransactionsTableProcessedTableManager =
       Transaction,
       PrefetchHooks Function()
     >;
-typedef $$BudgetsTableCreateCompanionBuilder =
-    BudgetsCompanion Function({
-      required String id,
-      required String name,
-      required String categoryId,
-      required String period,
-      required int amount,
-      Value<String?> groupId,
-      Value<bool> rollover,
-      Value<String> rolloverType,
-      Value<int?> rolloverCap,
-      required DateTime startDate,
-      Value<DateTime?> endDate,
-      Value<double> notificationThreshold,
-      Value<bool> isActive,
-      Value<DateTime> createdAt,
-      Value<int> rowid,
-    });
-typedef $$BudgetsTableUpdateCompanionBuilder =
-    BudgetsCompanion Function({
-      Value<String> id,
-      Value<String> name,
-      Value<String> categoryId,
-      Value<String> period,
-      Value<int> amount,
-      Value<String?> groupId,
-      Value<bool> rollover,
-      Value<String> rolloverType,
-      Value<int?> rolloverCap,
-      Value<DateTime> startDate,
-      Value<DateTime?> endDate,
-      Value<double> notificationThreshold,
-      Value<bool> isActive,
-      Value<DateTime> createdAt,
-      Value<int> rowid,
-    });
+typedef $$BudgetsTableCreateCompanionBuilder = BudgetsCompanion Function({
+  required String id,
+  required String name,
+  required String categoryId,
+  required String period,
+  required int amount,
+  Value<String?> groupId,
+  Value<bool> rollover,
+  Value<String> rolloverType,
+  Value<int?> rolloverCap,
+  required DateTime startDate,
+  Value<DateTime?> endDate,
+  Value<double> notificationThreshold,
+  Value<bool> isActive,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$BudgetsTableUpdateCompanionBuilder = BudgetsCompanion Function({
+  Value<String> id,
+  Value<String> name,
+  Value<String> categoryId,
+  Value<String> period,
+  Value<int> amount,
+  Value<String?> groupId,
+  Value<bool> rollover,
+  Value<String> rolloverType,
+  Value<int?> rolloverCap,
+  Value<DateTime> startDate,
+  Value<DateTime?> endDate,
+  Value<double> notificationThreshold,
+  Value<bool> isActive,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
 
 class $$BudgetsTableFilterComposer
     extends Composer<_$AppDatabase, $BudgetsTable> {
@@ -11717,26 +11711,24 @@ typedef $$AppSettingsTableProcessedTableManager =
       AppSetting,
       PrefetchHooks Function()
     >;
-typedef $$TrackersTableCreateCompanionBuilder =
-    TrackersCompanion Function({
-      required String id,
-      required String name,
-      required String icon,
-      required String color,
-      Value<bool> isArchived,
-      Value<DateTime> createdAt,
-      Value<int> rowid,
-    });
-typedef $$TrackersTableUpdateCompanionBuilder =
-    TrackersCompanion Function({
-      Value<String> id,
-      Value<String> name,
-      Value<String> icon,
-      Value<String> color,
-      Value<bool> isArchived,
-      Value<DateTime> createdAt,
-      Value<int> rowid,
-    });
+typedef $$TrackersTableCreateCompanionBuilder = TrackersCompanion Function({
+  required String id,
+  required String name,
+  required String icon,
+  required String color,
+  Value<bool> isArchived,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$TrackersTableUpdateCompanionBuilder = TrackersCompanion Function({
+  Value<String> id,
+  Value<String> name,
+  Value<String> icon,
+  Value<String> color,
+  Value<bool> isArchived,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
 
 class $$TrackersTableFilterComposer
     extends Composer<_$AppDatabase, $TrackersTable> {
@@ -12486,54 +12478,52 @@ typedef $$SavingsGoalContributionsTableProcessedTableManager =
       SavingsGoalContribution,
       PrefetchHooks Function()
     >;
-typedef $$LoansTableCreateCompanionBuilder =
-    LoansCompanion Function({
-      required String id,
-      required int amount,
-      required int remaining,
-      required String status,
-      Value<String?> provider,
-      Value<String?> description,
-      Value<String?> sender,
-      Value<String?> reference,
-      required DateTime disbursedAt,
-      Value<DateTime?> dueAt,
-      Value<DateTime?> paidAt,
-      Value<String?> trackerId,
-      Value<double?> interestRate,
-      Value<int?> installmentAmount,
-      Value<int?> totalInstallments,
-      Value<int?> paidInstallments,
-      Value<int?> frequencyInDays,
-      Value<String?> category,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<int> rowid,
-    });
-typedef $$LoansTableUpdateCompanionBuilder =
-    LoansCompanion Function({
-      Value<String> id,
-      Value<int> amount,
-      Value<int> remaining,
-      Value<String> status,
-      Value<String?> provider,
-      Value<String?> description,
-      Value<String?> sender,
-      Value<String?> reference,
-      Value<DateTime> disbursedAt,
-      Value<DateTime?> dueAt,
-      Value<DateTime?> paidAt,
-      Value<String?> trackerId,
-      Value<double?> interestRate,
-      Value<int?> installmentAmount,
-      Value<int?> totalInstallments,
-      Value<int?> paidInstallments,
-      Value<int?> frequencyInDays,
-      Value<String?> category,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<int> rowid,
-    });
+typedef $$LoansTableCreateCompanionBuilder = LoansCompanion Function({
+  required String id,
+  required int amount,
+  required int remaining,
+  required String status,
+  Value<String?> provider,
+  Value<String?> description,
+  Value<String?> sender,
+  Value<String?> reference,
+  required DateTime disbursedAt,
+  Value<DateTime?> dueAt,
+  Value<DateTime?> paidAt,
+  Value<String?> trackerId,
+  Value<double?> interestRate,
+  Value<int?> installmentAmount,
+  Value<int?> totalInstallments,
+  Value<int?> paidInstallments,
+  Value<int?> frequencyInDays,
+  Value<String?> category,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+typedef $$LoansTableUpdateCompanionBuilder = LoansCompanion Function({
+  Value<String> id,
+  Value<int> amount,
+  Value<int> remaining,
+  Value<String> status,
+  Value<String?> provider,
+  Value<String?> description,
+  Value<String?> sender,
+  Value<String?> reference,
+  Value<DateTime> disbursedAt,
+  Value<DateTime?> dueAt,
+  Value<DateTime?> paidAt,
+  Value<String?> trackerId,
+  Value<double?> interestRate,
+  Value<int?> installmentAmount,
+  Value<int?> totalInstallments,
+  Value<int?> paidInstallments,
+  Value<int?> frequencyInDays,
+  Value<String?> category,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
 
 class $$LoansTableFilterComposer extends Composer<_$AppDatabase, $LoansTable> {
   $$LoansTableFilterComposer({

@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+
 import '../app_database.dart';
 import '../tables/accounts_table.dart';
 import '../tables/categories_table.dart';
@@ -396,9 +397,8 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
           } else if (oldType == 'transfer') {
             reverseDelta = old.amount;
           }
-          await update(
-            accounts,
-          ).replace(acct.copyWith(balance: acct.balance + reverseDelta));
+          await update(accounts)
+              .replace(acct.copyWith(balance: acct.balance + reverseDelta));
         }
       }
       if (old.type.toLowerCase() == 'transfer' &&
@@ -407,9 +407,8 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
           ..where((t) => t.id.equals(old.destinationAccountId!));
         final dest = await destQ.getSingleOrNull();
         if (dest != null) {
-          await update(
-            accounts,
-          ).replace(dest.copyWith(balance: dest.balance - old.amount));
+          await update(accounts)
+              .replace(dest.copyWith(balance: dest.balance - old.amount));
         }
       }
       await update(transactions).replace(updated);
@@ -441,9 +440,8 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
           ..where((t) => t.id.equals(updated.destinationAccountId!));
         final dest = await destQ.getSingleOrNull();
         if (dest != null) {
-          await update(
-            accounts,
-          ).replace(dest.copyWith(balance: dest.balance + updated.amount));
+          await update(accounts)
+              .replace(dest.copyWith(balance: dest.balance + updated.amount));
         }
       }
     });

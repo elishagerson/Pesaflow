@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+
 import '../app_database.dart';
 import '../tables/budgets_table.dart';
 import '../tables/budget_periods_table.dart';
@@ -158,9 +159,8 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
       await update(budgets).replace(budget);
       final period = await getCurrentPeriod(budget.id);
       if (period != null) {
-        await update(
-          budgetPeriods,
-        ).replace(period.copyWith(allocated: budget.amount));
+        await update(budgetPeriods)
+            .replace(period.copyWith(allocated: budget.amount));
       }
     });
   }
@@ -208,18 +208,16 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
   ) async {
     final period = await getCurrentPeriod(budgetId);
     if (period != null) {
-      await update(
-        budgetPeriods,
-      ).replace(period.copyWith(allocated: newAllocated));
+      await update(budgetPeriods)
+          .replace(period.copyWith(allocated: newAllocated));
     }
   }
 
   /// Watches for changes to the transactions table.
   /// Fires on every insert, update, or delete of any transaction.
   Stream<int> watchTransactionChanges() {
-    return tableUpdates(
-      TableUpdateQuery.onTable(transactions),
-    ).map((_) => DateTime.now().microsecondsSinceEpoch);
+    return tableUpdates(TableUpdateQuery.onTable(transactions))
+        .map((_) => DateTime.now().microsecondsSinceEpoch);
   }
 
   /// Gets all active budgets with their category, current period, and spent amount in a single query.
@@ -329,16 +327,12 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
               ..where(
                 (t) =>
                     t.categoryId.isIn(allCategoryIds) &
-                    coalesce<DateTime>([
-                      t.smsTimestamp,
-                      t.createdAt,
-                    ]).isBiggerOrEqual(Constant(periodStart)) &
-                    coalesce<DateTime>([
-                      t.smsTimestamp,
-                      t.createdAt,
-                    ]).isSmallerThan(
-                      Constant(periodEnd.add(const Duration(days: 1))),
-                    ) &
+                    coalesce<DateTime>([t.smsTimestamp, t.createdAt])
+                        .isBiggerOrEqual(Constant(periodStart)) &
+                    coalesce<DateTime>([t.smsTimestamp, t.createdAt])
+                        .isSmallerThan(
+                          Constant(periodEnd.add(const Duration(days: 1))),
+                        ) &
                     (t.type.equals('expense') |
                         t.type.equals('airtime') |
                         t.type.equals('fee')),

@@ -63,9 +63,7 @@ class _AffordabilityCheckViewState
     if (_pickingPhoto) return;
     setState(() => _pickingPhoto = true);
     try {
-      final result = await FilePicker.pickFiles(
-        type: FileType.image,
-      );
+      final result = await FilePicker.pickFiles(type: FileType.image);
       final pickedPath = result.firstOrNull?.path;
       if (pickedPath == null) return;
 
@@ -246,8 +244,8 @@ class _AffordabilityCheckViewState
                           border: Border.all(color: context.appColors.hairline),
                         ),
                         clipBehavior: Clip.antiAlias,
-                        child: _photoPath != null &&
-                                File(_photoPath!).existsSync()
+                        child:
+                            _photoPath != null && File(_photoPath!).existsSync()
                             ? Stack(
                                 fit: StackFit.expand,
                                 children: [
@@ -342,7 +340,8 @@ class _AffordabilityCheckViewState
                                     fontWeight: FontWeight.w700,
                                   ),
                                   decoration: InputDecoration(
-                                    prefixText: CurrencyFormatter.currencyPrefix,
+                                    prefixText:
+                                        CurrencyFormatter.currencyPrefix,
                                     hintText: 'Price',
                                     isDense: true,
                                     contentPadding: const EdgeInsets.symmetric(
@@ -488,12 +487,8 @@ class _AffordabilityCheckViewState
                                   ),
                                 ),
                                 clipBehavior: Clip.antiAlias,
-                                child: thumb != null &&
-                                        File(thumb).existsSync()
-                                    ? Image.file(
-                                        File(thumb),
-                                        fit: BoxFit.cover,
-                                      )
+                                child: thumb != null && File(thumb).existsSync()
+                                    ? Image.file(File(thumb), fit: BoxFit.cover)
                                     : Icon(
                                         PesaFlowIcons.card,
                                         size: 18,
@@ -741,11 +736,7 @@ class _ResultCard extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      PesaFlowIcons.lightbulb,
-                      size: 14,
-                      color: statusColor,
-                    ),
+                    Icon(PesaFlowIcons.lightbulb, size: 14, color: statusColor),
                     const SizedBox(width: kSpacing8),
                     Expanded(
                       child: Text(
@@ -784,8 +775,8 @@ class _ActionButtonsRow extends ConsumerWidget {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
     final today = dateOnly(DateTime.now());
-    final futureTarget = result.recommendedDate != null &&
-            result.recommendedDate!.isAfter(today)
+    final futureTarget =
+        result.recommendedDate != null && result.recommendedDate!.isAfter(today)
         ? result.recommendedDate!
         : null;
 
@@ -933,8 +924,10 @@ class _AffordabilityBarChartPainter extends CustomPainter {
 
     const double topLabelSpace = 22;
     const double bottomLabelSpace = 24;
-    final chartHeight =
-        (size.height - topLabelSpace - bottomLabelSpace).clamp(24.0, size.height);
+    final chartHeight = (size.height - topLabelSpace - bottomLabelSpace).clamp(
+      24.0,
+      size.height,
+    );
     final baselineY = topLabelSpace + chartHeight;
 
     int maxVal = priceCents;
@@ -980,10 +973,7 @@ class _AffordabilityBarChartPainter extends CustomPainter {
       const Radius.circular(9),
     );
     canvas.drawRRect(pillRect, Paint()..color = thresholdColor);
-    priceTp.paint(
-      canvas,
-      Offset(pillRect.left + 6, pillRect.top + 2),
-    );
+    priceTp.paint(canvas, Offset(pillRect.left + 6, pillRect.top + 2));
 
     // Draw 3 milestone bars
     final count = milestones.length;
@@ -1024,7 +1014,10 @@ class _AffordabilityBarChartPainter extends CustomPainter {
         spareTp.paint(
           canvas,
           Offset(
-            (centerX - spareTp.width / 2).clamp(0.0, size.width - spareTp.width),
+            (centerX - spareTp.width / 2).clamp(
+              0.0,
+              size.width - spareTp.width,
+            ),
             (baselineY - effectiveBarHeight - 16).clamp(0.0, baselineY - 16),
           ),
         );

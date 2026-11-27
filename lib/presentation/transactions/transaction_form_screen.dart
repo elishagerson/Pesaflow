@@ -860,9 +860,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
     final amt = _amountController.text.isEmpty
         ? '0'
-        : NumberFormat(
-            '#,###',
-          ).format(int.tryParse(_amountController.text) ?? 0);
+        : NumberFormat('#,###')
+              .format(int.tryParse(_amountController.text) ?? 0);
     final amtColor = _transactionType == 'Expense'
         ? context.appColors.expenseColor
         : (_transactionType == 'Income'

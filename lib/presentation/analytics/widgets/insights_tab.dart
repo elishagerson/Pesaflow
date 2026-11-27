@@ -71,8 +71,7 @@ class InsightsTab extends ConsumerWidget {
                 child: const EmptyState(
                   icon: PesaFlowIcons.lightbulb,
                   title: 'No Insights Yet',
-                  subtitle:
-                      'Insights will appear after you have transactions recorded.',
+                  subtitle: 'Insights will appear after you have transactions recorded.',
                 ),
               ),
             ),

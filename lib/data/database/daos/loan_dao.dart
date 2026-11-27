@@ -1,5 +1,7 @@
 import 'dart:math';
+
 import 'package:drift/drift.dart';
+
 import '../app_database.dart';
 import '../tables/loans_table.dart';
 import '../tables/transactions_table.dart';

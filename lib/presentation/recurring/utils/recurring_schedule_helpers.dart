@@ -41,17 +41,18 @@ class ClassifiedBills {
 
   /// All active bills due now or before payday (the "to pay" total).
   List<RecurringTransaction> get toPayBeforePayday => [
-        ...dueNow,
-        ...dueBeforePayday,
-      ];
+    ...dueNow,
+    ...dueBeforePayday,
+  ];
 
   int get toPayTotalCents =>
       toPayBeforePayday.fold<int>(0, (sum, r) => sum + r.amount);
 
   int get paidThisMonthTotalCents => paidThisMonth.fold<int>(
-        0,
-        (sum, r) => sum + (r.totalPaid > 0 && r.paymentCount == 1 ? r.totalPaid : r.amount),
-      );
+    0,
+    (sum, r) =>
+        sum + (r.totalPaid > 0 && r.paymentCount == 1 ? r.totalPaid : r.amount),
+  );
 }
 
 /// A single step on the projected balance-after-bills chart.
@@ -123,7 +124,8 @@ DateTime? nextPaydayFor(
       );
       guard++;
     }
-    if (income.endDate != null && candidate.isAfter(dateOnly(income.endDate!))) {
+    if (income.endDate != null &&
+        candidate.isAfter(dateOnly(income.endDate!))) {
       continue;
     }
     if (earliest == null || candidate.isBefore(earliest)) {
@@ -254,7 +256,8 @@ ClassifiedBills classifyUpcomingBills(
   dueBeforePayday.sort((a, b) => a.nextDate.compareTo(b.nextDate));
   upcomingLater.sort((a, b) => a.nextDate.compareTo(b.nextDate));
   paidThisMonth.sort(
-    (a, b) => (b.lastPaidAt ?? b.nextDate).compareTo(a.lastPaidAt ?? a.nextDate),
+    (a, b) =>
+        (b.lastPaidAt ?? b.nextDate).compareTo(a.lastPaidAt ?? a.nextDate),
   );
 
   return ClassifiedBills(

@@ -540,9 +540,8 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                             kSpacing16,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: const Color(
-                                              0xFF3C4550,
-                                            ).withValues(alpha: 0.15),
+                                            color: const Color(0xFF3C4550)
+                                                .withValues(alpha: 0.15),
                                             borderRadius: BorderRadius.circular(
                                               AppTheme.squircleRadius(80),
                                             ),

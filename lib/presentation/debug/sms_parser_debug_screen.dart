@@ -20,8 +20,7 @@ class SmsParserDebugScreen extends ConsumerStatefulWidget {
 class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
   final _senderController = TextEditingController(text: 'SELCOM');
   final _bodyController = TextEditingController(
-    text:
-        '0517EQMYW Confirmed. You have received TZS 473,000.00 from ELISHA NDUNDULU - Mixx by Yas (255675259341) on 2026-05-17 17:57:46. Updated balance is TZS 477,319.85.',
+    text: '0517EQMYW Confirmed. You have received TZS 473,000.00 from ELISHA NDUNDULU - Mixx by Yas (255675259341) on 2026-05-17 17:57:46. Updated balance is TZS 477,319.85.',
   );
   final _timestampController = TextEditingController(
     text: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -254,8 +253,7 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
 // Extension to make it easy to push from anywhere
 extension SmsParserDebugExtension on BuildContext {
   void openSmsParserDebug() {
-    Navigator.of(
-      this,
-    ).push(MaterialPageRoute(builder: (_) => const SmsParserDebugScreen()));
+    Navigator.of(this)
+        .push(MaterialPageRoute(builder: (_) => const SmsParserDebugScreen()));
   }
 }

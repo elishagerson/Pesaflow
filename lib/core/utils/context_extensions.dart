@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:pesaflow/l10n/app_localizations.dart';
+
 import '../theme/app_colors_theme.dart';
 import '../theme/app_theme.dart';
 import 'responsive.dart';
@@ -294,9 +295,9 @@ class ResponsiveCard extends StatelessWidget {
             boxShadow ??
             [
               BoxShadow(
-                color: Theme.of(
-                  context,
-                ).extension<AppColorsTheme>()!.shadowSubtle,
+                color: Theme.of(context)
+                    .extension<AppColorsTheme>()!
+                    .shadowSubtle,
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),

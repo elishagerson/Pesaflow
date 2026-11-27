@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../data/repositories/analytics_repository.dart';
+
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 
 final insightGeneratorProvider = Provider<InsightGenerator>((ref) {

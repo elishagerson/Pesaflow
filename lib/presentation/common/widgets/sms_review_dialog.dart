@@ -255,9 +255,8 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         leading: Container(
                           padding: const EdgeInsets.all(kSpacing6),
                           decoration: BoxDecoration(
-                            color: hexToColor(
-                              cat.color,
-                            ).withValues(alpha: 0.15),
+                            color: hexToColor(cat.color)
+                                .withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(
                               AppTheme.squircleRadius(30),
                             ),

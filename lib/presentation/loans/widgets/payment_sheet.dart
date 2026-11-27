@@ -1037,9 +1037,8 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                 );
                                               }
                                               if (sheetContext.mounted) {
-                                                Navigator.of(
-                                                  sheetContext,
-                                                ).pop();
+                                                Navigator.of(sheetContext)
+                                                    .pop();
                                               }
                                             }
                                           } else {

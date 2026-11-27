@@ -458,8 +458,7 @@ class _SavingsGoalDetailSheetState
                                       TextCapitalization.sentences,
                                   style: context.ts(15, color: onSurface),
                                   decoration: context.inputDecoration(
-                                    hintText:
-                                        'Add an optional note (e.g. Salary bonus)',
+                                    hintText: 'Add an optional note (e.g. Salary bonus)',
                                     prefixIcon: Icon(
                                       PesaFlowIcons.edit,
                                       size: 20,
@@ -1132,18 +1131,16 @@ class _SavingsGoalDetailSheetState
                                                 actions: [
                                                   TextButton(
                                                     onPressed: () =>
-                                                        Navigator.of(
-                                                          context,
-                                                        ).pop(false),
+                                                        Navigator.of(context)
+                                                            .pop(false),
                                                     child: Text(
                                                       context.l10n.cancel_2,
                                                     ),
                                                   ),
                                                   TextButton(
                                                     onPressed: () =>
-                                                        Navigator.of(
-                                                          context,
-                                                        ).pop(true),
+                                                        Navigator.of(context)
+                                                            .pop(true),
                                                     child: Text(
                                                       'Delete',
                                                       style: TextStyle(

@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+
 import '../app_database.dart';
 import '../tables/savings_goals_table.dart';
 import '../tables/savings_goal_contributions_table.dart';

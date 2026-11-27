@@ -885,9 +885,9 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
   ) async {
     final controller = TextEditingController(
       text: currentIncome > 0
-          ? CurrencyFormatter.formatCents(
-              currentIncome,
-            ).replaceFirst(CurrencyFormatter.currencyPrefix, '').trim()
+          ? CurrencyFormatter.formatCents(currentIncome)
+                .replaceFirst(CurrencyFormatter.currencyPrefix, '')
+                .trim()
           : '',
     );
     final brandColor = context.appColors.brandColor;
@@ -1744,8 +1744,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
     return EmptyState(
       icon: PesaFlowIcons.budgets,
       title: 'No Budgets Yet',
-      subtitle:
-          'Set up a 50/30/20 budget plan based on your income, or create individual category envelopes.',
+      subtitle: 'Set up a 50/30/20 budget plan based on your income, or create individual category envelopes.',
       illustration: PesaFlowIllustration.emptyBudgets(),
       action: Column(
         mainAxisSize: MainAxisSize.min,
@@ -1843,8 +1842,7 @@ class _BudgetListScreenState extends ConsumerState<BudgetListScreen> {
           return EmptyState(
             icon: PesaFlowIcons.savings,
             title: 'Emergency Reserves & Goals',
-            subtitle:
-                'Set visual targets for big purchases, safety vaults, or long-term dreams. Log progress with optional account wallet deductions.',
+            subtitle: 'Set visual targets for big purchases, safety vaults, or long-term dreams. Log progress with optional account wallet deductions.',
             illustration: PesaFlowIllustration.emptyGoals(),
             action: TactileSpringContainer(
               haptic: HapticType.soft,

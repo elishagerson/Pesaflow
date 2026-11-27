@@ -41,40 +41,40 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('InsightsCarousel keeps a minimum height and grows with content', (
-    WidgetTester tester,
-  ) async {
-    final insights = [
-      const InsightData(
-        title: 'A long insight title that could wrap',
-        subtitle:
-            'A much longer subtitle that wraps onto several lines when the system text scale is increased substantially',
-        icon: Icons.fastfood,
-        color: Colors.orange,
-      ),
-    ];
-
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          dynamicInsightsProvider.overrideWith((ref) async => insights),
-        ],
-        child: MediaQuery(
-          data: MediaQueryData(
-            size: const Size(400, 800),
-            textScaler: TextScaler.linear(1.6),
-          ),
-          child: const MaterialApp(home: Scaffold(body: InsightsCarousel())),
+  testWidgets(
+    'InsightsCarousel keeps a minimum height and grows with content',
+    (WidgetTester tester) async {
+      final insights = [
+        const InsightData(
+          title: 'A long insight title that could wrap',
+          subtitle: 'A much longer subtitle that wraps onto several lines when the system text scale is increased substantially',
+          icon: Icons.fastfood,
+          color: Colors.orange,
         ),
-      ),
-    );
+      ];
 
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            dynamicInsightsProvider.overrideWith((ref) async => insights),
+          ],
+          child: MediaQuery(
+            data: MediaQueryData(
+              size: const Size(400, 800),
+              textScaler: TextScaler.linear(1.6),
+            ),
+            child: const MaterialApp(home: Scaffold(body: InsightsCarousel())),
+          ),
+        ),
+      );
 
-    expect(find.byType(InsightsCarousel), findsOneWidget);
-    expect(tester.takeException(), isNull);
+      await tester.pumpAndSettle();
 
-    final Size carouselSize = tester.getSize(find.byType(InsightsCarousel));
-    expect(carouselSize.height, greaterThanOrEqualTo(114));
-  });
+      expect(find.byType(InsightsCarousel), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      final Size carouselSize = tester.getSize(find.byType(InsightsCarousel));
+      expect(carouselSize.height, greaterThanOrEqualTo(114));
+    },
+  );
 }

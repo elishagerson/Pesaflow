@@ -11,7 +11,8 @@ Future<void> showEditDisplayNameDialog(
   WidgetRef ref, {
   String? currentName,
 }) async {
-  final initial = (currentName != null &&
+  final initial =
+      (currentName != null &&
           currentName != 'TOTAL NET WORTH' &&
           currentName != 'Your accounts')
       ? currentName

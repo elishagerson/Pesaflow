@@ -52,158 +52,152 @@ void main() {
   });
 
   group('Emergency Budget Savings Sweep & Notification', () {
-    test(
-      'Unused emergency budget (never used) sweeps 100% to savings on period expiration and notifies user',
-      () async {
-        final categories = await categoryDao.getAllCategories();
-        final emergencyCat = categories.firstWhere(
-          (c) => c.name == 'Health',
-          orElse: () => categories.first,
-        );
+    test('Unused emergency budget (never used) sweeps 100% to savings on period expiration and notifies user', () async {
+      final categories = await categoryDao.getAllCategories();
+      final emergencyCat = categories.firstWhere(
+        (c) => c.name == 'Health',
+        orElse: () => categories.first,
+      );
 
-        final now = DateTime.now();
-        final pastStart = DateTime(now.year, now.month - 1, 1);
-        const allocatedCents = 20000000; // 200,000 TZS
+      final now = DateTime.now();
+      final pastStart = DateTime(now.year, now.month - 1, 1);
+      const allocatedCents = 20000000; // 200,000 TZS
 
-        await budgetRepo.createBudget(
-          name: 'Emergency Buffer',
-          categoryId: emergencyCat.id,
-          period: 'monthly',
-          amount: allocatedCents,
-          rollover: true,
-          rolloverType: 'all',
-          startDate: pastStart,
-        );
+      await budgetRepo.createBudget(
+        name: 'Emergency Buffer',
+        categoryId: emergencyCat.id,
+        period: 'monthly',
+        amount: allocatedCents,
+        rollover: true,
+        rolloverType: 'all',
+        startDate: pastStart,
+      );
 
-        final activeBudgets = await budgetDao.getAllActiveBudgets();
-        final budget = activeBudgets.firstWhere(
-          (b) => b.name == 'Emergency Buffer',
-        );
+      final activeBudgets = await budgetDao.getAllActiveBudgets();
+      final budget = activeBudgets.firstWhere(
+        (b) => b.name == 'Emergency Buffer',
+      );
 
-        // Verify no savings goals initially
-        final initialGoals = await savingsGoalsDao.getAllGoals();
-        expect(initialGoals, isEmpty);
+      // Verify no savings goals initially
+      final initialGoals = await savingsGoalsDao.getAllGoals();
+      expect(initialGoals, isEmpty);
 
-        // Check and close expired periods
-        await budgetRepo.checkAndCloseExpiredPeriods();
+      // Check and close expired periods
+      await budgetRepo.checkAndCloseExpiredPeriods();
 
-        // 1. A dedicated Emergency Fund savings goal should have been auto-created
-        final goals = await savingsGoalsDao.getAllGoals();
-        expect(goals.length, equals(1));
-        final emergencyGoal = goals.first;
-        expect(emergencyGoal.name, equals('Emergency Fund'));
-        expect(emergencyGoal.currentAmount, equals(allocatedCents));
+      // 1. A dedicated Emergency Fund savings goal should have been auto-created
+      final goals = await savingsGoalsDao.getAllGoals();
+      expect(goals.length, equals(1));
+      final emergencyGoal = goals.first;
+      expect(emergencyGoal.name, equals('Emergency Fund'));
+      expect(emergencyGoal.currentAmount, equals(allocatedCents));
 
-        // 2. A contribution record should exist with the transferred amount
-        final contributions = await savingsGoalsDao.getContributionsForGoal(
-          emergencyGoal.id,
-        );
-        expect(contributions.length, equals(1));
-        expect(contributions.first.amount, equals(allocatedCents));
-        expect(
-          contributions.first.notes,
-          contains('Unused budget from Emergency Buffer'),
-        );
+      // 2. A contribution record should exist with the transferred amount
+      final contributions = await savingsGoalsDao.getContributionsForGoal(
+        emergencyGoal.id,
+      );
+      expect(contributions.length, equals(1));
+      expect(contributions.first.amount, equals(allocatedCents));
+      expect(
+        contributions.first.notes,
+        contains('Unused budget from Emergency Buffer'),
+      );
 
-        // 3. User notification should have been dispatched
-        expect(mockNotifService.sentNotifications.length, equals(1));
-        final notif = mockNotifService.sentNotifications.first;
-        expect(notif.title, contains('Move to Savings'));
-        expect(notif.body, contains('Emergency Buffer'));
-        expect(notif.body, contains('Emergency Fund'));
+      // 3. User notification should have been dispatched
+      expect(mockNotifService.sentNotifications.length, equals(1));
+      final notif = mockNotifService.sentNotifications.first;
+      expect(notif.title, contains('Move to Savings'));
+      expect(notif.body, contains('Emergency Buffer'));
+      expect(notif.body, contains('Emergency Fund'));
 
-        // 4. Because funds were moved to savings, rollover into next budget period should be 0
-        final currentPeriod = await budgetDao.getCurrentPeriod(budget.id);
-        expect(currentPeriod, isNotNull);
-        expect(currentPeriod!.rolledFrom, equals(0));
-        expect(currentPeriod.allocated, equals(allocatedCents));
-      },
-    );
+      // 4. Because funds were moved to savings, rollover into next budget period should be 0
+      final currentPeriod = await budgetDao.getCurrentPeriod(budget.id);
+      expect(currentPeriod, isNotNull);
+      expect(currentPeriod!.rolledFrom, equals(0));
+      expect(currentPeriod.allocated, equals(allocatedCents));
+    });
 
-    test(
-      'Partially used emergency budget moves remainder to existing savings goal and notifies user',
-      () async {
-        final categories = await categoryDao.getAllCategories();
-        final emergencyCat = categories.firstWhere(
-          (c) => c.name == 'Health',
-          orElse: () => categories.first,
-        );
-        const uuid = Uuid();
+    test('Partially used emergency budget moves remainder to existing savings goal and notifies user', () async {
+      final categories = await categoryDao.getAllCategories();
+      final emergencyCat = categories.firstWhere(
+        (c) => c.name == 'Health',
+        orElse: () => categories.first,
+      );
+      const uuid = Uuid();
 
-        // Pre-create an existing savings goal
-        final existingGoalId = uuid.v4();
-        await savingsGoalsDao.insertSavingsGoal(
-          SavingsGoal(
-            id: existingGoalId,
-            name: 'My Safety Cushion',
-            targetAmount: 100000000,
-            currentAmount: 10000000, // 100,000 TZS already saved
-            targetDate: DateTime(2027, 1, 1),
-            color: '#10B981',
-            icon: 'shield',
-            trackerId: null,
-            isCompleted: false,
-            createdAt: DateTime(2026, 1, 1),
-          ),
-        );
+      // Pre-create an existing savings goal
+      final existingGoalId = uuid.v4();
+      await savingsGoalsDao.insertSavingsGoal(
+        SavingsGoal(
+          id: existingGoalId,
+          name: 'My Safety Cushion',
+          targetAmount: 100000000,
+          currentAmount: 10000000, // 100,000 TZS already saved
+          targetDate: DateTime(2027, 1, 1),
+          color: '#10B981',
+          icon: 'shield',
+          trackerId: null,
+          isCompleted: false,
+          createdAt: DateTime(2026, 1, 1),
+        ),
+      );
 
-        final now = DateTime.now();
-        final pastStart = DateTime(now.year, now.month - 1, 1);
-        const allocatedCents = 15000000; // 150,000 TZS
-        const spentCents = 5000000; // 50,000 TZS spent
-        const remainingCents = 10000000; // 100,000 TZS remaining
+      final now = DateTime.now();
+      final pastStart = DateTime(now.year, now.month - 1, 1);
+      const allocatedCents = 15000000; // 150,000 TZS
+      const spentCents = 5000000; // 50,000 TZS spent
+      const remainingCents = 10000000; // 100,000 TZS remaining
 
-        await budgetRepo.createBudget(
-          name: 'Urgent Care Emergency',
-          categoryId: emergencyCat.id,
-          period: 'monthly',
-          amount: allocatedCents,
-          rollover: false,
-          rolloverType: 'none',
-          startDate: pastStart,
-        );
+      await budgetRepo.createBudget(
+        name: 'Urgent Care Emergency',
+        categoryId: emergencyCat.id,
+        period: 'monthly',
+        amount: allocatedCents,
+        rollover: false,
+        rolloverType: 'none',
+        startDate: pastStart,
+      );
 
-        // Record a transaction during that past period
-        await db
-            .into(db.transactions)
-            .insert(
-              Transaction(
-                id: uuid.v4(),
-                amount: spentCents,
-                type: 'expense',
-                categoryId: emergencyCat.id,
-                description: 'Clinic medicine',
-                source: 'manual',
-                createdAt: DateTime(pastStart.year, pastStart.month, 10, 10, 0),
-                updatedAt: DateTime(pastStart.year, pastStart.month, 10, 10, 0),
-              ),
-            );
+      // Record a transaction during that past period
+      await db
+          .into(db.transactions)
+          .insert(
+            Transaction(
+              id: uuid.v4(),
+              amount: spentCents,
+              type: 'expense',
+              categoryId: emergencyCat.id,
+              description: 'Clinic medicine',
+              source: 'manual',
+              createdAt: DateTime(pastStart.year, pastStart.month, 10, 10, 0),
+              updatedAt: DateTime(pastStart.year, pastStart.month, 10, 10, 0),
+            ),
+          );
 
-        // Run period close
-        await budgetRepo.checkAndCloseExpiredPeriods();
+      // Run period close
+      await budgetRepo.checkAndCloseExpiredPeriods();
 
-        // Goal currentAmount should be updated: 100,000 + 100,000 = 200,000 TZS (20,000,000 cents)
-        final updatedGoal = await savingsGoalsDao.getSavingsGoalById(
-          existingGoalId,
-        );
-        expect(updatedGoal, isNotNull);
-        expect(updatedGoal!.currentAmount, equals(20000000));
+      // Goal currentAmount should be updated: 100,000 + 100,000 = 200,000 TZS (20,000,000 cents)
+      final updatedGoal = await savingsGoalsDao.getSavingsGoalById(
+        existingGoalId,
+      );
+      expect(updatedGoal, isNotNull);
+      expect(updatedGoal!.currentAmount, equals(20000000));
 
-        // Contribution must match the remainder exactly
-        final contributions = await savingsGoalsDao.getContributionsForGoal(
-          existingGoalId,
-        );
-        expect(contributions.length, equals(1));
-        expect(contributions.first.amount, equals(remainingCents));
+      // Contribution must match the remainder exactly
+      final contributions = await savingsGoalsDao.getContributionsForGoal(
+        existingGoalId,
+      );
+      expect(contributions.length, equals(1));
+      expect(contributions.first.amount, equals(remainingCents));
 
-        // Notification sent with details
-        expect(mockNotifService.sentNotifications.length, equals(1));
-        expect(
-          mockNotifService.sentNotifications.first.body,
-          contains('My Safety Cushion'),
-        );
-      },
-    );
+      // Notification sent with details
+      expect(mockNotifService.sentNotifications.length, equals(1));
+      expect(
+        mockNotifService.sentNotifications.first.body,
+        contains('My Safety Cushion'),
+      );
+    });
 
     test('Fully spent emergency budget does NOT transfer to savings', () async {
       final categories = await categoryDao.getAllCategories();
@@ -251,72 +245,70 @@ void main() {
       expect(mockNotifService.sentNotifications, isEmpty);
     });
 
-    test(
-      'moveEmergencyBudgetRemainderToSavings moves funds on demand and adjusts allocated',
-      () async {
-        final categories = await categoryDao.getAllCategories();
-        final emergencyCat = categories.firstWhere(
-          (c) => c.name == 'Health',
-          orElse: () => categories.first,
-        );
-        const uuid = Uuid();
+    test('moveEmergencyBudgetRemainderToSavings moves funds on demand and adjusts allocated', () async {
+      final categories = await categoryDao.getAllCategories();
+      final emergencyCat = categories.firstWhere(
+        (c) => c.name == 'Health',
+        orElse: () => categories.first,
+      );
+      const uuid = Uuid();
 
-        final now = DateTime.now();
-        final currentMonthStart = DateTime(now.year, now.month, 1);
-        const allocatedCents = 30000000; // 300,000 TZS
-        const spentCents = 10000000; // 100,000 TZS
+      final now = DateTime.now();
+      final currentMonthStart = DateTime(now.year, now.month, 1);
+      const allocatedCents = 30000000; // 300,000 TZS
+      const spentCents = 10000000; // 100,000 TZS
 
-        await budgetRepo.createBudget(
-          name: 'Active Emergency Budget',
-          categoryId: emergencyCat.id,
-          period: 'monthly',
-          amount: allocatedCents,
-          rollover: false,
-          rolloverType: 'none',
-          startDate: currentMonthStart,
-        );
+      await budgetRepo.createBudget(
+        name: 'Active Emergency Budget',
+        categoryId: emergencyCat.id,
+        period: 'monthly',
+        amount: allocatedCents,
+        rollover: false,
+        rolloverType: 'none',
+        startDate: currentMonthStart,
+      );
 
-        final activeBudgets = await budgetDao.getAllActiveBudgets();
-        final budget = activeBudgets.firstWhere(
-          (b) => b.name == 'Active Emergency Budget',
-        );
+      final activeBudgets = await budgetDao.getAllActiveBudgets();
+      final budget = activeBudgets.firstWhere(
+        (b) => b.name == 'Active Emergency Budget',
+      );
 
-        // Add a spent transaction in current month
-        await db
-            .into(db.transactions)
-            .insert(
-              Transaction(
-                id: uuid.v4(),
-                amount: spentCents,
-                type: 'expense',
-                categoryId: emergencyCat.id,
-                description: 'Urgent clinic visit',
-                source: 'manual',
-                createdAt: DateTime(now.year, now.month, 2, 10, 0),
-                updatedAt: DateTime(now.year, now.month, 2, 10, 0),
-              ),
-            );
+      // Add a spent transaction in current month
+      await db
+          .into(db.transactions)
+          .insert(
+            Transaction(
+              id: uuid.v4(),
+              amount: spentCents,
+              type: 'expense',
+              categoryId: emergencyCat.id,
+              description: 'Urgent clinic visit',
+              source: 'manual',
+              createdAt: DateTime(now.year, now.month, 2, 10, 0),
+              updatedAt: DateTime(now.year, now.month, 2, 10, 0),
+            ),
+          );
 
-        // Move remainder early (200,000 TZS)
-        final moved = await budgetRepo.moveEmergencyBudgetRemainderToSavings(
-          budget.id,
-        );
-        expect(moved, isTrue);
+      // Move remainder early (200,000 TZS)
+      final moved = await budgetRepo.moveEmergencyBudgetRemainderToSavings(
+        budget.id,
+      );
+      expect(moved, isTrue);
 
-        // Savings goal created and credited with 200,000 TZS
-        final goals = await savingsGoalsDao.getAllGoals();
-        expect(goals.length, equals(1));
-        expect(goals.first.currentAmount, equals(20000000));
+      // Savings goal created and credited with 200,000 TZS
+      final goals = await savingsGoalsDao.getAllGoals();
+      expect(goals.length, equals(1));
+      expect(goals.first.currentAmount, equals(20000000));
 
-        // Period allocated should be adjusted to equal spent so remainder is now 0
-        final updatedPeriod = await budgetDao.getCurrentPeriod(budget.id);
-        expect(updatedPeriod!.allocated, equals(spentCents));
+      // Period allocated should be adjusted to equal spent so remainder is now 0
+      final updatedPeriod = await budgetDao.getCurrentPeriod(budget.id);
+      expect(updatedPeriod!.allocated, equals(spentCents));
 
-        // Trying to move again returns false
-        final movedAgain = await budgetRepo
-            .moveEmergencyBudgetRemainderToSavings(budget.id);
-        expect(movedAgain, isFalse);
-      },
-    );
+      // Trying to move again returns false
+      final movedAgain = await budgetRepo.moveEmergencyBudgetRemainderToSavings(
+        budget.id,
+      );
+      expect(movedAgain, isFalse);
+    });
   });
 }

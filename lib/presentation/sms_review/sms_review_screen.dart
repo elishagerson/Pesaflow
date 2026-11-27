@@ -184,9 +184,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 width: 36,
                                 height: 36,
                                 decoration: BoxDecoration(
-                                  color: hexToColor(
-                                    cat.color,
-                                  ).withValues(alpha: 0.15),
+                                  color: hexToColor(cat.color)
+                                      .withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(
                                     AppTheme.squircleRadius(36),
                                   ),
@@ -397,8 +396,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                     return EmptyState(
                       icon: PesaFlowIcons.success,
                       title: 'All Clear!',
-                      subtitle:
-                          'No transactions awaiting review.\nAuto-logged entries appear on the Dashboard.',
+                      subtitle: 'No transactions awaiting review.\nAuto-logged entries appear on the Dashboard.',
                     );
                   }
 
@@ -788,13 +786,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                                           1,
                                                                     ),
                                                                     decoration: BoxDecoration(
-                                                                      color:
-                                                                          _providerColor(
-                                                                            trans.provider,
-                                                                          ).withValues(
-                                                                            alpha:
-                                                                                0.1,
-                                                                          ),
+                                                                      color: _providerColor(
+                                                                        trans
+                                                                            .provider,
+                                                                      ).withValues(alpha: 0.1),
                                                                       borderRadius:
                                                                           BorderRadius.circular(
                                                                             4,
@@ -1036,8 +1031,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                           if (context.mounted) {
                                                             CustomToast.show(
                                                               context,
-                                                              message:
-                                                                  'Transaction approved',
+                                                              message: 'Transaction approved',
                                                               type: ToastType
                                                                   .success,
                                                             );
@@ -1060,8 +1054,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                             context: context,
                                                             entityName:
                                                                 'Transaction',
-                                                            message:
-                                                                'Transaction rejected',
+                                                            message: 'Transaction rejected',
                                                             onUndo: () async {
                                                               await ref
                                                                   .read(

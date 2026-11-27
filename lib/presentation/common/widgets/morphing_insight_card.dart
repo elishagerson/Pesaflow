@@ -218,9 +218,8 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                                 vertical: 3,
                               ),
                               decoration: BoxDecoration(
-                                color: _severityColor(
-                                  severity,
-                                ).withValues(alpha: 0.12),
+                                color: _severityColor(severity)
+                                    .withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(
                                   AppTheme.radiusSmall,
                                 ),

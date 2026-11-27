@@ -452,8 +452,7 @@ class _LoanListScreenState extends ConsumerState<LoanListScreen> {
     return EmptyState(
       icon: PesaFlowIcons.loans,
       title: 'No Loans Yet',
-      subtitle:
-          'Add a loan manually or wait for loan\ndisbursements from M-Pesa to appear.',
+      subtitle: 'Add a loan manually or wait for loan\ndisbursements from M-Pesa to appear.',
       illustration: PesaFlowIllustration.emptyLoans(),
     );
   }

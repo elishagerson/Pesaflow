@@ -3,8 +3,7 @@ import 'package:drift/drift.dart';
 @DataClassName('Transaction')
 class Transactions extends Table {
   TextColumn get id => text()();
-  TextColumn get accountId => text()
-      .nullable()(); // FK to Accounts — source account for transfers (nullable for offline/loan payments)
+  TextColumn get accountId => text().nullable()(); // FK to Accounts — source account for transfers (nullable for offline/loan payments)
   TextColumn get destinationAccountId =>
       text().nullable()(); // FK to Accounts — destination for transfers
   TextColumn get loanId =>

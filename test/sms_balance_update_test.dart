@@ -310,26 +310,29 @@ void main() {
       await verifyBalance(accountId, 4500000);
     });
 
-    test('Selcom expense (English sent) — "Updated balance" overwrites', () async {
-      const initialBalance = 50000000;
-      final accountId = await seedAccount(
-        provider: 'SelcomPesa_TZ',
-        initialBalance: initialBalance,
-      );
+    test(
+      'Selcom expense (English sent) — "Updated balance" overwrites',
+      () async {
+        const initialBalance = 50000000;
+        final accountId = await seedAccount(
+          provider: 'SelcomPesa_TZ',
+          initialBalance: initialBalance,
+        );
 
-      const sms =
-          '0517EQN0Z Accepted. You have sent TZS 477,000.00 to PARTS AND COMPONENTS MBEYA - 19938686 '
-          'on 2026-05-17 17:58:34. Charge is FREE. Transaction 13 of 150-Hello Mwezi. '
-          'Updated balance is TZS 319.85. Help 0800 714 888 / 0800 784 888';
-      final success = await smsProcessor.processSms(
-        'SELCOM',
-        sms,
-        DateTime(2026, 5, 17, 17, 58),
-      );
-      expect(success, isTrue);
+        const sms =
+            '0517EQN0Z Accepted. You have sent TZS 477,000.00 to PARTS AND COMPONENTS MBEYA - 19938686 '
+            'on 2026-05-17 17:58:34. Charge is FREE. Transaction 13 of 150-Hello Mwezi. '
+            'Updated balance is TZS 319.85. Help 0800 714 888 / 0800 784 888';
+        final success = await smsProcessor.processSms(
+          'SELCOM',
+          sms,
+          DateTime(2026, 5, 17, 17, 58),
+        );
+        expect(success, isTrue);
 
-      await verifyBalance(accountId, 31985);
-    });
+        await verifyBalance(accountId, 31985);
+      },
+    );
 
     test('NMB Bank expense (debit) — Salio overwrites balance', () async {
       const initialBalance = 500000000;
@@ -353,29 +356,26 @@ void main() {
       await verifyBalance(accountId, 125000000);
     });
 
-    test(
-      'CRDB Bank expense (withdrawal) — "Available" overwrites balance',
-      () async {
-        const initialBalance = 500000000;
-        final accountId = await seedAccount(
-          provider: 'CRDB_Bank',
-          initialBalance: initialBalance,
-          type: 'bank',
-        );
+    test('CRDB Bank expense (withdrawal) — "Available" overwrites balance', () async {
+      const initialBalance = 500000000;
+      final accountId = await seedAccount(
+        provider: 'CRDB_Bank',
+        initialBalance: initialBalance,
+        type: 'bank',
+      );
 
-        const sms =
-            'CRDB: Withdrawal TZS 200,000.00 at ATM/Arusha. Available: TZS 800,000.00. Ref: CRDB123';
-        final success = await smsProcessor.processSms(
-          'CRDB',
-          sms,
-          DateTime(2026, 5, 15, 14, 30),
-        );
-        expect(success, isTrue);
+      const sms =
+          'CRDB: Withdrawal TZS 200,000.00 at ATM/Arusha. Available: TZS 800,000.00. Ref: CRDB123';
+      final success = await smsProcessor.processSms(
+        'CRDB',
+        sms,
+        DateTime(2026, 5, 15, 14, 30),
+      );
+      expect(success, isTrue);
 
-        // Available in SMS is 800,000.00 → 80,000,000 cents
-        await verifyBalance(accountId, 80000000);
-      },
-    );
+      // Available in SMS is 800,000.00 → 80,000,000 cents
+      await verifyBalance(accountId, 80000000);
+    });
 
     test('NBC Bank expense (debit) — "Bal" overwrites balance', () async {
       const initialBalance = 500000000;

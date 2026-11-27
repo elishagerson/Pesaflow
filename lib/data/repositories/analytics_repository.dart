@@ -1,5 +1,7 @@
 import 'dart:developer' as developer;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../database/app_database.dart';
 import '../database/daos/analytics_dao.dart';
 import '../database/database_providers.dart';

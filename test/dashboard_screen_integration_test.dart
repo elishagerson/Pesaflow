@@ -91,9 +91,8 @@ ProviderScope _scope({
       // test view, so the dashboard lays out exactly as it would on a device
       // with the user's larger-type setting.
       builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(
-          context,
-        ).copyWith(textScaler: TextScaler.linear(textScale)),
+        data: MediaQuery.of(context)
+            .copyWith(textScaler: TextScaler.linear(textScale)),
         child: child!,
       ),
       home: const DashboardScreen(),

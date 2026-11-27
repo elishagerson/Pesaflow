@@ -118,8 +118,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                       if (item == null) {
                         return ErrorState(
                           title: 'Transaction Not Found',
-                          message:
-                              'This transaction may have been deleted or does not exist.',
+                          message: 'This transaction may have been deleted or does not exist.',
                           onRetry: () => context.pop(),
                         );
                       }

@@ -41,9 +41,9 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
 
   String _incomeInputText(int cents) {
     if (cents <= 0) return '';
-    return CurrencyFormatter.formatCents(
-      cents,
-    ).replaceFirst(CurrencyFormatter.currencyPrefix, '').trim();
+    return CurrencyFormatter.formatCents(cents)
+        .replaceFirst(CurrencyFormatter.currencyPrefix, '')
+        .trim();
   }
 
   @override

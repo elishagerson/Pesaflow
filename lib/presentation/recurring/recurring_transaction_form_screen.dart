@@ -2065,9 +2065,8 @@ class _RecurringTransactionFormScreenState
                   ),
                   itemBuilder: (context, index) {
                     final tx = _paymentHistory[index];
-                    final dateStr = DateFormat(
-                      'd MMM yyyy, HH:mm',
-                    ).format(tx.createdAt);
+                    final dateStr = DateFormat('d MMM yyyy, HH:mm')
+                        .format(tx.createdAt);
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [

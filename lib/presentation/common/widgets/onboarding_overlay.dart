@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -23,8 +24,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
     _OnboardingPageData(
       icon: PesaFlowIcons.message,
       title: 'Track from SMS',
-      description:
-          'PesaFlow automatically reads transaction SMS from M-Pesa, Airtel, and Tigo',
+      description: 'PesaFlow automatically reads transaction SMS from M-Pesa, Airtel, and Tigo',
     ),
     _OnboardingPageData(
       icon: PesaFlowIcons.wallet,
@@ -173,9 +173,9 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                         onPressed: _next,
                         style: FilledButton.styleFrom(
                           backgroundColor: accentColor,
-                          foregroundColor: Theme.of(
-                            context,
-                          ).colorScheme.onPrimary,
+                          foregroundColor: Theme.of(context)
+                              .colorScheme
+                              .onPrimary,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 40,
                             vertical: 16,

@@ -40,9 +40,8 @@ Future<void> _host(
         // `ThemeData.copyWith` has no textScaler in this Flutter version, so
         // the scale is applied where the media query is actually read.
         builder: (context, _) => MediaQuery(
-          data: MediaQuery.of(
-            context,
-          ).copyWith(textScaler: TextScaler.linear(textScale)),
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: TextScaler.linear(textScale)),
           child: Scaffold(body: child),
         ),
       ),

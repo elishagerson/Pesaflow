@@ -58,9 +58,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   /// `BudgetSetupScreen._incomeInputText`.
   String _formatAmountInput(int cents) {
     if (cents <= 0) return '';
-    return CurrencyFormatter.formatCents(
-      cents,
-    ).replaceFirst(CurrencyFormatter.currencyPrefix, '').trim();
+    return CurrencyFormatter.formatCents(cents)
+        .replaceFirst(CurrencyFormatter.currencyPrefix, '')
+        .trim();
   }
 
   bool get _isDirty {
@@ -1528,9 +1528,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           _selectedGroupId = selected ? g.group.id : null;
                         });
                       },
-                      selectedColor: hexToColor(
-                        g.group.color,
-                      ).withValues(alpha: 0.15),
+                      selectedColor: hexToColor(g.group.color)
+                          .withValues(alpha: 0.15),
                     ),
                 ],
               ),

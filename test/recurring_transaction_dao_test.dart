@@ -67,27 +67,24 @@ void main() {
       expect(all.length, 2);
     });
 
-    test(
-      'getDueTransactions returns only active recurring txs with nextDate <= given date',
-      () async {
-        final pastDate = DateTime.now().subtract(const Duration(days: 5));
-        final futureDate = DateTime.now().add(const Duration(days: 5));
+    test('getDueTransactions returns only active recurring txs with nextDate <= given date', () async {
+      final pastDate = DateTime.now().subtract(const Duration(days: 5));
+      final futureDate = DateTime.now().add(const Duration(days: 5));
 
-        await dao.insertRecurringTransaction(
-          makeRecurring(nextDate: pastDate, status: 'active'),
-        );
-        await dao.insertRecurringTransaction(
-          makeRecurring(nextDate: futureDate, status: 'active'),
-        );
-        await dao.insertRecurringTransaction(
-          makeRecurring(nextDate: pastDate, status: 'paused'),
-        );
+      await dao.insertRecurringTransaction(
+        makeRecurring(nextDate: pastDate, status: 'active'),
+      );
+      await dao.insertRecurringTransaction(
+        makeRecurring(nextDate: futureDate, status: 'active'),
+      );
+      await dao.insertRecurringTransaction(
+        makeRecurring(nextDate: pastDate, status: 'paused'),
+      );
 
-        final due = await dao.getDueTransactions(DateTime.now());
-        expect(due.length, 1);
-        expect(due.first.status, 'active');
-      },
-    );
+      final due = await dao.getDueTransactions(DateTime.now());
+      expect(due.length, 1);
+      expect(due.first.status, 'active');
+    });
 
     test('getDueTransactions returns empty when none are due', () async {
       final futureDate = DateTime.now().add(const Duration(days: 30));
@@ -255,20 +252,17 @@ void main() {
       expect(check.paymentCount, 0);
     });
 
-    test(
-      'recordPayment accepts payment when nextDate equals endDate (last occurrence)',
-      () async {
-        final today = DateTime.now();
-        final r = makeRecurring(nextDate: today, endDate: today);
-        await dao.insertRecurringTransaction(r);
+    test('recordPayment accepts payment when nextDate equals endDate (last occurrence)', () async {
+      final today = DateTime.now();
+      final r = makeRecurring(nextDate: today, endDate: today);
+      await dao.insertRecurringTransaction(r);
 
-        final result = await dao.recordPayment(r.id, 1000, today);
-        expect(result, isTrue);
+      final result = await dao.recordPayment(r.id, 1000, today);
+      expect(result, isTrue);
 
-        final check = await dao.getById(r.id);
-        expect(check!.totalPaid, 1000);
-      },
-    );
+      final check = await dao.getById(r.id);
+      expect(check!.totalPaid, 1000);
+    });
 
     test('recordPayment advances when nextDate is before endDate', () async {
       final tomorrow = DateTime.now().add(const Duration(days: 1));

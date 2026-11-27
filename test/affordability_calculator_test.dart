@@ -112,15 +112,18 @@ void main() {
     expect(result.suggestions.length, greaterThanOrEqualTo(2));
   });
 
-  test('returns notSupported when balance is 0 and no payday is configured', () {
-    final result = evaluateAffordability(
-      priceCents: 50000,
-      currentBalanceCents: 0,
-      allRecurring: const [],
-      now: today,
-    );
+  test(
+    'returns notSupported when balance is 0 and no payday is configured',
+    () {
+      final result = evaluateAffordability(
+        priceCents: 50000,
+        currentBalanceCents: 0,
+        allRecurring: const [],
+        now: today,
+      );
 
-    expect(result.status, AffordabilityStatus.notSupported);
-    expect(result.suggestions, isNotEmpty);
-  });
+      expect(result.status, AffordabilityStatus.notSupported);
+      expect(result.suggestions, isNotEmpty);
+    },
+  );
 }

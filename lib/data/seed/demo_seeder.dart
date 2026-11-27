@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/settings_dao.dart';

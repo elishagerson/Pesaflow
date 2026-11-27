@@ -3,7 +3,9 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+
 import 'widgets/quick_deposit_sheet.dart';
+
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -287,8 +289,7 @@ class _SavingsGoalListScreenState extends ConsumerState<SavingsGoalListScreen> {
     return EmptyState(
       icon: PesaFlowIcons.savings,
       title: 'No Savings Goals Yet',
-      subtitle:
-          'Set a savings target and track your progress.\nEvery journey starts with a goal.',
+      subtitle: 'Set a savings target and track your progress.\nEvery journey starts with a goal.',
       illustration: PesaFlowIllustration.emptyGoals(),
       action: TactileSpringContainer(
         onTap: () {

@@ -90,25 +90,22 @@ void main() {
       expect(michangoCat.color, '#2563EB');
     });
 
-    test(
-      'Migration from schema version 15 to 16 prunes niche categories and remaps transactions',
-      () async {
-        // Add a temporary deprecated category
-        await db.customStatement(
-          "INSERT INTO categories (id, name, icon, color, type, sort_order, is_system, created_at) "
-          "VALUES ('deprecated_fuel', 'Vehicle & Fuel', 'gas-station', '#EA580C', 'expense', 26, 1, 1700000000)",
-        );
+    test('Migration from schema version 15 to 16 prunes niche categories and remaps transactions', () async {
+      // Add a temporary deprecated category
+      await db.customStatement(
+        "INSERT INTO categories (id, name, icon, color, type, sort_order, is_system, created_at) "
+        "VALUES ('deprecated_fuel', 'Vehicle & Fuel', 'gas-station', '#EA580C', 'expense', 26, 1, 1700000000)",
+      );
 
-        final before = await categoryDao.getAllCategories();
-        expect(before.any((c) => c.name == 'Vehicle & Fuel'), isTrue);
+      final before = await categoryDao.getAllCategories();
+      expect(before.any((c) => c.name == 'Vehicle & Fuel'), isTrue);
 
-        // Run migration step for 15 -> 16
-        await db.migration.onUpgrade(db.createMigrator(), 15, 16);
+      // Run migration step for 15 -> 16
+      await db.migration.onUpgrade(db.createMigrator(), 15, 16);
 
-        final after = await categoryDao.getAllCategories();
-        expect(after.any((c) => c.name == 'Vehicle & Fuel'), isFalse);
-      },
-    );
+      final after = await categoryDao.getAllCategories();
+      expect(after.any((c) => c.name == 'Vehicle & Fuel'), isFalse);
+    });
   });
 
   group('Category Icon Helper Mappings', () {
@@ -200,91 +197,85 @@ void main() {
       expect(res2.category.name, 'Contributions & Michango');
     });
 
-    test(
-      'categorizes personal care, family support, maintenance, insurance, subscriptions',
-      () async {
-        final resSalon = await categorizer.categorize(
-          type: 'expense',
-          description: 'Kinyozi na kunyoa ndevu',
-          senderOrRecipient: 'Classic Barber',
-        );
-        expect(resSalon.category.name, 'Personal Care');
+    test('categorizes personal care, family support, maintenance, insurance, subscriptions', () async {
+      final resSalon = await categorizer.categorize(
+        type: 'expense',
+        description: 'Kinyozi na kunyoa ndevu',
+        senderOrRecipient: 'Classic Barber',
+      );
+      expect(resSalon.category.name, 'Personal Care');
 
-        final resFamily = await categorizer.categorize(
-          type: 'expense',
-          description: 'Pesa ya wazazi kijijini',
-          senderOrRecipient: 'Mama mzazi',
-        );
-        expect(resFamily.category.name, 'Family Support');
+      final resFamily = await categorizer.categorize(
+        type: 'expense',
+        description: 'Pesa ya wazazi kijijini',
+        senderOrRecipient: 'Mama mzazi',
+      );
+      expect(resFamily.category.name, 'Family Support');
 
-        final resMaintenance = await categorizer.categorize(
-          type: 'expense',
-          description: 'Malipo ya fundi bomba',
-          senderOrRecipient: 'Fundi Juma',
-        );
-        expect(resMaintenance.category.name, 'Utilities');
+      final resMaintenance = await categorizer.categorize(
+        type: 'expense',
+        description: 'Malipo ya fundi bomba',
+        senderOrRecipient: 'Fundi Juma',
+      );
+      expect(resMaintenance.category.name, 'Utilities');
 
-        final resInsurance = await categorizer.categorize(
-          type: 'expense',
-          description: 'Malipo ya bima ya gari',
-          senderOrRecipient: 'Sanlam Insurance',
-        );
-        expect(resInsurance.category.name, 'Health');
+      final resInsurance = await categorizer.categorize(
+        type: 'expense',
+        description: 'Malipo ya bima ya gari',
+        senderOrRecipient: 'Sanlam Insurance',
+      );
+      expect(resInsurance.category.name, 'Health');
 
-        final resSubs = await categorizer.categorize(
-          type: 'expense',
-          description: 'Netflix subscription renewal',
-          senderOrRecipient: 'Netflix International',
-        );
-        expect(resSubs.category.name, 'Entertainment');
-      },
-    );
+      final resSubs = await categorizer.categorize(
+        type: 'expense',
+        description: 'Netflix subscription renewal',
+        senderOrRecipient: 'Netflix International',
+      );
+      expect(resSubs.category.name, 'Entertainment');
+    });
 
-    test(
-      'categorizes vehicle/fuel and travel into Transport, gym into Health, baby into Family Support, legal/fines into Other',
-      () async {
-        final resFuel = await categorizer.categorize(
-          type: 'expense',
-          description: 'Mafuta ya petrol gari',
-          senderOrRecipient: 'TotalEnergies Station',
-        );
-        expect(resFuel.category.name, 'Transport');
+    test('categorizes vehicle/fuel and travel into Transport, gym into Health, baby into Family Support, legal/fines into Other', () async {
+      final resFuel = await categorizer.categorize(
+        type: 'expense',
+        description: 'Mafuta ya petrol gari',
+        senderOrRecipient: 'TotalEnergies Station',
+      );
+      expect(resFuel.category.name, 'Transport');
 
-        final resTravel = await categorizer.categorize(
-          type: 'expense',
-          description: 'Booking ticket azam marine zanzibar',
-          senderOrRecipient: 'Azam Marine Ferry',
-        );
-        expect(resTravel.category.name, 'Transport');
+      final resTravel = await categorizer.categorize(
+        type: 'expense',
+        description: 'Booking ticket azam marine zanzibar',
+        senderOrRecipient: 'Azam Marine Ferry',
+      );
+      expect(resTravel.category.name, 'Transport');
 
-        final resGym = await categorizer.categorize(
-          type: 'expense',
-          description: 'Monthly gym workout subscription',
-          senderOrRecipient: 'Crossfit Gym Club',
-        );
-        expect(resGym.category.name, 'Health');
+      final resGym = await categorizer.categorize(
+        type: 'expense',
+        description: 'Monthly gym workout subscription',
+        senderOrRecipient: 'Crossfit Gym Club',
+      );
+      expect(resGym.category.name, 'Health');
 
-        final resBaby = await categorizer.categorize(
-          type: 'expense',
-          description: 'Pampers za mtoto na baby food',
-          senderOrRecipient: 'Baby Care Store',
-        );
-        expect(resBaby.category.name, 'Family Support');
+      final resBaby = await categorizer.categorize(
+        type: 'expense',
+        description: 'Pampers za mtoto na baby food',
+        senderOrRecipient: 'Baby Care Store',
+      );
+      expect(resBaby.category.name, 'Family Support');
 
-        final resLegal = await categorizer.categorize(
-          type: 'expense',
-          description: 'Malipo ya mwanasheria kuthibitisha hati',
-          senderOrRecipient: 'Advocate & Notary Public',
-        );
-        expect(resLegal.category.name, 'Other');
+      final resLegal = await categorizer.categorize(
+        type: 'expense',
+        description: 'Malipo ya mwanasheria kuthibitisha hati',
+        senderOrRecipient: 'Advocate & Notary Public',
+      );
+      expect(resLegal.category.name, 'Other');
 
-        final resFine = await categorizer.categorize(
-          type: 'expense',
-          description: 'Traffic fine TMS askari',
-          senderOrRecipient: 'Tanzania Police TMS',
-        );
-        expect(resFine.category.name, 'Other');
-      },
-    );
+      final resFine = await categorizer.categorize(
+        type: 'expense',
+        description: 'Traffic fine TMS askari',
+        senderOrRecipient: 'Tanzania Police TMS',
+      );
+      expect(resFine.category.name, 'Other');
+    });
   });
 }
