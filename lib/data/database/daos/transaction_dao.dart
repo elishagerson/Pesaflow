@@ -774,7 +774,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
     final query = select(transactions)
       ..where((t) {
         var pred =
-            t.type.equals('expense') & t.date.isBiggerOrEqualValue(since);
+            t.type.equals('expense') & t.createdAt.isBiggerOrEqualValue(since);
         if (trackerId != null) {
           pred = pred & t.trackerId.equals(trackerId);
         }
