@@ -275,6 +275,9 @@ class _RecurringTransactionFormScreenState
   }
 
   void _applyInitialData(Map<String, dynamic> data) {
+    if (data['type'] is String) {
+      _type = data['type'] as String;
+    }
     if (data['title'] != null) {
       _descriptionController.text = data['title'] as String;
     }
