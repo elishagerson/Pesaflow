@@ -407,6 +407,173 @@ class _AffordabilityCheckViewState
               priceCents: priceCents,
               result: result,
             ),
+            const SizedBox(height: kSpacing10),
+            Center(
+              child: TextButton.icon(
+                onPressed: () => _saveCurrentCheck(
+                  itemName: itemName,
+                  priceCents: priceCents,
+                  storeNote: storeNote,
+                ),
+                icon: const Icon(PesaFlowIcons.bookmark, size: 16),
+                label: const Text('Save to Wishlist'),
+              ),
+            ),
+          ],
+
+          if (savedChecks.isNotEmpty) ...[
+            const SizedBox(height: kSpacing16),
+            Text(
+              'SAVED CHECKS (${savedChecks.length})',
+              style: context
+                  .ts(
+                    10,
+                    fontWeight: FontWeight.w800,
+                    color: context.appColors.textMedium,
+                  )
+                  .copyWith(letterSpacing: 1.2),
+            ),
+            const SizedBox(height: kSpacing8),
+            GlassListContainer(
+              child: Column(
+                children: savedChecks.asMap().entries.map((entry) {
+                  final idx = entry.key;
+                  final item = entry.value;
+                  final id = (item['id'] as String?) ?? '';
+                  final title = (item['title'] as String?) ?? 'Saved item';
+                  final cents = (item['priceCents'] as int?) ?? 0;
+                  final store = (item['store'] as String?) ?? '';
+                  final thumb = item['photoPath'] as String?;
+                  final itemResult = cents > 0
+                      ? evaluateAffordability(
+                          priceCents: cents,
+                          currentBalanceCents: widget.currentBalanceCents,
+                          allRecurring: widget.allRecurring,
+                          estimatedDailySpendCents: estimatedDailySpend,
+                          remainingBudgetHeadroomCents: remainingBudgetCents,
+                        )
+                      : null;
+                  final badgeColor = switch (itemResult?.status) {
+                    AffordabilityStatus.affordableToday ||
+                    AffordabilityStatus.bestAfterPayday =>
+                      context.appColors.incomeColor,
+                    AffordabilityStatus.needsAdjustment =>
+                      context.appColors.warningColor,
+                    _ => context.appColors.expenseColor,
+                  };
+                  final badgeLabel = switch (itemResult?.status) {
+                    AffordabilityStatus.affordableToday => 'Affordable',
+                    AffordabilityStatus.bestAfterPayday => 'After payday',
+                    AffordabilityStatus.needsAdjustment => 'Adjust',
+                    _ => 'Not ready',
+                  };
+
+                  return Column(
+                    children: [
+                      TactileSpringContainer(
+                        onTap: () => _loadSavedCheck(item),
+                        child: Padding(
+                          padding: const EdgeInsets.all(kSpacing12),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: onSurface.withValues(alpha: 0.06),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusSmall,
+                                  ),
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: thumb != null &&
+                                        File(thumb).existsSync()
+                                    ? Image.file(
+                                        File(thumb),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Icon(
+                                        PesaFlowIcons.card,
+                                        size: 18,
+                                        color: context.appColors.textMedium,
+                                      ),
+                              ),
+                              const SizedBox(width: kSpacing12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      title,
+                                      style: context.ts(
+                                        14,
+                                        fontWeight: FontWeight.w700,
+                                        color: onSurface,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Text(
+                                      store.isNotEmpty
+                                          ? '$store · ${CurrencyFormatter.formatCompact(cents)}'
+                                          : CurrencyFormatter.formatCompact(
+                                              cents,
+                                            ),
+                                      style: context.ts(
+                                        12,
+                                        color: context.appColors.textMedium,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: kSpacing8,
+                                  vertical: kSpacing2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: badgeColor.withValues(alpha: 0.14),
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusPill,
+                                  ),
+                                ),
+                                child: Text(
+                                  badgeLabel,
+                                  style: context.ts(
+                                    10,
+                                    fontWeight: FontWeight.w700,
+                                    color: badgeColor,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: kSpacing6),
+                              IconButton(
+                                visualDensity: VisualDensity.compact,
+                                icon: Icon(
+                                  PesaFlowIcons.close,
+                                  size: 16,
+                                  color: context.appColors.textMedium,
+                                ),
+                                onPressed: () => _deleteSavedCheck(id),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      if (idx < savedChecks.length - 1)
+                        Divider(
+                          height: 1,
+                          thickness: 0.5,
+                          color: context.appColors.hairline,
+                        ),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ),
           ],
         ],
       ),
@@ -429,54 +596,6 @@ class _ResultCard extends StatelessWidget {
     required this.result,
   });
 
-  Future<void> _saveCurrentCheck({
-    required String itemName,
-    required int priceCents,
-    required String storeNote,
-  }) async {
-    final repo = ref.read(settingsRepositoryProvider);
-    final existing =
-        ref.read(savedAffordabilityChecksStreamProvider).asData?.value ?? [];
-    final entry = <String, dynamic>{
-      'id': DateTime.now().millisecondsSinceEpoch.toString(),
-      'title': itemName,
-      'priceCents': priceCents,
-      'store': storeNote,
-      'photoPath': _photoPath,
-      'createdAt': DateTime.now().toIso8601String(),
-    };
-    final updated = [entry, ...existing];
-    await repo.setSetting('saved_affordability_checks', jsonEncode(updated));
-    if (mounted) {
-      PesaHaptics.medium();
-      CustomToast.show(
-        context,
-        message: 'Saved "$itemName" to wishlist',
-        type: ToastType.success,
-      );
-    }
-  }
-
-  Future<void> _deleteSavedCheck(String id) async {
-    final repo = ref.read(settingsRepositoryProvider);
-    final existing =
-        ref.read(savedAffordabilityChecksStreamProvider).asData?.value ?? [];
-    final updated = existing.where((e) => e['id'] != id).toList();
-    await repo.setSetting('saved_affordability_checks', jsonEncode(updated));
-    PesaHaptics.light();
-  }
-
-  void _loadSavedCheck(Map<String, dynamic> item) {
-    setState(() {
-      _nameController.text = (item['title'] as String?) ?? '';
-      final cents = (item['priceCents'] as int?) ?? 0;
-      _priceController.text = cents > 0 ? (cents ~/ 100).toString() : '';
-      _noteController.text = (item['store'] as String?) ?? '';
-      _photoPath = item['photoPath'] as String?;
-    });
-    PesaHaptics.selection();
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -484,7 +603,7 @@ class _ResultCard extends StatelessWidget {
     final statusColor = switch (result.status) {
       AffordabilityStatus.affordableToday ||
       AffordabilityStatus.bestAfterPayday => context.appColors.incomeColor,
-      AffordabilityStatus.needsAdjustment => const Color(0xFFB45309),
+      AffordabilityStatus.needsAdjustment => context.appColors.warningColor,
       AffordabilityStatus.notSupported => context.appColors.expenseColor,
     };
 
@@ -593,7 +712,7 @@ class _ResultCard extends StatelessWidget {
                   priceCents: priceCents,
                   highlightColor: statusColor,
                   mutedBarColor: onSurface.withValues(alpha: 0.16),
-                  thresholdColor: const Color(0xFFB45309),
+                  thresholdColor: context.appColors.warningColor,
                   textStyle: context.ts(
                     11,
                     fontWeight: FontWeight.w600,
@@ -676,7 +795,16 @@ class _ActionButtonsRow extends ConsumerWidget {
           child: TactileSpringContainer(
             onTap: () {
               PesaHaptics.medium();
-              context.push('/transactions/add?type=Expense');
+              context.push(
+                Uri(
+                  path: '/transactions/add',
+                  queryParameters: {
+                    'type': 'Expense',
+                    'description': itemName,
+                    'amount': priceCents.toString(),
+                  },
+                ).toString(),
+              );
             },
             child: Container(
               height: 48,
@@ -745,7 +873,15 @@ class _ActionButtonsRow extends ConsumerWidget {
             child: TactileSpringContainer(
               onTap: () {
                 PesaHaptics.medium();
-                context.push('/savings-goals/add');
+                context.push(
+                  Uri(
+                    path: '/savings-goals/add',
+                    queryParameters: {
+                      'name': itemName,
+                      'target': priceCents.toString(),
+                    },
+                  ).toString(),
+                );
               },
               child: Container(
                 height: 48,
