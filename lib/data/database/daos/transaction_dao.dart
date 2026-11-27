@@ -767,6 +767,24 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
             : key[0].toUpperCase() + key.substring(1),
     };
   }
+
+  /// Computes average daily expense in cents over the last 30 days.
+  Future<int> get30DayDailyBurnRateCents({String? trackerId}) async {
+    final since = DateTime.now().subtract(const Duration(days: 30));
+    final query = select(transactions)
+      ..where((t) {
+        var pred =
+            t.type.equals('expense') & t.date.isBiggerOrEqualValue(since);
+        if (trackerId != null) {
+          pred = pred & t.trackerId.equals(trackerId);
+        }
+        return pred;
+      });
+    final rows = await query.get();
+    if (rows.isEmpty) return 0;
+    final total = rows.fold<int>(0, (sum, r) => sum + r.amount);
+    return total ~/ 30;
+  }
 }
 
 /// Represents a potential recurring bill discovered from historical SMS transactions.
