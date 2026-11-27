@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pesaflow/presentation/common/widgets/morphing_insight_card.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';

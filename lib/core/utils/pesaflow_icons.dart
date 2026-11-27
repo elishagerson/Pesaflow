@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Branded icon set for PesaFlow.
 /// Single source of truth — never use raw `Icons.xxx` in screens.

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Brand colors for Tanzanian mobile money and banking providers.
 /// Used in SMS review and transaction source identification.

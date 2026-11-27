@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Desaturates a color by [factor] (0.0 = original, 1.0 = fully gray).
 /// Useful for muting user-defined category colors in card backgrounds

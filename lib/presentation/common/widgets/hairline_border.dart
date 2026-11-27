@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 /// The app's hairline: a 1px stroke that is strongest where the light comes from

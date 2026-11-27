@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:pesaflow/core/theme/motion_constants.dart';
 
 /// A widget that shakes horizontally when [shaking] is true.
