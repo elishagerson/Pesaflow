@@ -38,6 +38,10 @@ void main() {
       await (FontLoader(
         'Inter',
       )..addFont(rootBundle.load('assets/fonts/Inter-Regular.ttf'))).load();
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 20)),
+      );
+      await tester.pump();
 
       late BuildContext ctx;
       await tester.pumpWidget(
@@ -51,6 +55,7 @@ void main() {
           ),
         ),
       );
+      await tester.pump();
 
       double widthOf(String text, TextStyle style) {
         final painter = TextPainter(
