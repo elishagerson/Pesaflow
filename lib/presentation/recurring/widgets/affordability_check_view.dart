@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -14,7 +15,9 @@ import 'package:pesaflow/core/utils/haptics.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/pesa_surface.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/recurring/utils/affordability_calculator.dart';
@@ -95,6 +98,54 @@ class _AffordabilityCheckViewState
     }
   }
 
+  Future<void> _saveCurrentCheck({
+    required String itemName,
+    required int priceCents,
+    required String storeNote,
+  }) async {
+    final repo = ref.read(settingsRepositoryProvider);
+    final existing =
+        ref.read(savedAffordabilityChecksStreamProvider).asData?.value ?? [];
+    final entry = <String, dynamic>{
+      'id': DateTime.now().millisecondsSinceEpoch.toString(),
+      'title': itemName,
+      'priceCents': priceCents,
+      'store': storeNote,
+      'photoPath': _photoPath,
+      'createdAt': DateTime.now().toIso8601String(),
+    };
+    final updated = [entry, ...existing];
+    await repo.setSetting('saved_affordability_checks', jsonEncode(updated));
+    if (mounted) {
+      PesaHaptics.medium();
+      CustomToast.show(
+        context,
+        message: 'Saved "$itemName" to wishlist',
+        type: ToastType.success,
+      );
+    }
+  }
+
+  Future<void> _deleteSavedCheck(String id) async {
+    final repo = ref.read(settingsRepositoryProvider);
+    final existing =
+        ref.read(savedAffordabilityChecksStreamProvider).asData?.value ?? [];
+    final updated = existing.where((e) => e['id'] != id).toList();
+    await repo.setSetting('saved_affordability_checks', jsonEncode(updated));
+    PesaHaptics.light();
+  }
+
+  void _loadSavedCheck(Map<String, dynamic> item) {
+    setState(() {
+      _nameController.text = (item['title'] as String?) ?? '';
+      final cents = (item['priceCents'] as int?) ?? 0;
+      _priceController.text = cents > 0 ? (cents ~/ 100).toString() : '';
+      _noteController.text = (item['store'] as String?) ?? '';
+      _photoPath = item['photoPath'] as String?;
+    });
+    PesaHaptics.selection();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -112,21 +163,11 @@ class _AffordabilityCheckViewState
       error: (_, _) => 0,
     );
 
-    // Estimate daily discretionary burn from recent transactions if available.
-    final recentTxAsync = ref.watch(recentTransactionsStreamProvider);
-    final estimatedDailySpend = recentTxAsync.when(
-      data: (txs) {
-        final expenses = txs.where((t) => t.transaction.type == 'expense');
-        if (expenses.isEmpty) return 0;
-        final total = expenses.fold<int>(
-          0,
-          (sum, t) => sum + t.transaction.amount,
-        );
-        return (total ~/ 30).clamp(0, 1 << 62);
-      },
-      loading: () => 0,
-      error: (_, _) => 0,
-    );
+    // Real 30-day average daily expense burn rate.
+    final estimatedDailySpend =
+        ref.watch(thirtyDayDailyBurnRateProvider).asData?.value ?? 0;
+    final savedChecks =
+        ref.watch(savedAffordabilityChecksStreamProvider).asData?.value ?? [];
 
     final priceCents = CurrencyFormatter.parseToCents(_priceController.text);
     final itemName = _nameController.text.trim().isEmpty
@@ -387,6 +428,54 @@ class _ResultCard extends StatelessWidget {
     required this.photoPath,
     required this.result,
   });
+
+  Future<void> _saveCurrentCheck({
+    required String itemName,
+    required int priceCents,
+    required String storeNote,
+  }) async {
+    final repo = ref.read(settingsRepositoryProvider);
+    final existing =
+        ref.read(savedAffordabilityChecksStreamProvider).asData?.value ?? [];
+    final entry = <String, dynamic>{
+      'id': DateTime.now().millisecondsSinceEpoch.toString(),
+      'title': itemName,
+      'priceCents': priceCents,
+      'store': storeNote,
+      'photoPath': _photoPath,
+      'createdAt': DateTime.now().toIso8601String(),
+    };
+    final updated = [entry, ...existing];
+    await repo.setSetting('saved_affordability_checks', jsonEncode(updated));
+    if (mounted) {
+      PesaHaptics.medium();
+      CustomToast.show(
+        context,
+        message: 'Saved "$itemName" to wishlist',
+        type: ToastType.success,
+      );
+    }
+  }
+
+  Future<void> _deleteSavedCheck(String id) async {
+    final repo = ref.read(settingsRepositoryProvider);
+    final existing =
+        ref.read(savedAffordabilityChecksStreamProvider).asData?.value ?? [];
+    final updated = existing.where((e) => e['id'] != id).toList();
+    await repo.setSetting('saved_affordability_checks', jsonEncode(updated));
+    PesaHaptics.light();
+  }
+
+  void _loadSavedCheck(Map<String, dynamic> item) {
+    setState(() {
+      _nameController.text = (item['title'] as String?) ?? '';
+      final cents = (item['priceCents'] as int?) ?? 0;
+      _priceController.text = cents > 0 ? (cents ~/ 100).toString() : '';
+      _noteController.text = (item['store'] as String?) ?? '';
+      _photoPath = item['photoPath'] as String?;
+    });
+    PesaHaptics.selection();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -127,7 +127,7 @@ class BillsOverviewCard extends StatelessWidget {
                     13,
                     fontWeight: FontWeight.w700,
                     color: billCount > 0
-                        ? const Color(0xFFB45309)
+                        ? context.appColors.warningColor
                         : context.appColors.incomeColor,
                   ),
                 ),
