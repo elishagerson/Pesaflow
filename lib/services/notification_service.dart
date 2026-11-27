@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timezone/timezone.dart' as tz;
 import 'dart:developer' as developer;
 
 final notificationServiceProvider = Provider<NotificationService>((ref) {
@@ -144,5 +145,48 @@ class NotificationService {
         name: 'NotificationService',
       );
     }
+  }
+
+  /// Schedules a 9:00 AM local reminder on [targetDate] to revisit an admired purchase.
+  Future<void> schedulePurchaseReminder({
+    required String itemName,
+    required int amountCents,
+    required DateTime targetDate,
+  }) async {
+    await ensureInitialized();
+
+    final now = tz.TZDateTime.now(tz.local);
+    var scheduled = tz.TZDateTime(
+      tz.local,
+      targetDate.year,
+      targetDate.month,
+      targetDate.day,
+      9,
+    );
+    if (!scheduled.isAfter(now)) {
+      scheduled = now.add(const Duration(minutes: 1));
+    }
+
+    const details = NotificationDetails(
+      android: AndroidNotificationDetails(
+        'pesaflow_purchase_reminders',
+        'Purchase Reminders',
+        channelDescription: 'Reminders for planned purchases after payday',
+        icon: '@drawable/ic_notification_pesaflow',
+        importance: Importance.high,
+        priority: Priority.high,
+      ),
+    );
+
+    final id = 3000 + (itemName.hashCode.abs() % 1000);
+    await _plugin.zonedSchedule(
+      id: id,
+      title: 'Time to check: $itemName',
+      body:
+          'You planned to review ${CurrencyFormatter.formatCents(amountCents)} today.',
+      scheduledDate: scheduled,
+      notificationDetails: details,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
   }
 }
