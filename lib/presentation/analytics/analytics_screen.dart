@@ -31,6 +31,7 @@ import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.da
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
 import 'package:pesaflow/presentation/analytics/widgets/insights_tab.dart';
 import 'package:pesaflow/presentation/analytics/widgets/insights_carousel.dart';
+import 'package:pesaflow/presentation/analytics/widgets/weekly_digest_section.dart';
 import 'package:pesaflow/presentation/common/widgets/ios_large_title_header.dart';
 
 enum TrendRange { days, weeks, months }
@@ -301,6 +302,7 @@ class _OverviewTab extends ConsumerWidget {
         ref.invalidate(monthlyTotalsProvider);
         ref.invalidate(topCategoriesProvider);
         ref.invalidate(trendPointsProvider);
+        ref.invalidate(thirtyDayDailyBurnRateProvider);
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -313,6 +315,12 @@ class _OverviewTab extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Weekly & Behavioral Digest
+            const StaggeredFadeSlide(
+              index: 0,
+              child: WeeklyDigestSection(),
+            ),
+
             // Monthly Summary
             totalsAsync.when(
               data: (totals) {
