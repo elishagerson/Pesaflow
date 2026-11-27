@@ -18,6 +18,7 @@ import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/edit_display_name_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/settings/widgets/export_dialog.dart';
 import 'package:pesaflow/presentation/settings/widgets/import_dialog.dart';
@@ -835,6 +836,34 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: IosListSection(
                   header: 'PREFERENCES & SECURITY',
                   rows: [
+                    IosListRow(
+                      leading: _buildSquircleIcon(
+                        context: context,
+                        icon: PesaFlowIcons.person,
+                        color: theme.colorScheme.primary,
+                      ),
+                      title: const Text('Your Name'),
+                      subtitle: Text(
+                        switch (ref.watch(cardholderNameProvider).value) {
+                          final n?
+                              when n.isNotEmpty &&
+                                  n != 'TOTAL NET WORTH' &&
+                                  n != 'Your accounts' =>
+                            n,
+                          _ => 'Tap to personalize your greeting',
+                        },
+                      ),
+                      trailing: Icon(
+                        PesaFlowIcons.chevronRight,
+                        size: 18,
+                        color: context.appColors.textMedium,
+                      ),
+                      onTap: () => showEditDisplayNameDialog(
+                        context,
+                        ref,
+                        currentName: ref.read(cardholderNameProvider).value,
+                      ),
+                    ),
                     IosListRow(
                       leading: _buildSquircleIcon(
                         context: context,

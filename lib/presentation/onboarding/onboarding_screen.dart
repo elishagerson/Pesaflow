@@ -28,6 +28,7 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final _pageController = PageController();
+  final _nameController = TextEditingController();
   int _currentPage = 0;
   bool _smsPermissionGranted = false;
 
@@ -90,6 +91,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   Future<void> _finish({bool seedDemo = false}) async {
     try {
+      final trimmedName = _nameController.text.trim();
+      if (trimmedName.isNotEmpty) {
+        await ref
+            .read(settingsRepositoryProvider)
+            .setSetting('cardholder_name', trimmedName);
+      }
       if (seedDemo) {
         final db = ref.read(databaseProvider);
         await DemoSeeder(db).seedDemoData();
@@ -156,6 +163,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   void dispose() {
     _pageController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -199,7 +207,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     controller: _pageController,
                     onPageChanged: (i) => setState(() => _currentPage = i),
                     children: [
-                      _WelcomePage(theme: theme),
+                      _WelcomePage(
+                        theme: theme,
+                        nameController: _nameController,
+                      ),
                       _SmsPermissionPage(
                         theme: theme,
                         permissionGranted: _smsPermissionGranted,
@@ -369,12 +380,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
 class _WelcomePage extends StatelessWidget {
   final ThemeData theme;
-  const _WelcomePage({required this.theme});
+  final TextEditingController nameController;
+  const _WelcomePage({
+    required this.theme,
+    required this.nameController,
+  });
   @override
   Widget build(BuildContext context) {
     return StaggeredFadeSlide(
       index: 0,
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: kSpacing32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -426,6 +441,20 @@ class _WelcomePage extends StatelessWidget {
                 16,
                 color: theme.colorScheme.onSurfaceVariant,
                 height: 1.5,
+              ),
+            ),
+            const SizedBox(height: kSpacing24),
+            TextField(
+              controller: nameController,
+              textCapitalization: TextCapitalization.words,
+              textInputAction: TextInputAction.done,
+              decoration: InputDecoration(
+                labelText: 'What should we call you? (optional)',
+                hintText: 'e.g. Amina',
+                prefixIcon: const Icon(PesaFlowIcons.person, size: 18),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                ),
               ),
             ),
           ],

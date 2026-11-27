@@ -22,10 +22,19 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 class WeeklyDigestSection extends ConsumerWidget {
   const WeeklyDigestSection({super.key});
 
-  String _greetingForHour(int hour) {
-    if (hour < 12) return 'Good morning,';
-    if (hour < 17) return 'Good afternoon,';
-    return 'Good evening,';
+  String _greetingForHour(int hour, String? userName) {
+    final base = hour < 12
+        ? 'Good morning'
+        : hour < 17
+            ? 'Good afternoon'
+            : 'Good evening';
+    if (userName != null &&
+        userName.isNotEmpty &&
+        userName != 'TOTAL NET WORTH' &&
+        userName != 'Your accounts') {
+      return '$base, $userName,';
+    }
+    return '$base,';
   }
 
   @override
@@ -39,6 +48,7 @@ class WeeklyDigestSection extends ConsumerWidget {
     final today = dateOnly(now);
 
     final currentBalance = ref.watch(netWorthProvider);
+    final userName = ref.watch(cardholderNameProvider).asData?.value;
     final recurring =
         ref.watch(recurringTransactionsStreamProvider).asData?.value ?? [];
     final goals = ref.watch(savingsGoalsStreamProvider).asData?.value ?? [];
@@ -105,7 +115,7 @@ class WeeklyDigestSection extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _greetingForHour(now.hour),
+                _greetingForHour(now.hour, userName),
                 style: context.ts(
                   24,
                   fontWeight: FontWeight.w800,

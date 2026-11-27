@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/presentation/common/widgets/edit_display_name_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -260,39 +261,50 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   // truncates rather than shoving the search
                                   // and review buttons off the bar.
                                   Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _getGreeting(),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: context.ts(
-                                            12,
-                                            fontWeight: FontWeight.w500,
-                                            color: theme
-                                                .colorScheme
-                                                .onSurfaceVariant,
+                                    child: GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () => showEditDisplayNameDialog(
+                                        context,
+                                        ref,
+                                        currentName: cardholderName,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            _getGreeting(),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: context.ts(
+                                              12,
+                                              fontWeight: FontWeight.w500,
+                                              color: theme
+                                                  .colorScheme
+                                                  .onSurfaceVariant,
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          cardholderName.isNotEmpty &&
-                                                  cardholderName !=
-                                                      'Your accounts'
-                                              ? cardholderName
-                                              : 'PesaFlow',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: context.ts(
-                                            20,
-                                            fontWeight: FontWeight.w800,
-                                            color: theme.colorScheme.onSurface,
-                                            letterSpacing: -0.4,
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            cardholderName.isNotEmpty &&
+                                                    cardholderName !=
+                                                        'Your accounts' &&
+                                                    cardholderName !=
+                                                        'TOTAL NET WORTH'
+                                                ? cardholderName
+                                                : 'PesaFlow',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: context.ts(
+                                              20,
+                                              fontWeight: FontWeight.w800,
+                                              color:
+                                                  theme.colorScheme.onSurface,
+                                              letterSpacing: -0.4,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   Row(
@@ -438,7 +450,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         orElse: () => accounts.first,
                                       )
                                       .name
-                                : cardholderName;
+                                : 'TOTAL NET WORTH';
 
                             return StaggeredFadeSlide(
                               index: 0,
