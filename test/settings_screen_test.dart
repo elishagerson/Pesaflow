@@ -63,6 +63,7 @@ void main() {
         allTrackersStreamProvider.overrideWith(
           (ref) => Stream.value([testTracker]),
         ),
+        cardholderNameProvider.overrideWith((ref) => Stream.value('Amina')),
         activeTrackerIdProvider.overrideWith(
           () => MockActiveTrackerIdNotifier(),
         ),

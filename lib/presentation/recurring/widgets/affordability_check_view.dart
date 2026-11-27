@@ -267,7 +267,9 @@ class _AffordabilityCheckViewState
                                           color: Colors.black.withValues(
                                             alpha: 0.6,
                                           ),
-                                          shape: BoxShape.circle,
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.squircleRadius(16),
+                                          ),
                                         ),
                                         child: const Icon(
                                           PesaFlowIcons.close,

@@ -401,7 +401,9 @@ class _NextPaydaysCard extends StatelessWidget {
                             color: i == 0
                                 ? incomeColor
                                 : onSurface.withValues(alpha: 0.2),
-                            shape: BoxShape.circle,
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.squircleRadius(10),
+                            ),
                           ),
                         ),
                         if (i < occurrences.length - 1)

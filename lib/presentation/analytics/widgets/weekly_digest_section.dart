@@ -313,7 +313,9 @@ class _AllocationCard extends StatelessWidget {
                     height: 8,
                     decoration: BoxDecoration(
                       color: seg.color,
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.squircleRadius(8),
+                      ),
                     ),
                   ),
                   const SizedBox(width: kSpacing10),
