@@ -17,7 +17,7 @@ import 'package:pesaflow/presentation/recurring/utils/recurring_schedule_helpers
 /// - Header ("Payday" + schedule cadence)
 /// - Countdown calendar card ("X days to payday" + 3-week calendar strip)
 /// - Next paydays timeline card (next 3 projected occurrences)
-/// - Safe-to-spend card ("<amount> to last X days")
+/// - Safe-to-spend card ("`<amount>` to last X days")
 class PaydayView extends StatelessWidget {
   final List<RecurringTransaction> allRecurring;
   final int currentBalanceCents;
@@ -146,8 +146,7 @@ class PaydayView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         spacing: kSpacing6,
                         children: [
                           AmountText(
