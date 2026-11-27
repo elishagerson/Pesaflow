@@ -63,7 +63,7 @@ class _AffordabilityCheckViewState
       final result = await FilePicker.pickFiles(
         type: FileType.image,
       );
-      final pickedPath = result?.files.single.path;
+      final pickedPath = result.firstOrNull?.path;
       if (pickedPath == null) return;
 
       final appDir = await getApplicationDocumentsDirectory();
