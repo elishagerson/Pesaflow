@@ -94,23 +94,25 @@ class _RecurringTransactionListScreenState
 
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: kSpacing16),
-        child: AppExtendedFab(
-          label: _activeFilter == _RecurringFilter.payday
-              ? 'Add Payday'
-              : 'New Recurring',
-          onPressed: () {
-            PesaHaptics.medium();
-            context.push(
-              '/recurring/add',
-              extra: _activeFilter == _RecurringFilter.payday
-                  ? const {'type': 'income'}
-                  : null,
-            );
-          },
-        ),
-      ),
+      floatingActionButton: _activeFilter == _RecurringFilter.check
+          ? null
+          : Padding(
+              padding: const EdgeInsets.only(bottom: kSpacing16),
+              child: AppExtendedFab(
+                label: _activeFilter == _RecurringFilter.payday
+                    ? 'Add Payday'
+                    : 'New Recurring',
+                onPressed: () {
+                  PesaHaptics.medium();
+                  context.push(
+                    '/recurring/add',
+                    extra: _activeFilter == _RecurringFilter.payday
+                        ? const {'type': 'income'}
+                        : null,
+                  );
+                },
+              ),
+            ),
       body: SafeArea(
         top: true,
         bottom: false,
@@ -136,7 +138,8 @@ class _RecurringTransactionListScreenState
                       ref.invalidate(recurringTransactionsStreamProvider);
                       ref.invalidate(dueRecurringTransactionsProvider);
                     },
-                    child: recurring.isEmpty
+                    child: recurring.isEmpty &&
+                            _activeFilter != _RecurringFilter.check
                         ? SingleChildScrollView(
                             physics: const AlwaysScrollableScrollPhysics(),
                             child: _buildEmptyState(context, theme),
@@ -178,6 +181,17 @@ class _RecurringTransactionListScreenState
                                   currentBalanceCents: currentBalanceCents,
                                   catColor: catColor,
                                   accountNames: accountNames,
+                                ),
+                              ] else if (_activeFilter ==
+                                  _RecurringFilter.check) ...[
+                                SliverToBoxAdapter(
+                                  child: StaggeredFadeSlide(
+                                    index: 1,
+                                    child: AffordabilityCheckView(
+                                      allRecurring: recurring,
+                                      currentBalanceCents: currentBalanceCents,
+                                    ),
+                                  ),
                                 ),
                               ] else ...[
                                 // ── Summary Header (All view) ──
@@ -786,9 +800,6 @@ class _RecurringTransactionListScreenState
     final allCount = allRecurring.length;
     final expenseCount = allRecurring.where((r) => r.type == 'expense').length;
     final incomeCount = allRecurring.where((r) => r.type == 'income').length;
-    final transferCount = allRecurring
-        .where((r) => r.type == 'transfer')
-        .length;
 
     return Container(
       margin: const EdgeInsets.symmetric(
@@ -814,13 +825,13 @@ class _RecurringTransactionListScreenState
             incomeCount,
             _RecurringFilter.payday,
           ),
-          _filterTab(theme, 'All', allCount, _RecurringFilter.all),
           _filterTab(
             theme,
-            'Transfer',
-            transferCount,
-            _RecurringFilter.transfers,
+            'Check',
+            0,
+            _RecurringFilter.check,
           ),
+          _filterTab(theme, 'All', allCount, _RecurringFilter.all),
         ],
       ),
     );
