@@ -29,11 +29,12 @@ import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/core/utils/scroll_helpers.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/recurring/utils/recurring_schedule_helpers.dart';
+import 'package:pesaflow/presentation/recurring/widgets/affordability_check_view.dart';
 import 'package:pesaflow/presentation/recurring/widgets/bills_overview_card.dart';
 import 'package:pesaflow/presentation/recurring/widgets/payday_view.dart';
 
 /// View tabs for the recurring flows screen.
-enum _RecurringFilter { bills, payday, all, transfers }
+enum _RecurringFilter { bills, payday, check, all }
 
 class RecurringTransactionListScreen extends ConsumerStatefulWidget {
   const RecurringTransactionListScreen({super.key});
@@ -61,9 +62,8 @@ class _RecurringTransactionListScreenState
         items.where((r) => r.type == 'expense').toList(),
       _RecurringFilter.payday =>
         items.where((r) => r.type == 'income').toList(),
+      _RecurringFilter.check => items,
       _RecurringFilter.all => items,
-      _RecurringFilter.transfers =>
-        items.where((r) => r.type == 'transfer').toList(),
     };
   }
 
