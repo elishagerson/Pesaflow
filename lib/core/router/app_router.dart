@@ -449,8 +449,18 @@ final GoRouter appRouter = GoRouter(
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
-                      pageBuilder: (context, state) =>
-                          swipeBackPage(const SavingsGoalFormScreen()),
+                      pageBuilder: (context, state) {
+                        final params = state.uri.queryParameters;
+                        final targetStr = params['target'];
+                        return swipeBackPage(
+                          SavingsGoalFormScreen(
+                            prefillName: params['name'],
+                            prefillTargetCents: targetStr != null
+                                ? int.tryParse(targetStr)
+                                : null,
+                          ),
+                        );
+                      },
                     ),
                     GoRoute(
                       path: ':id',
@@ -483,8 +493,11 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'recurring',
                   parentNavigatorKey: _rootNavigatorKey,
-                  pageBuilder: (context, state) =>
-                      swipeBackPage(const RecurringTransactionListScreen()),
+                  pageBuilder: (context, state) => swipeBackPage(
+                    RecurringTransactionListScreen(
+                      initialTab: state.uri.queryParameters['tab'],
+                    ),
+                  ),
                   routes: [
                     GoRoute(
                       path: 'add',

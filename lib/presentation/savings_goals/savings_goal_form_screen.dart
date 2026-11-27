@@ -24,7 +24,14 @@ import 'package:pesaflow/core/theme/motion_constants.dart';
 
 class SavingsGoalFormScreen extends ConsumerStatefulWidget {
   final String? goalId;
-  const SavingsGoalFormScreen({this.goalId, super.key});
+  final String? prefillName;
+  final int? prefillTargetCents;
+  const SavingsGoalFormScreen({
+    this.goalId,
+    this.prefillName,
+    this.prefillTargetCents,
+    super.key,
+  });
 
   @override
   ConsumerState<SavingsGoalFormScreen> createState() =>
@@ -123,7 +130,16 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
     _selectedColor = AppTheme.goalPalette[0];
     _selectedIcon = 'savings';
     _selectedDate = DateTime.now().add(const Duration(days: 90));
-    if (widget.goalId != null) _loadGoal();
+    if (widget.goalId != null) {
+      _loadGoal();
+    } else {
+      if (widget.prefillName != null && widget.prefillName!.isNotEmpty) {
+        _nameController.text = widget.prefillName!;
+      }
+      if (widget.prefillTargetCents != null && widget.prefillTargetCents! > 0) {
+        _amountController.text = (widget.prefillTargetCents! ~/ 100).toString();
+      }
+    }
   }
 
   void _onFieldChanged() {

@@ -724,3 +724,25 @@ final transactionTemplatesStreamProvider =
         }
       });
     });
+
+/// Average daily expense in cents over the last 30 days for the active tracker.
+final thirtyDayDailyBurnRateProvider = FutureProvider<int>((ref) async {
+  ref.watch(dataChangesStreamProvider);
+  final dao = ref.watch(transactionDaoProvider);
+  final trackerId = ref.watch(activeTrackerIdProvider);
+  return dao.get30DayDailyBurnRateCents(trackerId: trackerId);
+});
+
+/// Saved "Can I afford it?" wishlist items persisted in app_settings.
+final savedAffordabilityChecksStreamProvider =
+    StreamProvider<List<Map<String, dynamic>>>((ref) {
+      final repo = ref.watch(settingsRepositoryProvider);
+      return repo.watchSetting('saved_affordability_checks').map((json) {
+        if (json == null) return [];
+        try {
+          return (jsonDecode(json) as List).cast<Map<String, dynamic>>();
+        } catch (_) {
+          return [];
+        }
+      });
+    });
